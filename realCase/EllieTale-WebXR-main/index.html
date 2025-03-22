@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="lib/aframe.min.js"></script>
+    <script src="lib/aframe-physics-system.min.js"></script>
+    <script src="lib/aframe-event-set-component.min.js"></script>
+    <script src="lib/aframe-extras.min.js"></script>
+    <script src="lib/super-hands.min.js"></script>
+    <script src="lib/aframe-aabb-collider-component.min.js"></script>
+    <script src="lib/gradientsky.min.js"></script>
+    <script src="lib/aframe-area-light-component.min.js"></script>
+    <script src="lib/jquery.min.js"></script>
+    <script src="js/custom/aframe-environment-component.min.js"></script>
+    <script src="js/custom/aframe-spe-particles-component.js"></script>
+    <script src="js/distractoradvancedmovenment.js"></script>
+    <script src="js/movetotarget.js"></script>
+    <script src="js/items.js"></script>
+    <script src="js/fairytasktimer.js"></script>
+    <script src="js/inpscounter.js"></script>
+    <script src="js/stats.js"></script>
+    <script src="js/timemanger.js"></script>
+    <script src="js/distractormovenment.js"></script>
+    <script src="js/menu.js"></script>
+    <!-- <script src="https://cdnjs.com/libraries/jquery/1.9.1"></script> -->
+
+    <script src="index.js"></script>
+    <style>
+        body {
+            font-family: "Abel", sans-serif;
+            background-color: azure;
+            font-size: larger;
+        }
+        
+        button {
+            font-family: "Abel", sans-serif;
+        }
+        
+        .button-cls {
+            font-family: "Abel", sans-serif;
+            border-radius: 5px;
+            background-color: #25b2c2;
+            border: none;
+            color: #FFFFFF;
+            text-align: center;
+            font-size: 25px;
+            -webkit-transition-duration: 0.4s;
+            transition-duration: 0.4s;
+            text-decoration: none;
+            overflow: hidden;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .button-cls:hover {
+            background-color: #3e6e8e
+        }
+        /* .center {
+        margin: 0 auto;
+        width: 80%;
+        text-align: center;
+        width: 70%;
+        height: 70%;
+        
+        position: absolute;
+        top:0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+          
+        margin: auto;
+      } */
+    </style>
+</head>
+
+<body>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <!-- <script src="/__/firebase/8.2.1/firebase-app.js"></script> -->
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+    <!-- <script src="/__/firebase/8.2.1/firebase-analytics.js"></script> -->
+
+    <!--  <h>Select langauge</h>
+        <br>
+        <button class="button button-cls" onclick="set_language('En')">English </button>
+        <br> <br>      <button class="button button-cls" onclick="set_language('Ar')">Arabic </button>
+ Initialize Firebase -->
+    <!-- <script src="/__/firebase/init.js"></script> -->
+    <div id="dr-menu" class="center">
+
+
+        <h>Select level</h>
+        <br>
+        <button class="button button-cls" onclick="set_level(1)">level 1</button>
+        <button class="button button-cls" onclick="set_level(2)">level 2</button>
+        <button class="button button-cls" onclick="set_level(3)">level 3</button>
+        <br> <br>
+        <h>Select timer</h>
+        <br>
+        <button class="button button-cls" onclick="set_timer(90)"> 30</button>
+        <button class="button button-cls" onclick="set_timer(120)"> 60</button>
+        <button class="button button-cls" onclick="set_timer(150)"> 90</button>
+        <button class="button button-cls" onclick="set_timer(0)"> open </button>
+        <br> <br>
+        <h>Select Environment</h>
+        <br>
+        <button class="button button-cls" onclick="set_environment('Beach')">Beach</button>
+        <button class="button button-cls" onclick="set_environment('Garden')">Garden</button>
+        <button class="button button-cls" onclick="set_environment('Library')">Library</button>
+        <br> <br>
+
+        <br> <br>
+        <button class="button button-cls" onclick="start_game()">Start</button>
+    </div>
+
+    <div id="game" style="visibility: hidden;">
+        <div id="injectable"></div>
+
+    </div>
+</body>
+
+</html>
