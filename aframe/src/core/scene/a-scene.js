@@ -111,7 +111,6 @@ export class AScene extends AEntity {
 
     this.initSystems();
     // Compute component order
-    
     this.componentOrder = determineComponentBehaviorOrder(components, this.componentOrder);
     this.addEventListener('componentregistered', function () {
       // Recompute order

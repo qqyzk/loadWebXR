@@ -15,6 +15,7 @@ class AAssets extends ANode {
     this.isAssets = true;
     this.fileLoader = fileLoader;
     this.timeout = null;
+    console.log('my a-assets aaa');
   }
 
   doConnectedCallback () {
