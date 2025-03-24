@@ -5926,9 +5926,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
-/* global THREE, XRRigidTransform, localStorage */
+/* global XRRigidTransform, localStorage */
+
 
 
 var warn = _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.debug('components:anchored:warn');
@@ -5953,7 +5955,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
       optionalFeaturesArray.push('anchors');
       this.el.sceneEl.setAttribute('webxr', webxrData);
     }
-    this.auxQuaternion = new THREE.Quaternion();
+    this.auxQuaternion = new three__WEBPACK_IMPORTED_MODULE_2__.Quaternion();
     this.onEnterVR = this.onEnterVR.bind(this);
     this.el.sceneEl.addEventListener('enter-vr', this.onEnterVR);
   },
@@ -6096,18 +6098,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var super_animejs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! super-animejs */ "./node_modules/super-animejs/lib/anime.es.js");
-/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
-/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var super_animejs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! super-animejs */ "./node_modules/super-animejs/lib/anime.es.js");
+/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
+/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 
 
 
 
-var colorHelperFrom = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Color();
-var colorHelperTo = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Color();
-var getComponentProperty = _utils_index_js__WEBPACK_IMPORTED_MODULE_3__.entity.getComponentProperty;
-var setComponentProperty = _utils_index_js__WEBPACK_IMPORTED_MODULE_3__.entity.setComponentProperty;
+var colorHelperFrom = new three__WEBPACK_IMPORTED_MODULE_3__.Color();
+var colorHelperTo = new three__WEBPACK_IMPORTED_MODULE_3__.Color();
+var getComponentProperty = _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.entity.getComponentProperty;
+var setComponentProperty = _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.entity.setComponentProperty;
 var splitCache = {};
 var TYPE_COLOR = 'color';
 var PROP_POSITION = 'position';
@@ -6137,7 +6139,7 @@ var STRING_OBJECT3D = 'object3D';
  * @member {object} animation - anime.js instance.
  * @member {boolean} animationIsPlaying - Control if animation is playing.
  */
-var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerComponent)('animation', {
+var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerComponent)('animation', {
   schema: {
     autoplay: {
       default: true
@@ -6291,7 +6293,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
     var data = this.data;
     this.updateConfig();
     this.animationIsPlaying = false;
-    this.animation = (0,super_animejs__WEBPACK_IMPORTED_MODULE_1__["default"])(this.config);
+    this.animation = (0,super_animejs__WEBPACK_IMPORTED_MODULE_0__["default"])(this.config);
     this.animation.began = true;
     this.removeEventListeners();
     this.addEventListeners();
@@ -6339,7 +6341,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
     if (this.animation) {
       this.animation.pause();
     }
-    this.animation = (0,super_animejs__WEBPACK_IMPORTED_MODULE_1__["default"])(this.config);
+    this.animation = (0,super_animejs__WEBPACK_IMPORTED_MODULE_0__["default"])(this.config);
 
     // Include the delay before each start event.
     if (this.data.delay) {
@@ -6466,9 +6468,9 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
     var property = split[0] === 'object3D' ? split[1] : split[0];
 
     // Parse coordinates.
-    from = data.from !== '' ? _utils_index_js__WEBPACK_IMPORTED_MODULE_3__.coordinates.parse(data.from) // If data.from defined, use that.
+    from = data.from !== '' ? _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.coordinates.parse(data.from) // If data.from defined, use that.
     : getComponentProperty(el, property); // If data.from not defined, get on the fly.
-    to = _utils_index_js__WEBPACK_IMPORTED_MODULE_3__.coordinates.parse(data.to);
+    to = _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.coordinates.parse(data.to);
     if (property === PROP_ROTATION) {
       toRadians(from);
       toRadians(to);
@@ -6560,7 +6562,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
       cb();
       // Since the config was created async, create the animation now since we missed it
       // earlier.
-      self.animation = (0,super_animejs__WEBPACK_IMPORTED_MODULE_1__["default"])(self.config);
+      self.animation = (0,super_animejs__WEBPACK_IMPORTED_MODULE_0__["default"])(self.config);
       el.removeEventListener('componentinitialized', wait);
     });
     return true;
@@ -6636,7 +6638,7 @@ function getPropertyType(el, property) {
   }
   componentName = split[0];
   propertyName = split[1];
-  component = el.components[componentName] || _core_component_js__WEBPACK_IMPORTED_MODULE_2__.components[componentName];
+  component = el.components[componentName] || _core_component_js__WEBPACK_IMPORTED_MODULE_1__.components[componentName];
 
   // Primitives.
   if (!component) {
@@ -6661,9 +6663,9 @@ function getPropertyType(el, property) {
  * Convert object to radians.
  */
 function toRadians(obj) {
-  obj.x = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.degToRad(obj.x);
-  obj.y = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.degToRad(obj.y);
-  obj.z = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.degToRad(obj.z);
+  obj.x = three__WEBPACK_IMPORTED_MODULE_3__.MathUtils.degToRad(obj.x);
+  obj.y = three__WEBPACK_IMPORTED_MODULE_3__.MathUtils.degToRad(obj.y);
+  obj.z = three__WEBPACK_IMPORTED_MODULE_3__.MathUtils.degToRad(obj.z);
 }
 function addEventListeners(el, eventNames, handler) {
   var i;
@@ -6698,7 +6700,7 @@ function setRawProperty(el, path, value, type) {
   var propertyName;
   var targetValue;
   if (path.startsWith('object3D.rotation')) {
-    value = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.degToRad(value);
+    value = three__WEBPACK_IMPORTED_MODULE_3__.MathUtils.degToRad(value);
   }
 
   // Walk.
@@ -6748,8 +6750,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 
 
 
@@ -6757,7 +6759,7 @@ __webpack_require__.r(__webpack_exports__);
  * Camera component.
  * Pairs along with camera system to handle tracking the active camera.
  */
-var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerComponent)('camera', {
+var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerComponent)('camera', {
   schema: {
     active: {
       default: true
@@ -6790,7 +6792,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
     var el = this.el;
 
     // Create camera.
-    camera = this.camera = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].PerspectiveCamera();
+    camera = this.camera = new three__WEBPACK_IMPORTED_MODULE_1__.PerspectiveCamera();
     el.setObject3D('camera', camera);
   },
   /**
@@ -6867,9 +6869,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
-/* global THREE, MouseEvent, TouchEvent */
+/* global MouseEvent, TouchEvent */
+
 
 
 var EVENTS = {
@@ -7099,8 +7103,8 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
   },
   resetRaycaster: function () {
     this.el.setAttribute('raycaster', {
-      direction: new THREE.Vector3().set(0, 0, -1),
-      origin: new THREE.Vector3()
+      direction: new three__WEBPACK_IMPORTED_MODULE_2__.Vector3().set(0, 0, -1),
+      origin: new three__WEBPACK_IMPORTED_MODULE_2__.Vector3()
     });
   },
   addWebXREventListeners: function () {
@@ -7128,9 +7132,9 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     }
   },
   onMouseMove: function () {
-    var direction = new THREE.Vector3();
-    var mouse = new THREE.Vector2();
-    var origin = new THREE.Vector3();
+    var direction = new three__WEBPACK_IMPORTED_MODULE_2__.Vector3();
+    var mouse = new three__WEBPACK_IMPORTED_MODULE_2__.Vector2();
+    var origin = new three__WEBPACK_IMPORTED_MODULE_2__.Vector3();
     var rayCasterConfig = {
       origin: origin,
       direction: direction
@@ -7647,26 +7651,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
-/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
+/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 
 
 
-var dummyGeometry = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].BufferGeometry();
+var dummyGeometry = new three__WEBPACK_IMPORTED_MODULE_2__.BufferGeometry();
 
 /**
  * Geometry component. Combined with material component to make a mesh in 3D object.
  * Extended with registered geometries.
  */
-var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerComponent)('geometry', {
+var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerComponent)('geometry', {
   schema: {
     buffer: {
       default: true
     },
     primitive: {
       default: 'box',
-      oneOf: _core_geometry_js__WEBPACK_IMPORTED_MODULE_1__.geometryNames,
+      oneOf: _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__.geometryNames,
       schemaChange: true
     },
     skipCache: {
@@ -7699,11 +7703,11 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
     if (mesh) {
       mesh.geometry = this.geometry;
     } else {
-      mesh = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Mesh();
+      mesh = new three__WEBPACK_IMPORTED_MODULE_2__.Mesh();
       mesh.geometry = this.geometry;
       // Default material if not defined on the entity.
       if (!this.el.getAttribute('material')) {
-        mesh.material = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MeshStandardMaterial({
+        mesh.material = new three__WEBPACK_IMPORTED_MODULE_2__.MeshStandardMaterial({
           color: Math.random() * 0xFFFFFF,
           metalness: 0,
           roughness: 0.5
@@ -7727,7 +7731,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
   updateSchema: function (data) {
     var currentGeometryType = this.oldData && this.oldData.primitive;
     var newGeometryType = data.primitive;
-    var schema = _core_geometry_js__WEBPACK_IMPORTED_MODULE_1__.geometries[newGeometryType] && _core_geometry_js__WEBPACK_IMPORTED_MODULE_1__.geometries[newGeometryType].schema;
+    var schema = _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__.geometries[newGeometryType] && _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__.geometries[newGeometryType].schema;
 
     // Geometry has no schema.
     if (!schema) {
@@ -7754,18 +7758,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
-/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
+/* harmony import */ var three_addons_loaders_GLTFLoader_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three/addons/loaders/GLTFLoader.js */ "./node_modules/three/examples/jsm/loaders/GLTFLoader.js");
+/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
+/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 
 
 
-var warn = _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.debug('components:gltf-model:warn');
+var warn = _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.debug('components:gltf-model:warn');
 
 /**
  * glTF model loader.
  */
-var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerComponent)('gltf-model', {
+var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerComponent)('gltf-model', {
   schema: {
     type: 'model'
   },
@@ -7775,7 +7779,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
     var meshoptDecoder = this.system.getMeshoptDecoder();
     var ktxLoader = this.system.getKTX2Loader();
     this.model = null;
-    this.loader = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].GLTFLoader();
+    this.loader = new three_addons_loaders_GLTFLoader_js__WEBPACK_IMPORTED_MODULE_2__.GLTFLoader();
     if (dracoLoader) {
       this.loader.setDRACOLoader(dracoLoader);
     }
@@ -7856,9 +7860,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three_addons_loaders_GLTFLoader_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three/addons/loaders/GLTFLoader.js */ "./node_modules/three/examples/jsm/loaders/GLTFLoader.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants/index.js */ "./src/constants/index.js");
-/* global THREE */
+
+
 
 
 
@@ -7929,7 +7936,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     // Active buttons populated by events provided by the attached controls.
     this.pressedButtons = {};
     this.touchedButtons = {};
-    this.loader = new THREE.GLTFLoader();
+    this.loader = new three_addons_loaders_GLTFLoader_js__WEBPACK_IMPORTED_MODULE_2__.GLTFLoader();
     this.loader.setCrossOrigin('anonymous');
     this.onGripDown = function () {
       self.handleButton('grip', 'down');
@@ -8112,14 +8119,14 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
       var handmodelUrl = MODEL_URLS[handModelStyle + hand.charAt(0).toUpperCase() + hand.slice(1)];
       this.loader.load(handmodelUrl, function (gltf) {
         var mesh = gltf.scene.children[0];
-        mesh.mixer = new THREE.AnimationMixer(mesh);
+        mesh.mixer = new three__WEBPACK_IMPORTED_MODULE_3__.AnimationMixer(mesh);
         self.clips = gltf.animations;
         el.setObject3D('mesh', mesh);
         mesh.traverse(function (object) {
           if (!object.isMesh) {
             return;
           }
-          object.material.color = new THREE.Color(handColor);
+          object.material.color = new three__WEBPACK_IMPORTED_MODULE_3__.Color(handColor);
         });
         el.setAttribute('magicleap-controls', controlConfiguration);
         el.setAttribute('vive-controls', controlConfiguration);
@@ -8288,7 +8295,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
       return;
     }
     toAction.clampWhenFinished = true;
-    toAction.loop = THREE.LoopOnce;
+    toAction.loop = three__WEBPACK_IMPORTED_MODULE_3__.LoopOnce;
     toAction.repetitions = 0;
     toAction.timeScale = 1;
     toAction.time = 0;
@@ -8352,11 +8359,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _core_a_entity_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/a-entity.js */ "./src/core/a-entity.js");
 /* harmony import */ var _utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/tracked-controls.js */ "./src/utils/tracked-controls.js");
 /* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../constants/index.js */ "./src/constants/index.js");
-/* global THREE, XRHand */
+/* global XRHand */
+
 
 
 
@@ -8416,7 +8425,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
       optionalFeaturesArray.push('hand-tracking');
       sceneEl.setAttribute('webxr', webxrData);
     }
-    this.wristObject3D = new THREE.Object3D();
+    this.wristObject3D = new three__WEBPACK_IMPORTED_MODULE_4__.Object3D();
     this.el.sceneEl.object3D.add(this.wristObject3D);
     this.onModelLoaded = this.onModelLoaded.bind(this);
     this.onChildAttached = this.onChildAttached.bind(this);
@@ -8424,10 +8433,10 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     this.controllerPresent = false;
     this.isPinched = false;
     this.pinchEventDetail = {
-      position: new THREE.Vector3(),
-      wristRotation: new THREE.Quaternion()
+      position: new three__WEBPACK_IMPORTED_MODULE_4__.Vector3(),
+      wristRotation: new three__WEBPACK_IMPORTED_MODULE_4__.Quaternion()
     };
-    this.indexTipPosition = new THREE.Vector3();
+    this.indexTipPosition = new three__WEBPACK_IMPORTED_MODULE_4__.Vector3();
     this.hasPoses = false;
     this.jointPoses = new Float32Array(16 * JOINTS.length);
     this.jointRadii = new Float32Array(JOINTS.length);
@@ -8509,7 +8518,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     }
   },
   updateWristObject: function () {
-    var jointPose = new THREE.Matrix4();
+    var jointPose = new three__WEBPACK_IMPORTED_MODULE_4__.Matrix4();
     return function () {
       var wristObject3D = this.wristObject3D;
       if (!wristObject3D || !this.hasPoses) {
@@ -8540,7 +8549,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     return null;
   },
   updateHandMeshModel: function () {
-    var jointPose = new THREE.Matrix4();
+    var jointPose = new three__WEBPACK_IMPORTED_MODULE_4__.Matrix4();
     return function () {
       var i = 0;
       var jointPoses = this.jointPoses;
@@ -8590,8 +8599,8 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     this.detectPinch();
   },
   detectPinch: function () {
-    var thumbTipPosition = new THREE.Vector3();
-    var jointPose = new THREE.Matrix4();
+    var thumbTipPosition = new three__WEBPACK_IMPORTED_MODULE_4__.Vector3();
+    var jointPose = new three__WEBPACK_IMPORTED_MODULE_4__.Matrix4();
     return function () {
       var indexTipPosition = this.indexTipPosition;
       var pinchEventDetail = this.pinchEventDetail;
@@ -8700,10 +8709,15 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     mesh.position.set(0, 0, 0);
     mesh.rotation.set(0, 0, 0);
     skinnedMesh.frustumCulled = false;
-    skinnedMesh.material = new THREE.MeshStandardMaterial();
+    skinnedMesh.material = new three__WEBPACK_IMPORTED_MODULE_4__.MeshStandardMaterial();
     this.updateModelMaterial();
     this.setupChildrenEntities();
     this.el.setObject3D('mesh', mesh);
+    this.el.emit('controllermodelready', {
+      name: 'hand-tracking-controls',
+      model: this.data.model,
+      rayOrigin: new three__WEBPACK_IMPORTED_MODULE_4__.Vector3(0, 0, 0)
+    });
   },
   setupChildrenEntities: function () {
     var childrenEls = this.el.children;
@@ -8733,7 +8747,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
 
 
 (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerComponent)('hand-tracking-grab-controls', {
@@ -8770,7 +8784,7 @@ __webpack_require__.r(__webpack_exports__);
       trackedObject3D: trackedObject3DVariable,
       size: 0.04
     });
-    this.auxMatrix = new _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].Matrix4();
+    this.auxMatrix = new three__WEBPACK_IMPORTED_MODULE_1__.Matrix4();
     this.onCollisionStarted = this.onCollisionStarted.bind(this);
     this.el.addEventListener('obbcollisionstarted', this.onCollisionStarted);
     this.onCollisionEnded = this.onCollisionEnded.bind(this);
@@ -8935,9 +8949,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../constants/index.js */ "./src/constants/index.js");
-/* harmony import */ var _utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/tracked-controls.js */ "./src/utils/tracked-controls.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants/index.js */ "./src/constants/index.js");
+/* harmony import */ var _utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/tracked-controls.js */ "./src/utils/tracked-controls.js");
 
 
 
@@ -8947,7 +8961,7 @@ __webpack_require__.r(__webpack_exports__);
 // https://github.com/immersive-web/webxr-input-profiles/tree/master/packages/registry
 // TODO: Add a more robust system for deriving gamepad name.
 var GAMEPAD_ID = 'hp-mixed-reality';
-var HP_MIXED_REALITY_MODEL_GLB_BASE_URL = _constants_index_js__WEBPACK_IMPORTED_MODULE_2__.AFRAME_CDN_ROOT + 'controllers/hp/mixed-reality/';
+var HP_MIXED_REALITY_MODEL_GLB_BASE_URL = _constants_index_js__WEBPACK_IMPORTED_MODULE_1__.AFRAME_CDN_ROOT + 'controllers/hp/mixed-reality/';
 var HP_MIXED_REALITY_POSITION_OFFSET = {
   x: 0,
   y: 0,
@@ -9004,16 +9018,16 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     this.controllerPresent = false;
     this.onButtonChanged = this.onButtonChanged.bind(this);
     this.onButtonDown = function (evt) {
-      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.onButtonEvent)(evt.detail.id, 'down', self, self.data.hand);
+      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.onButtonEvent)(evt.detail.id, 'down', self, self.data.hand);
     };
     this.onButtonUp = function (evt) {
-      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.onButtonEvent)(evt.detail.id, 'up', self, self.data.hand);
+      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.onButtonEvent)(evt.detail.id, 'up', self, self.data.hand);
     };
     this.onButtonTouchEnd = function (evt) {
-      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.onButtonEvent)(evt.detail.id, 'touchend', self, self.data.hand);
+      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.onButtonEvent)(evt.detail.id, 'touchend', self, self.data.hand);
     };
     this.onButtonTouchStart = function (evt) {
-      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.onButtonEvent)(evt.detail.id, 'touchstart', self, self.data.hand);
+      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.onButtonEvent)(evt.detail.id, 'touchstart', self, self.data.hand);
     };
     this.previousButtonValues = {};
     this.bindMethods();
@@ -9061,7 +9075,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
   },
   checkIfControllerPresent: function () {
     var data = this.data;
-    (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.checkControllerPresentAndSetup)(this, GAMEPAD_ID, {
+    (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.checkControllerPresentAndSetup)(this, GAMEPAD_ID, {
       index: this.controllerIndex,
       hand: data.hand
     });
@@ -9116,11 +9130,11 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     this.el.emit('controllermodelready', {
       name: 'hp-mixed-reality-controls',
       model: this.data.model,
-      rayOrigin: new _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].Vector3(0, 0, 0)
+      rayOrigin: new three__WEBPACK_IMPORTED_MODULE_3__.Vector3(0, 0, 0)
     });
   },
   onAxisMoved: function (evt) {
-    (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.emitIfAxesChanged)(this, this.mapping.axes, evt);
+    (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.emitIfAxesChanged)(this, this.mapping.axes, evt);
   }
 });
 
@@ -9445,9 +9459,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
-/* global THREE, XRRigidTransform, XRWebGLBinding */
+/* global XRRigidTransform, XRWebGLBinding */
+
 
 
 var warn = _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.debug('components:layer:warn');
@@ -9472,8 +9488,8 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
   },
   init: function () {
     var gl = this.el.sceneEl.renderer.getContext();
-    this.quaternion = new THREE.Quaternion();
-    this.position = new THREE.Vector3();
+    this.quaternion = new three__WEBPACK_IMPORTED_MODULE_2__.Quaternion();
+    this.position = new three__WEBPACK_IMPORTED_MODULE_2__.Vector3();
     this.bindMethods();
     this.needsRedraw = false;
     this.frameBuffer = gl.createFramebuffer();
@@ -9864,23 +9880,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
-/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
-/* harmony import */ var _utils_math_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/math.js */ "./src/utils/math.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three_addons_lights_LightProbeGenerator_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! three/addons/lights/LightProbeGenerator.js */ "./node_modules/three/examples/jsm/lights/LightProbeGenerator.js");
+/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
+/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
+/* harmony import */ var _utils_math_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/math.js */ "./src/utils/math.js");
 
 
 
 
-var degToRad = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.degToRad;
-var warn = (0,_utils_index_js__WEBPACK_IMPORTED_MODULE_1__.debug)('components:light:warn');
-var CubeLoader = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].CubeTextureLoader();
+
+var degToRad = three__WEBPACK_IMPORTED_MODULE_3__.MathUtils.degToRad;
+var warn = (0,_utils_index_js__WEBPACK_IMPORTED_MODULE_0__.debug)('components:light:warn');
+var CubeLoader = new three__WEBPACK_IMPORTED_MODULE_3__.CubeTextureLoader();
 var probeCache = {};
 
 /**
  * Light component.
  */
-var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerComponent)('light', {
+var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerComponent)('light', {
   schema: {
     angle: {
       default: 60,
@@ -10045,7 +10063,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
    */
   update: function (oldData) {
     var data = this.data;
-    var diffData = (0,_utils_index_js__WEBPACK_IMPORTED_MODULE_1__.diff)(data, oldData);
+    var diffData = (0,_utils_index_js__WEBPACK_IMPORTED_MODULE_0__.diff)(data, oldData);
     var light = this.light;
     var self = this;
 
@@ -10130,14 +10148,14 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
     this.updateShadow();
   },
   tick: function () {
-    var bbox = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Box3();
-    var normal = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
-    var cameraWorldPosition = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
-    var tempMat = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Matrix4();
-    var sphere = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Sphere();
-    var tempVector = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
+    var bbox = new three__WEBPACK_IMPORTED_MODULE_3__.Box3();
+    var normal = new three__WEBPACK_IMPORTED_MODULE_3__.Vector3();
+    var cameraWorldPosition = new three__WEBPACK_IMPORTED_MODULE_3__.Vector3();
+    var tempMat = new three__WEBPACK_IMPORTED_MODULE_3__.Matrix4();
+    var sphere = new three__WEBPACK_IMPORTED_MODULE_3__.Sphere();
+    var tempVector = new three__WEBPACK_IMPORTED_MODULE_3__.Vector3();
     return function () {
-      if (!(this.data.type === 'directional' && this.light.shadow && this.light.shadow.camera instanceof _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].OrthographicCamera && this.shadowCameraAutomaticEls.length)) return;
+      if (!(this.data.type === 'directional' && this.light.shadow && this.light.shadow.camera instanceof three__WEBPACK_IMPORTED_MODULE_3__.OrthographicCamera && this.shadowCameraAutomaticEls.length)) return;
       var camera = this.light.shadow.camera;
       camera.getWorldDirection(normal);
       camera.getWorldPosition(cameraWorldPosition);
@@ -10151,8 +10169,8 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
       this.shadowCameraAutomaticEls.forEach(function (el) {
         bbox.setFromObject(el.object3D);
         bbox.getBoundingSphere(sphere);
-        var distanceToPlane = _utils_math_js__WEBPACK_IMPORTED_MODULE_3__.distanceOfPointFromPlane(cameraWorldPosition, normal, sphere.center);
-        var pointOnCameraPlane = _utils_math_js__WEBPACK_IMPORTED_MODULE_3__.nearestPointInPlane(cameraWorldPosition, normal, sphere.center, tempVector);
+        var distanceToPlane = _utils_math_js__WEBPACK_IMPORTED_MODULE_2__.distanceOfPointFromPlane(cameraWorldPosition, normal, sphere.center);
+        var pointOnCameraPlane = _utils_math_js__WEBPACK_IMPORTED_MODULE_2__.nearestPointInPlane(cameraWorldPosition, normal, sphere.center, tempVector);
         var pointInXYPlane = pointOnCameraPlane.applyMatrix4(tempMat);
         camera.near = Math.min(-distanceToPlane - sphere.radius - 1, camera.near);
         camera.left = Math.min(-sphere.radius + pointInXYPlane.x, camera.left);
@@ -10203,7 +10221,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
     // Shadow camera helper.
     var cameraHelper = el.getObject3D('cameraHelper');
     if (data.shadowCameraVisible && !cameraHelper) {
-      cameraHelper = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].CameraHelper(light.shadow.camera);
+      cameraHelper = new three__WEBPACK_IMPORTED_MODULE_3__.CameraHelper(light.shadow.camera);
       el.setObject3D('cameraHelper', cameraHelper);
     } else if (!data.shadowCameraVisible && cameraHelper) {
       el.removeObject3D('cameraHelper');
@@ -10221,7 +10239,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
     // Shadow camera.
     light.shadow.camera.near = data.shadowCameraNear;
     light.shadow.camera.far = data.shadowCameraFar;
-    if (light.shadow.camera instanceof _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].OrthographicCamera) {
+    if (light.shadow.camera instanceof three__WEBPACK_IMPORTED_MODULE_3__.OrthographicCamera) {
       light.shadow.camera.top = data.shadowCameraTop;
       light.shadow.camera.right = data.shadowCameraRight;
       light.shadow.camera.bottom = data.shadowCameraBottom;
@@ -10241,11 +10259,11 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
    */
   getLight: function (data) {
     var angle = data.angle;
-    var color = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Color(data.color);
+    var color = new three__WEBPACK_IMPORTED_MODULE_3__.Color(data.color);
     color = color.getHex();
     var decay = data.decay;
     var distance = data.distance;
-    var groundColor = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Color(data.groundColor);
+    var groundColor = new three__WEBPACK_IMPORTED_MODULE_3__.Color(data.groundColor);
     groundColor = groundColor.getHex();
     var intensity = data.intensity;
     var type = data.type;
@@ -10254,11 +10272,11 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
     switch (type.toLowerCase()) {
       case 'ambient':
         {
-          return new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].AmbientLight(color, intensity);
+          return new three__WEBPACK_IMPORTED_MODULE_3__.AmbientLight(color, intensity);
         }
       case 'directional':
         {
-          light = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].DirectionalLight(color, intensity);
+          light = new three__WEBPACK_IMPORTED_MODULE_3__.DirectionalLight(color, intensity);
           this.defaultTarget = light.target;
           if (target) {
             if (target.hasLoaded) {
@@ -10271,15 +10289,15 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
         }
       case 'hemisphere':
         {
-          return new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].HemisphereLight(color, groundColor, intensity);
+          return new three__WEBPACK_IMPORTED_MODULE_3__.HemisphereLight(color, groundColor, intensity);
         }
       case 'point':
         {
-          return new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].PointLight(color, intensity, distance, decay);
+          return new three__WEBPACK_IMPORTED_MODULE_3__.PointLight(color, intensity, distance, decay);
         }
       case 'spot':
         {
-          light = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].SpotLight(color, intensity, distance, degToRad(angle), data.penumbra, decay);
+          light = new three__WEBPACK_IMPORTED_MODULE_3__.SpotLight(color, intensity, distance, degToRad(angle), data.penumbra, decay);
           this.defaultTarget = light.target;
           if (target) {
             if (target.hasLoaded) {
@@ -10292,7 +10310,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
         }
       case 'probe':
         {
-          light = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].LightProbe();
+          light = new three__WEBPACK_IMPORTED_MODULE_3__.LightProbe();
           this.updateProbeMap(data, light);
           return light;
         }
@@ -10308,16 +10326,16 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
   updateProbeMap: function (data, light) {
     if (!data.envMap) {
       // reset parameters if no map
-      light.copy(new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].LightProbe());
+      light.copy(new three__WEBPACK_IMPORTED_MODULE_3__.LightProbe());
       return;
     }
 
     // Populate the cache if not done for this envMap yet
     if (probeCache[data.envMap] === undefined) {
       probeCache[data.envMap] = new window.Promise(function (resolve) {
-        _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.srcLoader.validateCubemapSrc(data.envMap, function loadEnvMap(urls) {
+        _utils_index_js__WEBPACK_IMPORTED_MODULE_0__.srcLoader.validateCubemapSrc(data.envMap, function loadEnvMap(urls) {
           CubeLoader.load(urls, function (cube) {
-            var tempLightProbe = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].LightProbeGenerator.fromCubeTexture(cube);
+            var tempLightProbe = three_addons_lights_LightProbeGenerator_js__WEBPACK_IMPORTED_MODULE_4__.LightProbeGenerator.fromCubeTexture(cube);
             probeCache[data.envMap] = tempLightProbe;
             resolve(tempLightProbe);
           });
@@ -10330,7 +10348,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
       probeCache[data.envMap].then(function (tempLightProbe) {
         light.copy(tempLightProbe);
       });
-    } else if (probeCache[data.envMap] instanceof _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].LightProbe) {
+    } else if (probeCache[data.envMap] instanceof three__WEBPACK_IMPORTED_MODULE_3__.LightProbe) {
       light.copy(probeCache[data.envMap]);
     }
   },
@@ -10362,8 +10380,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
-/* global THREE */
+
 
 var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerComponent)('line', {
   schema: {
@@ -10400,15 +10419,15 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     var data = this.data;
     var geometry;
     var material;
-    material = this.material = new THREE.LineBasicMaterial({
+    material = this.material = new three__WEBPACK_IMPORTED_MODULE_1__.LineBasicMaterial({
       color: data.color,
       opacity: data.opacity,
       transparent: data.opacity < 1,
       visible: data.visible
     });
-    geometry = this.geometry = new THREE.BufferGeometry();
-    geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(2 * 3), 3));
-    this.line = new THREE.Line(geometry, material);
+    geometry = this.geometry = new three__WEBPACK_IMPORTED_MODULE_1__.BufferGeometry();
+    geometry.setAttribute('position', new three__WEBPACK_IMPORTED_MODULE_1__.BufferAttribute(new Float32Array(2 * 3), 3));
+    this.line = new three__WEBPACK_IMPORTED_MODULE_1__.Line(geometry, material);
     this.el.setObject3D(this.attrName, this.line);
   },
   update: function (oldData) {
@@ -10464,9 +10483,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
-/* harmony import */ var _core_shader_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../core/shader.js */ "./src/core/shader.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
+/* harmony import */ var _core_shader_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/shader.js */ "./src/core/shader.js");
 
 
 
@@ -10477,7 +10496,7 @@ var DEFAULT_PREVIEW_DISTANCE = 15.0;
  *
  * @member {object} hiddenEls - Store the hidden elements during peek mode.
  */
-var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerComponent)('link', {
+var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerComponent)('link', {
   schema: {
     backgroundColor: {
       default: 'red',
@@ -10520,7 +10539,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
   init: function () {
     this.navigate = this.navigate.bind(this);
     this.previousQuaternion = undefined;
-    this.quaternionClone = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Quaternion();
+    this.quaternionClone = new three__WEBPACK_IMPORTED_MODULE_2__.Quaternion();
     // Store hidden elements during peek mode so we can show them again later.
     this.hiddenEls = [];
   },
@@ -10675,10 +10694,10 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
    * 3. Face portal to camera when far away from user.
    */
   tick: function () {
-    var cameraWorldPosition = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
-    var elWorldPosition = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
-    var quaternion = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Quaternion();
-    var scale = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
+    var cameraWorldPosition = new three__WEBPACK_IMPORTED_MODULE_2__.Vector3();
+    var elWorldPosition = new three__WEBPACK_IMPORTED_MODULE_2__.Vector3();
+    var quaternion = new three__WEBPACK_IMPORTED_MODULE_2__.Quaternion();
+    var scale = new three__WEBPACK_IMPORTED_MODULE_2__.Vector3();
     return function () {
       var el = this.el;
       var object3D = el.object3D;
@@ -10778,10 +10797,10 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
    * @returns {number} > 0 if camera faces front of portal, < 0 if it faces back of portal.
    */
   calculateCameraPortalOrientation: function () {
-    var mat4 = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Matrix4();
-    var cameraPosition = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
-    var portalNormal = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3(0, 0, 1);
-    var portalPosition = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3(0, 0, 0);
+    var mat4 = new three__WEBPACK_IMPORTED_MODULE_2__.Matrix4();
+    var cameraPosition = new three__WEBPACK_IMPORTED_MODULE_2__.Vector3();
+    var portalNormal = new three__WEBPACK_IMPORTED_MODULE_2__.Vector3(0, 0, 1);
+    var portalPosition = new three__WEBPACK_IMPORTED_MODULE_2__.Vector3(0, 0, 0);
     return function () {
       var el = this.el;
       var camera = el.sceneEl.camera;
@@ -10821,7 +10840,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
 });
 
 /* eslint-disable */
-(0,_core_shader_js__WEBPACK_IMPORTED_MODULE_2__.registerShader)('portal', {
+(0,_core_shader_js__WEBPACK_IMPORTED_MODULE_1__.registerShader)('portal', {
   schema: {
     borderEnabled: {
       default: 1.0,
@@ -10866,10 +10885,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
-/* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../constants/index.js */ "./src/constants/index.js");
-/* harmony import */ var _utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/tracked-controls.js */ "./src/utils/tracked-controls.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
+/* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants/index.js */ "./src/constants/index.js");
+/* harmony import */ var _utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/tracked-controls.js */ "./src/utils/tracked-controls.js");
 
 
 
@@ -10879,7 +10898,7 @@ __webpack_require__.r(__webpack_exports__);
 // https://github.com/immersive-web/webxr-input-profiles/tree/master/packages/registry
 // TODO: Add a more robust system for deriving gamepad name.
 var GAMEPAD_ID = 'logitech-mx-ink';
-var LOGITECH_MX_INK_MODEL_GLB_BASE_URL = _constants_index_js__WEBPACK_IMPORTED_MODULE_2__.AFRAME_CDN_ROOT + 'controllers/logitech/';
+var LOGITECH_MX_INK_MODEL_GLB_BASE_URL = _constants_index_js__WEBPACK_IMPORTED_MODULE_1__.AFRAME_CDN_ROOT + 'controllers/logitech/';
 
 /**
  * Button IDs:
@@ -10902,7 +10921,7 @@ var INPUT_MAPPING_WEBXR = {
 /**
  * Logitech MX Ink Controls
  */
-var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerComponent)('logitech-mx-ink-controls', {
+var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerComponent)('logitech-mx-ink-controls', {
   schema: {
     hand: {
       default: 'left'
@@ -10919,16 +10938,16 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
     var self = this;
     this.onButtonChanged = this.onButtonChanged.bind(this);
     this.onButtonDown = function (evt) {
-      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.onButtonEvent)(evt.detail.id, 'down', self, self.data.hand);
+      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.onButtonEvent)(evt.detail.id, 'down', self, self.data.hand);
     };
     this.onButtonUp = function (evt) {
-      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.onButtonEvent)(evt.detail.id, 'up', self, self.data.hand);
+      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.onButtonEvent)(evt.detail.id, 'up', self, self.data.hand);
     };
     this.onButtonTouchEnd = function (evt) {
-      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.onButtonEvent)(evt.detail.id, 'touchend', self, self.data.hand);
+      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.onButtonEvent)(evt.detail.id, 'touchend', self, self.data.hand);
     };
     this.onButtonTouchStart = function (evt) {
-      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.onButtonEvent)(evt.detail.id, 'touchstart', self, self.data.hand);
+      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.onButtonEvent)(evt.detail.id, 'touchstart', self, self.data.hand);
     };
     this.bindMethods();
   },
@@ -10976,7 +10995,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
     if (controllerObject3D) {
       controllerObject3D.visible = false;
     }
-    (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.checkControllerPresentAndSetup)(this, GAMEPAD_ID, {
+    (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.checkControllerPresentAndSetup)(this, GAMEPAD_ID, {
       hand: this.data.hand,
       iterateControllerProfiles: true
     });
@@ -11036,13 +11055,13 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
     this.el.emit('controllermodelready', {
       name: 'logitech-mx-ink-controls',
       model: this.data.model,
-      rayOrigin: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3(0, 0, 0)
+      rayOrigin: new three__WEBPACK_IMPORTED_MODULE_3__.Vector3(0, 0, 0)
     });
     this.controllerObject3D = this.el.getObject3D('mesh');
     this.controllerObject3D.visible = this.el.sceneEl.is('vr-mode');
   },
   onAxisMoved: function (evt) {
-    (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.emitIfAxesChanged)(this, this.mapping.axes, evt);
+    (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.emitIfAxesChanged)(this, this.mapping.axes, evt);
   }
 });
 
@@ -11059,10 +11078,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _vendor_DeviceOrientationControls_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../vendor/DeviceOrientationControls.js */ "./vendor/DeviceOrientationControls.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 /* global DeviceOrientationEvent  */
+
 
 
 
@@ -11100,12 +11121,12 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
   },
   init: function () {
     this.deltaYaw = 0;
-    this.previousHMDPosition = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
-    this.hmdQuaternion = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Quaternion();
-    this.magicWindowAbsoluteEuler = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Euler();
-    this.magicWindowDeltaEuler = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Euler();
-    this.position = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
-    this.magicWindowObject = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Object3D();
+    this.previousHMDPosition = new three__WEBPACK_IMPORTED_MODULE_3__.Vector3();
+    this.hmdQuaternion = new three__WEBPACK_IMPORTED_MODULE_3__.Quaternion();
+    this.magicWindowAbsoluteEuler = new three__WEBPACK_IMPORTED_MODULE_3__.Euler();
+    this.magicWindowDeltaEuler = new three__WEBPACK_IMPORTED_MODULE_3__.Euler();
+    this.position = new three__WEBPACK_IMPORTED_MODULE_3__.Vector3();
+    this.magicWindowObject = new three__WEBPACK_IMPORTED_MODULE_3__.Object3D();
     this.rotation = {};
     this.deltaRotation = {};
     this.savedPose = null;
@@ -11117,8 +11138,8 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
 
     // To save / restore camera pose
     this.savedPose = {
-      position: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3(),
-      rotation: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Euler()
+      position: new three__WEBPACK_IMPORTED_MODULE_3__.Vector3(),
+      rotation: new three__WEBPACK_IMPORTED_MODULE_3__.Euler()
     };
 
     // Call enter VR handler if the scene has entered VR before the event listeners attached.
@@ -11132,7 +11153,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
 
     // Only on mobile devices and only enabled if DeviceOrientation permission has been granted.
     if (_utils_index_js__WEBPACK_IMPORTED_MODULE_2__.device.isMobile() || _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.device.isMobileDeviceRequestingDesktopSite()) {
-      magicWindowControls = this.magicWindowControls = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].DeviceOrientationControls(this.magicWindowObject);
+      magicWindowControls = this.magicWindowControls = new _vendor_DeviceOrientationControls_js__WEBPACK_IMPORTED_MODULE_0__.DeviceOrientationControls(this.magicWindowObject);
       if (typeof DeviceOrientationEvent !== 'undefined' && DeviceOrientationEvent.requestPermission) {
         magicWindowControls.enabled = false;
         if (this.el.sceneEl.components['device-orientation-permission-ui'].permissionGranted) {
@@ -11210,8 +11231,8 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
    */
   setupMouseControls: function () {
     this.mouseDown = false;
-    this.pitchObject = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Object3D();
-    this.yawObject = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Object3D();
+    this.pitchObject = new three__WEBPACK_IMPORTED_MODULE_3__.Object3D();
+    this.yawObject = new three__WEBPACK_IMPORTED_MODULE_3__.Object3D();
     this.yawObject.position.y = 10;
     this.yawObject.add(this.pitchObject);
   },
@@ -11735,15 +11756,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
-/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
-/* harmony import */ var _core_shader_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../core/shader.js */ "./src/core/shader.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
+/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
+/* harmony import */ var _core_shader_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../core/shader.js */ "./src/core/shader.js");
 
 
 
 
-var error = _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.debug('components:material:error');
+var error = _utils_index_js__WEBPACK_IMPORTED_MODULE_0__.debug('components:material:error');
 
 /**
  * Material component.
@@ -11752,7 +11773,7 @@ var error = _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.debug('components:mater
  *         three.js's implementation of PBR. Another standard shading model is `flat` which
  *         uses MeshBasicMaterial.
  */
-var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerComponent)('material', {
+var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerComponent)('material', {
   schema: {
     alphaTest: {
       default: 0.0,
@@ -11792,7 +11813,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
     },
     shader: {
       default: 'standard',
-      oneOf: _core_shader_js__WEBPACK_IMPORTED_MODULE_3__.shaderNames,
+      oneOf: _core_shader_js__WEBPACK_IMPORTED_MODULE_2__.shaderNames,
       schemaChange: true
     },
     side: {
@@ -11844,7 +11865,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
     newShader = data && data.shader;
     currentShader = this.oldData && this.oldData.shader;
     shader = newShader || currentShader;
-    schema = _core_shader_js__WEBPACK_IMPORTED_MODULE_3__.shaders[shader] && _core_shader_js__WEBPACK_IMPORTED_MODULE_3__.shaders[shader].schema;
+    schema = _core_shader_js__WEBPACK_IMPORTED_MODULE_2__.shaders[shader] && _core_shader_js__WEBPACK_IMPORTED_MODULE_2__.shaders[shader].schema;
     if (!schema) {
       error('Unknown shader schema ' + shader);
     }
@@ -11886,7 +11907,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
   },
   updateShader: function (shaderName) {
     var data = this.data;
-    var Shader = _core_shader_js__WEBPACK_IMPORTED_MODULE_3__.shaders[shaderName] && _core_shader_js__WEBPACK_IMPORTED_MODULE_3__.shaders[shaderName].Shader;
+    var Shader = _core_shader_js__WEBPACK_IMPORTED_MODULE_2__.shaders[shaderName] && _core_shader_js__WEBPACK_IMPORTED_MODULE_2__.shaders[shaderName].Shader;
     var shaderInstance;
     if (!Shader) {
       throw new Error('Unknown shader ' + shaderName);
@@ -11934,7 +11955,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
    * Dispose of it from memory and unsubscribe from scene updates.
    */
   remove: function () {
-    var defaultMaterial = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MeshBasicMaterial();
+    var defaultMaterial = new three__WEBPACK_IMPORTED_MODULE_3__.MeshBasicMaterial();
     var material = this.material;
     var object3D = this.el.getObject3D('mesh');
     if (object3D) {
@@ -11946,9 +11967,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
    * (Re)create new material. Has side-effects of setting `this.material` and updating
    * material registration in scene.
    *
-   * @param {object} data - Material component data.
-   * @param {object} type - Material type to create.
-   * @returns {object} Material.
+   * @param {THREE.Material} material - Material to register.
    */
   setMaterial: function (material) {
     var el = this.el;
@@ -11987,16 +12006,16 @@ function parseSide(side) {
   switch (side) {
     case 'back':
       {
-        return _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].BackSide;
+        return three__WEBPACK_IMPORTED_MODULE_3__.BackSide;
       }
     case 'double':
       {
-        return _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].DoubleSide;
+        return three__WEBPACK_IMPORTED_MODULE_3__.DoubleSide;
       }
     default:
       {
         // Including case `front`.
-        return _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].FrontSide;
+        return three__WEBPACK_IMPORTED_MODULE_3__.FrontSide;
       }
   }
 }
@@ -12004,31 +12023,30 @@ function parseSide(side) {
 /**
  * Return a three.js constant determining blending
  *
- * @param {string} [blending=normal]
- * - `none`, additive`, `subtractive`,`multiply` or `normal`.
+ * @param {string} [blending=normal] - `none`, additive`, `subtractive`,`multiply` or `normal`.
  * @returns {number}
  */
 function parseBlending(blending) {
   switch (blending) {
     case 'none':
       {
-        return _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].NoBlending;
+        return three__WEBPACK_IMPORTED_MODULE_3__.NoBlending;
       }
     case 'additive':
       {
-        return _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].AdditiveBlending;
+        return three__WEBPACK_IMPORTED_MODULE_3__.AdditiveBlending;
       }
     case 'subtractive':
       {
-        return _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].SubtractiveBlending;
+        return three__WEBPACK_IMPORTED_MODULE_3__.SubtractiveBlending;
       }
     case 'multiply':
       {
-        return _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MultiplyBlending;
+        return three__WEBPACK_IMPORTED_MODULE_3__.MultiplyBlending;
       }
     default:
       {
-        return _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].NormalBlending;
+        return three__WEBPACK_IMPORTED_MODULE_3__.NormalBlending;
       }
   }
 }
@@ -12061,10 +12079,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
-/* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../constants/index.js */ "./src/constants/index.js");
-/* harmony import */ var _utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/tracked-controls.js */ "./src/utils/tracked-controls.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
+/* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants/index.js */ "./src/constants/index.js");
+/* harmony import */ var _utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/tracked-controls.js */ "./src/utils/tracked-controls.js");
 
 
 
@@ -12074,8 +12092,8 @@ __webpack_require__.r(__webpack_exports__);
 var GAMEPAD_ID_PREFIX = 'oculus-touch';
 
 // First generation model URL.
-var TOUCH_CONTROLLER_MODEL_BASE_URL = _constants_index_js__WEBPACK_IMPORTED_MODULE_2__.AFRAME_CDN_ROOT + 'controllers/oculus/oculus-touch-controller-';
-var META_CONTROLLER_MODEL_BASE_URL = _constants_index_js__WEBPACK_IMPORTED_MODULE_2__.AFRAME_CDN_ROOT + 'controllers/meta/';
+var TOUCH_CONTROLLER_MODEL_BASE_URL = _constants_index_js__WEBPACK_IMPORTED_MODULE_1__.AFRAME_CDN_ROOT + 'controllers/oculus/oculus-touch-controller-';
+var META_CONTROLLER_MODEL_BASE_URL = _constants_index_js__WEBPACK_IMPORTED_MODULE_1__.AFRAME_CDN_ROOT + 'controllers/meta/';
 var OCULUS_TOUCH_CONFIG = {
   left: {
     modelUrl: TOUCH_CONTROLLER_MODEL_BASE_URL + 'left.gltf',
@@ -12091,8 +12109,8 @@ var OCULUS_TOUCH_CONFIG = {
         z: -1
       }
     },
-    modelPivotOffset: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3(-0.005, 0.036, -0.037),
-    modelPivotRotation: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Euler(Math.PI / 4.5, 0, 0)
+    modelPivotOffset: new three__WEBPACK_IMPORTED_MODULE_3__.Vector3(-0.005, 0.036, -0.037),
+    modelPivotRotation: new three__WEBPACK_IMPORTED_MODULE_3__.Euler(Math.PI / 4.5, 0, 0)
   },
   right: {
     modelUrl: TOUCH_CONTROLLER_MODEL_BASE_URL + 'right.gltf',
@@ -12108,8 +12126,8 @@ var OCULUS_TOUCH_CONFIG = {
         z: -1
       }
     },
-    modelPivotOffset: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3(0.005, 0.036, -0.037),
-    modelPivotRotation: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Euler(Math.PI / 4.5, 0, 0)
+    modelPivotOffset: new three__WEBPACK_IMPORTED_MODULE_3__.Vector3(0.005, 0.036, -0.037),
+    modelPivotRotation: new three__WEBPACK_IMPORTED_MODULE_3__.Euler(Math.PI / 4.5, 0, 0)
   }
 };
 var CONTROLLER_DEFAULT = 'oculus-touch';
@@ -12130,8 +12148,8 @@ var CONTROLLER_PROPERTIES = {
           z: -1
         }
       },
-      modelPivotOffset: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3(0, -0.007, -0.021),
-      modelPivotRotation: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Euler(-Math.PI / 4, 0, 0)
+      modelPivotOffset: new three__WEBPACK_IMPORTED_MODULE_3__.Vector3(0, -0.007, -0.021),
+      modelPivotRotation: new three__WEBPACK_IMPORTED_MODULE_3__.Euler(-Math.PI / 4, 0, 0)
     },
     right: {
       modelUrl: TOUCH_CONTROLLER_MODEL_BASE_URL + 'gen2-right.gltf',
@@ -12147,8 +12165,8 @@ var CONTROLLER_PROPERTIES = {
           z: -1
         }
       },
-      modelPivotOffset: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3(0, -0.007, -0.021),
-      modelPivotRotation: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Euler(-Math.PI / 4, 0, 0)
+      modelPivotOffset: new three__WEBPACK_IMPORTED_MODULE_3__.Vector3(0, -0.007, -0.021),
+      modelPivotRotation: new three__WEBPACK_IMPORTED_MODULE_3__.Euler(-Math.PI / 4, 0, 0)
     }
   },
   'oculus-touch-v3': {
@@ -12166,8 +12184,8 @@ var CONTROLLER_PROPERTIES = {
           z: -0.7945567170519814
         }
       },
-      modelPivotOffset: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3(0, 0, 0),
-      modelPivotRotation: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Euler(0, 0, 0)
+      modelPivotOffset: new three__WEBPACK_IMPORTED_MODULE_3__.Vector3(0, 0, 0),
+      modelPivotRotation: new three__WEBPACK_IMPORTED_MODULE_3__.Euler(0, 0, 0)
     },
     right: {
       modelUrl: TOUCH_CONTROLLER_MODEL_BASE_URL + 'v3-right.glb',
@@ -12183,8 +12201,8 @@ var CONTROLLER_PROPERTIES = {
           z: -0.7945567170519814
         }
       },
-      modelPivotOffset: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3(0, 0, 0),
-      modelPivotRotation: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Euler(0, 0, 0)
+      modelPivotOffset: new three__WEBPACK_IMPORTED_MODULE_3__.Vector3(0, 0, 0),
+      modelPivotRotation: new three__WEBPACK_IMPORTED_MODULE_3__.Euler(0, 0, 0)
     }
   },
   'meta-quest-touch-pro': {
@@ -12202,8 +12220,8 @@ var CONTROLLER_PROPERTIES = {
           z: -0.7945567170519814
         }
       },
-      modelPivotOffset: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3(0, 0, 0),
-      modelPivotRotation: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Euler(0, 0, 0)
+      modelPivotOffset: new three__WEBPACK_IMPORTED_MODULE_3__.Vector3(0, 0, 0),
+      modelPivotRotation: new three__WEBPACK_IMPORTED_MODULE_3__.Euler(0, 0, 0)
     },
     right: {
       modelUrl: META_CONTROLLER_MODEL_BASE_URL + 'quest-touch-pro-right.glb',
@@ -12219,8 +12237,8 @@ var CONTROLLER_PROPERTIES = {
           z: -0.7945567170519814
         }
       },
-      modelPivotOffset: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3(0, 0, 0),
-      modelPivotRotation: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Euler(0, 0, 0)
+      modelPivotOffset: new three__WEBPACK_IMPORTED_MODULE_3__.Vector3(0, 0, 0),
+      modelPivotRotation: new three__WEBPACK_IMPORTED_MODULE_3__.Euler(0, 0, 0)
     }
   },
   'meta-quest-touch-plus': {
@@ -12238,8 +12256,8 @@ var CONTROLLER_PROPERTIES = {
           z: -0.7945567170519814
         }
       },
-      modelPivotOffset: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3(0, 0, 0),
-      modelPivotRotation: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Euler(0, 0, 0)
+      modelPivotOffset: new three__WEBPACK_IMPORTED_MODULE_3__.Vector3(0, 0, 0),
+      modelPivotRotation: new three__WEBPACK_IMPORTED_MODULE_3__.Euler(0, 0, 0)
     },
     right: {
       modelUrl: META_CONTROLLER_MODEL_BASE_URL + 'quest-touch-plus-right.glb',
@@ -12255,8 +12273,8 @@ var CONTROLLER_PROPERTIES = {
           z: -0.7945567170519814
         }
       },
-      modelPivotOffset: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3(0, 0, 0),
-      modelPivotRotation: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Euler(0, 0, 0)
+      modelPivotOffset: new three__WEBPACK_IMPORTED_MODULE_3__.Vector3(0, 0, 0),
+      modelPivotRotation: new three__WEBPACK_IMPORTED_MODULE_3__.Euler(0, 0, 0)
     }
   }
 };
@@ -12321,21 +12339,21 @@ var componentConfig = {
   init: function () {
     var self = this;
     this.onButtonDown = function (evt) {
-      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.onButtonEvent)(evt.detail.id, 'down', self, self.data.hand);
+      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.onButtonEvent)(evt.detail.id, 'down', self, self.data.hand);
     };
     this.onButtonUp = function (evt) {
-      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.onButtonEvent)(evt.detail.id, 'up', self, self.data.hand);
+      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.onButtonEvent)(evt.detail.id, 'up', self, self.data.hand);
     };
     this.onButtonTouchStart = function (evt) {
-      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.onButtonEvent)(evt.detail.id, 'touchstart', self, self.data.hand);
+      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.onButtonEvent)(evt.detail.id, 'touchstart', self, self.data.hand);
     };
     this.onButtonTouchEnd = function (evt) {
-      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.onButtonEvent)(evt.detail.id, 'touchend', self, self.data.hand);
+      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.onButtonEvent)(evt.detail.id, 'touchend', self, self.data.hand);
     };
     this.controllerPresent = false;
     this.previousButtonValues = {};
     this.bindMethods();
-    this.triggerEuler = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Euler();
+    this.triggerEuler = new three__WEBPACK_IMPORTED_MODULE_3__.Euler();
   },
   addEventListeners: function () {
     var el = this.el;
@@ -12366,7 +12384,7 @@ var componentConfig = {
     if (controllerObject3D) {
       controllerObject3D.visible = false;
     }
-    (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.checkControllerPresentAndSetup)(this, GAMEPAD_ID_PREFIX, {
+    (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.checkControllerPresentAndSetup)(this, GAMEPAD_ID_PREFIX, {
       hand: this.data.hand,
       iterateControllerProfiles: true
     });
@@ -12564,7 +12582,7 @@ var componentConfig = {
     };
   },
   onAxisMoved: function (evt) {
-    (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.emitIfAxesChanged)(this, this.mapping[this.data.hand].axes, evt);
+    (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.emitIfAxesChanged)(this, this.mapping[this.data.hand].axes, evt);
   },
   onThumbstickMoved: function (evt) {
     if (!this.buttonMeshes || !this.buttonMeshes.thumbstick) {
@@ -12609,8 +12627,8 @@ var componentConfig = {
     }
   }
 };
-(0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerComponent)('oculus-touch-controls', componentConfig);
-var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerComponent)('meta-touch-controls', componentConfig);
+(0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerComponent)('oculus-touch-controls', componentConfig);
+var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerComponent)('meta-touch-controls', componentConfig);
 
 /**
  * Some of the controller models share the same material for different parts (buttons, triggers...).
@@ -12637,11 +12655,13 @@ function cloneMeshMaterial(object3d) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three_addons_math_OBB_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three/addons/math/OBB.js */ "./node_modules/three/examples/jsm/math/OBB.js");
+/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 
 
-(0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerComponent)('obb-collider', {
+
+(0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerComponent)('obb-collider', {
   schema: {
     size: {
       default: 0
@@ -12657,10 +12677,10 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   init: function () {
-    this.previousScale = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3().copy(this.el.object3D.scale);
-    this.auxEuler = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Euler();
-    this.boundingBox = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Box3();
-    this.boundingBoxSize = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
+    this.previousScale = new three__WEBPACK_IMPORTED_MODULE_1__.Vector3().copy(this.el.object3D.scale);
+    this.auxEuler = new three__WEBPACK_IMPORTED_MODULE_1__.Euler();
+    this.boundingBox = new three__WEBPACK_IMPORTED_MODULE_1__.Box3();
+    this.boundingBoxSize = new three__WEBPACK_IMPORTED_MODULE_1__.Vector3();
     this.updateCollider = this.updateCollider.bind(this);
     this.onModelLoaded = this.onModelLoaded.bind(this);
     this.updateBoundingBox = this.updateBoundingBox.bind(this);
@@ -12691,8 +12711,8 @@ __webpack_require__.r(__webpack_exports__);
       return;
     }
     this.el.removeObject3D('mesh');
-    box = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Box3().setFromObject(model);
-    center = box.getCenter(new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3());
+    box = new three__WEBPACK_IMPORTED_MODULE_1__.Box3().setFromObject(model);
+    center = box.getCenter(new three__WEBPACK_IMPORTED_MODULE_1__.Vector3());
     model.position.x += model.position.x - center.x;
     model.position.y += model.position.y - center.y;
     model.position.z += model.position.z - center.z;
@@ -12701,8 +12721,8 @@ __webpack_require__.r(__webpack_exports__);
   updateCollider: function () {
     var el = this.el;
     var boundingBoxSize = this.boundingBoxSize;
-    var aabb = this.aabb = this.aabb || new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].OBB();
-    this.obb = this.obb || new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].OBB();
+    var aabb = this.aabb = this.aabb || new three_addons_math_OBB_js__WEBPACK_IMPORTED_MODULE_2__.OBB();
+    this.obb = this.obb || new three_addons_math_OBB_js__WEBPACK_IMPORTED_MODULE_2__.OBB();
 
     // Defer if entity has not yet loaded.
     if (!el.hasLoaded) {
@@ -12729,7 +12749,7 @@ __webpack_require__.r(__webpack_exports__);
 
     // Destroy current geometry.
     renderColliderMesh.geometry.dispose();
-    renderColliderMesh.geometry = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].BoxGeometry(boundingBoxSize.x, boundingBoxSize.y, boundingBoxSize.z);
+    renderColliderMesh.geometry = new three__WEBPACK_IMPORTED_MODULE_1__.BoxGeometry(boundingBoxSize.x, boundingBoxSize.y, boundingBoxSize.z);
   },
   hideCollider: function () {
     if (!this.renderColliderMesh) {
@@ -12742,10 +12762,10 @@ __webpack_require__.r(__webpack_exports__);
     var renderColliderGeometry;
     var renderColliderMesh;
     boundingBoxSize = this.boundingBoxSize;
-    renderColliderGeometry = this.renderColliderGeometry = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].BoxGeometry(boundingBoxSize.x, boundingBoxSize.y, boundingBoxSize.z);
-    renderColliderMesh = this.renderColliderMesh = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Mesh(renderColliderGeometry, new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MeshLambertMaterial({
+    renderColliderGeometry = this.renderColliderGeometry = new three__WEBPACK_IMPORTED_MODULE_1__.BoxGeometry(boundingBoxSize.x, boundingBoxSize.y, boundingBoxSize.z);
+    renderColliderMesh = this.renderColliderMesh = new three__WEBPACK_IMPORTED_MODULE_1__.Mesh(renderColliderGeometry, new three__WEBPACK_IMPORTED_MODULE_1__.MeshLambertMaterial({
       color: 0x00ff00,
-      side: _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].DoubleSide
+      side: three__WEBPACK_IMPORTED_MODULE_1__.DoubleSide
     }));
     renderColliderMesh.matrixAutoUpdate = false;
     renderColliderMesh.matrixWorldAutoUpdate = false;
@@ -12754,11 +12774,11 @@ __webpack_require__.r(__webpack_exports__);
     this.el.sceneEl.object3D.add(renderColliderMesh);
   },
   updateBoundingBox: function () {
-    var auxPosition = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
-    var auxScale = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
-    var auxQuaternion = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Quaternion();
-    var identityQuaternion = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Quaternion();
-    var auxMatrix = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Matrix4();
+    var auxPosition = new three__WEBPACK_IMPORTED_MODULE_1__.Vector3();
+    var auxScale = new three__WEBPACK_IMPORTED_MODULE_1__.Vector3();
+    var auxQuaternion = new three__WEBPACK_IMPORTED_MODULE_1__.Quaternion();
+    var identityQuaternion = new three__WEBPACK_IMPORTED_MODULE_1__.Quaternion();
+    var auxMatrix = new three__WEBPACK_IMPORTED_MODULE_1__.Matrix4();
     return function () {
       var auxEuler = this.auxEuler;
       var boundingBox = this.boundingBox;
@@ -12818,10 +12838,10 @@ __webpack_require__.r(__webpack_exports__);
     return this.trackedObject3D;
   },
   tick: function () {
-    var auxPosition = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
-    var auxScale = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
-    var auxQuaternion = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Quaternion();
-    var auxMatrix = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Matrix4();
+    var auxPosition = new three__WEBPACK_IMPORTED_MODULE_1__.Vector3();
+    var auxScale = new three__WEBPACK_IMPORTED_MODULE_1__.Vector3();
+    var auxQuaternion = new three__WEBPACK_IMPORTED_MODULE_1__.Quaternion();
+    var auxMatrix = new three__WEBPACK_IMPORTED_MODULE_1__.Matrix4();
     return function () {
       var obb = this.obb;
       var renderColliderMesh = this.renderColliderMesh;
@@ -12867,9 +12887,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three_addons_loaders_OBJLoader_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three/addons/loaders/OBJLoader.js */ "./node_modules/three/examples/jsm/loaders/OBJLoader.js");
+/* harmony import */ var three_addons_loaders_MTLLoader_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three/addons/loaders/MTLLoader.js */ "./node_modules/three/examples/jsm/loaders/MTLLoader.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
+
+
 
 
 
@@ -12886,8 +12910,8 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
   init: function () {
     var self = this;
     this.model = null;
-    this.objLoader = new _lib_three_js__WEBPACK_IMPORTED_MODULE_2__["default"].OBJLoader();
-    this.mtlLoader = new _lib_three_js__WEBPACK_IMPORTED_MODULE_2__["default"].MTLLoader(this.objLoader.manager);
+    this.objLoader = new three_addons_loaders_OBJLoader_js__WEBPACK_IMPORTED_MODULE_2__.OBJLoader();
+    this.mtlLoader = new three_addons_loaders_MTLLoader_js__WEBPACK_IMPORTED_MODULE_3__.MTLLoader(this.objLoader.manager);
     // Allow cross-origin images to be loaded.
     this.mtlLoader.crossOrigin = '';
     this.el.addEventListener('componentinitialized', function (evt) {
@@ -12972,7 +12996,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
       return;
     }
     this.model.traverse(function (child) {
-      if (child instanceof _lib_three_js__WEBPACK_IMPORTED_MODULE_2__["default"].Mesh) {
+      if (child instanceof three__WEBPACK_IMPORTED_MODULE_4__.Mesh) {
         child.material = material.material;
       }
     });
@@ -13195,9 +13219,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../constants/index.js */ "./src/constants/index.js");
-/* harmony import */ var _utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/tracked-controls.js */ "./src/utils/tracked-controls.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants/index.js */ "./src/constants/index.js");
+/* harmony import */ var _utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/tracked-controls.js */ "./src/utils/tracked-controls.js");
 
 
 
@@ -13207,7 +13231,7 @@ __webpack_require__.r(__webpack_exports__);
 // https://github.com/immersive-web/webxr-input-profiles/tree/master/packages/registry
 // TODO: Add a more robust system for deriving gamepad name.
 var GAMEPAD_ID = 'pico-4';
-var PICO_MODEL_GLB_BASE_URL = _constants_index_js__WEBPACK_IMPORTED_MODULE_2__.AFRAME_CDN_ROOT + 'controllers/pico/pico4/';
+var PICO_MODEL_GLB_BASE_URL = _constants_index_js__WEBPACK_IMPORTED_MODULE_1__.AFRAME_CDN_ROOT + 'controllers/pico/pico4/';
 
 /**
  * Button IDs:
@@ -13252,16 +13276,16 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     var self = this;
     this.onButtonChanged = this.onButtonChanged.bind(this);
     this.onButtonDown = function (evt) {
-      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.onButtonEvent)(evt.detail.id, 'down', self, self.data.hand);
+      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.onButtonEvent)(evt.detail.id, 'down', self, self.data.hand);
     };
     this.onButtonUp = function (evt) {
-      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.onButtonEvent)(evt.detail.id, 'up', self, self.data.hand);
+      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.onButtonEvent)(evt.detail.id, 'up', self, self.data.hand);
     };
     this.onButtonTouchEnd = function (evt) {
-      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.onButtonEvent)(evt.detail.id, 'touchend', self, self.data.hand);
+      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.onButtonEvent)(evt.detail.id, 'touchend', self, self.data.hand);
     };
     this.onButtonTouchStart = function (evt) {
-      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.onButtonEvent)(evt.detail.id, 'touchstart', self, self.data.hand);
+      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.onButtonEvent)(evt.detail.id, 'touchstart', self, self.data.hand);
     };
     this.bindMethods();
   },
@@ -13308,7 +13332,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
   },
   checkIfControllerPresent: function () {
     var data = this.data;
-    (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.checkControllerPresentAndSetup)(this, GAMEPAD_ID, {
+    (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.checkControllerPresentAndSetup)(this, GAMEPAD_ID, {
       index: this.controllerIndex,
       hand: data.hand
     });
@@ -13360,11 +13384,11 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     this.el.emit('controllermodelready', {
       name: 'pico-controls',
       model: this.data.model,
-      rayOrigin: new _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].Vector3(0, 0, 0)
+      rayOrigin: new three__WEBPACK_IMPORTED_MODULE_3__.Vector3(0, 0, 0)
     });
   },
   onAxisMoved: function (evt) {
-    (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.emitIfAxesChanged)(this, this.mapping[this.data.hand].axes, evt);
+    (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.emitIfAxesChanged)(this, this.mapping[this.data.hand].axes, evt);
   }
 });
 
@@ -13411,15 +13435,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
-/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
+/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 /* global MutationObserver */
 
 
 
 
-var warn = _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.debug('components:raycaster:warn');
+var warn = _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.debug('components:raycaster:warn');
 
 // Defines selectors that should be 'safe' for the MutationObserver used to
 // refresh the whitelist. Matches classnames, IDs, and presence of attributes.
@@ -13454,7 +13478,7 @@ var EVENTS = {
  * @member {number} prevCheckTime - Previous time intersection was checked. To help interval.
  * @member {object} raycaster - three.js Raycaster.
  */
-var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerComponent)('raycaster', {
+var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerComponent)('raycaster', {
   schema: {
     autoRefresh: {
       default: true
@@ -13501,7 +13525,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
   multiple: true,
   init: function () {
     this.clearedIntersectedEls = [];
-    this.unitLineEndVec3 = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
+    this.unitLineEndVec3 = new three__WEBPACK_IMPORTED_MODULE_2__.Vector3();
     this.intersectedEls = [];
     this.intersections = [];
     this.newIntersectedEls = [];
@@ -13510,14 +13534,14 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
     this.prevCheckTime = undefined;
     this.prevIntersectedEls = [];
     this.rawIntersections = [];
-    this.raycaster = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Raycaster();
+    this.raycaster = new three__WEBPACK_IMPORTED_MODULE_2__.Raycaster();
     this.updateOriginDirection();
     this.setDirty = this.setDirty.bind(this);
     this.updateLine = this.updateLine.bind(this);
     this.observer = new MutationObserver(this.setDirty);
     this.dirty = true;
-    this.lineEndVec3 = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
-    this.otherLineEndVec3 = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
+    this.lineEndVec3 = new three__WEBPACK_IMPORTED_MODULE_2__.Vector3();
+    this.otherLineEndVec3 = new three__WEBPACK_IMPORTED_MODULE_2__.Vector3();
     this.lineData = {
       end: this.lineEndVec3
     };
@@ -13741,7 +13765,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
   /**
    * Return the most recent intersection details for a given entity, if any.
    * @param {AEntity} el
-   * @return {Object}
+   * @returns {object|null}
    */
   getIntersection: function (el) {
     var i;
@@ -13759,8 +13783,8 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
    * direction offsets.
    */
   updateOriginDirection: function () {
-    var direction = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
-    var originVec3 = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
+    var direction = new three__WEBPACK_IMPORTED_MODULE_2__.Vector3();
+    var originVec3 = new three__WEBPACK_IMPORTED_MODULE_2__.Vector3();
 
     // Closure to make quaternion/vector3 objects private.
     return function updateOriginDirection() {
@@ -13830,8 +13854,8 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
    * Only push children defined as component attachments (e.g., setObject3D),
    * NOT actual children in the scene graph hierarchy.
    *
-   * @param  {Array<Element>} els
-   * @return {Array<THREE.Object3D>}
+   * @param {Array<Element>} els
+   * @returns {Array<THREE.Object3D>}
    */
   flattenObject3DMaps: function (els) {
     var key;
@@ -13894,12 +13918,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 
 
-var degToRad = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.degToRad;
-var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerComponent)('rotation', {
+var degToRad = three__WEBPACK_IMPORTED_MODULE_1__.MathUtils.degToRad;
+var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerComponent)('rotation', {
   schema: {
     type: 'vec3'
   },
@@ -13965,16 +13989,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../core/component.js */ "./src/core/component.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../core/component.js */ "./src/core/component.js");
 /* global ImageData, Map, Set */
 
 
 var arrowURL = 'data:image/webp;base64,UklGRkQHAABXRUJQVlA4WAoAAAAQAAAA/wEA/wEAQUxQSL0DAAARDzD/ERGCjrY9sYYFfgo6aa1kJ7K0w9Lo3AadLSVeFxevQwj5kuM8RfR/Atw/C0+ozB/oUBrloFZs6ElSW88j1KA4yExNWQaqRZquIDF0JYmlq0hAuUDTFu66tng3teW7pa3cQf1V1edvur54M/Slm6Wv3Gx9zw0MXlQLntcsBN6wkHjTQuYtC4W3LTw8mGRVG57TbAROtxHfZNhInGkjc5aNwtk2Hg6Mvki14k+NkZzCwQgCxalcAv3kddRTPI1DcUrXId1FLf1uHpzaQz4tquhZVLlKesbVpqKeTj0n0F5PpXDlFN9UqmhalL/ImuZFo6KmToWLoKlddMprqlS8cKovBvHo2kTiFV2LN4msaxKZl3QNiair8xYRdDWivIvXVXmbcMqJ51UebZuFXxZt6xd4laxtciqRtA3Cv0nU1t+kEUFbI8JvCa+tvkm3FDlO/W+OR99+kWEp/YYo+tYfTVnf/K8cE/F///3vv//993eeL+a+uvjawLcX3xjYvJotBFY3kVjTRGFtE+BU2AiMbiQyhpHMWEYeBozAH5qNBYRDB5KBCaTDBKKBAZTDBoKBDjwHAN5ABeCJBsAZcAAC0YHHxAYSMYBiYgGZWEA2MYFCbCCZGAAIANFEB+AnYgMQTDQAYSJ2AN5EBZAm4gDgTDgAeSIu4DGygTIRN1CMLOCZiACykQlg4jsAycgA8AO+BxCNdJyDkcbwRirDGXGnx8w+FDPrkM3MQ9JQZMYhiiwV/RDMtIM3U1/DmXHUo+IR2kSR2ToWkQ1NIn2qf2J8LCqJKiDUiSADHY3whirhdHgZ94HKaR97PhE+twEUJUFoAcgyTct8hfSxSkShASDKdMJ/ritKHwgyQ0sD4D/miCxU5SbhOOUDTnZpccCjYP/i0bZ/8bAgtVGEoGapWIQXyzKVKLwgNJFk2rtMIgoNRJlOZF7SNSSyUEeQmbxBFKEmtYjEe8S8zOZ1AkJVCmS88FJOtF40Ksg4oUaFiygk3C8qlTVNyl8UTevCUdAE2t14PfVqU1FPp57TopKeQZWromddTQp6QOfTOEQt/ZDuipZ11w/wOiqO8dRORcc6BQEkDQMClaHcn5wV9yLbxsNZNgpn2sicYSNxuo34Js1G4FQbnuNsOPa28PCWhcKbFjJvWEi8ZiHwqgXPcxbc5db33Cx95WboSzddX7yp+vyN0+eul7ZyN7Xlu64t3jVt4c5pc4JLV5EYupJE0xUknC4nOjVlmaYpyLit53HCQ0+ScnqceNcS5dzUkd0/CwMAVlA4IGADAAAQXwCdASoAAgACP8ne6Wy/tjCpqJ/IA/A5CWlu4XYBG/Pz8AfwD8APz//f3v8E1fuHZnxKYACtfuHZnxKYACrYTb5mOslhxu843ecbvON3nG7zjd3a0VCn7G1MABVxwH/Xd25gAK1+4dmfEpe2+PHhQaj75++riG6FuYACtfuHZnxKYACRrK3q9xO8Ss3uWKnMhs/rDF1hi6wxdYYusMXWGI5QRcCFDZog5OgqNlse1NDuz/UoFa/cOzPiUwAEsAOK4/nu5eZHK2tlXxJfNYlMABWv3Dsz4bvNJ5YA/LtxJ38SmAArX7h2Z8Sk5vdZUYv7mZPiUwAFa/cOzPh21s5OgZxf1mfEpemRyFr/rM+JS9noA/LtxJ38SmAAlUJIotzAASn6TjdhK+D3Dsz4dyvB7h2Z8O2tnJ0DOL+sz4lL2nKLT4lL/+iSLOocxq639w7M34MNZdm55uJ8v8ra2cpVZnxKTq2F3PN/cNksAfl24k7+JTAASqrD37h2Z7b1W+VtbOUqsz4lJ1bC7nm/uGyWAPy7cSd/EpgAJVVh79w7M9t6rfK2tnKVWZ8Sk6thdzzf3DZLAH5duJO/iUwAEqqw9+4dme29VvlbWzlKrM+JSdWwu55v7hslgD8u3EnfxKYACVVYe/cOzPbeq3ytrZylVme0kYJ8557FLerqFrzIbPrrf3DZLAH5duJO/iUvaVMS9BoaF4p7pSDFTP1XMyfElelrM0DOL+sz4eBJ13nV1OppBGPuKb4YzXQgq9uH19uS/0+JS9t9fr6ZUlQBelDG6GMgq97otb5QMPJwtKyBTbFp8Sl7b6/X0ykkawEOsgdiE6Fi0vb/Eve6xkwsmug0Z4nGNHQO8839bpTsjpz7SWIJxKagvd1QWMa6FYT1KEw3j4XDT6vJ9Xk+nyfT5Pq8n1eEmk5dinMM/9Fcfz4Z3Dsz3KD2dw7LxBRxKrqUUGQPH/7zxr1KIfNpLEJ0MZB2ITM/0Z2EFoh12NlXnEcpYcbvON3nG7zjd5xu84vfcNIAAP7+y8ceyzbVxkakPYY4lcr72fqOnDwipv+yxC71wAADBrjKnAAAAAAAAAAAAAAw7oNGHttqWONcoFN/2WIDc2pa6WVFtFYROlsaMaTXdcOjXHz93+YxAglKa4AAAAA=';
 var CAM_LAYER = 21;
 var applyPose = function () {
-  var tempQuaternion = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Quaternion();
-  var tempVec3 = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
+  var tempQuaternion = new three__WEBPACK_IMPORTED_MODULE_1__.Quaternion();
+  var tempVec3 = new three__WEBPACK_IMPORTED_MODULE_1__.Vector3();
   function applyPose(pose, object3D, offset) {
     object3D.position.copy(pose.transform.position);
     object3D.quaternion.copy(pose.transform.orientation);
@@ -13987,8 +14011,8 @@ var applyPose = function () {
 }();
 applyPose.tempFakePose = {
   transform: {
-    orientation: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Quaternion(),
-    position: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3()
+    orientation: new three__WEBPACK_IMPORTED_MODULE_1__.Quaternion(),
+    position: new three__WEBPACK_IMPORTED_MODULE_1__.Vector3()
   }
 };
 
@@ -14013,7 +14037,7 @@ applyPose.tempFakePose = {
  * will always be a transient input and as of 08/2021 all transient inputs are 'generic-touchscreen'
  *
  * @param {WebGLRenderer} renderer THREE.JS Renderer
- * @param {} hitTestSourceDetails The source information either as the information for a transient hit-test or a regular hit-test
+ * @param {object} hitTestSourceDetails The source information either as the information for a transient hit-test or a regular hit-test
  */
 function HitTest(renderer, hitTestSourceDetails) {
   this.renderer = renderer;
@@ -14060,7 +14084,6 @@ HitTest.prototype.sessionStart = function sessionStart(hitTestSourceDetails) {
  *
  * @param {Object3D} object3D object to track
  * @param {Vector3} offset offset of the object from the origin that gets subtracted
- * @returns
  */
 HitTest.prototype.anchorFromLastHitTestResult = function (object3D, offset) {
   var hitTest = this.lastHitTest;
@@ -14157,7 +14180,7 @@ HitTest.updateAnchorPoses = function (frame, refSpace) {
   HitTest.prototype.previousFrameAnchors = trackedAnchors;
 };
 var hitTestCache;
-var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerComponent)('ar-hit-test', {
+var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerComponent)('ar-hit-test', {
   schema: {
     target: {
       type: 'selector'
@@ -14190,19 +14213,19 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
     this.imageDataArray = new Uint8ClampedArray(512 * 512 * 4);
     this.imageData = new ImageData(this.imageDataArray, 512, 512);
     this.textureCache = new Map();
-    this.orthoCam = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].OrthographicCamera();
+    this.orthoCam = new three__WEBPACK_IMPORTED_MODULE_1__.OrthographicCamera();
     this.orthoCam.layers.set(CAM_LAYER);
-    this.textureTarget = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].WebGLRenderTarget(512, 512, {});
-    this.basicMaterial = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MeshBasicMaterial({
+    this.textureTarget = new three__WEBPACK_IMPORTED_MODULE_1__.WebGLRenderTarget(512, 512, {});
+    this.basicMaterial = new three__WEBPACK_IMPORTED_MODULE_1__.MeshBasicMaterial({
       color: 0x000000,
-      side: _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].DoubleSide
+      side: three__WEBPACK_IMPORTED_MODULE_1__.DoubleSide
     });
     this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
     this.context.imageSmoothingEnabled = false;
     this.canvas.width = 512;
     this.canvas.height = 512;
-    this.canvasTexture = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].CanvasTexture(this.canvas, {
+    this.canvasTexture = new three__WEBPACK_IMPORTED_MODULE_1__.CanvasTexture(this.canvas, {
       alpha: true
     });
     this.canvasTexture.flipY = false;
@@ -14218,7 +14241,9 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
     this.el.sceneEl.renderer.xr.addEventListener('sessionend', function () {
       this.hitTest = null;
     }.bind(this));
-    this.el.sceneEl.renderer.xr.addEventListener('sessionstart', function () {
+
+    // Use enter-vr event instead of sessionstart so that ar-mode is set before this is called
+    this.el.sceneEl.addEventListener('enter-vr', function () {
       // Don't request Hit Test unless AR (breaks WebXR Emulator)
       if (!this.el.is('ar-mode')) {
         return;
@@ -14321,7 +14346,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
         }
       }.bind(this));
     }.bind(this));
-    this.bboxOffset = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
+    this.bboxOffset = new three__WEBPACK_IMPORTED_MODULE_1__.Vector3();
     this.update = this.update.bind(this);
     this.makeBBox();
   },
@@ -14347,15 +14372,15 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
     this.bboxNeedsUpdate = true;
   },
   makeBBox: function () {
-    var geometry = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].PlaneGeometry(1, 1);
-    var material = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MeshBasicMaterial({
+    var geometry = new three__WEBPACK_IMPORTED_MODULE_1__.PlaneGeometry(1, 1);
+    var material = new three__WEBPACK_IMPORTED_MODULE_1__.MeshBasicMaterial({
       transparent: true,
       color: 0xffffff
     });
     geometry.rotateX(-Math.PI / 2);
     geometry.rotateY(-Math.PI / 2);
-    this.bbox = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Box3();
-    this.bboxMesh = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Mesh(geometry, material);
+    this.bbox = new three__WEBPACK_IMPORTED_MODULE_1__.Box3();
+    this.bboxMesh = new three__WEBPACK_IMPORTED_MODULE_1__.Mesh(geometry, material);
     this.el.setObject3D('ar-hit-test', this.bboxMesh);
     this.bboxMesh.visible = false;
   },
@@ -14418,7 +14443,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
         if (this.textureCache.has(this.data.src)) {
           texture = this.textureCache.get(this.data.src);
         } else {
-          texture = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].TextureLoader().load(this.data.src);
+          texture = new three__WEBPACK_IMPORTED_MODULE_1__.TextureLoader().load(this.data.src);
           this.textureCache.set(this.data.src, texture);
         }
         this.bboxMesh.material.map = texture;
@@ -14469,8 +14494,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../core/component.js */ "./src/core/component.js");
-/* global THREE */
+
 
 var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerComponent)('background', {
   schema: {
@@ -14489,7 +14515,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     if (data.transparent) {
       object3D.background = null;
     } else {
-      object3D.background = new THREE.Color(data.color);
+      object3D.background = new three__WEBPACK_IMPORTED_MODULE_1__.Color(data.color);
     }
   },
   remove: function () {
@@ -14635,6 +14661,9 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
 /**
  * Create a modal dialog that request users permission to access the Device Motion API.
  *
+ * @param {string} denyText
+ * @param {string} allowText
+ * @param {string} dialogText
  * @param {function} onAllowClicked - click event handler
  * @param {function} onDenyClicked - click event handler
  *
@@ -14769,7 +14798,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../core/component.js */ "./src/core/component.js");
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../lib/three.js */ "./src/lib/three.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
 
 
 
@@ -14815,7 +14844,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     Object.keys(this.schema).forEach(function (key) {
       var value = data[key];
       if (key === 'color') {
-        value = new _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].Color(value);
+        value = new three__WEBPACK_IMPORTED_MODULE_1__.Color(value);
       }
       fog[key] = value;
     });
@@ -14842,9 +14871,9 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
 function getFog(data) {
   var fog;
   if (data.type === 'exponential') {
-    fog = new _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].FogExp2(data.color, data.density);
+    fog = new three__WEBPACK_IMPORTED_MODULE_1__.FogExp2(data.color, data.density);
   } else {
-    fog = new _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].Fog(data.color, data.near, data.far);
+    fog = new three__WEBPACK_IMPORTED_MODULE_1__.Fog(data.color, data.near, data.far);
   }
   fog.name = data.type;
   return fog;
@@ -15195,8 +15224,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../core/component.js */ "./src/core/component.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../core/component.js */ "./src/core/component.js");
 /* global XRPlane */
 
 
@@ -15208,7 +15237,7 @@ __webpack_require__.r(__webpack_exports__);
  * It requires a browser with support for the WebXR Mesh and Plane detection modules.
  *
  */
-var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerComponent)('real-world-meshing', {
+var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerComponent)('real-world-meshing', {
   schema: {
     filterLabels: {
       type: 'array'
@@ -15314,7 +15343,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
     this.createNewMeshes(newMeshes);
   },
   updateMeshes: function () {
-    var auxMatrix = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Matrix4();
+    var auxMatrix = new three__WEBPACK_IMPORTED_MODULE_1__.Matrix4();
     return function () {
       var meshPose;
       var sceneEl = this.el;
@@ -15364,7 +15393,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
     var shape;
     var polygon;
     if (mesh instanceof XRPlane) {
-      shape = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Shape();
+      shape = new three__WEBPACK_IMPORTED_MODULE_1__.Shape();
       polygon = mesh.polygon;
       for (var i = 0; i < polygon.length; ++i) {
         if (i === 0) {
@@ -15373,13 +15402,13 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
           shape.lineTo(polygon[i].x, polygon[i].z);
         }
       }
-      geometry = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].ShapeGeometry(shape);
+      geometry = new three__WEBPACK_IMPORTED_MODULE_1__.ShapeGeometry(shape);
       geometry.rotateX(Math.PI / 2);
       return geometry;
     }
-    geometry = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].BufferGeometry();
-    geometry.setAttribute('position', new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].BufferAttribute(mesh.vertices, 3));
-    geometry.setIndex(new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].BufferAttribute(mesh.indices, 1));
+    geometry = new three__WEBPACK_IMPORTED_MODULE_1__.BufferGeometry();
+    geometry.setAttribute('position', new three__WEBPACK_IMPORTED_MODULE_1__.BufferAttribute(mesh.vertices, 3));
+    geometry.setIndex(new three__WEBPACK_IMPORTED_MODULE_1__.BufferAttribute(mesh.indices, 1));
     return geometry;
   },
   initWorldMeshEntity: function (evt) {
@@ -15395,9 +15424,9 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
       }
     }
     geometry = this.initMeshGeometry(meshEntity.mesh);
-    mesh = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Mesh(geometry, new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MeshBasicMaterial({
+    mesh = new three__WEBPACK_IMPORTED_MODULE_1__.Mesh(geometry, new three__WEBPACK_IMPORTED_MODULE_1__.MeshBasicMaterial({
       color: Math.random() * 0xFFFFFF,
-      side: _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].DoubleSide
+      side: three__WEBPACK_IMPORTED_MODULE_1__.DoubleSide
     }));
     el.setObject3D('mesh', mesh);
     if (meshEntity.mesh instanceof XRPlane && this.data.planeMixin) {
@@ -15429,8 +15458,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../core/component.js */ "./src/core/component.js");
-/* global THREE, XRWebGLBinding */
+/* global XRWebGLBinding */
+
 
 
 // source: view-source:https://storage.googleapis.com/chromium-webxr-test/r886480/proposals/lighting-estimation.html
@@ -15453,9 +15484,9 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
   sceneOnly: true,
   init: function () {
     var self = this;
-    this.cubeRenderTarget = new THREE.WebGLCubeRenderTarget(16);
-    this.cubeCamera = new THREE.CubeCamera(0.1, 1000, this.cubeRenderTarget);
-    this.lightingEstimationTexture = new THREE.WebGLCubeRenderTarget(16).texture;
+    this.cubeRenderTarget = new three__WEBPACK_IMPORTED_MODULE_1__.WebGLCubeRenderTarget(16);
+    this.cubeCamera = new three__WEBPACK_IMPORTED_MODULE_1__.CubeCamera(0.1, 1000, this.cubeRenderTarget);
+    this.lightingEstimationTexture = new three__WEBPACK_IMPORTED_MODULE_1__.WebGLCubeRenderTarget(16).texture;
     this.needsVREnvironmentUpdate = true;
 
     // Update WebXR to support light-estimation
@@ -15584,7 +15615,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../core/component.js */ "./src/core/component.js");
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../lib/three.js */ "./src/lib/three.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
 /* global ImageData, URL */
 
 
@@ -15624,7 +15655,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
       return;
     }
     this.cubeMapSize = gl.getParameter(gl.MAX_CUBE_MAP_TEXTURE_SIZE);
-    this.material = new _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].RawShaderMaterial({
+    this.material = new three__WEBPACK_IMPORTED_MODULE_1__.RawShaderMaterial({
       uniforms: {
         map: {
           type: 't',
@@ -15633,25 +15664,25 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
       },
       vertexShader: VERTEX_SHADER,
       fragmentShader: FRAGMENT_SHADER,
-      side: _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].DoubleSide
+      side: three__WEBPACK_IMPORTED_MODULE_1__.DoubleSide
     });
-    this.quad = new _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].Mesh(new _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].PlaneGeometry(1, 1), this.material);
+    this.quad = new three__WEBPACK_IMPORTED_MODULE_1__.Mesh(new three__WEBPACK_IMPORTED_MODULE_1__.PlaneGeometry(1, 1), this.material);
     this.quad.visible = false;
-    this.camera = new _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].OrthographicCamera(-1 / 2, 1 / 2, 1 / 2, -1 / 2, -10000, 10000);
+    this.camera = new three__WEBPACK_IMPORTED_MODULE_1__.OrthographicCamera(-1 / 2, 1 / 2, 1 / 2, -1 / 2, -10000, 10000);
     this.canvas = document.createElement('canvas');
     this.ctx = this.canvas.getContext('2d');
     el.object3D.add(this.quad);
     this.onKeyDown = this.onKeyDown.bind(this);
   },
   getRenderTarget: function (width, height) {
-    return new _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].WebGLRenderTarget(width, height, {
+    return new three__WEBPACK_IMPORTED_MODULE_1__.WebGLRenderTarget(width, height, {
       colorSpace: this.el.sceneEl.renderer.outputColorSpace,
-      minFilter: _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].LinearFilter,
-      magFilter: _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].LinearFilter,
-      wrapS: _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].ClampToEdgeWrapping,
-      wrapT: _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].ClampToEdgeWrapping,
-      format: _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].RGBAFormat,
-      type: _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].UnsignedByteType
+      minFilter: three__WEBPACK_IMPORTED_MODULE_1__.LinearFilter,
+      magFilter: three__WEBPACK_IMPORTED_MODULE_1__.LinearFilter,
+      wrapS: three__WEBPACK_IMPORTED_MODULE_1__.ClampToEdgeWrapping,
+      wrapT: three__WEBPACK_IMPORTED_MODULE_1__.ClampToEdgeWrapping,
+      format: three__WEBPACK_IMPORTED_MODULE_1__.RGBAFormat,
+      type: three__WEBPACK_IMPORTED_MODULE_1__.UnsignedByteType
     });
   },
   resize: function (width, height) {
@@ -15708,14 +15739,14 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     } else {
       // Use ortho camera.
       camera = this.camera;
-      cubeRenderTarget = new _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].WebGLCubeRenderTarget(Math.min(this.cubeMapSize, 2048), {
-        format: _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].RGBFormat,
+      cubeRenderTarget = new three__WEBPACK_IMPORTED_MODULE_1__.WebGLCubeRenderTarget(Math.min(this.cubeMapSize, 2048), {
+        format: three__WEBPACK_IMPORTED_MODULE_1__.RGBFormat,
         generateMipmaps: true,
-        minFilter: _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].LinearMipmapLinearFilter,
-        colorSpace: _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].SRGBColorSpace
+        minFilter: three__WEBPACK_IMPORTED_MODULE_1__.LinearMipmapLinearFilter,
+        colorSpace: three__WEBPACK_IMPORTED_MODULE_1__.SRGBColorSpace
       });
       // Create cube camera and copy position from scene camera.
-      cubeCamera = new _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].CubeCamera(el.camera.near, el.camera.far, cubeRenderTarget);
+      cubeCamera = new three__WEBPACK_IMPORTED_MODULE_1__.CubeCamera(el.camera.near, el.camera.far, cubeRenderTarget);
       // Copy camera position into cube camera;
       el.camera.getWorldPosition(cubeCamera.position);
       el.camera.getWorldQuaternion(cubeCamera.quaternion);
@@ -16249,8 +16280,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 
 
 
@@ -16260,7 +16291,7 @@ __webpack_require__.r(__webpack_exports__);
  * When applied to an entity, that entity's geometry and any descendants will cast or receive
  * shadows as specified by the `cast` and `receive` properties.
  */
-var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerComponent)('shadow', {
+var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerComponent)('shadow', {
   schema: {
     cast: {
       default: true
@@ -16286,7 +16317,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerCompo
   updateDescendants: function (cast, receive) {
     var sceneEl = this.el.sceneEl;
     this.el.object3D.traverse(function (node) {
-      if (!(node instanceof _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Mesh)) {
+      if (!(node instanceof three__WEBPACK_IMPORTED_MODULE_1__.Mesh)) {
         return;
       }
       node.castShadow = cast;
@@ -16318,7 +16349,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
 
 
 
@@ -16374,8 +16405,8 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
   init: function () {
     var self = this;
     this.listener = null;
-    this.audioLoader = new _lib_three_js__WEBPACK_IMPORTED_MODULE_2__["default"].AudioLoader();
-    this.pool = new _lib_three_js__WEBPACK_IMPORTED_MODULE_2__["default"].Group();
+    this.audioLoader = new three__WEBPACK_IMPORTED_MODULE_2__.AudioLoader();
+    this.pool = new three__WEBPACK_IMPORTED_MODULE_2__.Group();
     this.loaded = false;
     this.mustPlay = false;
 
@@ -16433,7 +16464,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
         self.loaded = true;
 
         // Remove this key from cache, otherwise we can't play it again
-        _lib_three_js__WEBPACK_IMPORTED_MODULE_2__["default"].Cache.remove(data.src);
+        three__WEBPACK_IMPORTED_MODULE_2__.Cache.remove(data.src);
         if (self.data.autoplay || self.mustPlay) {
           self.playSound(self.processSound);
         }
@@ -16483,8 +16514,6 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
   },
   /**
    * Removes current sound object, creates new sound object, adds to entity.
-   *
-   * @returns {object} sound
    */
   setupSound: function () {
     var el = this.el;
@@ -16498,7 +16527,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     }
 
     // Only want one AudioListener. Cache it on the scene.
-    var listener = this.listener = sceneEl.audioListener || new _lib_three_js__WEBPACK_IMPORTED_MODULE_2__["default"].AudioListener();
+    var listener = this.listener = sceneEl.audioListener || new three__WEBPACK_IMPORTED_MODULE_2__.AudioListener();
     sceneEl.audioListener = listener;
     if (sceneEl.camera) {
       sceneEl.camera.add(listener);
@@ -16510,9 +16539,9 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     });
 
     // Create [poolSize] audio instances and attach them to pool
-    this.pool = new _lib_three_js__WEBPACK_IMPORTED_MODULE_2__["default"].Group();
+    this.pool = new three__WEBPACK_IMPORTED_MODULE_2__.Group();
     for (i = 0; i < this.data.poolSize; i++) {
-      sound = this.data.positional ? new _lib_three_js__WEBPACK_IMPORTED_MODULE_2__["default"].PositionalAudio(listener) : new _lib_three_js__WEBPACK_IMPORTED_MODULE_2__["default"].Audio(listener);
+      sound = this.data.positional ? new three__WEBPACK_IMPORTED_MODULE_2__.PositionalAudio(listener) : new three__WEBPACK_IMPORTED_MODULE_2__.Audio(listener);
       this.pool.add(sound);
     }
     el.setObject3D(this.attrName, this.pool);
@@ -16611,9 +16640,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var load_bmfont__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(load_bmfont__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _core_shader_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../core/shader.js */ "./src/core/shader.js");
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
-/* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../constants/index.js */ "./src/constants/index.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
+/* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../constants/index.js */ "./src/constants/index.js");
 
 
 
@@ -16621,15 +16650,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var error = _utils_index_js__WEBPACK_IMPORTED_MODULE_5__.debug('components:text:error');
-var warn = _utils_index_js__WEBPACK_IMPORTED_MODULE_5__.debug('components:text:warn');
+var error = _utils_index_js__WEBPACK_IMPORTED_MODULE_4__.debug('components:text:error');
+var warn = _utils_index_js__WEBPACK_IMPORTED_MODULE_4__.debug('components:text:warn');
 
 // 1 to match other A-Frame default widths.
 var DEFAULT_WIDTH = 1;
 
 // @bryik set anisotropy to 16. Improves look of large amounts of text when viewed from angle.
 var MAX_ANISOTROPY = 16;
-var FONT_BASE_URL = _constants_index_js__WEBPACK_IMPORTED_MODULE_6__.AFRAME_CDN_ROOT + 'fonts/';
+var FONT_BASE_URL = _constants_index_js__WEBPACK_IMPORTED_MODULE_5__.AFRAME_CDN_ROOT + 'fonts/';
 var FONTS = {
   aileronsemibold: FONT_BASE_URL + 'Aileron-Semibold.fnt',
   dejavu: FONT_BASE_URL + 'DejaVu-sdf.fnt',
@@ -16773,7 +16802,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
       this.texture = textures[data.font];
     } else {
       // Create texture per font.
-      this.texture = textures[data.font] = new _lib_three_js__WEBPACK_IMPORTED_MODULE_4__["default"].Texture();
+      this.texture = textures[data.font] = new three__WEBPACK_IMPORTED_MODULE_6__.Texture();
       this.texture.anisotropy = MAX_ANISOTROPY;
     }
 
@@ -16924,7 +16953,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
     if (this.mesh) {
       return;
     }
-    this.mesh = new _lib_three_js__WEBPACK_IMPORTED_MODULE_4__["default"].Mesh(this.geometry, this.material);
+    this.mesh = new three__WEBPACK_IMPORTED_MODULE_6__.Mesh(this.geometry, this.material);
     this.el.setObject3D(this.attrName, this.mesh);
   },
   getFontImageSrc: function () {
@@ -16938,7 +16967,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
     if (imageSrc.match(protocolRe) && imageSrc.indexOf('http') !== 0) {
       return fontSrc.replace(/(\.fnt)|(\.json)/, '.png');
     }
-    return _lib_three_js__WEBPACK_IMPORTED_MODULE_4__["default"].LoaderUtils.extractUrlBase(fontSrc) + imageSrc;
+    return three__WEBPACK_IMPORTED_MODULE_6__.LoaderUtils.extractUrlBase(fontSrc) + imageSrc;
   },
   /**
    * Update layout with anchor, alignment, baseline, and considering any meshes.
@@ -17043,7 +17072,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
       geometryUpdateData.lineHeight = data.lineHeight && isFinite(data.lineHeight) ? data.lineHeight : font.common.lineHeight;
       geometryUpdateData.text = data.value.toString().replace(newLineRegex, '\n').replace(tabRegex, '\t');
       geometryUpdateData.width = computeWidth(data.wrapPixels, data.wrapCount, font.widthFactor);
-      geometry.update(_utils_index_js__WEBPACK_IMPORTED_MODULE_5__.extend(geometryUpdateBase, data, geometryUpdateData));
+      geometry.update(_utils_index_js__WEBPACK_IMPORTED_MODULE_4__.extend(geometryUpdateBase, data, geometryUpdateData));
     };
   }()
 });
@@ -17056,15 +17085,15 @@ function parseSide(side) {
   switch (side) {
     case 'back':
       {
-        return _lib_three_js__WEBPACK_IMPORTED_MODULE_4__["default"].FrontSide;
+        return three__WEBPACK_IMPORTED_MODULE_6__.FrontSide;
       }
     case 'double':
       {
-        return _lib_three_js__WEBPACK_IMPORTED_MODULE_4__["default"].DoubleSide;
+        return three__WEBPACK_IMPORTED_MODULE_6__.DoubleSide;
       }
     default:
       {
-        return _lib_three_js__WEBPACK_IMPORTED_MODULE_4__["default"].BackSide;
+        return three__WEBPACK_IMPORTED_MODULE_6__.BackSide;
       }
   }
 }
@@ -17100,7 +17129,7 @@ function loadFont(src, yOffset) {
  */
 function loadTexture(src) {
   return new Promise(function (resolve, reject) {
-    new _lib_three_js__WEBPACK_IMPORTED_MODULE_4__["default"].ImageLoader().load(src, function (image) {
+    new three__WEBPACK_IMPORTED_MODULE_6__.ImageLoader().load(src, function (image) {
       resolve(image);
     }, undefined, function () {
       error('Error loading font image', src);
@@ -17450,14 +17479,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../constants/index.js */ "./src/constants/index.js");
-/* harmony import */ var _utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/tracked-controls.js */ "./src/utils/tracked-controls.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants/index.js */ "./src/constants/index.js");
+/* harmony import */ var _utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/tracked-controls.js */ "./src/utils/tracked-controls.js");
 
 
 
 
-var INDEX_CONTROLLER_MODEL_BASE_URL = _constants_index_js__WEBPACK_IMPORTED_MODULE_2__.AFRAME_CDN_ROOT + 'controllers/valve/index/valve-index-';
+var INDEX_CONTROLLER_MODEL_BASE_URL = _constants_index_js__WEBPACK_IMPORTED_MODULE_1__.AFRAME_CDN_ROOT + 'controllers/valve/index/valve-index-';
 var INDEX_CONTROLLER_MODEL_URL = {
   left: INDEX_CONTROLLER_MODEL_BASE_URL + 'left.glb',
   right: INDEX_CONTROLLER_MODEL_BASE_URL + 'right.glb'
@@ -17528,16 +17557,16 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     this.controllerPresent = false;
     this.onButtonChanged = this.onButtonChanged.bind(this);
     this.onButtonDown = function (evt) {
-      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.onButtonEvent)(evt.detail.id, 'down', self);
+      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.onButtonEvent)(evt.detail.id, 'down', self);
     };
     this.onButtonUp = function (evt) {
-      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.onButtonEvent)(evt.detail.id, 'up', self);
+      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.onButtonEvent)(evt.detail.id, 'up', self);
     };
     this.onButtonTouchEnd = function (evt) {
-      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.onButtonEvent)(evt.detail.id, 'touchend', self);
+      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.onButtonEvent)(evt.detail.id, 'touchend', self);
     };
     this.onButtonTouchStart = function (evt) {
-      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.onButtonEvent)(evt.detail.id, 'touchstart', self);
+      (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.onButtonEvent)(evt.detail.id, 'touchstart', self);
     };
     this.previousButtonValues = {};
     this.bindMethods();
@@ -17588,7 +17617,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
   checkIfControllerPresent: function () {
     var data = this.data;
     var controllerIndex = data.hand === 'right' ? 0 : data.hand === 'left' ? 1 : 2;
-    (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.checkControllerPresentAndSetup)(this, GAMEPAD_ID_PREFIX, {
+    (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.checkControllerPresentAndSetup)(this, GAMEPAD_ID_PREFIX, {
       index: controllerIndex,
       iterateControllerProfiles: true,
       hand: data.hand
@@ -17675,11 +17704,11 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     this.el.emit('controllermodelready', {
       name: 'valve-index-controls',
       model: this.data.model,
-      rayOrigin: new _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].Vector3(0, 0, 0)
+      rayOrigin: new three__WEBPACK_IMPORTED_MODULE_3__.Vector3(0, 0, 0)
     });
   },
   onAxisMoved: function (evt) {
-    (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__.emitIfAxesChanged)(this, this.mapping.axes, evt);
+    (0,_utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__.emitIfAxesChanged)(this, this.mapping.axes, evt);
   },
   updateModel: function (buttonName, evtName) {
     var color;
@@ -18205,15 +18234,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _constants_keyboardevent_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants/keyboardevent.js */ "./src/constants/keyboardevent.js");
-/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
-/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _constants_keyboardevent_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants/keyboardevent.js */ "./src/constants/keyboardevent.js");
+/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
+/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 
 
 
 
-var shouldCaptureKeyEvent = _utils_index_js__WEBPACK_IMPORTED_MODULE_3__.shouldCaptureKeyEvent;
+var shouldCaptureKeyEvent = _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.shouldCaptureKeyEvent;
 var CLAMP_VELOCITY = 0.00001;
 var MAX_DELTA = 0.2;
 var KEYS = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'ArrowDown'];
@@ -18221,7 +18250,7 @@ var KEYS = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowLeft', 'ArrowRight'
 /**
  * WASD component to control entities using WASD keys.
  */
-var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerComponent)('wasd-controls', {
+var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerComponent)('wasd-controls', {
   schema: {
     acceleration: {
       default: 65
@@ -18258,7 +18287,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
     // To keep track of the pressed keys.
     this.keys = {};
     this.easing = 1.1;
-    this.velocity = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
+    this.velocity = new three__WEBPACK_IMPORTED_MODULE_3__.Vector3();
 
     // Bind methods and add event listeners.
     this.onBlur = this.onBlur.bind(this);
@@ -18369,8 +18398,8 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
     }
   },
   getMovementVector: function () {
-    var directionVector = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3(0, 0, 0);
-    var rotationEuler = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Euler(0, 0, 0, 'YXZ');
+    var directionVector = new three__WEBPACK_IMPORTED_MODULE_3__.Vector3(0, 0, 0);
+    var rotationEuler = new three__WEBPACK_IMPORTED_MODULE_3__.Euler(0, 0, 0, 'YXZ');
     return function (delta) {
       var rotation = this.el.getAttribute('rotation');
       var velocity = this.velocity;
@@ -18385,7 +18414,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
       xRotation = this.data.fly ? rotation.x : 0;
 
       // Transform direction relative to heading.
-      rotationEuler.set(_lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.degToRad(xRotation), _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.degToRad(rotation.y), 0);
+      rotationEuler.set(three__WEBPACK_IMPORTED_MODULE_3__.MathUtils.degToRad(xRotation), three__WEBPACK_IMPORTED_MODULE_3__.MathUtils.degToRad(rotation.y), 0);
       directionVector.applyEuler(rotationEuler);
       return directionVector;
     };
@@ -18433,14 +18462,14 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_2__.registerCompo
     if (!shouldCaptureKeyEvent(event)) {
       return;
     }
-    code = event.code || _constants_keyboardevent_js__WEBPACK_IMPORTED_MODULE_1__.KEYCODE_TO_CODE[event.keyCode];
+    code = event.code || _constants_keyboardevent_js__WEBPACK_IMPORTED_MODULE_0__.KEYCODE_TO_CODE[event.keyCode];
     if (KEYS.indexOf(code) !== -1) {
       this.keys[code] = true;
     }
   },
   onKeyUp: function (event) {
     var code;
-    code = event.code || _constants_keyboardevent_js__WEBPACK_IMPORTED_MODULE_1__.KEYCODE_TO_CODE[event.keyCode];
+    code = event.code || _constants_keyboardevent_js__WEBPACK_IMPORTED_MODULE_0__.KEYCODE_TO_CODE[event.keyCode];
     delete this.keys[code];
   }
 });
@@ -18465,11 +18494,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 /* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../constants/index.js */ "./src/constants/index.js");
 /* harmony import */ var _utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/tracked-controls.js */ "./src/utils/tracked-controls.js");
-/* global THREE */
+
 
 
 
@@ -18572,8 +18602,8 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
 
     // Pointing poses
     this.rayOrigin = {
-      origin: new THREE.Vector3(),
-      direction: new THREE.Vector3(0, 0, -1),
+      origin: new three__WEBPACK_IMPORTED_MODULE_4__.Vector3(),
+      direction: new three__WEBPACK_IMPORTED_MODULE_4__.Vector3(0, 0, -1),
       createdFromMesh: false
     };
     el.addEventListener('controllerconnected', this.onControllerConnected);
@@ -18762,7 +18792,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     }
   },
   calculateRayOriginFromMesh: function () {
-    var quaternion = new THREE.Quaternion();
+    var quaternion = new three__WEBPACK_IMPORTED_MODULE_4__.Quaternion();
     return function (rootNode) {
       var mesh;
 
@@ -18800,7 +18830,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     };
   }(),
   lerpAxisTransform: function () {
-    var quaternion = new THREE.Quaternion();
+    var quaternion = new three__WEBPACK_IMPORTED_MODULE_4__.Quaternion();
     return function (axis, axisValue) {
       var axisMeshInfo = this.loadedMeshInfo.axisMeshes[axis];
       if (!axisMeshInfo) return;
@@ -18815,7 +18845,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     };
   }(),
   lerpButtonTransform: function () {
-    var quaternion = new THREE.Quaternion();
+    var quaternion = new three__WEBPACK_IMPORTED_MODULE_4__.Quaternion();
     return function (buttonName, buttonValue) {
       var buttonMeshInfo = this.loadedMeshInfo.buttonMeshes[buttonName];
       if (!buttonMeshInfo) return;
@@ -18931,26 +18961,30 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   getFileNameFromURL: () => (/* binding */ getFileNameFromURL),
 /* harmony export */   inferResponseType: () => (/* binding */ inferResponseType)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _a_node_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./a-node.js */ "./src/core/a-node.js");
-/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _a_node_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./a-node.js */ "./src/core/a-node.js");
+/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 /* global customElements */
 
 
 
-var fileLoader = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].FileLoader();
-var warn = (0,_utils_index_js__WEBPACK_IMPORTED_MODULE_2__.debug)('core:a-assets:warn');
+var fileLoader = new three__WEBPACK_IMPORTED_MODULE_2__.FileLoader();
+var warn = (0,_utils_index_js__WEBPACK_IMPORTED_MODULE_1__.debug)('core:a-assets:warn');
 
 /**
  * Asset management system. Handles blocking on asset loading.
  */
-class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_1__.ANode {
+class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
   constructor() {
     super();
     this.isAssets = true;
     this.fileLoader = fileLoader;
     this.timeout = null;
-    console.log('my a-assets aaa');
+    this.priorityQueues = {
+      1: [],
+      2: [],
+      3: []
+    };
   }
   doConnectedCallback() {
     var self = this;
@@ -18966,6 +19000,8 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_1__.ANode {
     if (!this.parentNode.isScene) {
       throw new Error('<a-assets> must be a child of a <a-scene>.');
     }
+    this.collectResources();
+    console.log('queue', this.priorityQueues);
 
     // Wait for <img>s.
     imgEls = this.querySelectorAll('img');
@@ -18974,7 +19010,7 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_1__.ANode {
       loaded.push(new Promise(function (resolve, reject) {
         // Set in cache because we won't be needing to call three.js loader if we have.
         // a loaded media element.
-        _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Cache.add(imgEls[i].getAttribute('src'), imgEl);
+        three__WEBPACK_IMPORTED_MODULE_2__.Cache.add(imgEls[i].getAttribute('src'), imgEl);
         if (imgEl.complete) {
           resolve();
           return;
@@ -18994,7 +19030,7 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_1__.ANode {
       loaded.push(mediaElementLoaded(mediaEl));
     }
 
-    // Wait for <a-asset-item>
+    // Wait for <a-asset-item>s
     children = this.getChildren();
     children.forEach(function (child) {
       if (!child.isAssetItem || !child.hasAttribute('src')) {
@@ -19043,13 +19079,25 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_1__.ANode {
       return false;
     });
   }
+  collectResources() {
+    const elements = this.getChildren();
+    elements.forEach(el => {
+      const priority = this.getPriority(el);
+      this.priorityQueues[priority].push(el);
+    });
+  }
+  getPriority(el) {
+    if (el.hasAttribute('priority')) return parseInt(el.getAttribute('priority'));
+    if (el.tagName === 'AUDIO' && el.autoplay) return 1;
+    return 3;
+  }
 }
 customElements.define('a-assets', AAssets);
 
 /**
  * Preload using XHRLoader for any type of asset.
  */
-class AAssetItem extends _a_node_js__WEBPACK_IMPORTED_MODULE_1__.ANode {
+class AAssetItem extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
   constructor() {
     super();
     this.data = null;
@@ -19061,7 +19109,7 @@ class AAssetItem extends _a_node_js__WEBPACK_IMPORTED_MODULE_1__.ANode {
     fileLoader.setResponseType(this.getAttribute('response-type') || inferResponseType(src));
     fileLoader.load(src, function handleOnLoad(response) {
       self.data = response;
-      _a_node_js__WEBPACK_IMPORTED_MODULE_1__.ANode.prototype.load.call(self);
+      _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode.prototype.load.call(self);
     }, function handleOnProgress(xhr) {
       self.emit('progress', {
         loadedBytes: xhr.loaded,
@@ -19114,7 +19162,7 @@ function mediaElementLoaded(el) {
         // Store video elements only. three.js loader is used for audio elements.
         // See assetParse too.
         if (el.tagName === 'VIDEO') {
-          _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Cache.add(el.getAttribute('src'), el);
+          three__WEBPACK_IMPORTED_MODULE_2__.Cache.add(el.getAttribute('src'), el);
         }
         resolve();
       }
@@ -19147,7 +19195,7 @@ function fixUpMediaElement(mediaEl) {
  * If it is not defined, we must create and re-append a new media element <img> and
  * have the browser re-request it with `crossorigin` set.
  *
- * @param {Element} Media element (e.g., <img>, <audio>, <video>).
+ * @param {Element} mediaEl - Media element (e.g., <img>, <audio>, <video>).
  * @returns {Element} Media element to be used to listen to for loaded events.
  */
 function setCrossOrigin(mediaEl) {
@@ -19273,7 +19321,7 @@ class ACubeMap extends HTMLElement {
    * Checks for exactly six elements with [src].
    * When <img>s are used they will be prefetched.
    *
-   * @returns {Array|null} - six URLs or <img> elements if valid, else null.
+   * @returns {Array<string|Element>|undefined} six URLs or <img> elements if valid, else undefined.
    */
   validate() {
     var elements = this.querySelectorAll('[src]');
@@ -19308,17 +19356,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   AEntity: () => (/* binding */ AEntity)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _a_node_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./a-node.js */ "./src/core/a-node.js");
-/* harmony import */ var _component_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./component.js */ "./src/core/component.js");
-/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _a_node_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./a-node.js */ "./src/core/a-node.js");
+/* harmony import */ var _component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./component.js */ "./src/core/component.js");
+/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 /* global customElements */
 
 
 
 
-var debug = _utils_index_js__WEBPACK_IMPORTED_MODULE_3__.debug('core:a-entity:debug');
-var warn = _utils_index_js__WEBPACK_IMPORTED_MODULE_3__.debug('core:a-entity:warn');
+var debug = _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.debug('core:a-entity:debug');
+var warn = _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.debug('core:a-entity:warn');
 var MULTIPLE_COMPONENT_DELIMITER = '__';
 var OBJECT3D_COMPONENTS = ['position', 'rotation', 'scale', 'visible'];
 var ONCE = {
@@ -19331,12 +19379,12 @@ var ONCE = {
  *
  * To be able to take components, the scene element inherits from the entity definition.
  *
- * @member {object} components - entity's currently initialized components.
- * @member {object} object3D - three.js object.
- * @member {array} states.
- * @member {boolean} isPlaying - false if dynamic behavior of the entity is paused.
+ * @property {object} components - entity's currently initialized components.
+ * @property {THREE.Object3D} object3D - three.js object.
+ * @property {string[]} states
+ * @property {boolean} isPlaying - false if dynamic behavior of the entity is paused.
  */
-class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_1__.ANode {
+class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
   constructor() {
     super();
     this.components = {};
@@ -19345,7 +19393,7 @@ class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_1__.ANode {
     this.componentsToUpdate = {};
     this.isEntity = true;
     this.isPlaying = false;
-    this.object3D = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Group();
+    this.object3D = new three__WEBPACK_IMPORTED_MODULE_3__.Group();
     this.object3D.rotation.order = 'YXZ';
     this.object3D.el = this;
     this.object3DMap = {};
@@ -19435,12 +19483,12 @@ class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_1__.ANode {
    * Set a THREE.Object3D into the map.
    *
    * @param {string} type - Developer-set name of the type of object, will be unique per type.
-   * @param {object} obj - A THREE.Object3D.
+   * @param {THREE.Object3D} obj - A THREE.Object3D.
    */
   setObject3D(type, obj) {
     var oldObj;
     var self = this;
-    if (!(obj instanceof _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Object3D)) {
+    if (!(obj instanceof three__WEBPACK_IMPORTED_MODULE_3__.Object3D)) {
       throw new Error('`Entity.setObject3D` was called with an object that was not an instance of ' + 'THREE.Object3D.');
     }
 
@@ -19572,7 +19620,7 @@ class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_1__.ANode {
   }
 
   /**
-   * @returns {array} Direct children that are entities.
+   * @returns {Array<Element>} Direct children that are entities.
    */
   getChildEntities() {
     var children = this.children;
@@ -19599,12 +19647,12 @@ class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_1__.ANode {
     var componentInfo;
     var componentName;
     var isComponentDefined;
-    componentInfo = _utils_index_js__WEBPACK_IMPORTED_MODULE_3__.split(attrName, MULTIPLE_COMPONENT_DELIMITER);
+    componentInfo = _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.split(attrName, MULTIPLE_COMPONENT_DELIMITER);
     componentName = componentInfo[0];
     componentId = componentInfo.length > 2 ? componentInfo.slice(1).join('__') : componentInfo[1];
 
     // Not a registered component.
-    if (!_component_js__WEBPACK_IMPORTED_MODULE_2__.components[componentName]) {
+    if (!_component_js__WEBPACK_IMPORTED_MODULE_1__.components[componentName]) {
       return;
     }
 
@@ -19624,7 +19672,7 @@ class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_1__.ANode {
     this.initComponentDependencies(componentName);
 
     // Initialize component
-    component = new _component_js__WEBPACK_IMPORTED_MODULE_2__.components[componentName].Component(this, data, componentId);
+    component = new _component_js__WEBPACK_IMPORTED_MODULE_1__.components[componentName].Component(this, data, componentId);
     if (this.isPlaying) {
       component.play();
     }
@@ -19647,7 +19695,7 @@ class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_1__.ANode {
    */
   initComponentDependencies(name) {
     var self = this;
-    var component = _component_js__WEBPACK_IMPORTED_MODULE_2__.components[name];
+    var component = _component_js__WEBPACK_IMPORTED_MODULE_1__.components[name];
     var dependencies;
     var i;
 
@@ -19657,7 +19705,7 @@ class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_1__.ANode {
     }
 
     // No dependencies.
-    dependencies = _component_js__WEBPACK_IMPORTED_MODULE_2__.components[name].dependencies;
+    dependencies = _component_js__WEBPACK_IMPORTED_MODULE_1__.components[name].dependencies;
     if (!dependencies) {
       return;
     }
@@ -19706,7 +19754,7 @@ class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_1__.ANode {
    * Build data using initial components, defined attributes, mixins, and defaults.
    * Update default components before the rest.
    *
-   * @member {function} getExtraComponents - Can be implemented to include component data
+   * @property {function} getExtraComponents - Can be implemented to include component data
    *   from other sources (e.g., implemented by primitives).
    */
   updateComponents() {
@@ -19883,7 +19931,7 @@ class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_1__.ANode {
    * @param {string|object} newVal
    */
   setEntityAttribute(attr, oldVal, newVal) {
-    if (_component_js__WEBPACK_IMPORTED_MODULE_2__.components[attr] || this.components[attr]) {
+    if (_component_js__WEBPACK_IMPORTED_MODULE_1__.components[attr] || this.components[attr]) {
       this.updateComponent(attr, newVal);
       return;
     }
@@ -19965,9 +20013,9 @@ class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_1__.ANode {
    * 4. Set a value for a single-property component, mixin, or normal HTML attribute.
    *
    * @param {string} attrName - Component or attribute name.
-   * @param {*} arg1 - Can be a value, property name, CSS-style property string, or
+   * @param {any} arg1 - Can be a value, property name, CSS-style property string, or
    *   object of properties.
-   * @param {*|bool} arg2 - If arg1 is a property name, this should be a value. Otherwise,
+   * @param {any} arg2 - If arg1 is a property name, this should be a value. Otherwise,
    *   it is a boolean indicating whether to clobber previous values (defaults to false).
    */
   setAttribute(attrName, arg1, arg2) {
@@ -19982,7 +20030,7 @@ class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_1__.ANode {
     componentName = delimiterIndex > 0 ? attrName.substring(0, delimiterIndex) : attrName;
 
     // Not a component. Normal set attribute.
-    if (!_component_js__WEBPACK_IMPORTED_MODULE_2__.components[componentName]) {
+    if (!_component_js__WEBPACK_IMPORTED_MODULE_1__.components[componentName]) {
       if (attrName === 'mixin') {
         this.mixinUpdate(arg1);
       }
@@ -19996,7 +20044,7 @@ class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_1__.ANode {
     }
 
     // Determine new attributes from the arguments
-    if (typeof arg2 !== 'undefined' && typeof arg1 === 'string' && arg1.length > 0 && typeof _utils_index_js__WEBPACK_IMPORTED_MODULE_3__.styleParser.parse(arg1) === 'string') {
+    if (typeof arg2 !== 'undefined' && typeof arg1 === 'string' && arg1.length > 0 && typeof _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.styleParser.parse(arg1) === 'string') {
       // Update a single property of a multi-property component
       for (key in singlePropUpdate) {
         delete singlePropUpdate[key];
@@ -20024,7 +20072,7 @@ class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_1__.ANode {
   /**
    * Reflect component data in the DOM (as seen from the browser DOM Inspector).
    *
-   * @param {bool} recursive - Also flushToDOM on the children.
+   * @param {boolean} recursive - Also flushToDOM on the children.
    **/
   flushToDOM(recursive) {
     var components = this.components;
@@ -20118,7 +20166,8 @@ class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_1__.ANode {
 
   /**
    * Checks if the element is in a given state. e.g. el.is('alive');
-   * @type {string} state - Name of the state we want to check
+   *
+   * @param {string} state - Name of the state we want to check
    */
   is(state) {
     return this.states.indexOf(state) !== -1;
@@ -20166,7 +20215,7 @@ function checkComponentDefined(el, name) {
  * Check if any mixins contains a component.
  *
  * @param {string} name - Component name.
- * @param {array} mixinEls - Array of <a-mixin>s.
+ * @param {Array<Element>} mixinEls - Array of <a-mixin>s.
  */
 function isComponentMixedIn(name, mixinEls) {
   var i;
@@ -20195,7 +20244,7 @@ function mergeComponentData(attrValue, extraData) {
 
   // Merge multi-property data.
   if (extraData.constructor === Object) {
-    return _utils_index_js__WEBPACK_IMPORTED_MODULE_3__.extend(extraData, _utils_index_js__WEBPACK_IMPORTED_MODULE_3__.styleParser.parse(attrValue || {}));
+    return _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.extend(extraData, _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.styleParser.parse(attrValue || {}));
   }
 
   // Return data, precedence to the defined value.
@@ -20203,15 +20252,15 @@ function mergeComponentData(attrValue, extraData) {
 }
 function isComponent(componentName) {
   if (componentName.indexOf(MULTIPLE_COMPONENT_DELIMITER) !== -1) {
-    componentName = _utils_index_js__WEBPACK_IMPORTED_MODULE_3__.split(componentName, MULTIPLE_COMPONENT_DELIMITER)[0];
+    componentName = _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.split(componentName, MULTIPLE_COMPONENT_DELIMITER)[0];
   }
-  if (!_component_js__WEBPACK_IMPORTED_MODULE_2__.components[componentName]) {
+  if (!_component_js__WEBPACK_IMPORTED_MODULE_1__.components[componentName]) {
     return false;
   }
   return true;
 }
 function getRotation(entityEl) {
-  var radToDeg = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.radToDeg;
+  var radToDeg = three__WEBPACK_IMPORTED_MODULE_3__.MathUtils.radToDeg;
   var rotation = entityEl.object3D.rotation;
   var rotationObj = entityEl.rotationObj;
   rotationObj.x = radToDeg(rotation.x);
@@ -20245,9 +20294,9 @@ __webpack_require__.r(__webpack_exports__);
 var MULTIPLE_COMPONENT_DELIMITER = '__';
 
 /**
- * @member {object} componentCache - Cache of pre-parsed values. An object where the keys
+ * @property {object} componentCache - Cache of pre-parsed values. An object where the keys
  *         are component names and the values are already parsed by the component.
- * @member {object} rawAttributeCache - Cache of the raw attribute values.
+ * @property {object} rawAttributeCache - Cache of the raw attribute values.
  */
 class AMixin extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
   constructor() {
@@ -20397,8 +20446,8 @@ var knownTags = {
   'a-node': true,
   'a-entity': true
 };
-function isNode(node) {
-  return node.tagName.toLowerCase() in knownTags || node.isNode;
+function isANode(node) {
+  return node.tagName.toLowerCase() in knownTags || node.isANode;
 }
 
 /**
@@ -20412,7 +20461,7 @@ class ANode extends HTMLElement {
     super();
     this.computedMixinStr = '';
     this.hasLoaded = false;
-    this.isNode = true;
+    this.isANode = true;
     this.mixinEls = [];
   }
   connectedCallback() {
@@ -20501,7 +20550,7 @@ class ANode extends HTMLElement {
     }
 
     // Default to waiting for all nodes.
-    childFilter = childFilter || isNode;
+    childFilter = childFilter || isANode;
     // Wait for children to load (if any), then load.
     children = this.getChildren();
     childrenLoaded = children.filter(childFilter).map(function (child) {
@@ -20758,9 +20807,10 @@ var attrValueProxyHandler = {
  * by adding, removing, or updating components. Entities do not share instances
  * of components.
  *
- * @member {object} el - Reference to the entity element.
- * @member {string} attrValue - Value of the corresponding HTML attribute.
- * @member {string} id - Optional id for differentiating multiple instances on the same entity.
+ * @constructor
+ * @param {object} el - Reference to the entity element.
+ * @param {string} attrValue - Value of the corresponding HTML attribute.
+ * @param {string} id - Optional id for differentiating multiple instances on the same entity.
  */
 var Component = function (el, attrValue, id) {
   var self = this;
@@ -20973,7 +21023,7 @@ Component.prototype = {
   },
   /**
    * @param {string|object} attrValue - Passed argument from setAttribute.
-   * @param {bool} clobber - Whether or not to overwrite previous data by the attrValue.
+   * @param {boolean} clobber - Whether or not to overwrite previous data by the attrValue.
    */
   updateData: function (attrValue, clobber) {
     // Single property (including object based single property)
@@ -21393,7 +21443,8 @@ function hasBehavior(component) {
  * Wrapper for defined pause method.
  * Pause component by removing tick behavior and calling user's pause method.
  *
- * @param pauseMethod {function}
+ * @param {function} pauseMethod
+ * @returns {function}
  */
 function wrapPause(pauseMethod) {
   return function pause() {
@@ -21416,7 +21467,8 @@ function wrapPause(pauseMethod) {
  * Wrapper for defined play method.
  * Play component by adding tick behavior and calling user's play method.
  *
- * @param playMethod {function}
+ * @param {function} playMethod
+ * @returns {function}
  */
 function wrapPlay(playMethod) {
   return function play() {
@@ -21456,7 +21508,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   registerGeometry: () => (/* binding */ registerGeometry)
 /* harmony export */ });
 /* harmony import */ var _schema_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./schema.js */ "./src/core/schema.js");
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
 
 
 var processSchema = _schema_js__WEBPACK_IMPORTED_MODULE_0__.process;
@@ -21480,7 +21532,7 @@ Geometry.prototype = {
    * Called during shader initialization and is only run once.
    */
   init: function (data) {
-    this.geometry = new _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].BufferGeometry();
+    this.geometry = new three__WEBPACK_IMPORTED_MODULE_1__.BufferGeometry();
     return this.geometry;
   },
   /**
@@ -21589,12 +21641,11 @@ registerPropertyType('vec4', {
  * `schema.process` will set the property `parse` and `stringify`.
  *
  * @param {string} type - Type name.
- * @param [defaultValue=null] -
- *   Default value to use if component does not define default value.
+ * @param {any} [defaultValue=null] - Default value to use if component does not define default value.
  * @param {function} [parse=defaultParse] - Parse string function.
  * @param {function} [stringify=defaultStringify] - Stringify to DOM function.
  * @param {function} [equals=defaultEquals] - Equality comparator.
- * @param {boolean} [cachable=false] - Whether or not the parsed value of a property can be cached.
+ * @param {boolean} [cacheable=false] - Whether or not the parsed value of a property can be cached.
  */
 function registerPropertyType(type, defaultValue, parse, stringify, equals, cacheable) {
   if (type in propertyTypes) {
@@ -21927,18 +21978,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   determineComponentBehaviorOrder: () => (/* binding */ determineComponentBehaviorOrder),
 /* harmony export */   setupCanvas: () => (/* binding */ setupCanvas)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _metaTags_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./metaTags.js */ "./src/core/scene/metaTags.js");
-/* harmony import */ var _wakelock_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./wakelock.js */ "./src/core/scene/wakelock.js");
-/* harmony import */ var _loadingScreen_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./loadingScreen.js */ "./src/core/scene/loadingScreen.js");
-/* harmony import */ var _scenes_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./scenes.js */ "./src/core/scene/scenes.js");
-/* harmony import */ var _system_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../system.js */ "./src/core/system.js");
-/* harmony import */ var _component_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../component.js */ "./src/core/component.js");
-/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../utils/index.js */ "./src/utils/index.js");
-/* harmony import */ var _a_entity_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../a-entity.js */ "./src/core/a-entity.js");
-/* harmony import */ var _a_node_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../a-node.js */ "./src/core/a-node.js");
-/* harmony import */ var _postMessage_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./postMessage.js */ "./src/core/scene/postMessage.js");
-/* harmony import */ var _utils_ios_orientationchange_blank_bug_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../utils/ios-orientationchange-blank-bug.js */ "./src/utils/ios-orientationchange-blank-bug.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var _metaTags_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./metaTags.js */ "./src/core/scene/metaTags.js");
+/* harmony import */ var _wakelock_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./wakelock.js */ "./src/core/scene/wakelock.js");
+/* harmony import */ var _loadingScreen_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./loadingScreen.js */ "./src/core/scene/loadingScreen.js");
+/* harmony import */ var _scenes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./scenes.js */ "./src/core/scene/scenes.js");
+/* harmony import */ var _system_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../system.js */ "./src/core/system.js");
+/* harmony import */ var _component_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../component.js */ "./src/core/component.js");
+/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../utils/index.js */ "./src/utils/index.js");
+/* harmony import */ var _a_entity_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../a-entity.js */ "./src/core/a-entity.js");
+/* harmony import */ var _a_node_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../a-node.js */ "./src/core/a-node.js");
+/* harmony import */ var _postMessage_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./postMessage.js */ "./src/core/scene/postMessage.js");
+/* harmony import */ var _utils_ios_orientationchange_blank_bug_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../utils/ios-orientationchange-blank-bug.js */ "./src/utils/ios-orientationchange-blank-bug.js");
 /* global Promise, customElements, screen */
 
 
@@ -21954,45 +22006,39 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var warn = _utils_index_js__WEBPACK_IMPORTED_MODULE_7__.debug('core:a-scene:warn');
-var isIOS = _utils_index_js__WEBPACK_IMPORTED_MODULE_7__.device.isIOS();
-var isMobile = _utils_index_js__WEBPACK_IMPORTED_MODULE_7__.device.isMobile();
-var isWebXRAvailable = _utils_index_js__WEBPACK_IMPORTED_MODULE_7__.device.isWebXRAvailable;
+var warn = _utils_index_js__WEBPACK_IMPORTED_MODULE_6__.debug('core:a-scene:warn');
+var isIOS = _utils_index_js__WEBPACK_IMPORTED_MODULE_6__.device.isIOS();
+var isMobile = _utils_index_js__WEBPACK_IMPORTED_MODULE_6__.device.isMobile();
+var isWebXRAvailable = _utils_index_js__WEBPACK_IMPORTED_MODULE_6__.device.isWebXRAvailable;
 
 /**
  * Scene element, holds all entities.
  *
- * @member {array} behaviors - Component instances that have registered themselves to be
+ * @member {Array} behaviors - Component instances that have registered themselves to be
            updated on every tick.
  * @member {object} camera - three.js Camera object.
  * @member {object} canvas
- * @member {bool} isScene - Differentiates as scene entity as opposed to other entities.
- * @member {bool} isMobile - Whether browser is mobile (via UA detection).
+ * @member {boolean} isScene - Differentiates as scene entity as opposed to other entities.
+ * @member {boolean} isMobile - Whether browser is mobile (via UA detection).
  * @member {object} object3D - Root three.js Scene object.
  * @member {object} renderer
- * @member {bool} renderStarted
+ * @member {boolean} renderStarted
  * @member {object} systems - Registered instantiated systems.
  * @member {number} time
  */
 
-class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
+class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
   constructor() {
     var self;
     super();
     self = this;
-    self.clock = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Clock();
+    self.clock = new three__WEBPACK_IMPORTED_MODULE_11__.Clock();
     self.isIOS = isIOS;
     self.isMobile = isMobile;
     self.hasWebXR = isWebXRAvailable;
     self.isAR = false;
     self.isScene = true;
-    self.object3D = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Scene();
-    self.object3D.onAfterRender = function (renderer, scene, camera) {
-      // THREE may swap the camera used for the rendering if in VR, so we pass it to tock
-      if (self.isPlaying) {
-        self.tock(self.time, self.delta, camera);
-      }
-    };
+    self.object3D = new three__WEBPACK_IMPORTED_MODULE_11__.Scene();
     self.resize = self.resize.bind(self);
     self.render = self.render.bind(self);
     self.systems = {};
@@ -22026,14 +22072,14 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
     // Renderer initialization
     setupCanvas(this);
     this.setupRenderer();
-    _loadingScreen_js__WEBPACK_IMPORTED_MODULE_3__.setup(this, getCanvasSize);
+    _loadingScreen_js__WEBPACK_IMPORTED_MODULE_2__.setup(this, getCanvasSize);
     this.resize();
     if (!embedded) {
       this.addFullScreenStyles();
     }
-    (0,_postMessage_js__WEBPACK_IMPORTED_MODULE_10__.initPostMessageAPI)(this);
-    (0,_metaTags_js__WEBPACK_IMPORTED_MODULE_1__.inject)(this);
-    (0,_wakelock_js__WEBPACK_IMPORTED_MODULE_2__.initWakelock)(this);
+    (0,_postMessage_js__WEBPACK_IMPORTED_MODULE_9__.initPostMessageAPI)(this);
+    (0,_metaTags_js__WEBPACK_IMPORTED_MODULE_0__.inject)(this);
+    (0,_wakelock_js__WEBPACK_IMPORTED_MODULE_1__.initWakelock)(this);
 
     // Bind functions.
     this.enterVRBound = function () {
@@ -22049,11 +22095,10 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
     });
     this.initSystems();
     // Compute component order
-
-    this.componentOrder = determineComponentBehaviorOrder(_component_js__WEBPACK_IMPORTED_MODULE_6__.components, this.componentOrder);
+    this.componentOrder = determineComponentBehaviorOrder(_component_js__WEBPACK_IMPORTED_MODULE_5__.components, this.componentOrder);
     this.addEventListener('componentregistered', function () {
       // Recompute order
-      self.componentOrder = determineComponentBehaviorOrder(_component_js__WEBPACK_IMPORTED_MODULE_6__.components, self.componentOrder);
+      self.componentOrder = determineComponentBehaviorOrder(_component_js__WEBPACK_IMPORTED_MODULE_5__.components, self.componentOrder);
     });
 
     // WebXR Immersive navigation handler.
@@ -22082,7 +22127,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
     this.play();
 
     // Add to scene index.
-    _scenes_js__WEBPACK_IMPORTED_MODULE_4__["default"].push(this);
+    _scenes_js__WEBPACK_IMPORTED_MODULE_3__["default"].push(this);
   }
 
   /**
@@ -22093,7 +22138,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
 
     // Initialize camera system first.
     this.initSystem('camera');
-    for (name in _system_js__WEBPACK_IMPORTED_MODULE_5__.systems) {
+    for (name in _system_js__WEBPACK_IMPORTED_MODULE_4__.systems) {
       if (name === 'camera') {
         continue;
       }
@@ -22108,7 +22153,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
     if (this.systems[name]) {
       return;
     }
-    this.systems[name] = new _system_js__WEBPACK_IMPORTED_MODULE_5__.systems[name](this);
+    this.systems[name] = new _system_js__WEBPACK_IMPORTED_MODULE_4__.systems[name](this);
     this.systemNames.push(name);
   }
 
@@ -22117,9 +22162,9 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
    */
   disconnectedCallback() {
     // Remove from scene index.
-    var sceneIndex = _scenes_js__WEBPACK_IMPORTED_MODULE_4__["default"].indexOf(this);
+    var sceneIndex = _scenes_js__WEBPACK_IMPORTED_MODULE_3__["default"].indexOf(this);
     super.disconnectedCallback();
-    _scenes_js__WEBPACK_IMPORTED_MODULE_4__["default"].splice(sceneIndex, 1);
+    _scenes_js__WEBPACK_IMPORTED_MODULE_3__["default"].splice(sceneIndex, 1);
     window.removeEventListener('sessionend', this.resize);
     this.removeFullScreenStyles();
     this.renderer.dispose();
@@ -22181,7 +22226,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
    * For tests.
    */
   checkHeadsetConnected() {
-    return _utils_index_js__WEBPACK_IMPORTED_MODULE_7__.device.checkHeadsetConnected();
+    return _utils_index_js__WEBPACK_IMPORTED_MODULE_6__.device.checkHeadsetConnected();
   }
   enterAR() {
     var errorMessage;
@@ -22189,7 +22234,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
       errorMessage = 'Failed to enter AR mode, WebXR not supported.';
       throw new Error(errorMessage);
     }
-    if (!_utils_index_js__WEBPACK_IMPORTED_MODULE_7__.device.checkARSupport()) {
+    if (!_utils_index_js__WEBPACK_IMPORTED_MODULE_6__.device.checkARSupport()) {
       errorMessage = 'Failed to enter AR, WebXR immersive-ar mode not supported in your browser or device.';
       throw new Error(errorMessage);
     }
@@ -22197,11 +22242,11 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
   }
 
   /**
-   * Call `requestPresent` if WebVR or WebVR polyfill.
+   * Call `requestSession` if WebXR is supported.
    * Call `requestFullscreen` on desktop.
    * Handle events, states, fullscreen styles.
    *
-   * @param {bool?} useAR - if true, try immersive-ar mode
+   * @param {?boolean} useAR - if true, try immersive-ar mode
    * @returns {Promise}
    */
   enterVR(useAR, useOfferSession) {
@@ -22282,10 +22327,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
       }
       self.addFullScreenStyles();
 
-      // On mobile, the polyfill handles fullscreen.
-      // TODO: 07/16 Chromium builds break when `requestFullscreen`ing on a canvas
-      // that we are also `requestPresent`ing. Until then, don't fullscreen if headset
-      // connected.
+      // Call `requestFullscreen` on desktop
       if (!self.isMobile && !self.checkHeadsetConnected()) {
         requestFullscreen(self.canvas);
       }
@@ -22297,11 +22339,11 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
   }
 
   /**
-  * Call `exitPresent` if WebVR / WebXR or WebVR polyfill.
-  * Handle events, states, fullscreen styles.
-  *
-  * @returns {Promise}
-  */
+   * Call `xrSession.end` if WebXR.
+   * Handle events, states, fullscreen styles.
+   *
+   * @returns {Promise}
+   */
   exitVR() {
     var self = this;
     var vrManager = this.renderer.xr;
@@ -22311,7 +22353,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
       return Promise.resolve('Not in immersive mode.');
     }
 
-    // Handle exiting VR if not yet already and in a headset or polyfill.
+    // Handle exiting VR if not yet already and in a headset or mobile.
     if (this.checkHeadsetConnected() || this.isMobile) {
       vrManager.enabled = false;
       if (this.hasWebXR) {
@@ -22342,7 +22384,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
       }
       self.resize();
       if (self.isIOS) {
-        _utils_index_js__WEBPACK_IMPORTED_MODULE_7__.forceCanvasResizeSafariMobile(self.canvas);
+        _utils_index_js__WEBPACK_IMPORTED_MODULE_6__.forceCanvasResizeSafariMobile(self.canvas);
       }
       self.renderer.setPixelRatio(window.devicePixelRatio);
       self.emit('exit-vr', {
@@ -22360,7 +22402,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
     if (system) {
       return system.data;
     }
-    return _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity.prototype.getAttribute.call(this, attr);
+    return _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity.prototype.getAttribute.call(this, attr);
   }
 
   /**
@@ -22372,7 +22414,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
     if (system) {
       return system.data;
     }
-    return _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity.prototype.getDOMAttribute.call(this, attr);
+    return _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity.prototype.getDOMAttribute.call(this, attr);
   }
 
   /**
@@ -22382,8 +22424,8 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
    */
   setAttribute(attr, value, componentPropValue) {
     // Check if system exists (i.e. is registered).
-    if (_system_js__WEBPACK_IMPORTED_MODULE_5__.systems[attr]) {
-      _a_node_js__WEBPACK_IMPORTED_MODULE_9__.ANode.prototype.setAttribute.call(this, attr, value);
+    if (_system_js__WEBPACK_IMPORTED_MODULE_4__.systems[attr]) {
+      _a_node_js__WEBPACK_IMPORTED_MODULE_8__.ANode.prototype.setAttribute.call(this, attr, value);
 
       // Update system instance, if initialized on the scene.
       var system = this.systems[attr];
@@ -22392,7 +22434,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
       }
       return;
     }
-    _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity.prototype.setAttribute.call(this, attr, value, componentPropValue);
+    _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity.prototype.setAttribute.call(this, attr, value, componentPropValue);
   }
 
   /**
@@ -22437,10 +22479,10 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
     isVRPresenting = this.renderer.xr.enabled && isPresenting;
 
     // Do not update renderer, if a camera or a canvas have not been injected.
-    // In VR mode, three handles canvas resize based on the dimensions returned by
-    // the getEyeParameters function of the WebVR API. These dimensions are independent of
+    // In VR mode, three handles canvas resize based on the dimensions of the created
+    // XRWebGLLayer or XRProjectionLayer. These dimensions are independent of
     // the window size, therefore should not be overwritten with the window's width and
-    // height, // except when in fullscreen mode.
+    // height, except when in fullscreen mode.
     if (!camera || !canvas || this.is('vr-mode') && (this.isMobile || isVRPresenting)) {
       return;
     }
@@ -22474,7 +22516,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
     };
     if (this.hasAttribute('renderer')) {
       rendererAttrString = this.getAttribute('renderer');
-      rendererAttr = _utils_index_js__WEBPACK_IMPORTED_MODULE_7__.styleParser.parse(rendererAttrString);
+      rendererAttr = _utils_index_js__WEBPACK_IMPORTED_MODULE_6__.styleParser.parse(rendererAttrString);
       if (rendererAttr.precision) {
         rendererConfig.precision = rendererAttr.precision + 'p';
       }
@@ -22498,7 +22540,17 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
         height: rendererAttr.maxCanvasHeight ? parseInt(rendererAttr.maxCanvasHeight) : this.maxCanvasSize.height
       };
     }
-    renderer = this.renderer = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].WebGLRenderer(rendererConfig);
+
+    // Trick Webpack so that it can't statically determine the exact export used.
+    // Otherwise it will conclude that one of the two exports can't be found in THREE.
+    // Only one needs to exist, and this should be determined at runtime.
+    var rendererImpl = ['WebGLRenderer', 'WebGPURenderer'].find(function (x) {
+      return three__WEBPACK_IMPORTED_MODULE_12__[x];
+    });
+    renderer = this.renderer = new three__WEBPACK_IMPORTED_MODULE_12__[rendererImpl](rendererConfig);
+    if (!renderer.xr.setPoseTarget) {
+      renderer.xr.setPoseTarget = function () {};
+    }
     renderer.setPixelRatio(window.devicePixelRatio);
     if (this.camera) {
       renderer.xr.setPoseTarget(this.camera.el.object3D);
@@ -22516,12 +22568,12 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
     var self = this;
     var sceneEl = this;
     if (this.renderStarted) {
-      _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity.prototype.play.call(this);
+      _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity.prototype.play.call(this);
       return;
     }
     this.addEventListener('loaded', function () {
       var renderer = this.renderer;
-      _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity.prototype.play.call(this); // .play() *before* render.
+      _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity.prototype.play.call(this); // .play() *before* render.
 
       if (sceneEl.renderStarted) {
         return;
@@ -22533,7 +22585,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
         if (window.performance) {
           window.performance.mark('render-started');
         }
-        _loadingScreen_js__WEBPACK_IMPORTED_MODULE_3__.remove();
+        _loadingScreen_js__WEBPACK_IMPORTED_MODULE_2__.remove();
         renderer.setAnimationLoop(this.render);
         sceneEl.renderStarted = true;
         sceneEl.emit('renderstart');
@@ -22542,7 +22594,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
 
     // setTimeout to wait for all nodes to attach and run their callbacks.
     setTimeout(function () {
-      _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity.prototype.load.call(self);
+      _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity.prototype.load.call(self);
     });
   }
 
@@ -22551,10 +22603,10 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
    * (aframevr/aframe#2365).
    */
   updateComponent(componentName) {
-    if (componentName in _system_js__WEBPACK_IMPORTED_MODULE_5__.systems) {
+    if (componentName in _system_js__WEBPACK_IMPORTED_MODULE_4__.systems) {
       return;
     }
-    _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity.prototype.updateComponent.apply(this, arguments);
+    _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity.prototype.updateComponent.apply(this, arguments);
   }
 
   /**
@@ -22625,6 +22677,10 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
     if (savedBackground) {
       this.object3D.background = savedBackground;
     }
+    if (this.isPlaying) {
+      var renderCamera = renderer.xr.isPresenting ? renderer.xr.getCamera() : this.camera;
+      this.tock(this.time, this.delta, renderCamera);
+    }
   }
   callComponentBehaviors(behavior, time, timeDelta) {
     var i;
@@ -22657,7 +22713,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_8__.AEntity {
  * constraints into account.
  *
  * @param {object} components - The components to order
- * @param {array} array - Optional array to use as output
+ * @param {Array} array - Optional array to use as output
  */
 function determineComponentBehaviorOrder(components, array) {
   var graph = {};
@@ -22759,10 +22815,11 @@ customElements.define('a-scene', AScene);
  * The parent size will be returned in that case.
  * the returned size will be constrained to the maxSize maintaining aspect ratio.
  *
- * @param {object} canvasEl - the canvas element
+ * @param {Element} canvasEl - the canvas element
  * @param {boolean} embedded - Is the scene embedded?
- * @param {object} max - Max size parameters
+ * @param {object} maxSize - Max size parameters
  * @param {boolean} isVR - If in VR
+ * @returns {number} Max size
  */
 function getCanvasSize(canvasEl, embedded, maxSize, isVR) {
   if (!canvasEl.parentElement) {
@@ -22784,7 +22841,7 @@ function getCanvasSize(canvasEl, embedded, maxSize, isVR) {
 
 /**
  * Return the canvas size. Will be the window size unless that size is greater than the
- * maximum size (1920x1920 by default).  The constrained size will be returned in that case,
+ * maximum size (no maximum by default). The constrained size will be returned in that case,
  * maintaining aspect ratio
  *
  * @param {object} maxSize - Max size parameters (width and height).
@@ -22877,9 +22934,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   remove: () => (/* binding */ remove),
 /* harmony export */   setup: () => (/* binding */ setup)
 /* harmony export */ });
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
 /* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../constants/index.js */ "./src/constants/index.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/index.js */ "./src/utils/index.js");
-/* global THREE */
+
 
 
 var styleParser = _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.styleParser;
@@ -22910,16 +22968,16 @@ function setup(el, getCanvasSize) {
   }
 
   // Setup Scene.
-  loaderScene = new THREE.Scene();
-  sphereGeometry = new THREE.SphereGeometry(0.20, 36, 18, 0, 2 * Math.PI, 0, Math.PI);
-  sphereMaterial = new THREE.MeshBasicMaterial({
+  loaderScene = new three__WEBPACK_IMPORTED_MODULE_2__.Scene();
+  sphereGeometry = new three__WEBPACK_IMPORTED_MODULE_2__.SphereGeometry(0.20, 36, 18, 0, 2 * Math.PI, 0, Math.PI);
+  sphereMaterial = new three__WEBPACK_IMPORTED_MODULE_2__.MeshBasicMaterial({
     color: dotsColor
   });
-  sphereMesh1 = new THREE.Mesh(sphereGeometry, sphereMaterial);
+  sphereMesh1 = new three__WEBPACK_IMPORTED_MODULE_2__.Mesh(sphereGeometry, sphereMaterial);
   sphereMesh2 = sphereMesh1.clone();
   sphereMesh3 = sphereMesh1.clone();
-  camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.0005, 10000);
-  clock = new THREE.Clock();
+  camera = new three__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.0005, 10000);
+  clock = new three__WEBPACK_IMPORTED_MODULE_2__.Clock();
   time = 0;
   render = function () {
     sceneEl.renderer.render(loaderScene, camera);
@@ -22928,7 +22986,7 @@ function setup(el, getCanvasSize) {
     sphereMesh2.visible = time >= 2;
     sphereMesh3.visible = time >= 3;
   };
-  loaderScene.background = new THREE.Color(backgroundColor);
+  loaderScene.background = new three__WEBPACK_IMPORTED_MODULE_2__.Color(backgroundColor);
   loaderScene.add(camera);
   sphereMesh1.position.set(-1, 0, -15);
   sphereMesh2.position.set(0, 0, -15);
@@ -23425,9 +23483,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   shaderNames: () => (/* binding */ shaderNames),
 /* harmony export */   shaders: () => (/* binding */ shaders)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _schema_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./schema.js */ "./src/core/schema.js");
-/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _schema_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./schema.js */ "./src/core/schema.js");
+/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 
 
 
@@ -23469,9 +23527,9 @@ Shader.prototype = {
    */
   init: function (data) {
     this.uniforms = this.initUniforms();
-    this.material = new (this.raw ? _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].RawShaderMaterial : _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].ShaderMaterial)({
+    this.material = new (this.raw ? three__WEBPACK_IMPORTED_MODULE_2__.RawShaderMaterial : three__WEBPACK_IMPORTED_MODULE_2__.ShaderMaterial)({
       uniforms: this.uniforms,
-      glslVersion: this.raw || this.glsl3 ? _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].GLSL3 : null,
+      glslVersion: this.raw || this.glsl3 ? three__WEBPACK_IMPORTED_MODULE_2__.GLSL3 : null,
       vertexShader: this.vertexShader,
       fragmentShader: this.fragmentShader
     });
@@ -23522,7 +23580,7 @@ Shader.prototype = {
         this.setMapOnTextureLoad(uniforms, key, materialKey);
 
         // Kick off the texture update now that handler is added.
-        _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.material.updateMapMaterialFromData(materialKey, key, this, data);
+        _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.material.updateMapMaterialFromData(materialKey, key, this, data);
         continue;
       }
       uniforms[key].value = this.parseValue(schema[key].type, data[key]);
@@ -23534,20 +23592,20 @@ Shader.prototype = {
     switch (type) {
       case 'vec2':
         {
-          return new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector2(value.x, value.y);
+          return new three__WEBPACK_IMPORTED_MODULE_2__.Vector2(value.x, value.y);
         }
       case 'vec3':
         {
-          return new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3(value.x, value.y, value.z);
+          return new three__WEBPACK_IMPORTED_MODULE_2__.Vector3(value.x, value.y, value.z);
         }
       case 'vec4':
         {
-          return new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector4(value.x, value.y, value.z, value.w);
+          return new three__WEBPACK_IMPORTED_MODULE_2__.Vector4(value.x, value.y, value.z, value.w);
         }
       case 'color':
         {
-          color = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Color(value);
-          return new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3(color.r, color.g, color.b);
+          color = new three__WEBPACK_IMPORTED_MODULE_2__.Color(value);
+          return new three__WEBPACK_IMPORTED_MODULE_2__.Vector3(color.r, color.g, color.b);
         }
       default:
         {
@@ -23593,7 +23651,7 @@ function registerShader(name, definition) {
   NewShader.prototype.constructor = NewShader;
   shaders[name] = {
     Shader: NewShader,
-    schema: (0,_schema_js__WEBPACK_IMPORTED_MODULE_1__.process)(NewShader.prototype.schema)
+    schema: (0,_schema_js__WEBPACK_IMPORTED_MODULE_0__.process)(NewShader.prototype.schema)
   };
   shaderNames.push(name);
   return NewShader;
@@ -23639,8 +23697,9 @@ var systems = {}; // Keep track of registered systems.
  * and some pieces are missing from the Component facilities (e.g., attribute caching,
  * setAttribute behavior).
  *
- * @member {string} name - Name that system is registered under.
- * @member {Element} sceneEl - Handle to the scene element where system applies to.
+ * @constructor
+ * @param {Element} sceneEl - Handle to the scene element where system applies to.
+ * @property {string} name - Name that system is registered under.
  */
 var System = function (sceneEl) {
   var component = _component_js__WEBPACK_IMPORTED_MODULE_1__ && _component_js__WEBPACK_IMPORTED_MODULE_1__.components[this.name];
@@ -23735,7 +23794,6 @@ System.prototype = {
  *
  * @param {string} name - Component name.
  * @param {object} definition - Component property and methods.
- * @returns {object} Component.
  */
 function registerSystem(name, definition) {
   var i;
@@ -23793,17 +23851,17 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../core/component.js */ "./src/core/component.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../core/component.js */ "./src/core/component.js");
 
 
-var originalPosition = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
-var originalRotation = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3();
+var originalPosition = new three__WEBPACK_IMPORTED_MODULE_1__.Vector3();
+var originalRotation = new three__WEBPACK_IMPORTED_MODULE_1__.Vector3();
 
 /**
  * Wrap el.object3D within an outer group. Apply pivot to el.object3D as position.
  */
-(0,_core_component_js__WEBPACK_IMPORTED_MODULE_1__.registerComponent)('pivot', {
+(0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerComponent)('pivot', {
   dependencies: ['position'],
   schema: {
     type: 'vec3'
@@ -23813,7 +23871,7 @@ var originalRotation = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"]
     var el = this.el;
     var originalParent = el.object3D.parent;
     var originalGroup = el.object3D;
-    var outerGroup = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Group();
+    var outerGroup = new three__WEBPACK_IMPORTED_MODULE_1__.Group();
     originalPosition.copy(originalGroup.position);
     originalRotation.copy(originalGroup.rotation);
 
@@ -24645,11 +24703,11 @@ function unCamelCase(str) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
-(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_1__.registerGeometry)('box', {
+(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_0__.registerGeometry)('box', {
   schema: {
     depth: {
       default: 1,
@@ -24683,7 +24741,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   init: function (data) {
-    this.geometry = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].BoxGeometry(data.width, data.height, data.depth, data.segmentsWidth, data.segmentsHeight, data.segmentsDepth);
+    this.geometry = new three__WEBPACK_IMPORTED_MODULE_1__.BoxGeometry(data.width, data.height, data.depth, data.segmentsWidth, data.segmentsHeight, data.segmentsDepth);
   }
 });
 
@@ -24697,12 +24755,12 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
-var degToRad = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.degToRad;
-(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_1__.registerGeometry)('circle', {
+var degToRad = three__WEBPACK_IMPORTED_MODULE_1__.MathUtils.degToRad;
+(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_0__.registerGeometry)('circle', {
   schema: {
     radius: {
       default: 1,
@@ -24722,7 +24780,7 @@ var degToRad = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.d
     }
   },
   init: function (data) {
-    this.geometry = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].CircleGeometry(data.radius, data.segments, degToRad(data.thetaStart), degToRad(data.thetaLength));
+    this.geometry = new three__WEBPACK_IMPORTED_MODULE_1__.CircleGeometry(data.radius, data.segments, degToRad(data.thetaStart), degToRad(data.thetaLength));
   }
 });
 
@@ -24736,12 +24794,12 @@ var degToRad = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.d
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
-var degToRad = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.degToRad;
-(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_1__.registerGeometry)('cone', {
+var degToRad = three__WEBPACK_IMPORTED_MODULE_1__.MathUtils.degToRad;
+(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_0__.registerGeometry)('cone', {
   schema: {
     height: {
       default: 1,
@@ -24777,7 +24835,7 @@ var degToRad = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.d
     }
   },
   init: function (data) {
-    this.geometry = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].CylinderGeometry(data.radiusTop, data.radiusBottom, data.height, data.segmentsRadial, data.segmentsHeight, data.openEnded, degToRad(data.thetaStart), degToRad(data.thetaLength));
+    this.geometry = new three__WEBPACK_IMPORTED_MODULE_1__.CylinderGeometry(data.radiusTop, data.radiusBottom, data.height, data.segmentsRadial, data.segmentsHeight, data.openEnded, degToRad(data.thetaStart), degToRad(data.thetaLength));
   }
 });
 
@@ -24791,12 +24849,12 @@ var degToRad = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.d
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
-var degToRad = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.degToRad;
-(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_1__.registerGeometry)('cylinder', {
+var degToRad = three__WEBPACK_IMPORTED_MODULE_1__.MathUtils.degToRad;
+(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_0__.registerGeometry)('cylinder', {
   schema: {
     height: {
       default: 1,
@@ -24828,7 +24886,7 @@ var degToRad = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.d
     }
   },
   init: function (data) {
-    this.geometry = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].CylinderGeometry(data.radius, data.radius, data.height, data.segmentsRadial, data.segmentsHeight, data.openEnded, degToRad(data.thetaStart), degToRad(data.thetaLength));
+    this.geometry = new three__WEBPACK_IMPORTED_MODULE_1__.CylinderGeometry(data.radius, data.radius, data.height, data.segmentsRadial, data.segmentsHeight, data.openEnded, degToRad(data.thetaStart), degToRad(data.thetaLength));
   }
 });
 
@@ -24842,11 +24900,11 @@ var degToRad = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.d
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
-(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_1__.registerGeometry)('dodecahedron', {
+(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_0__.registerGeometry)('dodecahedron', {
   schema: {
     detail: {
       default: 0,
@@ -24860,7 +24918,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   init: function (data) {
-    this.geometry = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].DodecahedronGeometry(data.radius, data.detail);
+    this.geometry = new three__WEBPACK_IMPORTED_MODULE_1__.DodecahedronGeometry(data.radius, data.detail);
   }
 });
 
@@ -24874,11 +24932,11 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
-(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_1__.registerGeometry)('icosahedron', {
+(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_0__.registerGeometry)('icosahedron', {
   schema: {
     detail: {
       default: 0,
@@ -24892,7 +24950,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   init: function (data) {
-    this.geometry = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].IcosahedronGeometry(data.radius, data.detail);
+    this.geometry = new three__WEBPACK_IMPORTED_MODULE_1__.IcosahedronGeometry(data.radius, data.detail);
   }
 });
 
@@ -24945,11 +25003,11 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
-(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_1__.registerGeometry)('octahedron', {
+(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_0__.registerGeometry)('octahedron', {
   schema: {
     detail: {
       default: 0,
@@ -24963,7 +25021,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   init: function (data) {
-    this.geometry = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].OctahedronGeometry(data.radius, data.detail);
+    this.geometry = new three__WEBPACK_IMPORTED_MODULE_1__.OctahedronGeometry(data.radius, data.detail);
   }
 });
 
@@ -24977,11 +25035,11 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
-(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_1__.registerGeometry)('plane', {
+(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_0__.registerGeometry)('plane', {
   schema: {
     height: {
       default: 1,
@@ -25005,7 +25063,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   init: function (data) {
-    this.geometry = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].PlaneGeometry(data.width, data.height, data.segmentsWidth, data.segmentsHeight);
+    this.geometry = new three__WEBPACK_IMPORTED_MODULE_1__.PlaneGeometry(data.width, data.height, data.segmentsWidth, data.segmentsHeight);
   }
 });
 
@@ -25019,12 +25077,12 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
-var degToRad = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.degToRad;
-(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_1__.registerGeometry)('ring', {
+var degToRad = three__WEBPACK_IMPORTED_MODULE_1__.MathUtils.degToRad;
+(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_0__.registerGeometry)('ring', {
   schema: {
     radiusInner: {
       default: 0.8,
@@ -25053,7 +25111,7 @@ var degToRad = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.d
     }
   },
   init: function (data) {
-    this.geometry = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].RingGeometry(data.radiusInner, data.radiusOuter, data.segmentsTheta, data.segmentsPhi, degToRad(data.thetaStart), degToRad(data.thetaLength));
+    this.geometry = new three__WEBPACK_IMPORTED_MODULE_1__.RingGeometry(data.radiusInner, data.radiusOuter, data.segmentsTheta, data.segmentsPhi, degToRad(data.thetaStart), degToRad(data.thetaLength));
   }
 });
 
@@ -25067,12 +25125,12 @@ var degToRad = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.d
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
-var degToRad = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.degToRad;
-(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_1__.registerGeometry)('sphere', {
+var degToRad = three__WEBPACK_IMPORTED_MODULE_1__.MathUtils.degToRad;
+(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_0__.registerGeometry)('sphere', {
   schema: {
     radius: {
       default: 1,
@@ -25104,7 +25162,7 @@ var degToRad = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.d
     }
   },
   init: function (data) {
-    this.geometry = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].SphereGeometry(data.radius, data.segmentsWidth, data.segmentsHeight, degToRad(data.phiStart), degToRad(data.phiLength), degToRad(data.thetaStart), degToRad(data.thetaLength));
+    this.geometry = new three__WEBPACK_IMPORTED_MODULE_1__.SphereGeometry(data.radius, data.segmentsWidth, data.segmentsHeight, degToRad(data.phiStart), degToRad(data.phiLength), degToRad(data.thetaStart), degToRad(data.thetaLength));
   }
 });
 
@@ -25118,11 +25176,11 @@ var degToRad = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.d
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
-(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_1__.registerGeometry)('tetrahedron', {
+(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_0__.registerGeometry)('tetrahedron', {
   schema: {
     detail: {
       default: 0,
@@ -25136,7 +25194,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   init: function (data) {
-    this.geometry = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].TetrahedronGeometry(data.radius, data.detail);
+    this.geometry = new three__WEBPACK_IMPORTED_MODULE_1__.TetrahedronGeometry(data.radius, data.detail);
   }
 });
 
@@ -25150,12 +25208,12 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
-var degToRad = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.degToRad;
-(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_1__.registerGeometry)('torus', {
+var degToRad = three__WEBPACK_IMPORTED_MODULE_1__.MathUtils.degToRad;
+(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_0__.registerGeometry)('torus', {
   schema: {
     arc: {
       default: 360
@@ -25180,7 +25238,7 @@ var degToRad = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.d
     }
   },
   init: function (data) {
-    this.geometry = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].TorusGeometry(data.radius, data.radiusTubular * 2, data.segmentsRadial, data.segmentsTubular, degToRad(data.arc));
+    this.geometry = new three__WEBPACK_IMPORTED_MODULE_1__.TorusGeometry(data.radius, data.radiusTubular * 2, data.segmentsRadial, data.segmentsTubular, degToRad(data.arc));
   }
 });
 
@@ -25194,11 +25252,11 @@ var degToRad = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MathUtils.d
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
-(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_1__.registerGeometry)('torusKnot', {
+(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_0__.registerGeometry)('torusKnot', {
   schema: {
     p: {
       default: 2,
@@ -25228,7 +25286,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   init: function (data) {
-    this.geometry = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].TorusKnotGeometry(data.radius, data.radiusTubular * 2, data.segmentsTubular, data.segmentsRadial, data.p, data.q);
+    this.geometry = new three__WEBPACK_IMPORTED_MODULE_1__.TorusKnotGeometry(data.radius, data.radiusTubular * 2, data.segmentsTubular, data.segmentsRadial, data.p, data.q);
   }
 });
 
@@ -25242,16 +25300,16 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
-var quaternion = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Quaternion();
-var rotateVector = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3(0, 0, 1);
-var uvMinVector = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector2();
-var uvMaxVector = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector2();
-var uvScaleVector = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector2();
-(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_1__.registerGeometry)('triangle', {
+var quaternion = new three__WEBPACK_IMPORTED_MODULE_1__.Quaternion();
+var rotateVector = new three__WEBPACK_IMPORTED_MODULE_1__.Vector3(0, 0, 1);
+var uvMinVector = new three__WEBPACK_IMPORTED_MODULE_1__.Vector2();
+var uvMaxVector = new three__WEBPACK_IMPORTED_MODULE_1__.Vector2();
+var uvScaleVector = new three__WEBPACK_IMPORTED_MODULE_1__.Vector2();
+(0,_core_geometry_js__WEBPACK_IMPORTED_MODULE_0__.registerGeometry)('triangle', {
   schema: {
     vertexA: {
       type: 'vec3',
@@ -25288,11 +25346,11 @@ var uvScaleVector = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Ve
     var vertices;
     var normals;
     var uvs;
-    triangle = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Triangle();
+    triangle = new three__WEBPACK_IMPORTED_MODULE_1__.Triangle();
     triangle.a.set(data.vertexA.x, data.vertexA.y, data.vertexA.z);
     triangle.b.set(data.vertexB.x, data.vertexB.y, data.vertexB.z);
     triangle.c.set(data.vertexC.x, data.vertexC.y, data.vertexC.z);
-    normal = triangle.getNormal(new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector3());
+    normal = triangle.getNormal(new three__WEBPACK_IMPORTED_MODULE_1__.Vector3());
 
     // Rotate the 3D triangle to be parallel to XY plane.
     quaternion.setFromUnitVectors(normal, rotateVector);
@@ -25305,16 +25363,16 @@ var uvScaleVector = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Ve
     uvMinVector.set(Math.min(uvA.x, uvB.x, uvC.x), Math.min(uvA.y, uvB.y, uvC.y));
     uvMaxVector.set(Math.max(uvA.x, uvB.x, uvC.x), Math.max(uvA.y, uvB.y, uvC.y));
     uvScaleVector.set(0, 0).subVectors(uvMaxVector, uvMinVector);
-    uvA = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector2().subVectors(uvA, uvMinVector).divide(uvScaleVector);
-    uvB = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector2().subVectors(uvB, uvMinVector).divide(uvScaleVector);
-    uvC = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Vector2().subVectors(uvC, uvMinVector).divide(uvScaleVector);
-    geometry = this.geometry = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].BufferGeometry();
+    uvA = new three__WEBPACK_IMPORTED_MODULE_1__.Vector2().subVectors(uvA, uvMinVector).divide(uvScaleVector);
+    uvB = new three__WEBPACK_IMPORTED_MODULE_1__.Vector2().subVectors(uvB, uvMinVector).divide(uvScaleVector);
+    uvC = new three__WEBPACK_IMPORTED_MODULE_1__.Vector2().subVectors(uvC, uvMinVector).divide(uvScaleVector);
+    geometry = this.geometry = new three__WEBPACK_IMPORTED_MODULE_1__.BufferGeometry();
     vertices = [triangle.a.x, triangle.a.y, triangle.a.z, triangle.b.x, triangle.b.y, triangle.b.z, triangle.c.x, triangle.c.y, triangle.c.z];
     normals = [normal.x, normal.y, normal.z, normal.x, normal.y, normal.z, normal.x, normal.y, normal.z];
     uvs = [uvA.x, uvA.y, uvB.x, uvB.y, uvC.x, uvC.y];
-    geometry.setAttribute('position', new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Float32BufferAttribute(vertices, 3));
-    geometry.setAttribute('normal', new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Float32BufferAttribute(normals, 3));
-    geometry.setAttribute('uv', new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Float32BufferAttribute(uvs, 2));
+    geometry.setAttribute('position', new three__WEBPACK_IMPORTED_MODULE_1__.Float32BufferAttribute(vertices, 3));
+    geometry.setAttribute('normal', new three__WEBPACK_IMPORTED_MODULE_1__.Float32BufferAttribute(normals, 3));
+    geometry.setAttribute('uv', new three__WEBPACK_IMPORTED_MODULE_1__.Float32BufferAttribute(uvs, 2));
   }
 });
 
@@ -25435,8 +25493,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Shader: () => (/* binding */ Shader)
 /* harmony export */ });
 /* harmony import */ var _core_shader_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/shader.js */ "./src/core/shader.js");
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 
 
 
@@ -25485,14 +25543,14 @@ var Shader = (0,_core_shader_js__WEBPACK_IMPORTED_MODULE_0__.registerShader)('fl
    */
   init: function (data) {
     this.materialData = {
-      color: new _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].Color()
+      color: new three__WEBPACK_IMPORTED_MODULE_2__.Color()
     };
     getMaterialData(data, this.materialData);
-    this.material = new _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].MeshBasicMaterial(this.materialData);
+    this.material = new three__WEBPACK_IMPORTED_MODULE_2__.MeshBasicMaterial(this.materialData);
   },
   update: function (data) {
     this.updateMaterial(data);
-    _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.material.updateMap(this, data);
+    _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.material.updateMap(this, data);
   },
   /**
    * Updating existing material.
@@ -25561,7 +25619,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Shader: () => (/* binding */ Shader)
 /* harmony export */ });
 /* harmony import */ var _core_shader_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/shader.js */ "./src/core/shader.js");
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 
 
 var VERTEX_SHADER = ['#include <common>', '#include <fog_pars_vertex>', '#include <logdepthbuf_pars_vertex>', 'out vec2 vUV;', 'void main(void) {', '  vUV = uv;', '  #include <begin_vertex>', '  #include <project_vertex>', '  #include <logdepthbuf_vertex>', '  #include <fog_vertex>', '}'].join('\n');
@@ -25606,8 +25665,12 @@ var Shader = (0,_core_shader_js__WEBPACK_IMPORTED_MODULE_0__.registerShader)('ms
   vertexShader: VERTEX_SHADER,
   fragmentShader: FRAGMENT_SHADER,
   init: function () {
-    this.uniforms = _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].UniformsUtils.merge([_lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].UniformsLib.fog, this.initUniforms()]);
-    this.material = new _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].ShaderMaterial({
+    this.uniforms = this.initUniforms();
+    // When using the WebGPURenderer there is no UniformsLib or UniformsUtils.
+    if (three__WEBPACK_IMPORTED_MODULE_1__.UniformsUtils) {
+      this.uniforms = three__WEBPACK_IMPORTED_MODULE_1__.UniformsUtils.merge([three__WEBPACK_IMPORTED_MODULE_2__.UniformsLib.fog, this.uniforms]);
+    }
+    this.material = new three__WEBPACK_IMPORTED_MODULE_1__.ShaderMaterial({
       uniforms: this.uniforms,
       vertexShader: this.vertexShader,
       fragmentShader: this.fragmentShader,
@@ -25631,8 +25694,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Shader: () => (/* binding */ Shader)
 /* harmony export */ });
 /* harmony import */ var _core_shader_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/shader.js */ "./src/core/shader.js");
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 
 
 
@@ -25778,12 +25841,12 @@ var Shader = (0,_core_shader_js__WEBPACK_IMPORTED_MODULE_0__.registerShader)('ph
    */
   init: function (data) {
     this.materialData = {
-      color: new _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].Color(),
-      specular: new _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].Color(),
-      emissive: new _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].Color()
+      color: new three__WEBPACK_IMPORTED_MODULE_2__.Color(),
+      specular: new three__WEBPACK_IMPORTED_MODULE_2__.Color(),
+      emissive: new three__WEBPACK_IMPORTED_MODULE_2__.Color()
     };
     getMaterialData(data, this.materialData);
-    this.material = new _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].MeshPhongMaterial(this.materialData);
+    this.material = new three__WEBPACK_IMPORTED_MODULE_2__.MeshPhongMaterial(this.materialData);
     var sceneEl = this.el.sceneEl;
     // Fallback to scene environment when no envMap is defined (matching behaviour of standard material)
     Object.defineProperty(this.material, 'envMap', {
@@ -25797,12 +25860,12 @@ var Shader = (0,_core_shader_js__WEBPACK_IMPORTED_MODULE_0__.registerShader)('ph
   },
   update: function (data) {
     this.updateMaterial(data);
-    _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.material.updateMap(this, data);
-    _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.material.updateDistortionMap('normal', this, data);
-    _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.material.updateDistortionMap('displacement', this, data);
-    _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.material.updateDistortionMap('ambientOcclusion', this, data);
-    _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.material.updateDistortionMap('bump', this, data);
-    _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.material.updateEnvMap(this, data);
+    _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.material.updateMap(this, data);
+    _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.material.updateDistortionMap('normal', this, data);
+    _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.material.updateDistortionMap('displacement', this, data);
+    _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.material.updateDistortionMap('ambientOcclusion', this, data);
+    _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.material.updateDistortionMap('bump', this, data);
+    _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.material.updateEnvMap(this, data);
   },
   /**
    * Updating existing material.
@@ -25842,13 +25905,13 @@ function getMaterialData(data, materialData) {
   materialData.refractionRatio = data.refractionRatio;
   switch (data.combine) {
     case 'mix':
-      materialData.combine = _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].MixOperation;
+      materialData.combine = three__WEBPACK_IMPORTED_MODULE_2__.MixOperation;
       break;
     case 'multiply':
-      materialData.combine = _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].MultiplyOperation;
+      materialData.combine = three__WEBPACK_IMPORTED_MODULE_2__.MultiplyOperation;
       break;
     case 'add':
-      materialData.combine = _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].AddOperation;
+      materialData.combine = three__WEBPACK_IMPORTED_MODULE_2__.AddOperation;
       break;
   }
   if (data.normalMap) {
@@ -25881,7 +25944,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Shader: () => (/* binding */ Shader)
 /* harmony export */ });
 /* harmony import */ var _core_shader_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/shader.js */ "./src/core/shader.js");
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 
 
 var VERTEX_SHADER = ['#include <common>', '#include <fog_pars_vertex>', '#include <logdepthbuf_pars_vertex>', 'out vec2 vUV;', 'void main(void) {', '  vUV = uv;', '  #include <begin_vertex>', '  #include <project_vertex>', '  #include <logdepthbuf_vertex>', '  #include <fog_vertex>', '}'].join('\n');
@@ -25926,8 +25990,12 @@ var Shader = (0,_core_shader_js__WEBPACK_IMPORTED_MODULE_0__.registerShader)('sd
   vertexShader: VERTEX_SHADER,
   fragmentShader: FRAGMENT_SHADER,
   init: function () {
-    this.uniforms = _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].UniformsUtils.merge([_lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].UniformsLib.fog, this.initUniforms()]);
-    this.material = new _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].ShaderMaterial({
+    this.uniforms = this.initUniforms();
+    // When using the WebGPURenderer there is no UniformsLib or UniformsUtils.
+    if (three__WEBPACK_IMPORTED_MODULE_1__.UniformsUtils) {
+      this.uniforms = three__WEBPACK_IMPORTED_MODULE_1__.UniformsUtils.merge([three__WEBPACK_IMPORTED_MODULE_2__.UniformsLib.fog, this.uniforms]);
+    }
+    this.material = new three__WEBPACK_IMPORTED_MODULE_1__.ShaderMaterial({
       uniforms: this.uniforms,
       vertexShader: this.vertexShader,
       fragmentShader: this.fragmentShader,
@@ -25950,15 +26018,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Shader: () => (/* binding */ Shader)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_shader_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/shader.js */ "./src/core/shader.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_shader_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/shader.js */ "./src/core/shader.js");
 
 
 
 /**
  * Flat shader using THREE.ShadowMaterial.
  */
-var Shader = (0,_core_shader_js__WEBPACK_IMPORTED_MODULE_1__.registerShader)('shadow', {
+var Shader = (0,_core_shader_js__WEBPACK_IMPORTED_MODULE_0__.registerShader)('shadow', {
   schema: {
     opacity: {
       default: 0.5
@@ -25975,7 +26043,7 @@ var Shader = (0,_core_shader_js__WEBPACK_IMPORTED_MODULE_1__.registerShader)('sh
    * Adds a reference from the scene to this entity as the camera.
    */
   init: function (data) {
-    this.material = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].ShadowMaterial();
+    this.material = new three__WEBPACK_IMPORTED_MODULE_1__.ShadowMaterial();
   },
   update: function (data) {
     this.material.opacity = data.opacity;
@@ -25997,9 +26065,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Shader: () => (/* binding */ Shader)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_shader_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/shader.js */ "./src/core/shader.js");
-/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_shader_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/shader.js */ "./src/core/shader.js");
+/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 
 
 
@@ -26007,7 +26075,7 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * Standard (physically-based) shader using THREE.MeshStandardMaterial.
  */
-var Shader = (0,_core_shader_js__WEBPACK_IMPORTED_MODULE_1__.registerShader)('standard', {
+var Shader = (0,_core_shader_js__WEBPACK_IMPORTED_MODULE_0__.registerShader)('standard', {
   schema: {
     ambientOcclusionMap: {
       type: 'map'
@@ -26149,27 +26217,26 @@ var Shader = (0,_core_shader_js__WEBPACK_IMPORTED_MODULE_1__.registerShader)('st
    */
   init: function (data) {
     this.materialData = {
-      color: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Color(),
-      emissive: new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Color()
+      color: new three__WEBPACK_IMPORTED_MODULE_2__.Color(),
+      emissive: new three__WEBPACK_IMPORTED_MODULE_2__.Color()
     };
     getMaterialData(data, this.materialData);
-    this.material = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].MeshStandardMaterial(this.materialData);
+    this.material = new three__WEBPACK_IMPORTED_MODULE_2__.MeshStandardMaterial(this.materialData);
   },
   update: function (data) {
     this.updateMaterial(data);
-    _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.material.updateMap(this, data);
-    _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.material.updateDistortionMap('normal', this, data);
-    _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.material.updateDistortionMap('displacement', this, data);
-    _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.material.updateDistortionMap('ambientOcclusion', this, data);
-    _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.material.updateDistortionMap('metalness', this, data);
-    _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.material.updateDistortionMap('roughness', this, data);
-    _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.material.updateEnvMap(this, data);
+    _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.material.updateMap(this, data);
+    _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.material.updateDistortionMap('normal', this, data);
+    _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.material.updateDistortionMap('displacement', this, data);
+    _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.material.updateDistortionMap('ambientOcclusion', this, data);
+    _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.material.updateDistortionMap('metalness', this, data);
+    _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.material.updateDistortionMap('roughness', this, data);
+    _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.material.updateEnvMap(this, data);
   },
   /**
    * Updating existing material.
    *
    * @param {object} data - Material component data.
-   * @returns {object} Material.
    */
   updateMaterial: function (data) {
     var key;
@@ -26285,7 +26352,7 @@ var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('ca
       });
 
       // Load camera and wait for camera to initialize.
-      if (cameraEls[i].isNode) {
+      if (cameraEls[i].isANode) {
         cameraEls[i].load();
       } else {
         cameraEls[i].addEventListener('nodeready', function () {
@@ -26551,7 +26618,7 @@ var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('ge
   /**
    * Attempt to retrieve from cache.
    *
-   * @returns {Object|null} A geometry if it exists, else null.
+   * @returns {object|null} A geometry if it exists, else null.
    */
   getOrCreateGeometry: function (data) {
     var cache = this.cache;
@@ -26660,8 +26727,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   System: () => (/* binding */ System)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_system_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/system.js */ "./src/core/system.js");
+/* harmony import */ var three_addons_loaders_DRACOLoader_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three/addons/loaders/DRACOLoader.js */ "./node_modules/three/examples/jsm/loaders/DRACOLoader.js");
+/* harmony import */ var three_addons_loaders_KTX2Loader_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three/addons/loaders/KTX2Loader.js */ "./node_modules/three/examples/jsm/loaders/KTX2Loader.js");
+/* harmony import */ var _core_system_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/system.js */ "./src/core/system.js");
+
 
 
 function fetchScript(src) {
@@ -26685,7 +26754,7 @@ function fetchScript(src) {
  * @param {string} basisTranscoderPath - Base path from which to load Basis transcoder library.
  * @param {string} meshoptDecoderPath - Full path from which to load Meshopt decoder.
  */
-var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('gltf-model', {
+var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_0__.registerSystem)('gltf-model', {
   schema: {
     dracoDecoderPath: {
       default: 'https://www.gstatic.com/draco/versioned/decoders/1.5.7/'
@@ -26705,11 +26774,11 @@ var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('gl
     var basisTranscoderPath = this.data.basisTranscoderPath;
     var meshoptDecoderPath = this.data.meshoptDecoderPath;
     if (!this.dracoLoader && dracoDecoderPath) {
-      this.dracoLoader = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].DRACOLoader();
+      this.dracoLoader = new three_addons_loaders_DRACOLoader_js__WEBPACK_IMPORTED_MODULE_1__.DRACOLoader();
       this.dracoLoader.setDecoderPath(dracoDecoderPath);
     }
     if (!this.ktx2Loader && basisTranscoderPath) {
-      this.ktx2Loader = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].KTX2Loader();
+      this.ktx2Loader = new three_addons_loaders_KTX2Loader_js__WEBPACK_IMPORTED_MODULE_2__.KTX2Loader();
       this.ktx2Loader.setTranscoderPath(basisTranscoderPath).detectSupport(this.el.renderer);
     }
     if (!this.meshoptDecoder && meshoptDecoderPath) {
@@ -26787,8 +26856,8 @@ var DEFAULT_LIGHT_ATTR = 'data-aframe-default-light';
  * Prescribes default lighting if not specified (one ambient, one directional).
  * Removes default lighting from the scene when a new light is added.
  *
- * @param {bool} defaultLights - Whether default lighting are defined.
- * @param {bool} userDefinedLights - Whether user lighting is defined.
+ * @param {boolean} defaultLights - Whether default lighting are defined.
+ * @param {boolean} userDefinedLights - Whether user lighting is defined.
  */
 var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_0__.registerSystem)('light', {
   schema: {
@@ -26879,18 +26948,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   System: () => (/* binding */ System)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_system_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/system.js */ "./src/core/system.js");
-/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
-/* harmony import */ var _utils_material_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/material.js */ "./src/utils/material.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_system_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/system.js */ "./src/core/system.js");
+/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
+/* harmony import */ var _utils_material_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/material.js */ "./src/utils/material.js");
 
 
 
 
-var debug = _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.debug;
+var debug = _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.debug;
 var error = debug('components:texture:error');
 var warn = debug('components:texture:warn');
-var ImageLoader = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].ImageLoader();
+var ImageLoader = new three__WEBPACK_IMPORTED_MODULE_3__.ImageLoader();
 
 /**
  * System for material component.
@@ -26899,7 +26968,7 @@ var ImageLoader = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Imag
  * @member {object} materials - Registered materials.
  * @member {object} sourceCache - Texture source cache for, Image, Video and Canvas sources
  */
-var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('material', {
+var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_0__.registerSystem)('material', {
   init: function () {
     this.materials = {};
     this.sourceCache = {};
@@ -26910,21 +26979,21 @@ var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('ma
   /**
    * Loads and creates a texture for a given `src`.
    *
-   * @param {string, or element} src - URL or element
+   * @param {string|Element} src - URL or element
    * @param {object} data - Relevant texture properties
    * @param {function} cb - Callback to pass texture to
    */
   loadTexture: function (src, data, cb) {
     this.loadTextureSource(src, function sourceLoaded(source) {
-      var texture = (0,_utils_material_js__WEBPACK_IMPORTED_MODULE_3__.createCompatibleTexture)(source);
-      (0,_utils_material_js__WEBPACK_IMPORTED_MODULE_3__.setTextureProperties)(texture, data);
+      var texture = (0,_utils_material_js__WEBPACK_IMPORTED_MODULE_2__.createCompatibleTexture)(source);
+      (0,_utils_material_js__WEBPACK_IMPORTED_MODULE_2__.setTextureProperties)(texture, data);
       cb(texture);
     });
   },
   /**
    * Determine whether `src` is an image or video. Then try to load the asset, then call back.
    *
-   * @param {string, or element} src - URL or element.
+   * @param {string|Element} src - URL or element.
    * @param {function} cb - Callback to pass texture source to.
    */
   loadTextureSource: function (src, cb) {
@@ -26938,12 +27007,12 @@ var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('ma
 
     // Canvas.
     if (src.tagName === 'CANVAS') {
-      sourceLoaded(new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Source(src));
+      sourceLoaded(new three__WEBPACK_IMPORTED_MODULE_3__.Source(src));
       return;
     }
     sourceLoaded(new Promise(doSourceLoad));
     function doSourceLoad(resolve, reject) {
-      _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.srcLoader.validateSrc(src, loadImageCb, loadVideoCb);
+      _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.srcLoader.validateSrc(src, loadImageCb, loadVideoCb);
       function loadImageCb(src) {
         self.loadImage(src, resolve);
       }
@@ -26959,14 +27028,14 @@ var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('ma
   /**
    * Load the six individual sides and construct a cube texture, then call back.
    *
-   * @param {Array} srcs - Array of six texture URLs or elements.
+   * @param {Array<string|Element>} srcs - Array of six texture URLs or elements.
    * @param {function} cb - Callback to pass cube texture to.
    */
   loadCubeMapTexture: function (srcs, cb) {
     var self = this;
     var loaded = 0;
-    var cube = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].CubeTexture();
-    cube.colorSpace = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].SRGBColorSpace;
+    var cube = new three__WEBPACK_IMPORTED_MODULE_3__.CubeTexture();
+    cube.colorSpace = three__WEBPACK_IMPORTED_MODULE_3__.SRGBColorSpace;
     function loadSide(index) {
       self.loadTextureSource(srcs[index], function (source) {
         cube.images[index] = source.data;
@@ -26988,13 +27057,13 @@ var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('ma
   /**
    * High-level function for loading image textures (THREE.Texture).
    *
-   * @param {Element|string} src - Texture source.
+   * @param {string|Element} src - Texture source.
    * @param {function} cb - Callback to pass texture to.
    */
   loadImage: function (src, cb) {
     // Image element provided
     if (typeof src !== 'string') {
-      cb(new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Source(src));
+      cb(new three__WEBPACK_IMPORTED_MODULE_3__.Source(src));
       return;
     }
     cb(loadImageUrl(src));
@@ -27005,7 +27074,7 @@ var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('ma
    * Note that creating a video texture is synchronous unlike loading an image texture.
    * Made asynchronous to be consistent with image textures.
    *
-   * @param {Element|string} src - Texture source.
+   * @param {string|Element} src - Texture source.
    * @param {function} cb - Callback to pass texture to.
    */
   loadVideo: function (src, cb) {
@@ -27022,7 +27091,7 @@ var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('ma
 
     // Only URL provided. Use video element to create texture.
     videoEl = videoEl || createVideoEl(src);
-    cb(new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Source(videoEl));
+    cb(new three__WEBPACK_IMPORTED_MODULE_3__.Source(videoEl));
   },
   /**
    * Create a hash for a given source.
@@ -27068,7 +27137,7 @@ function loadImageUrl(src) {
       error('`$s` could not be fetched (Error code: %s; Response: %s)', xhr.status, xhr.statusText);
     });
     function resolveSource(data) {
-      resolve(new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Source(data));
+      resolve(new three__WEBPACK_IMPORTED_MODULE_3__.Source(data));
     }
   }
 }
@@ -27289,26 +27358,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   sortFrontToBack: () => (/* binding */ sortFrontToBack),
 /* harmony export */   sortRenderOrderOnly: () => (/* binding */ sortRenderOrderOnly)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_system_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/system.js */ "./src/core/system.js");
-/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_system_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/system.js */ "./src/core/system.js");
+/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 
 
 
-var debug = _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.debug;
+var debug = _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.debug;
 var warn = debug('components:renderer:warn');
 
 /**
  * Determines state of various renderer properties.
  */
-var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('renderer', {
+var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_0__.registerSystem)('renderer', {
   schema: {
     antialias: {
       default: 'auto',
       oneOf: ['true', 'false', 'auto']
     },
     highRefreshRate: {
-      default: _utils_index_js__WEBPACK_IMPORTED_MODULE_2__.device.isOculusBrowser()
+      default: _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.device.isOculusBrowser()
     },
     logarithmicDepthBuffer: {
       default: 'auto',
@@ -27362,10 +27432,10 @@ var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('re
     var toneMappingName = this.data.toneMapping.charAt(0).toUpperCase() + this.data.toneMapping.slice(1);
     // This is the rendering engine, such as THREE.js so copy over any persistent properties from the rendering system.
     var renderer = sceneEl.renderer;
-    renderer.toneMapping = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"][toneMappingName + 'ToneMapping'];
-    _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Texture.DEFAULT_ANISOTROPY = data.anisotropy;
-    _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].ColorManagement.enabled = data.colorManagement;
-    renderer.outputColorSpace = data.colorManagement ? _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].SRGBColorSpace : _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].LinearSRGBColorSpace;
+    renderer.toneMapping = three__WEBPACK_IMPORTED_MODULE_2__[toneMappingName + 'ToneMapping'];
+    three__WEBPACK_IMPORTED_MODULE_3__.Texture.DEFAULT_ANISOTROPY = data.anisotropy;
+    three__WEBPACK_IMPORTED_MODULE_3__.ColorManagement.enabled = data.colorManagement;
+    renderer.outputColorSpace = data.colorManagement ? three__WEBPACK_IMPORTED_MODULE_3__.SRGBColorSpace : three__WEBPACK_IMPORTED_MODULE_3__.LinearSRGBColorSpace;
     if (sceneEl.hasAttribute('antialias')) {
       warn('Component `antialias` is deprecated. Use `renderer="antialias: true"` instead.');
     }
@@ -27382,7 +27452,7 @@ var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('re
     var sceneEl = this.el;
     var renderer = sceneEl.renderer;
     var toneMappingName = this.data.toneMapping.charAt(0).toUpperCase() + this.data.toneMapping.slice(1);
-    renderer.toneMapping = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"][toneMappingName + 'ToneMapping'];
+    renderer.toneMapping = three__WEBPACK_IMPORTED_MODULE_2__[toneMappingName + 'ToneMapping'];
     renderer.toneMappingExposure = data.exposure;
     renderer.xr.setFoveation(data.foveationLevel);
     if (data.sortObjects) {
@@ -27398,8 +27468,8 @@ var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('re
     if (!this.data.colorManagement || !texture) {
       return;
     }
-    if (texture.isTexture && texture.colorSpace !== _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].SRGBColorSpace) {
-      texture.colorSpace = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].SRGBColorSpace;
+    if (texture.isTexture && texture.colorSpace !== three__WEBPACK_IMPORTED_MODULE_3__.SRGBColorSpace) {
+      texture.colorSpace = three__WEBPACK_IMPORTED_MODULE_3__.SRGBColorSpace;
       texture.needsUpdate = true;
     }
   },
@@ -27477,14 +27547,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   System: () => (/* binding */ System)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _core_system_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/system.js */ "./src/core/system.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _core_system_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/system.js */ "./src/core/system.js");
 
 
 var SHADOW_MAP_TYPE_MAP = {
-  basic: _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].BasicShadowMap,
-  pcf: _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].PCFShadowMap,
-  pcfsoft: _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].PCFSoftShadowMap
+  basic: three__WEBPACK_IMPORTED_MODULE_1__.BasicShadowMap,
+  pcf: three__WEBPACK_IMPORTED_MODULE_1__.PCFShadowMap,
+  pcfsoft: three__WEBPACK_IMPORTED_MODULE_1__.PCFSoftShadowMap
 };
 
 /**
@@ -27493,7 +27563,7 @@ var SHADOW_MAP_TYPE_MAP = {
  * Enabled automatically when one or more shadow components are added to the scene, the system sets
  * options on the WebGLRenderer for configuring shadow appearance.
  */
-var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('shadow', {
+var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_0__.registerSystem)('shadow', {
   schema: {
     enabled: {
       default: true
@@ -27704,8 +27774,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   stringify: () => (/* binding */ stringify),
 /* harmony export */   toVector3: () => (/* binding */ toVector3)
 /* harmony export */ });
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
 /* harmony import */ var _debug_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./debug.js */ "./src/utils/debug.js");
-/* global THREE */
+
 
 var warn = (0,_debug_js__WEBPACK_IMPORTED_MODULE_0__["default"])('utils:coordinates:warn');
 
@@ -27720,7 +27791,7 @@ var whitespaceRegex = /\s+/g;
  * Parses coordinates from an "x y z" string.
  * Example: "3 10 -5" to {x: 3, y: 10, z: -5}.
  *
- * @param {string} val - An "x y z" string.
+ * @param {string} value - An "x y z" string.
  * @param {string} defaultVec - fallback value.
  * @param {object} target - Optional target object for coordinates.
  * @returns {object} An object with keys [x, y, z].
@@ -27810,7 +27881,8 @@ function equals(a, b) {
 }
 
 /**
- * @returns {bool}
+ * @param {string} value
+ * @returns {boolean}
  */
 function isCoordinates(value) {
   return regex.test(value);
@@ -27830,7 +27902,7 @@ function parseIfString(val) {
  * Convert {x, y, z} object to three.js Vector3.
  */
 function toVector3(vec3) {
-  return new THREE.Vector3(vec3.x, vec3.y, vec3.z);
+  return new three__WEBPACK_IMPORTED_MODULE_1__.Vector3(vec3.x, vec3.y, vec3.z);
 }
 
 /***/ }),
@@ -27895,9 +27967,9 @@ function formatArgs(args) {
 /**
  * Returns the type of the namespace (e.g., `error`, `warn`).
  *
- * @param {String} namespace
+ * @param {string} namespace
  *   The debug logger's namespace (e.g., `components:geometry:warn`).
- * @returns {String} The type of the namespace (e.g., `warn`).
+ * @returns {string} The type of the namespace (e.g., `warn`).
  * @api private
  */
 function getDebugNamespaceType(namespace) {
@@ -27908,9 +27980,9 @@ function getDebugNamespaceType(namespace) {
 /**
  * Returns the color of the namespace (e.g., `orange`).
  *
- * @param {String} namespace
+ * @param {string} namespace
  *   The debug logger's namespace (e.g., `components:geometry:warn`).
- * @returns {String} The color of the namespace (e.g., `orange`).
+ * @returns {string} The color of the namespace (e.g., `orange`).
  * @api private
  */
 function getDebugNamespaceColor(namespace) {
@@ -27987,8 +28059,6 @@ var error = (0,_debug_js__WEBPACK_IMPORTED_MODULE_0__["default"])('device:error'
 var supportsVRSession = false;
 var supportsARSession = false;
 var isWebXRAvailable = navigator.xr !== undefined;
-
-// Support both WebVR and WebXR APIs.
 if (isWebXRAvailable) {
   var updateEnterInterfaces = function () {
     var sceneEl = document.querySelector('a-scene');
@@ -28047,7 +28117,7 @@ function checkVRSupport() {
 
 /**
  * Checks if browser is mobile and not stand-alone dedicated vr device.
- * @return {Boolean} True if mobile browser detected.
+ * @returns {boolean} True if mobile browser detected.
  */
 var isMobile = function () {
   var _isMobile = false;
@@ -28138,7 +28208,7 @@ function isR7() {
 
 /**
  * Checks mobile device orientation.
- * @return {Boolean} True if landscape orientation.
+ * @returns {boolean} True if landscape orientation.
  */
 function isLandscape() {
   var orientation = window.orientation;
@@ -28152,8 +28222,9 @@ function isLandscape() {
  * Check if running in a browser or spoofed browser (bundler).
  * We need to check a node api that isn't mocked on either side.
  * `require` and `module.exports` are mocked in browser by bundlers.
+ * process is polyfilled with process.browser true by Next.js with "use client".
  */
-var isBrowserEnvironment = typeof process === 'undefined';
+var isBrowserEnvironment = typeof process === 'undefined' || process.browser === true;
 
 /**
  * Check if running in node on the server.
@@ -28187,7 +28258,7 @@ __webpack_require__.r(__webpack_exports__);
  *
  * @param {string} str - e.g., `material.opacity`.
  * @param {string} delimiter - e.g., `.`.
- * @returns {array} e.g., `['material', 'opacity']`.
+ * @returns {string[]} e.g., `['material', 'opacity']`.
  */
 function getComponentPropertyPath(str, delimiter) {
   delimiter = delimiter || '.';
@@ -28453,7 +28524,7 @@ function throttleTick(functionToThrottle, minimumInterval, optionalContext) {
 /**
  * Returns debounce function that gets called only once after a set of repeated calls.
  *
- * @param {function} functionToDebounce
+ * @param {function} func - function to debounce
  * @param {number} wait - Time to wait for repeated function calls (milliseconds).
  * @param {boolean} immediate - Calls the function immediately regardless of if it should be waiting.
  * @returns {function} Debounced function.
@@ -28608,7 +28679,7 @@ var diff = function () {
 /**
  * Returns whether we should capture this keyboard event for keyboard shortcuts.
  * @param {Event} event Event object.
- * @returns {Boolean} Whether the key event should be captured.
+ * @returns {boolean} Whether the key event should be captured.
  */
 function shouldCaptureKeyEvent(event) {
   if (event.metaKey) {
@@ -28620,9 +28691,9 @@ function shouldCaptureKeyEvent(event) {
 /**
  * Splits a string into an array based on a delimiter.
  *
- * @param   {string=} [str='']        Source string
- * @param   {string=} [delimiter=' '] Delimiter to use
- * @returns {array}                   Array of delimited strings
+ * @param   {string} [str='']        Source string
+ * @param   {string} [delimiter=' '] Delimiter to use
+ * @returns {string[]}               Array of delimited strings
  */
 function splitString(str, delimiter) {
   if (typeof delimiter === 'undefined') {
@@ -28638,9 +28709,9 @@ function splitString(str, delimiter) {
 /**
  * Extracts data from the element given an object that contains expected keys.
  *
- * @param {Element} Source element.
- * @param {Object} [defaults={}] Object of default key-value pairs.
- * @returns {Object}
+ * @param {Element} el - Source element.
+ * @param {object} [defaults={}] - Object of default key-value pairs.
+ * @returns {object}
  */
 function getElData(el, defaults) {
   defaults = defaults || {};
@@ -28656,8 +28727,8 @@ function getElData(el, defaults) {
 
 /**
  * Retrieves querystring value.
- * @param  {String} name Name of querystring key.
- * @return {String}      Value
+ * @param {string} name Name of querystring key.
+ * @returns {string} Value
  */
 function getUrlParameter(name) {
   // eslint-disable-next-line no-useless-escape
@@ -28742,19 +28813,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   updateMap: () => (/* binding */ updateMap),
 /* harmony export */   updateMapMaterialFromData: () => (/* binding */ updateMapMaterialFromData)
 /* harmony export */ });
-/* harmony import */ var _lib_three_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/three.js */ "./src/lib/three.js");
-/* harmony import */ var _src_loader_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./src-loader.js */ "./src/utils/src-loader.js");
-/* harmony import */ var _debug_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./debug.js */ "./src/utils/debug.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _src_loader_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src-loader.js */ "./src/utils/src-loader.js");
+/* harmony import */ var _debug_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./debug.js */ "./src/utils/debug.js");
 /* global HTMLCanvasElement, HTMLVideoElement */
 
 
 
-var warn = (0,_debug_js__WEBPACK_IMPORTED_MODULE_2__["default"])('utils:material:warn');
+var warn = (0,_debug_js__WEBPACK_IMPORTED_MODULE_1__["default"])('utils:material:warn');
 var COLOR_MAPS = new Set(['emissiveMap', 'envMap', 'map', 'specularMap']);
 
 /**
  * Set texture properties such as repeat and offset.
  *
+ * @param {THREE.Texture} texture - a Texture instance.
  * @param {object} data - With keys like `repeat`.
  */
 function setTextureProperties(texture, data) {
@@ -28767,7 +28839,7 @@ function setTextureProperties(texture, data) {
     y: 1
   };
   var npot = data.npot || false;
-  var anisotropy = data.anisotropy || _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Texture.DEFAULT_ANISOTROPY;
+  var anisotropy = data.anisotropy || three__WEBPACK_IMPORTED_MODULE_2__.Texture.DEFAULT_ANISOTROPY;
   var wrapS = texture.wrapS;
   var wrapT = texture.wrapT;
   var magFilter = texture.magFilter;
@@ -28776,16 +28848,16 @@ function setTextureProperties(texture, data) {
   // To support NPOT textures, wrap must be ClampToEdge (not Repeat),
   // and filters must not use mipmaps (i.e. Nearest or Linear).
   if (npot) {
-    wrapS = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].ClampToEdgeWrapping;
-    wrapT = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].ClampToEdgeWrapping;
-    magFilter = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].LinearFilter;
-    minFilter = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].LinearFilter;
+    wrapS = three__WEBPACK_IMPORTED_MODULE_2__.ClampToEdgeWrapping;
+    wrapT = three__WEBPACK_IMPORTED_MODULE_2__.ClampToEdgeWrapping;
+    magFilter = three__WEBPACK_IMPORTED_MODULE_2__.LinearFilter;
+    minFilter = three__WEBPACK_IMPORTED_MODULE_2__.LinearFilter;
   }
 
   // Set wrap mode to repeat only if repeat isn't 1/1. Power-of-two is required to repeat.
   if (repeat.x !== 1 || repeat.y !== 1) {
-    wrapS = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].RepeatWrapping;
-    wrapT = _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].RepeatWrapping;
+    wrapS = three__WEBPACK_IMPORTED_MODULE_2__.RepeatWrapping;
+    wrapT = three__WEBPACK_IMPORTED_MODULE_2__.RepeatWrapping;
   }
 
   // Apply texture properties
@@ -28805,6 +28877,8 @@ function setTextureProperties(texture, data) {
  * Update `material` texture property (usually but not always `map`)
  * from `data` property (usually but not always `src`).
  *
+ * @param {string} materialName
+ * @param {string} dataName
  * @param {object} shader - A-Frame shader instance.
  * @param {object} data
  */
@@ -28840,7 +28914,7 @@ function updateMapMaterialFromData(materialName, dataName, shader, data) {
   shader.materialSrcs[materialName] = src;
 
   // If the new material src is already a texture, just use it.
-  if (src instanceof _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Texture) {
+  if (src instanceof three__WEBPACK_IMPORTED_MODULE_2__.Texture) {
     setMap(src);
   } else {
     // Load texture source for the new material src.
@@ -28971,9 +29045,9 @@ function updateEnvMap(shader, data) {
 
   // First time loading this env map.
   envMapPromises[src] = new Promise(function (resolve) {
-    _src_loader_js__WEBPACK_IMPORTED_MODULE_1__.validateEnvMapSrc(src, function loadCubeMap(srcs) {
+    _src_loader_js__WEBPACK_IMPORTED_MODULE_0__.validateEnvMapSrc(src, function loadCubeMap(srcs) {
       el.sceneEl.systems.material.loadCubeMapTexture(srcs, function (texture) {
-        texture.mapping = refract ? _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].CubeRefractionMapping : _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].CubeReflectionMapping;
+        texture.mapping = refract ? three__WEBPACK_IMPORTED_MODULE_2__.CubeRefractionMapping : three__WEBPACK_IMPORTED_MODULE_2__.CubeReflectionMapping;
         checkSetMap(texture);
         resolve(texture);
       });
@@ -28981,7 +29055,7 @@ function updateEnvMap(shader, data) {
       el.sceneEl.systems.material.loadTexture(src, {
         src: src
       }, function (texture) {
-        texture.mapping = refract ? _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].EquirectangularRefractionMapping : _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].EquirectangularReflectionMapping;
+        texture.mapping = refract ? three__WEBPACK_IMPORTED_MODULE_2__.EquirectangularRefractionMapping : three__WEBPACK_IMPORTED_MODULE_2__.EquirectangularReflectionMapping;
         checkSetMap(texture);
         resolve(texture);
       });
@@ -29061,12 +29135,12 @@ function isCompatibleTexture(texture, source) {
 function createCompatibleTexture(source) {
   var texture;
   if (source.data instanceof HTMLCanvasElement) {
-    texture = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].CanvasTexture();
+    texture = new three__WEBPACK_IMPORTED_MODULE_2__.CanvasTexture();
   } else if (source.data instanceof HTMLVideoElement) {
     // Pass underlying video to constructor to ensure requestVideoFrameCallback is setup
-    texture = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].VideoTexture(source.data);
+    texture = new three__WEBPACK_IMPORTED_MODULE_2__.VideoTexture(source.data);
   } else {
-    texture = new _lib_three_js__WEBPACK_IMPORTED_MODULE_0__["default"].Texture();
+    texture = new three__WEBPACK_IMPORTED_MODULE_2__.Texture();
   }
   texture.source = source;
   texture.needsUpdate = true;
@@ -29092,7 +29166,7 @@ __webpack_require__.r(__webpack_exports__);
  * @param {THREE.Vector3} positionOnPlane any point on the plane.
  * @param {THREE.Vector3} planeNormal the normal of the plane
  * @param {THREE.Vector3} pointToTest point to test
- * @returns Number
+ * @returns {number}
  */
 function distanceOfPointFromPlane(positionOnPlane, planeNormal, pointToTest) {
   // the d value in the plane equation a*x + b*y + c*z=d
@@ -29108,7 +29182,7 @@ function distanceOfPointFromPlane(positionOnPlane, planeNormal, pointToTest) {
  * @param {THREE.Vector3} planeNormal the normal of the plane
  * @param {THREE.Vector3} pointToTest point to test
  * @param {THREE.Vector3} resultPoint where to store the result.
- * @returns
+ * @returns {THREE.Vector3}
  */
 function nearestPointInPlane(positionOnPlane, planeNormal, pointToTest, resultPoint) {
   var t = distanceOfPointFromPlane(positionOnPlane, planeNormal, pointToTest);
@@ -29280,9 +29354,9 @@ var warn = (0,_debug_js__WEBPACK_IMPORTED_MODULE_0__["default"])('utils:src-load
  *
  * `src` will be passed into the callback
  *
- * @params {string|Element} src - URL or media element.
- * @params {function} isImageCb - callback if texture is an image.
- * @params {function} isVideoCb - callback if texture is a video.
+ * @param {string|Element} src - URL or media element.
+ * @param {function} isImageCb - callback if texture is an image.
+ * @param {function} isVideoCb - callback if texture is a video.
  */
 function validateSrc(src, isImageCb, isVideoCb) {
   checkIsImage(src, function isAnImageUrl(isImage) {
@@ -29299,8 +29373,8 @@ function validateSrc(src, isImageCb, isVideoCb) {
  *
  * @param {string} src - A selector, image URL or comma-separated image URLs. Image URLS
           must be wrapped by `url()`.
- * @param {*} isCubemapCb - callback if src is a cubemap.
- * @param {*} isEquirectCb - callback is src is a singular equirectangular image.
+ * @param {function} isCubemapCb - callback if src is a cubemap.
+ * @param {function} isEquirectCb - callback if src is a singular equirectangular image.
  */
 function validateEnvMapSrc(src, isCubemapCb, isEquirectCb) {
   var el;
@@ -29378,7 +29452,7 @@ function validateCubemapSrc(src, cb) {
 /**
  * Parses src from `url(src)`.
  * @param  {string} src - String to parse.
- * @return {string} The parsed src, if parseable.
+ * @returns {string} The parsed src, if parseable.
  */
 function parseUrl(src) {
   var parsedSrc = src.match(/url\((.+)\)/);
@@ -29440,10 +29514,10 @@ function checkIsImageFallback(src, onResult) {
 /**
  * Query and validate a query selector,
  *
- * @param  {string} selector - DOM selector.
- * @return {object|null|undefined} Selected DOM element if exists.
-           null if query yields no results.
-           undefined if `selector` is not a valid selector.
+ * @param {string} selector - DOM selector.
+ * @returns {object|null|undefined} Selected DOM element if exists.
+ *          null if query yields no results.
+ *          undefined if `selector` is not a valid selector.
  */
 function validateAndGetQuerySelector(selector) {
   try {
@@ -29518,7 +29592,7 @@ function stringify(data) {
  * Converts string from hyphen to camelCase.
  *
  * @param {string} str - String to camelCase.
- * @return {string} CamelCased string.
+ * @returns {string} CamelCased string.
  */
 function toCamelCase(str) {
   return str.replace(DASH_REGEX, upperCase);
@@ -29673,6 +29747,7 @@ function checkControllerPresentAndSetup(component, idPrefix, queryObject) {
 /**
  *
  * @param {object} component - Tracked controls component.
+ * @returns {boolean} True if a controller is present.
  */
 function isControllerPresentWebXR(component, id, queryObject) {
   var controllers;
@@ -29734,7 +29809,7 @@ function findMatchingControllerWebXR(controllers, idPrefix, handedness, index, i
  * Emit specific `moved` event(s) if axes changed based on original axismove event.
  *
  * @param {object} component - Controller component in use.
- * @param {array} axesMapping - For example `{thumbstick: [0, 1]}`.
+ * @param {object} axesMapping - For example `{thumbstick: [0, 1]}`.
  * @param {object} evt - Event to process.
  */
 function emitIfAxesChanged(component, axesMapping, evt) {
@@ -29991,7 +30066,7 @@ window.threeStats = function (renderer) {
   var _fractions = [];
   function _update() {
     _rS('renderer.info.memory.geometries').set(renderer.info.memory.geometries);
-    _rS('renderer.info.programs').set(renderer.info.programs.length);
+    _rS('renderer.info.programs').set(renderer.info.programs?.length ?? NaN);
     _rS('renderer.info.memory.textures').set(renderer.info.memory.textures);
     _rS('renderer.info.render.calls').set(renderer.info.render.calls);
     _rS('renderer.info.render.triangles').set(renderer.info.render.triangles);
@@ -32065,7 +32140,7 @@ let t=_seed+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);r
 // rotations are applied to the axes in the order specified by 'order'
 // rotation by angle 'a' is applied first, then by angle 'b', then by angle 'c'
 // angles are in radians
-const cos=Math.cos;const sin=Math.sin;const c2=cos(b/2);const s2=sin(b/2);const c13=cos((a+c)/2);const s13=sin((a+c)/2);const c1_3=cos((a-c)/2);const s1_3=sin((a-c)/2);const c3_1=cos((c-a)/2);const s3_1=sin((c-a)/2);switch(order){case'XYX':q.set(c2*s13,s2*c1_3,s2*s1_3,c2*c13);break;case'YZY':q.set(s2*s1_3,c2*s13,s2*c1_3,c2*c13);break;case'ZXZ':q.set(s2*c1_3,s2*s1_3,c2*s13,c2*c13);break;case'XZX':q.set(c2*s13,s2*s3_1,s2*c3_1,c2*c13);break;case'YXY':q.set(s2*c3_1,c2*s13,s2*s3_1,c2*c13);break;case'ZYZ':q.set(s2*s3_1,s2*c3_1,c2*s13,c2*c13);break;default:console.warn('THREE.MathUtils: .setQuaternionFromProperEuler() encountered an unknown order: '+order);}}function denormalize(value,array){switch(array.constructor){case Float32Array:return value;case Uint32Array:return value/4294967295.0;case Uint16Array:return value/65535.0;case Uint8Array:return value/255.0;case Int32Array:return Math.max(value/2147483647.0,-1.0);case Int16Array:return Math.max(value/32767.0,-1.0);case Int8Array:return Math.max(value/127.0,-1.0);default:throw new Error('Invalid component type.');}}function normalize(value,array){switch(array.constructor){case Float32Array:return value;case Uint32Array:return Math.round(value*4294967295.0);case Uint16Array:return Math.round(value*65535.0);case Uint8Array:return Math.round(value*255.0);case Int32Array:return Math.round(value*2147483647.0);case Int16Array:return Math.round(value*32767.0);case Int8Array:return Math.round(value*127.0);default:throw new Error('Invalid component type.');}}const MathUtils={DEG2RAD:DEG2RAD,RAD2DEG:RAD2DEG,generateUUID:generateUUID,clamp:clamp,euclideanModulo:euclideanModulo,mapLinear:mapLinear,inverseLerp:inverseLerp,lerp:lerp,damp:damp,pingpong:pingpong,smoothstep:smoothstep,smootherstep:smootherstep,randInt:randInt,randFloat:randFloat,randFloatSpread:randFloatSpread,seededRandom:seededRandom,degToRad:degToRad,radToDeg:radToDeg,isPowerOfTwo:isPowerOfTwo,ceilPowerOfTwo:ceilPowerOfTwo,floorPowerOfTwo:floorPowerOfTwo,setQuaternionFromProperEuler:setQuaternionFromProperEuler,normalize:normalize,denormalize:denormalize};class Vector2{constructor(x=0,y=0){Vector2.prototype.isVector2=true;this.x=x;this.y=y;}get width(){return this.x;}set width(value){this.x=value;}get height(){return this.y;}set height(value){this.y=value;}set(x,y){this.x=x;this.y=y;return this;}setScalar(scalar){this.x=scalar;this.y=scalar;return this;}setX(x){this.x=x;return this;}setY(y){this.y=y;return this;}setComponent(index,value){switch(index){case 0:this.x=value;break;case 1:this.y=value;break;default:throw new Error('index is out of range: '+index);}return this;}getComponent(index){switch(index){case 0:return this.x;case 1:return this.y;default:throw new Error('index is out of range: '+index);}}clone(){return new this.constructor(this.x,this.y);}copy(v){this.x=v.x;this.y=v.y;return this;}add(v){this.x+=v.x;this.y+=v.y;return this;}addScalar(s){this.x+=s;this.y+=s;return this;}addVectors(a,b){this.x=a.x+b.x;this.y=a.y+b.y;return this;}addScaledVector(v,s){this.x+=v.x*s;this.y+=v.y*s;return this;}sub(v){this.x-=v.x;this.y-=v.y;return this;}subScalar(s){this.x-=s;this.y-=s;return this;}subVectors(a,b){this.x=a.x-b.x;this.y=a.y-b.y;return this;}multiply(v){this.x*=v.x;this.y*=v.y;return this;}multiplyScalar(scalar){this.x*=scalar;this.y*=scalar;return this;}divide(v){this.x/=v.x;this.y/=v.y;return this;}divideScalar(scalar){return this.multiplyScalar(1/scalar);}applyMatrix3(m){const x=this.x,y=this.y;const e=m.elements;this.x=e[0]*x+e[3]*y+e[6];this.y=e[1]*x+e[4]*y+e[7];return this;}min(v){this.x=Math.min(this.x,v.x);this.y=Math.min(this.y,v.y);return this;}max(v){this.x=Math.max(this.x,v.x);this.y=Math.max(this.y,v.y);return this;}clamp(min,max){// assumes min < max, componentwise
+const cos=Math.cos;const sin=Math.sin;const c2=cos(b/2);const s2=sin(b/2);const c13=cos((a+c)/2);const s13=sin((a+c)/2);const c1_3=cos((a-c)/2);const s1_3=sin((a-c)/2);const c3_1=cos((c-a)/2);const s3_1=sin((c-a)/2);switch(order){case'XYX':q.set(c2*s13,s2*c1_3,s2*s1_3,c2*c13);break;case'YZY':q.set(s2*s1_3,c2*s13,s2*c1_3,c2*c13);break;case'ZXZ':q.set(s2*c1_3,s2*s1_3,c2*s13,c2*c13);break;case'XZX':q.set(c2*s13,s2*s3_1,s2*c3_1,c2*c13);break;case'YXY':q.set(s2*c3_1,c2*s13,s2*s3_1,c2*c13);break;case'ZYZ':q.set(s2*s3_1,s2*c3_1,c2*s13,c2*c13);break;default:console.warn('THREE.MathUtils: .setQuaternionFromProperEuler() encountered an unknown order: '+order);}}function denormalize(value,array){switch(array.constructor){case Float32Array:return value;case Uint32Array:return value/4294967295.0;case Uint16Array:return value/65535.0;case Uint8Array:return value/255.0;case Int32Array:return Math.max(value/2147483647.0,-1);case Int16Array:return Math.max(value/32767.0,-1);case Int8Array:return Math.max(value/127.0,-1);default:throw new Error('Invalid component type.');}}function normalize(value,array){switch(array.constructor){case Float32Array:return value;case Uint32Array:return Math.round(value*4294967295.0);case Uint16Array:return Math.round(value*65535.0);case Uint8Array:return Math.round(value*255.0);case Int32Array:return Math.round(value*2147483647.0);case Int16Array:return Math.round(value*32767.0);case Int8Array:return Math.round(value*127.0);default:throw new Error('Invalid component type.');}}const MathUtils={DEG2RAD:DEG2RAD,RAD2DEG:RAD2DEG,generateUUID:generateUUID,clamp:clamp,euclideanModulo:euclideanModulo,mapLinear:mapLinear,inverseLerp:inverseLerp,lerp:lerp,damp:damp,pingpong:pingpong,smoothstep:smoothstep,smootherstep:smootherstep,randInt:randInt,randFloat:randFloat,randFloatSpread:randFloatSpread,seededRandom:seededRandom,degToRad:degToRad,radToDeg:radToDeg,isPowerOfTwo:isPowerOfTwo,ceilPowerOfTwo:ceilPowerOfTwo,floorPowerOfTwo:floorPowerOfTwo,setQuaternionFromProperEuler:setQuaternionFromProperEuler,normalize:normalize,denormalize:denormalize};class Vector2{constructor(x=0,y=0){Vector2.prototype.isVector2=true;this.x=x;this.y=y;}get width(){return this.x;}set width(value){this.x=value;}get height(){return this.y;}set height(value){this.y=value;}set(x,y){this.x=x;this.y=y;return this;}setScalar(scalar){this.x=scalar;this.y=scalar;return this;}setX(x){this.x=x;return this;}setY(y){this.y=y;return this;}setComponent(index,value){switch(index){case 0:this.x=value;break;case 1:this.y=value;break;default:throw new Error('index is out of range: '+index);}return this;}getComponent(index){switch(index){case 0:return this.x;case 1:return this.y;default:throw new Error('index is out of range: '+index);}}clone(){return new this.constructor(this.x,this.y);}copy(v){this.x=v.x;this.y=v.y;return this;}add(v){this.x+=v.x;this.y+=v.y;return this;}addScalar(s){this.x+=s;this.y+=s;return this;}addVectors(a,b){this.x=a.x+b.x;this.y=a.y+b.y;return this;}addScaledVector(v,s){this.x+=v.x*s;this.y+=v.y*s;return this;}sub(v){this.x-=v.x;this.y-=v.y;return this;}subScalar(s){this.x-=s;this.y-=s;return this;}subVectors(a,b){this.x=a.x-b.x;this.y=a.y-b.y;return this;}multiply(v){this.x*=v.x;this.y*=v.y;return this;}multiplyScalar(scalar){this.x*=scalar;this.y*=scalar;return this;}divide(v){this.x/=v.x;this.y/=v.y;return this;}divideScalar(scalar){return this.multiplyScalar(1/scalar);}applyMatrix3(m){const x=this.x,y=this.y;const e=m.elements;this.x=e[0]*x+e[3]*y+e[6];this.y=e[1]*x+e[4]*y+e[7];return this;}min(v){this.x=Math.min(this.x,v.x);this.y=Math.min(this.y,v.y);return this;}max(v){this.x=Math.max(this.x,v.x);this.y=Math.max(this.y,v.y);return this;}clamp(min,max){// assumes min < max, componentwise
 this.x=clamp(this.x,min.x,max.x);this.y=clamp(this.y,min.y,max.y);return this;}clampScalar(minVal,maxVal){this.x=clamp(this.x,minVal,maxVal);this.y=clamp(this.y,minVal,maxVal);return this;}clampLength(min,max){const length=this.length();return this.divideScalar(length||1).multiplyScalar(clamp(length,min,max));}floor(){this.x=Math.floor(this.x);this.y=Math.floor(this.y);return this;}ceil(){this.x=Math.ceil(this.x);this.y=Math.ceil(this.y);return this;}round(){this.x=Math.round(this.x);this.y=Math.round(this.y);return this;}roundToZero(){this.x=Math.trunc(this.x);this.y=Math.trunc(this.y);return this;}negate(){this.x=-this.x;this.y=-this.y;return this;}dot(v){return this.x*v.x+this.y*v.y;}cross(v){return this.x*v.y-this.y*v.x;}lengthSq(){return this.x*this.x+this.y*this.y;}length(){return Math.sqrt(this.x*this.x+this.y*this.y);}manhattanLength(){return Math.abs(this.x)+Math.abs(this.y);}normalize(){return this.divideScalar(this.length()||1);}angle(){// computes the angle in radians with respect to the positive x-axis
 const angle=Math.atan2(-this.y,-this.x)+Math.PI;return angle;}angleTo(v){const denominator=Math.sqrt(this.lengthSq()*v.lengthSq());if(denominator===0)return Math.PI/2;const theta=this.dot(v)/denominator;// clamp, to handle numerical problems
 return Math.acos(clamp(theta,-1,1));}distanceTo(v){return Math.sqrt(this.distanceToSquared(v));}distanceToSquared(v){const dx=this.x-v.x,dy=this.y-v.y;return dx*dx+dy*dy;}manhattanDistanceTo(v){return Math.abs(this.x-v.x)+Math.abs(this.y-v.y);}setLength(length){return this.normalize().multiplyScalar(length);}lerp(v,alpha){this.x+=(v.x-this.x)*alpha;this.y+=(v.y-this.y)*alpha;return this;}lerpVectors(v1,v2,alpha){this.x=v1.x+(v2.x-v1.x)*alpha;this.y=v1.y+(v2.y-v1.y)*alpha;return this;}equals(v){return v.x===this.x&&v.y===this.y;}fromArray(array,offset=0){this.x=array[offset];this.y=array[offset+1];return this;}toArray(array=[],offset=0){array[offset]=this.x;array[offset+1]=this.y;return array;}fromBufferAttribute(attribute,index){this.x=attribute.getX(index);this.y=attribute.getY(index);return this;}rotateAround(center,angle){const c=Math.cos(angle),s=Math.sin(angle);const x=this.x-center.x;const y=this.y-center.y;this.x=x*c-y*s+center.x;this.y=x*s+y*c+center.y;return this;}random(){this.x=Math.random();this.y=Math.random();return this;}*[Symbol.iterator](){yield this.x;yield this.y;}}class Matrix3{constructor(n11,n12,n13,n21,n22,n23,n31,n32,n33){Matrix3.prototype.isMatrix3=true;this.elements=[1,0,0,0,1,0,0,0,1];if(n11!==undefined){this.set(n11,n12,n13,n21,n22,n23,n31,n32,n33);}}set(n11,n12,n13,n21,n22,n23,n31,n32,n33){const te=this.elements;te[0]=n11;te[1]=n21;te[2]=n31;te[3]=n12;te[4]=n22;te[5]=n32;te[6]=n13;te[7]=n23;te[8]=n33;return this;}identity(){this.set(1,0,0,0,1,0,0,0,1);return this;}copy(m){const te=this.elements;const me=m.elements;te[0]=me[0];te[1]=me[1];te[2]=me[2];te[3]=me[3];te[4]=me[4];te[5]=me[5];te[6]=me[6];te[7]=me[7];te[8]=me[8];return this;}extractBasis(xAxis,yAxis,zAxis){xAxis.setFromMatrix3Column(this,0);yAxis.setFromMatrix3Column(this,1);zAxis.setFromMatrix3Column(this,2);return this;}setFromMatrix4(m){const me=m.elements;this.set(me[0],me[4],me[8],me[1],me[5],me[9],me[2],me[6],me[10]);return this;}multiply(m){return this.multiplyMatrices(this,m);}premultiply(m){return this.multiplyMatrices(m,this);}multiplyMatrices(a,b){const ae=a.elements;const be=b.elements;const te=this.elements;const a11=ae[0],a12=ae[3],a13=ae[6];const a21=ae[1],a22=ae[4],a23=ae[7];const a31=ae[2],a32=ae[5],a33=ae[8];const b11=be[0],b12=be[3],b13=be[6];const b21=be[1],b22=be[4],b23=be[7];const b31=be[2],b32=be[5],b33=be[8];te[0]=a11*b11+a12*b21+a13*b31;te[3]=a11*b12+a12*b22+a13*b32;te[6]=a11*b13+a12*b23+a13*b33;te[1]=a21*b11+a22*b21+a23*b31;te[4]=a21*b12+a22*b22+a23*b32;te[7]=a21*b13+a22*b23+a23*b33;te[2]=a31*b11+a32*b21+a33*b31;te[5]=a31*b12+a32*b22+a33*b32;te[8]=a31*b13+a32*b23+a33*b33;return this;}multiplyScalar(s){const te=this.elements;te[0]*=s;te[3]*=s;te[6]*=s;te[1]*=s;te[4]*=s;te[7]*=s;te[2]*=s;te[5]*=s;te[8]*=s;return this;}determinant(){const te=this.elements;const a=te[0],b=te[1],c=te[2],d=te[3],e=te[4],f=te[5],g=te[6],h=te[7],i=te[8];return a*e*i-a*f*h-b*d*i+b*f*g+c*d*h-c*e*g;}invert(){const te=this.elements,n11=te[0],n21=te[1],n31=te[2],n12=te[3],n22=te[4],n32=te[5],n13=te[6],n23=te[7],n33=te[8],t11=n33*n22-n32*n23,t12=n32*n13-n33*n12,t13=n23*n12-n22*n13,det=n11*t11+n21*t12+n31*t13;if(det===0)return this.set(0,0,0,0,0,0,0,0,0);const detInv=1/det;te[0]=t11*detInv;te[1]=(n31*n23-n33*n21)*detInv;te[2]=(n32*n21-n31*n22)*detInv;te[3]=t12*detInv;te[4]=(n33*n11-n31*n13)*detInv;te[5]=(n31*n12-n32*n11)*detInv;te[6]=t13*detInv;te[7]=(n21*n13-n23*n11)*detInv;te[8]=(n22*n11-n21*n12)*detInv;return this;}transpose(){let tmp;const m=this.elements;tmp=m[1];m[1]=m[3];m[3]=tmp;tmp=m[2];m[2]=m[6];m[6]=tmp;tmp=m[5];m[5]=m[7];m[7]=tmp;return this;}getNormalMatrix(matrix4){return this.setFromMatrix4(matrix4).invert().transpose();}transposeIntoArray(r){const m=this.elements;r[0]=m[0];r[1]=m[3];r[2]=m[6];r[3]=m[1];r[4]=m[4];r[5]=m[7];r[6]=m[2];r[7]=m[5];r[8]=m[8];return this;}setUvTransform(tx,ty,sx,sy,rotation,cx,cy){const c=Math.cos(rotation);const s=Math.sin(rotation);this.set(sx*c,sx*s,-sx*(c*cx+s*cy)+cx+tx,-sy*s,sy*c,-sy*(-s*cx+c*cy)+cy+ty,0,0,1);return this;}//
@@ -32076,7 +32151,7 @@ equals(matrix){const te=this.elements;const me=matrix.elements;for(let i=0;i<9;i
 for(let i=array.length-1;i>=0;--i){if(array[i]>=65535)return true;// account for PRIMITIVE_RESTART_FIXED_INDEX, #24565
 }return false;}const TYPED_ARRAYS={Int8Array:Int8Array,Uint8Array:Uint8Array,Uint8ClampedArray:Uint8ClampedArray,Int16Array:Int16Array,Uint16Array:Uint16Array,Int32Array:Int32Array,Uint32Array:Uint32Array,Float32Array:Float32Array,Float64Array:Float64Array};function getTypedArray(type,buffer){return new TYPED_ARRAYS[type](buffer);}function createElementNS(name){return document.createElementNS('http://www.w3.org/1999/xhtml',name);}function createCanvasElement(){const canvas=createElementNS('canvas');canvas.style.display='block';return canvas;}const _cache={};function warnOnce(message){if(message in _cache)return;_cache[message]=true;console.warn(message);}function probeAsync(gl,sync,interval){return new Promise(function(resolve,reject){function probe(){switch(gl.clientWaitSync(sync,gl.SYNC_FLUSH_COMMANDS_BIT,0)){case gl.WAIT_FAILED:reject();break;case gl.TIMEOUT_EXPIRED:setTimeout(probe,interval);break;default:resolve();}}setTimeout(probe,interval);});}function toNormalizedProjectionMatrix(projectionMatrix){const m=projectionMatrix.elements;// Convert [-1, 1] to [0, 1] projection matrix
 m[2]=0.5*m[2]+0.5*m[3];m[6]=0.5*m[6]+0.5*m[7];m[10]=0.5*m[10]+0.5*m[11];m[14]=0.5*m[14]+0.5*m[15];}function toReversedProjectionMatrix(projectionMatrix){const m=projectionMatrix.elements;const isPerspectiveMatrix=m[11]===-1;// Reverse [0, 1] projection matrix
-if(isPerspectiveMatrix){m[10]=-m[10]-1;m[14]=-m[14];}else{m[10]=-m[10];m[14]=-m[14]+1;}}const LINEAR_REC709_TO_XYZ=/*@__PURE__*/new Matrix3().set(0.4123908,0.3575843,0.1804808,0.2126390,0.7151687,0.0721923,0.0193308,0.1191948,0.9505322);const XYZ_TO_LINEAR_REC709=/*@__PURE__*/new Matrix3().set(3.2409699,-1.5373832,-0.4986108,-0.9692436,1.8759675,0.0415551,0.0556301,-0.2039770,1.0569715);function createColorManagement(){const ColorManagement={enabled:true,workingColorSpace:LinearSRGBColorSpace,/**
+if(isPerspectiveMatrix){m[10]=-m[10]-1;m[14]=-m[14];}else{m[10]=-m[10];m[14]=-m[14]+1;}}const LINEAR_REC709_TO_XYZ=/*@__PURE__*/new Matrix3().set(0.4123908,0.3575843,0.1804808,0.2126390,0.7151687,0.0721923,0.0193308,0.1191948,0.9505322);const XYZ_TO_LINEAR_REC709=/*@__PURE__*/new Matrix3().set(3.2409699,-1.5373832,-0.4986108,-0.9692436,1.8759675,0.0415551,0.0556301,-0.203977,1.0569715);function createColorManagement(){const ColorManagement={enabled:true,workingColorSpace:LinearSRGBColorSpace,/**
 		 * Implementations of supported color spaces.
 		 *
 		 * Required:
@@ -32352,7 +32427,7 @@ const mantissaTable=new Uint32Array(2048);const exponentTable=new Uint32Array(64
 let e=0;// zero exponent
 // normalized
 while((m&0x00800000)===0){m<<=1;e-=0x00800000;// decrement exponent
-}m&=~0x00800000;// clear leading 1 bit
+}m&=-8388609;// clear leading 1 bit
 e+=0x38800000;// adjust bias
 mantissaTable[i]=m|e;}for(let i=1024;i<2048;++i){mantissaTable[i]=0x38000000+(i-1024<<13);}for(let i=1;i<31;++i){exponentTable[i]=i<<23;}exponentTable[31]=0x47800000;exponentTable[32]=0x80000000;for(let i=33;i<63;++i){exponentTable[i]=0x80000000+(i-32<<23);}exponentTable[63]=0xc7800000;for(let i=1;i<64;++i){if(i!==32){offsetTable[i]=1024;}}return{floatView:floatView,uint32View:uint32View,baseTable:baseTable,shiftTable:shiftTable,mantissaTable:mantissaTable,exponentTable:exponentTable,offsetTable:offsetTable};}// float32 to float16
 function toHalfFloat(val){if(Math.abs(val)>65504)console.warn('THREE.DataUtils.toHalfFloat(): Value out of range.');val=clamp(val,-65504,65504);_tables.floatView[0]=val;const f=_tables.uint32View[0];const e=f>>23&0x1ff;return _tables.baseTable[e]+((f&0x007fffff)>>_tables.shiftTable[e]);}// float16 to float32
@@ -32375,7 +32450,7 @@ if(morphAttributesPosition){for(let i=0,il=morphAttributesPosition.length;i<il;i
 if(index===null||attributes.position===undefined||attributes.normal===undefined||attributes.uv===undefined){console.error('THREE.BufferGeometry: .computeTangents() failed. Missing required attributes (index, position, normal or uv)');return;}const positionAttribute=attributes.position;const normalAttribute=attributes.normal;const uvAttribute=attributes.uv;if(this.hasAttribute('tangent')===false){this.setAttribute('tangent',new BufferAttribute(new Float32Array(4*positionAttribute.count),4));}const tangentAttribute=this.getAttribute('tangent');const tan1=[],tan2=[];for(let i=0;i<positionAttribute.count;i++){tan1[i]=new Vector3();tan2[i]=new Vector3();}const vA=new Vector3(),vB=new Vector3(),vC=new Vector3(),uvA=new Vector2(),uvB=new Vector2(),uvC=new Vector2(),sdir=new Vector3(),tdir=new Vector3();function handleTriangle(a,b,c){vA.fromBufferAttribute(positionAttribute,a);vB.fromBufferAttribute(positionAttribute,b);vC.fromBufferAttribute(positionAttribute,c);uvA.fromBufferAttribute(uvAttribute,a);uvB.fromBufferAttribute(uvAttribute,b);uvC.fromBufferAttribute(uvAttribute,c);vB.sub(vA);vC.sub(vA);uvB.sub(uvA);uvC.sub(uvA);const r=1.0/(uvB.x*uvC.y-uvC.x*uvB.y);// silently ignore degenerate uv triangles having coincident or colinear vertices
 if(!isFinite(r))return;sdir.copy(vB).multiplyScalar(uvC.y).addScaledVector(vC,-uvB.y).multiplyScalar(r);tdir.copy(vC).multiplyScalar(uvB.x).addScaledVector(vB,-uvC.x).multiplyScalar(r);tan1[a].add(sdir);tan1[b].add(sdir);tan1[c].add(sdir);tan2[a].add(tdir);tan2[b].add(tdir);tan2[c].add(tdir);}let groups=this.groups;if(groups.length===0){groups=[{start:0,count:index.count}];}for(let i=0,il=groups.length;i<il;++i){const group=groups[i];const start=group.start;const count=group.count;for(let j=start,jl=start+count;j<jl;j+=3){handleTriangle(index.getX(j+0),index.getX(j+1),index.getX(j+2));}}const tmp=new Vector3(),tmp2=new Vector3();const n=new Vector3(),n2=new Vector3();function handleVertex(v){n.fromBufferAttribute(normalAttribute,v);n2.copy(n);const t=tan1[v];// Gram-Schmidt orthogonalize
 tmp.copy(t);tmp.sub(n.multiplyScalar(n.dot(t))).normalize();// Calculate handedness
-tmp2.crossVectors(n2,t);const test=tmp2.dot(tan2[v]);const w=test<0.0?-1.0:1.0;tangentAttribute.setXYZW(v,tmp.x,tmp.y,tmp.z,w);}for(let i=0,il=groups.length;i<il;++i){const group=groups[i];const start=group.start;const count=group.count;for(let j=start,jl=start+count;j<jl;j+=3){handleVertex(index.getX(j+0));handleVertex(index.getX(j+1));handleVertex(index.getX(j+2));}}}computeVertexNormals(){const index=this.index;const positionAttribute=this.getAttribute('position');if(positionAttribute!==undefined){let normalAttribute=this.getAttribute('normal');if(normalAttribute===undefined){normalAttribute=new BufferAttribute(new Float32Array(positionAttribute.count*3),3);this.setAttribute('normal',normalAttribute);}else{// reset existing normals to zero
+tmp2.crossVectors(n2,t);const test=tmp2.dot(tan2[v]);const w=test<0.0?-1:1.0;tangentAttribute.setXYZW(v,tmp.x,tmp.y,tmp.z,w);}for(let i=0,il=groups.length;i<il;++i){const group=groups[i];const start=group.start;const count=group.count;for(let j=start,jl=start+count;j<jl;j+=3){handleVertex(index.getX(j+0));handleVertex(index.getX(j+1));handleVertex(index.getX(j+2));}}}computeVertexNormals(){const index=this.index;const positionAttribute=this.getAttribute('position');if(positionAttribute!==undefined){let normalAttribute=this.getAttribute('normal');if(normalAttribute===undefined){normalAttribute=new BufferAttribute(new Float32Array(positionAttribute.count*3),3);this.setAttribute('normal',normalAttribute);}else{// reset existing normals to zero
 for(let i=0,il=normalAttribute.count;i<il;i++){normalAttribute.setXYZ(i,0,0,0);}}const pA=new Vector3(),pB=new Vector3(),pC=new Vector3();const nA=new Vector3(),nB=new Vector3(),nC=new Vector3();const cb=new Vector3(),ab=new Vector3();// indexed elements
 if(index){for(let i=0,il=index.count;i<il;i+=3){const vA=index.getX(i+0);const vB=index.getX(i+1);const vC=index.getX(i+2);pA.fromBufferAttribute(positionAttribute,vA);pB.fromBufferAttribute(positionAttribute,vB);pC.fromBufferAttribute(positionAttribute,vC);cb.subVectors(pC,pB);ab.subVectors(pA,pB);cb.cross(ab);nA.fromBufferAttribute(normalAttribute,vA);nB.fromBufferAttribute(normalAttribute,vB);nC.fromBufferAttribute(normalAttribute,vC);nA.add(cb);nB.add(cb);nC.add(cb);normalAttribute.setXYZ(vA,nA.x,nA.y,nA.z);normalAttribute.setXYZ(vB,nB.x,nB.y,nB.z);normalAttribute.setXYZ(vC,nC.x,nC.y,nC.z);}}else{// non-indexed elements (unconnected triangle soup)
 for(let i=0,il=positionAttribute.count;i<il;i+=3){pA.fromBufferAttribute(positionAttribute,i+0);pB.fromBufferAttribute(positionAttribute,i+1);pC.fromBufferAttribute(positionAttribute,i+2);cb.subVectors(pC,pB);ab.subVectors(pA,pB);cb.cross(ab);normalAttribute.setXYZ(i+0,cb.x,cb.y,cb.z);normalAttribute.setXYZ(i+1,cb.x,cb.y,cb.z);normalAttribute.setXYZ(i+2,cb.x,cb.y,cb.z);}}this.normalizeNormals();normalAttribute.needsUpdate=true;}}normalizeNormals(){const normals=this.attributes.normal;for(let i=0,il=normals.count;i<il;i++){_vector$8.fromBufferAttribute(normals,i);_vector$8.normalize();normals.setXYZ(i,_vector$8.x,_vector$8.y,_vector$8.z);}}toNonIndexed(){function convertBufferAttribute(attribute,indices){const array=attribute.array;const itemSize=attribute.itemSize;const normalized=attribute.normalized;const array2=new array.constructor(indices.length*itemSize);let index=0,index2=0;for(let i=0,l=indices.length;i<l;i++){if(attribute.isInterleavedBufferAttribute){index=indices[i]*attribute.data.stride+attribute.offset;}else{index=indices[i]*itemSize;}for(let j=0;j<itemSize;j++){array2[index2++]=array[index++];}}return new BufferAttribute(array2,itemSize,normalized);}//
@@ -33843,10 +33918,10 @@ colorAttribute.needsUpdate=true;}update(){const geometry=this.geometry;const poi
 _camera.projectionMatrixInverse.copy(this.camera.projectionMatrixInverse);// Adjust z values based on coordinate system
 const nearZ=this.camera.coordinateSystem===WebGLCoordinateSystem?-1:0;// center / target
 setPoint('c',pointMap,geometry,_camera,0,0,nearZ);setPoint('t',pointMap,geometry,_camera,0,0,1);// near
-setPoint('n1',pointMap,geometry,_camera,-w,-h,nearZ);setPoint('n2',pointMap,geometry,_camera,w,-h,nearZ);setPoint('n3',pointMap,geometry,_camera,-w,h,nearZ);setPoint('n4',pointMap,geometry,_camera,w,h,nearZ);// far
-setPoint('f1',pointMap,geometry,_camera,-w,-h,1);setPoint('f2',pointMap,geometry,_camera,w,-h,1);setPoint('f3',pointMap,geometry,_camera,-w,h,1);setPoint('f4',pointMap,geometry,_camera,w,h,1);// up
-setPoint('u1',pointMap,geometry,_camera,w*0.7,h*1.1,nearZ);setPoint('u2',pointMap,geometry,_camera,-w*0.7,h*1.1,nearZ);setPoint('u3',pointMap,geometry,_camera,0,h*2,nearZ);// cross
-setPoint('cf1',pointMap,geometry,_camera,-w,0,1);setPoint('cf2',pointMap,geometry,_camera,w,0,1);setPoint('cf3',pointMap,geometry,_camera,0,-h,1);setPoint('cf4',pointMap,geometry,_camera,0,h,1);setPoint('cn1',pointMap,geometry,_camera,-w,0,nearZ);setPoint('cn2',pointMap,geometry,_camera,w,0,nearZ);setPoint('cn3',pointMap,geometry,_camera,0,-h,nearZ);setPoint('cn4',pointMap,geometry,_camera,0,h,nearZ);geometry.getAttribute('position').needsUpdate=true;}dispose(){this.geometry.dispose();this.material.dispose();}}function setPoint(point,pointMap,geometry,camera,x,y,z){_vector.set(x,y,z).unproject(camera);const points=pointMap[point];if(points!==undefined){const position=geometry.getAttribute('position');for(let i=0,l=points.length;i<l;i++){position.setXYZ(points[i],_vector.x,_vector.y,_vector.z);}}}const _box=/*@__PURE__*/new Box3();class BoxHelper extends LineSegments{constructor(object,color=0xffff00){const indices=new Uint16Array([0,1,1,2,2,3,3,0,4,5,5,6,6,7,7,4,0,4,1,5,2,6,3,7]);const positions=new Float32Array(8*3);const geometry=new BufferGeometry();geometry.setIndex(new BufferAttribute(indices,1));geometry.setAttribute('position',new BufferAttribute(positions,3));super(geometry,new LineBasicMaterial({color:color,toneMapped:false}));this.object=object;this.type='BoxHelper';this.matrixAutoUpdate=false;this.update();}update(object){if(object!==undefined){console.warn('THREE.BoxHelper: .update() has no longer arguments.');}if(this.object!==undefined){_box.setFromObject(this.object);}if(_box.isEmpty())return;const min=_box.min;const max=_box.max;/*
+setPoint('n1',pointMap,geometry,_camera,-1,-1,nearZ);setPoint('n2',pointMap,geometry,_camera,w,-1,nearZ);setPoint('n3',pointMap,geometry,_camera,-1,h,nearZ);setPoint('n4',pointMap,geometry,_camera,w,h,nearZ);// far
+setPoint('f1',pointMap,geometry,_camera,-1,-1,1);setPoint('f2',pointMap,geometry,_camera,w,-1,1);setPoint('f3',pointMap,geometry,_camera,-1,h,1);setPoint('f4',pointMap,geometry,_camera,w,h,1);// up
+setPoint('u1',pointMap,geometry,_camera,w*0.7,h*1.1,nearZ);setPoint('u2',pointMap,geometry,_camera,-1*0.7,h*1.1,nearZ);setPoint('u3',pointMap,geometry,_camera,0,h*2,nearZ);// cross
+setPoint('cf1',pointMap,geometry,_camera,-1,0,1);setPoint('cf2',pointMap,geometry,_camera,w,0,1);setPoint('cf3',pointMap,geometry,_camera,0,-1,1);setPoint('cf4',pointMap,geometry,_camera,0,h,1);setPoint('cn1',pointMap,geometry,_camera,-1,0,nearZ);setPoint('cn2',pointMap,geometry,_camera,w,0,nearZ);setPoint('cn3',pointMap,geometry,_camera,0,-1,nearZ);setPoint('cn4',pointMap,geometry,_camera,0,h,nearZ);geometry.getAttribute('position').needsUpdate=true;}dispose(){this.geometry.dispose();this.material.dispose();}}function setPoint(point,pointMap,geometry,camera,x,y,z){_vector.set(x,y,z).unproject(camera);const points=pointMap[point];if(points!==undefined){const position=geometry.getAttribute('position');for(let i=0,l=points.length;i<l;i++){position.setXYZ(points[i],_vector.x,_vector.y,_vector.z);}}}const _box=/*@__PURE__*/new Box3();class BoxHelper extends LineSegments{constructor(object,color=0xffff00){const indices=new Uint16Array([0,1,1,2,2,3,3,0,4,5,5,6,6,7,7,4,0,4,1,5,2,6,3,7]);const positions=new Float32Array(8*3);const geometry=new BufferGeometry();geometry.setIndex(new BufferAttribute(indices,1));geometry.setAttribute('position',new BufferAttribute(positions,3));super(geometry,new LineBasicMaterial({color:color,toneMapped:false}));this.object=object;this.type='BoxHelper';this.matrixAutoUpdate=false;this.update();}update(object){if(object!==undefined){console.warn('THREE.BoxHelper: .update() has no longer arguments.');}if(this.object!==undefined){_box.setFromObject(this.object);}if(_box.isEmpty())return;const min=_box.min;const max=_box.max;/*
 			5____4
 		1/___0/|
 		| 6__|_7
@@ -34983,8 +35058,8 @@ let foveation=1.0;let customReferenceSpace=null;let pose=null;var layers=[];let 
 const cameraL=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.PerspectiveCamera();cameraL.viewport=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.Vector4();const cameraR=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.PerspectiveCamera();cameraR.viewport=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.Vector4();const cameras=[cameraL,cameraR];const cameraXR=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.ArrayCamera();let _currentDepthNear=null;let _currentDepthFar=null;//
 this.cameraAutoUpdate=true;this.layersEnabled=false;this.enabled=false;this.isPresenting=false;this.isMultiview=false;this.getCameraPose=function(){return pose;};this.getController=function(index){let controller=controllers[index];if(controller===undefined){controller=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.WebXRController();controllers[index]=controller;}return controller.getTargetRaySpace();};this.getControllerGrip=function(index){let controller=controllers[index];if(controller===undefined){controller=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.WebXRController();controllers[index]=controller;}return controller.getGripSpace();};this.getHand=function(index){let controller=controllers[index];if(controller===undefined){controller=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.WebXRController();controllers[index]=controller;}return controller.getHandSpace();};//
 function onSessionEvent(event){const controllerIndex=controllerInputSources.indexOf(event.inputSource);if(controllerIndex===-1){return;}const controller=controllers[controllerIndex];if(controller!==undefined){controller.update(event.inputSource,event.frame,customReferenceSpace||referenceSpace);controller.dispatchEvent({type:event.type,data:event.inputSource});}}function onSessionEnd(){session.removeEventListener('select',onSessionEvent);session.removeEventListener('selectstart',onSessionEvent);session.removeEventListener('selectend',onSessionEvent);session.removeEventListener('squeeze',onSessionEvent);session.removeEventListener('squeezestart',onSessionEvent);session.removeEventListener('squeezeend',onSessionEvent);session.removeEventListener('end',onSessionEnd);session.removeEventListener('inputsourceschange',onInputSourcesChange);for(let i=0;i<controllers.length;i++){const inputSource=controllerInputSources[i];if(inputSource===null)continue;controllerInputSources[i]=null;controllers[i].disconnect(inputSource);}_currentDepthNear=null;_currentDepthFar=null;depthSensing.reset();// restore framebuffer/rendering state
-renderer.setRenderTarget(initialRenderTarget);glBaseLayer=null;glProjLayer=null;glBinding=null;session=null;newRenderTarget=null;//
-animation.stop();scope.isPresenting=false;renderer.setPixelRatio(currentPixelRatio);renderer.setSize(currentSize.width,currentSize.height,false);scope.dispatchEvent({type:'sessionend'});}this.setFramebufferScaleFactor=function(value){framebufferScaleFactor=value;if(scope.isPresenting===true){console.warn('THREE.WebXRManager: Cannot change framebuffer scale while presenting.');}};this.setReferenceSpaceType=function(value){referenceSpaceType=value;if(scope.isPresenting===true){console.warn('THREE.WebXRManager: Cannot change reference space type while presenting.');}};this.getReferenceSpace=function(){return customReferenceSpace||referenceSpace;};this.setReferenceSpace=function(space){customReferenceSpace=space;};this.getBaseLayer=function(){return glProjLayer!==null?glProjLayer:glBaseLayer;};this.getBinding=function(){return glBinding;};this.getRenderTarget=function(){return newRenderTarget;};this.getFrame=function(){return xrFrame;};this.getSession=function(){return session;};this.setSession=async function(value){session=value;if(session!==null){initialRenderTarget=renderer.getRenderTarget();session.addEventListener('select',onSessionEvent);session.addEventListener('selectstart',onSessionEvent);session.addEventListener('selectend',onSessionEvent);session.addEventListener('squeeze',onSessionEvent);session.addEventListener('squeezestart',onSessionEvent);session.addEventListener('squeezeend',onSessionEvent);session.addEventListener('end',onSessionEnd);session.addEventListener('inputsourceschange',onInputSourcesChange);if(attributes.xrCompatible!==true){await gl.makeXRCompatible();}currentPixelRatio=renderer.getPixelRatio();renderer.getSize(currentSize);// Check that the browser implements the necessary APIs to use an
+scope.isPresenting=false;renderer.setRenderTarget(initialRenderTarget);glBaseLayer=null;glProjLayer=null;glBinding=null;session=null;newRenderTarget=null;//
+animation.stop();renderer.setPixelRatio(currentPixelRatio);renderer.setSize(currentSize.width,currentSize.height,false);scope.dispatchEvent({type:'sessionend'});}this.setFramebufferScaleFactor=function(value){framebufferScaleFactor=value;if(scope.isPresenting===true){console.warn('THREE.WebXRManager: Cannot change framebuffer scale while presenting.');}};this.setReferenceSpaceType=function(value){referenceSpaceType=value;if(scope.isPresenting===true){console.warn('THREE.WebXRManager: Cannot change reference space type while presenting.');}};this.getReferenceSpace=function(){return customReferenceSpace||referenceSpace;};this.setReferenceSpace=function(space){customReferenceSpace=space;};this.getBaseLayer=function(){return glProjLayer!==null?glProjLayer:glBaseLayer;};this.getBinding=function(){return glBinding;};this.getRenderTarget=function(){return newRenderTarget;};this.getFrame=function(){return xrFrame;};this.getSession=function(){return session;};this.setSession=async function(value){session=value;if(session!==null){initialRenderTarget=renderer.getRenderTarget();session.addEventListener('select',onSessionEvent);session.addEventListener('selectstart',onSessionEvent);session.addEventListener('selectend',onSessionEvent);session.addEventListener('squeeze',onSessionEvent);session.addEventListener('squeezestart',onSessionEvent);session.addEventListener('squeezeend',onSessionEvent);session.addEventListener('end',onSessionEnd);session.addEventListener('inputsourceschange',onInputSourcesChange);if(attributes.xrCompatible!==true){await gl.makeXRCompatible();}currentPixelRatio=renderer.getPixelRatio();renderer.getSize(currentSize);// Check that the browser implements the necessary APIs to use an
 // XRProjectionLayer rather than an XRWebGLLayer
 const useLayers=typeof XRWebGLBinding!=='undefined'&&'createProjectionLayer'in XRWebGLBinding.prototype;if(!useLayers){const layerInit={antialias:attributes.antialias,alpha:true,depth:attributes.depth,stencil:attributes.stencil,framebufferScaleFactor:framebufferScaleFactor};glBaseLayer=new XRWebGLLayer(session,gl,layerInit);session.updateRenderState({baseLayer:glBaseLayer});renderer.setPixelRatio(1);renderer.setSize(glBaseLayer.framebufferWidth,glBaseLayer.framebufferHeight,false);newRenderTarget=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.WebGLRenderTarget(glBaseLayer.framebufferWidth,glBaseLayer.framebufferHeight,{format:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.RGBAFormat,type:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.UnsignedByteType,colorSpace:renderer.outputColorSpace,stencilBuffer:attributes.stencil});}else{let depthFormat=null;let depthType=null;let glDepthFormat=null;if(attributes.depth){glDepthFormat=attributes.stencil?gl.DEPTH24_STENCIL8:gl.DEPTH_COMPONENT24;depthFormat=attributes.stencil?_three_core_js__WEBPACK_IMPORTED_MODULE_0__.DepthStencilFormat:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.DepthFormat;depthType=attributes.stencil?_three_core_js__WEBPACK_IMPORTED_MODULE_0__.UnsignedInt248Type:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.UnsignedIntType;}scope.isMultiview=useMultiview&&extensions.has('OCULUS_multiview');const projectionlayerInit={colorFormat:gl.RGBA8,depthFormat:glDepthFormat,scaleFactor:framebufferScaleFactor};if(scope.isMultiview){projectionlayerInit.textureType='texture-array';}glBinding=new XRWebGLBinding(session,gl);glProjLayer=glBinding.createProjectionLayer(projectionlayerInit);session.updateRenderState({layers:[glProjLayer]});renderer.setPixelRatio(1);renderer.setSize(glProjLayer.textureWidth,glProjLayer.textureHeight,false);const renderTargetOptions={format:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.RGBAFormat,type:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.UnsignedByteType,depthTexture:new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.DepthTexture(glProjLayer.textureWidth,glProjLayer.textureHeight,depthType,undefined,undefined,undefined,undefined,undefined,undefined,depthFormat),stencilBuffer:attributes.stencil,colorSpace:renderer.outputColorSpace,samples:attributes.antialias?4:0,resolveDepthBuffer:glProjLayer.ignoreDepthValues===false};if(scope.isMultiview){const extension=extensions.get('OCULUS_multiview');this.maxNumViews=gl.getParameter(extension.MAX_VIEWS_OVR);newRenderTarget=new WebGLMultiviewRenderTarget(glProjLayer.textureWidth,glProjLayer.textureHeight,2,renderTargetOptions);}else{newRenderTarget=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.WebGLRenderTarget(glProjLayer.textureWidth,glProjLayer.textureHeight,renderTargetOptions);}}newRenderTarget.isXRRenderTarget=true;// TODO Remove this when possible, see #23278
 this.setFoveation(foveation);customReferenceSpace=null;referenceSpace=await session.requestReferenceSpace(referenceSpaceType);animation.setContext(session);animation.start();scope.isPresenting=true;scope.dispatchEvent({type:'sessionstart'});}};this.getEnvironmentBlendMode=function(){if(session!==null){return session.environmentBlendMode;}};this.addLayer=function(layer){if(!window.XRWebGLBinding||!this.layersEnabled||!session){return;}layers.push(layer);this.updateLayers();};this.removeLayer=function(layer){layers.splice(layers.indexOf(layer),1);if(!window.XRWebGLBinding||!this.layersEnabled||!session){return;}this.updateLayers();};this.updateLayers=function(){var layersCopy=layers.map(function(x){return x;});layersCopy.unshift(session.renderState.layers[0]);session.updateRenderState({layers:layersCopy});};this.getDepthTexture=function(){return depthSensing.getDepthTexture();};function onInputSourcesChange(event){// Notify disconnected
@@ -35008,7 +35083,7 @@ const near=projL[14]/(projL[10]-1);const far=projL[14]/(projL[10]+1);const topFo
 // left camera. xOffset should be roughly half `ipd`.
 const zOffset=ipd/(-leftFov+rightFov);const xOffset=zOffset*-leftFov;// TODO: Better way to apply this offset?
 cameraL.matrixWorld.decompose(camera.position,camera.quaternion,camera.scale);camera.translateX(xOffset);camera.translateZ(zOffset);camera.matrixWorld.compose(camera.position,camera.quaternion,camera.scale);camera.matrixWorldInverse.copy(camera.matrixWorld).invert();// Check if the projection uses an infinite far plane.
-if(projL[10]===-1.0){// Use the projection matrix from the left eye.
+if(projL[10]===-1){// Use the projection matrix from the left eye.
 // The camera offset is sufficient to include the view volumes
 // of both eyes (assuming symmetric projections).
 camera.projectionMatrix.copy(cameraL.projectionMatrix);camera.projectionMatrixInverse.copy(cameraL.projectionMatrixInverse);}else{// Find the union of the frustum values of the cameras and scale
@@ -42671,7 +42746,7 @@ class WorkerPool {
 /***/ ((module) => {
 
 "use strict";
-module.exports = /*#__PURE__*/JSON.parse('{"name":"aframe","version":"1.6.0","description":"A web framework for building virtual reality experiences.","homepage":"https://aframe.io/","main":"./dist/aframe-master.js","module":"./dist/aframe-master.module.min.js","exports":{".":{"import":"./dist/aframe-master.module.min.js","require":"./dist/aframe-master.js"}},"scripts":{"dev":"cross-env INSPECTOR_VERSION=dev webpack serve --port 8080","dist":"node scripts/updateVersionLog.js && npm run dist:min && npm run dist:max && npm run dist:module","dist:max":"webpack --config webpack.config.cjs","dist:min":"webpack --config webpack.prod.config.cjs","dist:module":"webpack --config webpack.module.config.cjs","docs":"markserv --dir docs --port 9001","preghpages":"node ./scripts/preghpages.js","ghpages":"gh-pages -d gh-pages","lint":"standardx -v | snazzy","lint:fix":"standardx --fix","precommit":"npm run lint","prepush":"node scripts/testOnlyCheck.js","prerelease":"node scripts/release.js 1.5.0 1.6.0","start":"npm run dev","start:https":"npm run dev -- --server-type https","test":"karma start ./tests/karma.conf.js","test:docs":"node scripts/docsLint.js","test:firefox":"npm test -- --browsers Firefox","test:chrome":"npm test -- --browsers Chrome","test:nobrowser":"NO_BROWSER=true npm test","test:node":"node ./node_modules/mocha/bin/mocha --ui tdd tests/node"},"repository":"aframevr/aframe","license":"MIT","files":["dist/*","docs/**/*","src/**/*","vendor/**/*"],"dependencies":{"buffer":"^6.0.3","debug":"^4.3.4","deep-assign":"^2.0.0","load-bmfont":"^1.2.3","super-animejs":"^3.1.0","three":"npm:super-three@0.173.4","three-bmfont-text":"dmarcos/three-bmfont-text#eed4878795be9b3e38cf6aec6b903f56acd1f695"},"devDependencies":{"@babel/core":"^7.24.0","babel-loader":"^9.1.3","babel-plugin-istanbul":"^6.1.1","chai":"^4.3.6","chai-shallow-deep-equal":"^1.4.0","chalk":"^1.1.3","cross-env":"^7.0.3","css-loader":"^7.1.2","eslint":"^8.45.0","eslint-config-semistandard":"^17.0.0","eslint-config-standard-jsx":"^11.0.0","gh-pages":"^6.3.0","git-rev":"^0.2.1","glob":"^8.0.3","husky":"^0.11.7","jsdom":"^24.0.0","jsdom-global":"^3.0.2","karma":"^6.4.0","karma-chai-shallow-deep-equal":"0.0.4","karma-chrome-launcher":"^3.1.1","karma-coverage":"^2.2.0","karma-env-preprocessor":"^0.1.1","karma-firefox-launcher":"^2.1.2","karma-mocha":"^2.0.1","karma-mocha-reporter":"^2.2.5","karma-sinon-chai":"^2.0.2","karma-webpack":"^5.0.0","markserv":"github:sukima/markserv#feature/fix-broken-websoketio-link","mocha":"^10.0.0","replace-in-file":"^8.3.0","shelljs":"^0.8.5","sinon":"<12.0.0","sinon-chai":"^3.7.0","snazzy":"^5.0.0","standardx":"^7.0.0","style-loader":"^4.0.0","too-wordy":"ngokevin/too-wordy","webpack":"^5.91.0","webpack-cli":"^5.1.4","webpack-dev-server":"^5.0.4","write-good":"^1.0.8"},"link":true,"standardx":{"ignore":["build/**","dist/**","examples/**/shaders/*.js","**/vendor/**"]},"keywords":["3d","aframe","cardboard","components","oculus","three","three.js","rift","vive","vr","quest","meta","web-components","webvr","webxr"],"engines":{"node":">= 4.6.0","npm":">= 2.15.9"}}');
+module.exports = /*#__PURE__*/JSON.parse('{"name":"aframe","version":"1.7.0","description":"A web framework for building virtual reality experiences.","homepage":"https://aframe.io/","main":"./dist/aframe-master.js","module":"./dist/aframe-master.module.min.js","exports":{".":{"import":"./dist/aframe-master.module.min.js","require":"./dist/aframe-master.js"}},"scripts":{"dev":"cross-env INSPECTOR_VERSION=dev webpack serve --port 8080","dist":"node scripts/updateVersionLog.js && npm run dist:min && npm run dist:max && npm run dist:module","dist:max":"webpack --config webpack.config.cjs","dist:min":"webpack --config webpack.prod.config.cjs","dist:module":"webpack --config webpack.module.config.cjs","docs":"markserv --dir docs --port 9001","preghpages":"node ./scripts/preghpages.js","ghpages":"gh-pages -d gh-pages","lint":"standardx -v | snazzy","lint:fix":"standardx --fix","precommit":"npm run lint","prepush":"node scripts/testOnlyCheck.js","prerelease":"node scripts/release.js 1.6.0 1.7.0","start":"npm run dev","start:https":"npm run dev -- --server-type https","start:webgpu":"cross-env WEBGPU=true npm run dev -- --server-type https","test":"karma start ./tests/karma.conf.js","test:docs":"node scripts/docsLint.js","test:firefox":"npm test -- --browsers Firefox","test:chrome":"npm test -- --browsers Chrome","test:nobrowser":"NO_BROWSER=true npm test","test:node":"node ./node_modules/mocha/bin/mocha --ui tdd tests/node"},"repository":"aframevr/aframe","license":"MIT","files":["dist/*","docs/**/*","src/**/*","vendor/**/*"],"dependencies":{"buffer":"^6.0.3","debug":"^4.3.4","deep-assign":"^2.0.0","load-bmfont":"^1.2.3","super-animejs":"^3.1.0","three":"npm:super-three@0.173.5","three-bmfont-text":"dmarcos/three-bmfont-text#eed4878795be9b3e38cf6aec6b903f56acd1f695"},"devDependencies":{"@babel/core":"^7.24.0","babel-loader":"^9.1.3","babel-plugin-istanbul":"^6.1.1","chai":"^4.3.6","chai-shallow-deep-equal":"^1.4.0","chalk":"^1.1.3","cross-env":"^7.0.3","css-loader":"^7.1.2","eslint":"^8.45.0","eslint-config-semistandard":"^17.0.0","eslint-config-standard-jsx":"^11.0.0","gh-pages":"^6.3.0","git-rev":"^0.2.1","glob":"^8.0.3","husky":"^0.11.7","jsdom":"^24.0.0","jsdom-global":"^3.0.2","karma":"^6.4.0","karma-chai-shallow-deep-equal":"0.0.4","karma-chrome-launcher":"^3.1.1","karma-coverage":"^2.2.0","karma-env-preprocessor":"^0.1.1","karma-firefox-launcher":"^2.1.2","karma-mocha":"^2.0.1","karma-mocha-reporter":"^2.2.5","karma-sinon-chai":"^2.0.2","karma-webpack":"^5.0.0","markserv":"github:sukima/markserv#feature/fix-broken-websoketio-link","mocha":"^10.0.0","replace-in-file":"^8.3.0","shelljs":"^0.8.5","sinon":"<12.0.0","sinon-chai":"^3.7.0","snazzy":"^5.0.0","standardx":"^7.0.0","style-loader":"^4.0.0","too-wordy":"ngokevin/too-wordy","webpack":"5.95.0","webpack-cli":"^5.1.4","webpack-dev-server":"~5.0.4","write-good":"^1.0.8"},"link":true,"standardx":{"ignore":["build/**","dist/**","examples/**/shaders/*.js","**/vendor/**"]},"keywords":["3d","aframe","cardboard","components","oculus","three","three.js","rift","vive","vr","quest","meta","web-components","webvr","webxr"],"engines":{"node":">= 4.6.0","npm":">= 2.15.9"}}');
 
 /***/ })
 
@@ -42790,7 +42865,7 @@ module.exports = /*#__PURE__*/JSON.parse('{"name":"aframe","version":"1.6.0","de
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
 "use strict";
 /*!**********************!*\
@@ -42872,7 +42947,7 @@ if (_utils_index_js__WEBPACK_IMPORTED_MODULE_16__.device.isBrowserEnvironment) {
   __webpack_require__(/*! ./style/aframe.css */ "./src/style/aframe.css");
   __webpack_require__(/*! ./style/rStats.css */ "./src/style/rStats.css");
 }
-console.log('A-Frame Version: 1.6.0 (Date 2025-03-24, Commit #f82c17f)');
+console.log('A-Frame Version: 1.7.0 (Date 2025-03-12, Commit #1b9650f1)');
 console.log('THREE Version (https://github.com/supermedium/three.js):', _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].REVISION);
 
 // Wait for ready state, unless user asynchronously initializes A-Frame.
