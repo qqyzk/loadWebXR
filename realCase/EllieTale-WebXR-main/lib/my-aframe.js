@@ -7803,7 +7803,11 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     }
     this.remove();
     this.ready.then(function () {
+      // var startTime = performance.now();
+      // console.log('gltf-model beginload',src,startTime);
       self.loader.load(src, function gltfLoaded(gltfModel) {
+        // var endTime = performance.now();
+        // console.log('gltf-model endload',src,endTime, endTime - startTime);
         self.model = gltfModel.scene || gltfModel.scenes[0];
         self.model.animations = gltfModel.animations;
         el.setObject3D('mesh', self.model);
@@ -18970,7 +18974,6 @@ __webpack_require__.r(__webpack_exports__);
 
 var fileLoader = new three__WEBPACK_IMPORTED_MODULE_2__.FileLoader();
 var warn = (0,_utils_index_js__WEBPACK_IMPORTED_MODULE_1__.debug)('core:a-assets:warn');
-
 /**
  * Asset management system. Handles blocking on asset loading.
  */
@@ -18983,10 +18986,11 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     this.priorityQueues = {
       1: [],
       2: [],
-      3: []
+      3: [],
+      4: []
     };
   }
-  doConnectedCallback() {
+  async doConnectedCallback() {
     var self = this;
     var i;
     var loaded = [];
@@ -19000,72 +19004,12 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     if (!this.parentNode.isScene) {
       throw new Error('<a-assets> must be a child of a <a-scene>.');
     }
+    await customElements.whenDefined('a-asset-item');
+    await Promise.resolve();
     this.collectResources();
     console.log('queue', this.priorityQueues);
-
-    // Wait for <img>s.
-    imgEls = this.querySelectorAll('img');
-    for (i = 0; i < imgEls.length; i++) {
-      imgEl = fixUpMediaElement(imgEls[i]);
-      loaded.push(new Promise(function (resolve, reject) {
-        // Set in cache because we won't be needing to call three.js loader if we have.
-        // a loaded media element.
-        three__WEBPACK_IMPORTED_MODULE_2__.Cache.add(imgEls[i].getAttribute('src'), imgEl);
-        if (imgEl.complete) {
-          resolve();
-          return;
-        }
-        imgEl.onload = resolve;
-        imgEl.onerror = reject;
-      }));
-    }
-
-    // Wait for <audio>s and <video>s.
-    mediaEls = this.querySelectorAll('audio, video');
-    for (i = 0; i < mediaEls.length; i++) {
-      mediaEl = fixUpMediaElement(mediaEls[i]);
-      if (!mediaEl.src && !mediaEl.srcObject) {
-        warn('Audio/video asset has neither `src` nor `srcObject` attributes.');
-      }
-      loaded.push(mediaElementLoaded(mediaEl));
-    }
-
-    // Wait for <a-asset-item>s
-    children = this.getChildren();
-    children.forEach(function (child) {
-      if (!child.isAssetItem || !child.hasAttribute('src')) {
-        return;
-      }
-      loaded.push(new Promise(function waitForLoaded(resolve, reject) {
-        if (child.hasLoaded) {
-          return resolve();
-        }
-        child.addEventListener('loaded', resolve);
-        child.addEventListener('error', reject);
-      }));
-    });
-
-    // Trigger loaded for scene to start rendering.
-    Promise.allSettled(loaded).then(function () {
-      // Make sure the timeout didn't occur.
-      if (self.timeout === null) {
-        return;
-      }
-      self.load();
-    });
-
-    // Timeout to start loading anyways.
-    timeout = parseInt(this.getAttribute('timeout'), 10) || 3000;
-    this.timeout = setTimeout(function () {
-      // Make sure the loading didn't complete.
-      if (self.hasLoaded) {
-        return;
-      }
-      warn('Asset loading timed out in', timeout, 'ms');
-      self.timeout = null;
-      self.emit('timeout');
-      self.load();
-    }, timeout);
+    await this.loadPriorityGroups();
+    this.load();
   }
   disconnectedCallback() {
     super.disconnectedCallback();
@@ -19088,8 +19032,24 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
   }
   getPriority(el) {
     if (el.hasAttribute('priority')) return parseInt(el.getAttribute('priority'));
-    if (el.tagName === 'AUDIO' && el.autoplay) return 1;
+    if (el.tagName === 'AUDIO') return 4;
     return 3;
+  }
+  async loadPriorityGroups() {
+    for (let priority of [1, 2, 3]) {
+      console.log('loading group', priority);
+      await this.loadGroup(priority);
+      console.log('group loaded', priority);
+    }
+  }
+  async loadGroup(priority) {
+    const group = this.priorityQueues[priority];
+    console.log('group', group);
+    if (!group.length) return;
+    await Promise.all(group.map(item => {
+      return item.load(); // AAssetItem
+      // if (item.tagName === 'AUDIO') return this.loadAudio(item); // 处理原生audio
+    }));
   }
 }
 customElements.define('a-assets', AAssets);
@@ -19102,25 +19062,35 @@ class AAssetItem extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     super();
     this.data = null;
     this.isAssetItem = true;
+    this._loadingPromise = null;
   }
-  connectedCallback() {
-    var self = this;
-    var src = this.getAttribute('src');
-    fileLoader.setResponseType(this.getAttribute('response-type') || inferResponseType(src));
-    fileLoader.load(src, function handleOnLoad(response) {
-      self.data = response;
-      _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode.prototype.load.call(self);
-    }, function handleOnProgress(xhr) {
-      self.emit('progress', {
-        loadedBytes: xhr.loaded,
-        totalBytes: xhr.total,
-        xhr: xhr
+  load() {
+    if (this._loadingPromise) return this._loadingPromise;
+    const src = this.getAttribute('src');
+    const responseType = this.getAttribute('response-type') || inferResponseType(src);
+    const id = this.getAttribute('id');
+    this._loadingPromise = new Promise((resolve, reject) => {
+      console.log('beginload', id, src);
+      fileLoader.setResponseType(responseType);
+      fileLoader.load(src, response => {
+        this.data = response;
+        _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode.prototype.load.call(this);
+        console.log('endload', id, src);
+        resolve();
+      }, xhr => {
+        this.emit('progress', {
+          loadedBytes: xhr.loaded,
+          totalBytes: xhr.total,
+          xhr: xhr
+        });
+      }, error => {
+        this.emit('error', {
+          error
+        }, false);
+        reject(error);
       });
-    }, function handleOnError(xhr) {
-      self.emit('error', {
-        xhr: xhr
-      }, false);
     });
+    return this._loadingPromise;
   }
 }
 customElements.define('a-asset-item', AAssetItem);

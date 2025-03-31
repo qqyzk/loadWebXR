@@ -41,7 +41,11 @@ export var Component = registerComponent('gltf-model', {
     this.remove();
 
     this.ready.then(function () {
+      // var startTime = performance.now();
+      // console.log('gltf-model beginload',src,startTime);
       self.loader.load(src, function gltfLoaded (gltfModel) {
+        // var endTime = performance.now();
+        // console.log('gltf-model endload',src,endTime, endTime - startTime);
         self.model = gltfModel.scene || gltfModel.scenes[0];
         self.model.animations = gltfModel.animations;
 
