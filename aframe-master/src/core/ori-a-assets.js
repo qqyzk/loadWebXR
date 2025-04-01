@@ -170,10 +170,10 @@ customElements.define('a-asset-item', AAssetItem);
  */
 function mediaElementLoaded (el) {
   if (!el.hasAttribute('autoplay') && el.getAttribute('preload') !== 'auto') {
-    console.log('return',el)
+    console.log('return',el.getAttribute('preload'),el.preload)
     return;
   }
-  console.log('no reture',el)
+  console.log('noreturn',el)
   // If media specifies autoplay or preload, wait until media is completely buffered.
   return new Promise(function (resolve, reject) {
     if (el.readyState === 4) { return resolve(); }  // Already loaded.

@@ -18987,8 +18987,7 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     this.priorityQueues = {
       1: [],
       2: [],
-      3: [],
-      4: []
+      3: []
     };
   }
   async doConnectedCallback() {
@@ -19033,7 +19032,6 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
   }
   getPriority(el) {
     if (el.hasAttribute('priority')) return parseInt(el.getAttribute('priority'));
-    if (el.tagName === 'AUDIO') return 4;
     return 3;
   }
   async loadPriorityGroups() {
@@ -19048,9 +19046,38 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     console.log('group', group);
     if (!group.length) return;
     await Promise.all(group.map(item => {
-      return item.load(); // AAssetItem
+      //return item.load(); // AAssetItem
       // if (item.tagName === 'AUDIO') return this.loadAudio(item); // 处理原生audio
+      if (item.tagName === 'A-ASSET-ITEM') {
+        return this.loadAssetItem(item);
+      } else if (item.tagName === 'AUDIO') {
+        return this.loadAudio(item);
+      }
     }));
+  }
+  async loadAssetItem(item) {
+    return item.load();
+  }
+  async loadAudio(audioEl) {
+    return new Promise((resolve, reject) => {
+      console.log(`Loading audio: ${audioEl.id}`);
+      const onSuccess = () => {
+        audioEl.removeEventListener('canplaythrough', onSuccess);
+        audioEl.removeEventListener('error', onError);
+        console.log(`Audio loaded: ${audioEl.id}`);
+        resolve();
+      };
+      const onError = err => {
+        audioEl.removeEventListener('canplaythrough', onSuccess);
+        audioEl.removeEventListener('error', onError);
+        console.log(`Error loading audio: ${audioEl.id}`, err);
+        reject(err);
+      };
+      audioEl.addEventListener('canplaythrough', onSuccess);
+      audioEl.addEventListener('error', onError);
+      audioEl.setAttribute('crossorigin', 'anonymous');
+      audioEl.load();
+    });
   }
 }
 customElements.define('a-assets', AAssets);
