@@ -16460,6 +16460,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     if (srcChanged) {
       var self = this;
       this.loaded = false;
+      console.log('audioLoader.load', data.src);
       this.audioLoader.load(data.src, function (buffer) {
         for (i = 0; i < self.pool.children.length; i++) {
           sound = self.pool.children[i];

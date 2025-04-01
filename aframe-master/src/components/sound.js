@@ -82,6 +82,7 @@ export var Component = registerComponent('sound', {
       var self = this;
 
       this.loaded = false;
+      console.log('audioLoader.load',data.src)
       this.audioLoader.load(data.src, function (buffer) {
         for (i = 0; i < self.pool.children.length; i++) {
           sound = self.pool.children[i];
