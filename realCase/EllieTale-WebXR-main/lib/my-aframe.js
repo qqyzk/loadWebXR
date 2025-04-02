@@ -16424,6 +16424,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     var i;
     var sound;
     var srcChanged = data.src !== oldData.src;
+    console.log('sound update', data.src, oldData.src);
 
     // Create new sound if not yet created or changing `src`.
     if (srcChanged) {
@@ -20950,6 +20951,7 @@ Component.prototype = {
       return stringifyProperty(data, schema);
     }
     data = stringifyProperties(data, schema);
+    console.log('stringify', data);
     return styleParser.stringify(data);
   },
   /**
@@ -21697,6 +21699,7 @@ function arrayEquals(a, b) {
  *   just string.
  */
 function assetParse(value) {
+  console.log('assetParse', value);
   var el;
   var parsedUrl;
 
@@ -21763,6 +21766,7 @@ function numberParse(value) {
   return parseFloat(value, 10);
 }
 function selectorParse(value) {
+  console.log('seletroParse', value);
   if (!value) {
     return null;
   }
@@ -33414,12 +33418,12 @@ this.files[key]=file;},get:function(key){if(this.enabled===false)return;// conso
 return this.files[key];},remove:function(key){delete this.files[key];},clear:function(){this.files={};}};class LoadingManager{constructor(onLoad,onProgress,onError){const scope=this;let isLoading=false;let itemsLoaded=0;let itemsTotal=0;let urlModifier=undefined;const handlers=[];// Refer to #5689 for the reason why we don't set .onStart
 // in the constructor
 this.onStart=undefined;this.onLoad=onLoad;this.onProgress=onProgress;this.onError=onError;this.itemStart=function(url){itemsTotal++;if(isLoading===false){if(scope.onStart!==undefined){scope.onStart(url,itemsLoaded,itemsTotal);}}isLoading=true;};this.itemEnd=function(url){itemsLoaded++;if(scope.onProgress!==undefined){scope.onProgress(url,itemsLoaded,itemsTotal);}if(itemsLoaded===itemsTotal){isLoading=false;if(scope.onLoad!==undefined){scope.onLoad();}}};this.itemError=function(url){if(scope.onError!==undefined){scope.onError(url);}};this.resolveURL=function(url){if(urlModifier){return urlModifier(url);}return url;};this.setURLModifier=function(transform){urlModifier=transform;return this;};this.addHandler=function(regex,loader){handlers.push(regex,loader);return this;};this.removeHandler=function(regex){const index=handlers.indexOf(regex);if(index!==-1){handlers.splice(index,2);}return this;};this.getHandler=function(file){for(let i=0,l=handlers.length;i<l;i+=2){const regex=handlers[i];const loader=handlers[i+1];if(regex.global)regex.lastIndex=0;// see #17920
-if(regex.test(file)){return loader;}}return null;};}}const DefaultLoadingManager=/*@__PURE__*/new LoadingManager();class Loader{constructor(manager){this.manager=manager!==undefined?manager:DefaultLoadingManager;this.crossOrigin='anonymous';this.withCredentials=false;this.path='';this.resourcePath='';this.requestHeader={};}load(/* url, onLoad, onProgress, onError */){}loadAsync(url,onProgress){const scope=this;return new Promise(function(resolve,reject){scope.load(url,resolve,onProgress,reject);});}parse(/* data */){}setCrossOrigin(crossOrigin){this.crossOrigin=crossOrigin;return this;}setWithCredentials(value){this.withCredentials=value;return this;}setPath(path){this.path=path;return this;}setResourcePath(resourcePath){this.resourcePath=resourcePath;return this;}setRequestHeader(requestHeader){this.requestHeader=requestHeader;return this;}}Loader.DEFAULT_MATERIAL_NAME='__DEFAULT';const loading={};class HttpError extends Error{constructor(message,response){super(message);this.response=response;}}class FileLoader extends Loader{constructor(manager){super(manager);}load(url,onLoad,onProgress,onError){if(url===undefined)url='';if(this.path!==undefined)url=this.path+url;url=this.manager.resolveURL(url);const cached=Cache.get(url);if(cached!==undefined){this.manager.itemStart(url);setTimeout(()=>{if(onLoad)onLoad(cached);this.manager.itemEnd(url);},0);return cached;}// Check if request is duplicate
-if(loading[url]!==undefined){loading[url].push({onLoad:onLoad,onProgress:onProgress,onError:onError});return;}// Initialise array for duplicate requests
+if(regex.test(file)){return loader;}}return null;};}}const DefaultLoadingManager=/*@__PURE__*/new LoadingManager();class Loader{constructor(manager){this.manager=manager!==undefined?manager:DefaultLoadingManager;this.crossOrigin='anonymous';this.withCredentials=false;this.path='';this.resourcePath='';this.requestHeader={};}load(/* url, onLoad, onProgress, onError */){}loadAsync(url,onProgress){const scope=this;return new Promise(function(resolve,reject){scope.load(url,resolve,onProgress,reject);});}parse(/* data */){}setCrossOrigin(crossOrigin){this.crossOrigin=crossOrigin;return this;}setWithCredentials(value){this.withCredentials=value;return this;}setPath(path){this.path=path;return this;}setResourcePath(resourcePath){this.resourcePath=resourcePath;return this;}setRequestHeader(requestHeader){this.requestHeader=requestHeader;return this;}}Loader.DEFAULT_MATERIAL_NAME='__DEFAULT';const loading={};class HttpError extends Error{constructor(message,response){super(message);this.response=response;}}class FileLoader extends Loader{constructor(manager){super(manager);}load(url,onLoad,onProgress,onError){if(url===undefined)url='';if(this.path!==undefined)url=this.path+url;url=this.manager.resolveURL(url);const cached=Cache.get(url);if(cached!==undefined){this.manager.itemStart(url);setTimeout(()=>{if(onLoad)onLoad(cached);this.manager.itemEnd(url);},0);console.log('cached',url);return cached;}console.log('not cached',url);// Check if request is duplicate
+if(loading[url]!==undefined){loading[url].push({onLoad:onLoad,onProgress:onProgress,onError:onError});console.log('not undefined',url);return;}// Initialise array for duplicate requests
 loading[url]=[];loading[url].push({onLoad:onLoad,onProgress:onProgress,onError:onError});// create request
 const req=new Request(url,{headers:new Headers(this.requestHeader),credentials:this.withCredentials?'include':'same-origin'// An abort controller could be added within a future PR
 });// record states ( avoid data race )
-const mimeType=this.mimeType;const responseType=this.responseType;// start the fetch
+const mimeType=this.mimeType;const responseType=this.responseType;console.log('fetch',url);// start the fetch
 fetch(req).then(response=>{if(response.status===200||response.status===0){// Some browsers return HTTP Status 0 when using non-http protocol
 // e.g. 'file://' or 'data://'. Handle as success.
 if(response.status===0){console.warn('THREE.FileLoader: HTTP Status 0 received.');}// Workaround: Checking if response.body === undefined for Alipay browser #23548

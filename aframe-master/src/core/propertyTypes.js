@@ -90,6 +90,7 @@ function arrayEquals (a, b) {
  *   just string.
  */
 function assetParse (value) {
+  console.log('assetParse',value);
   var el;
   var parsedUrl;
 
@@ -158,6 +159,7 @@ function numberParse (value) {
 }
 
 function selectorParse (value) {
+  console.log('seletroParse',value);
   if (!value) { return null; }
   if (typeof value !== 'string') { return value; }
   if (value[0] === '#' && !nonCharRegex.test(value)) {

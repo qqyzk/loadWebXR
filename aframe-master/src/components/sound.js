@@ -44,6 +44,7 @@ export var Component = registerComponent('sound', {
     var i;
     var sound;
     var srcChanged = data.src !== oldData.src;
+    console.log('sound update',data.src,oldData.src)
 
     // Create new sound if not yet created or changing `src`.
     if (srcChanged) {
