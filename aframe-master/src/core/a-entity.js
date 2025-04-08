@@ -71,7 +71,7 @@ export class AEntity extends ANode {
     this.addToParent();
 
     // Don't .load() scene on attachedCallback.
-    if (this.isScene) { return; }
+    if (this.isScene) {   return; }
 
     // Gracefully not error when outside of <a-scene> (e.g., tests).
     if (!sceneEl) {

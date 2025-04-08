@@ -44,8 +44,6 @@ export var Component = registerComponent('sound', {
     var i;
     var sound;
     var srcChanged = data.src !== oldData.src;
-    console.log('sound update',data.src,oldData.src)
-
     // Create new sound if not yet created or changing `src`.
     if (srcChanged) {
       if (!data.src) { return; }
@@ -83,7 +81,6 @@ export var Component = registerComponent('sound', {
       var self = this;
 
       this.loaded = false;
-      console.log('audioLoader.load',data.src)
       this.audioLoader.load(data.src, function (buffer) {
         for (i = 0; i < self.pool.children.length; i++) {
           sound = self.pool.children[i];

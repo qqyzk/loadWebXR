@@ -36,7 +36,6 @@ class AAssets extends ANode {
     await customElements.whenDefined('a-asset-item');
     await Promise.resolve(); 
     this.collectResources();
-    console.log('queue', this.priorityQueues);
     await this.loadPriorityGroups();
     this.load();
   }
@@ -65,14 +64,12 @@ class AAssets extends ANode {
   }
   async loadPriorityGroups() {
     for (let priority of [1, 2, 3]) {
-      console.log('loading group', priority);
       await this.loadGroup(priority);
-      console.log('group loaded', priority);
+
     }
   }
   async loadGroup(priority) {
     const group = this.priorityQueues[priority];
-    console.log('group', group);
     if (!group.length) return;
     await Promise.all(
       group.map(item => {
@@ -91,17 +88,14 @@ class AAssets extends ANode {
   }
   async loadAudio(audioEl) {
     return new Promise((resolve, reject) => {
-      console.log(`Loading audio: ${audioEl.id}`);
       const onSuccess = () => {
         audioEl.removeEventListener('canplaythrough', onSuccess);
         audioEl.removeEventListener('error', onError);
-        console.log(`Audio loaded: ${audioEl.id}`);
         resolve();
       };
       const onError = (err) => {
         audioEl.removeEventListener('canplaythrough', onSuccess);
         audioEl.removeEventListener('error', onError);
-        console.log(`Error loading audio: ${audioEl.id}`, err);
         reject(err);
       };
       audioEl.addEventListener('canplaythrough', onSuccess);
@@ -133,13 +127,11 @@ class AAssetItem extends ANode {
     const responseType = this.getAttribute('response-type') || inferResponseType(src);
     const id = this.getAttribute('id');
     this._loadingPromise = new Promise((resolve, reject) => {
-      console.log('beginload',id,src)
       fileLoader.setResponseType(responseType);
       fileLoader.load(src, 
         response => {
           this.data = response;
           ANode.prototype.load.call(this);
-          console.log('endload',id,src)
           resolve();
         },
         xhr => {

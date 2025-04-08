@@ -198,7 +198,6 @@ Component.prototype = {
     if (typeof data === 'string') { return data; }
     if (this.isSingleProperty) { return stringifyProperty(data, schema); }
     data = stringifyProperties(data, schema);
-    console.log('stringify',data);
     return styleParser.stringify(data);
   },
 
