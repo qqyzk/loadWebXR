@@ -103,45 +103,38 @@
 
     <!--items-->
 
-    <!-- <a-gltf-model id="item" class="items" visible="false" src="item/Beach_prop_fishingRod_01.glb"> -->
      <a-gltf-model id="item" src="#fishingRod"></a-gltf-model> 
          <a-sound id="sound1" src="#fishing" autoplay="false"></a-sound>
 
     </a-gltf-model>
 
-    <!-- <a-gltf-model id="itemOne" class="items" visible="false" src="item/Beach_prop_sharky_01.glb"> -->
     <a-gltf-model id="itemOne" src="#sharkModel"></a-gltf-model>
         <a-sound id="sound2" src="#shark" autoplay="false"></a-sound>
 
     </a-gltf-model>
 
-    <!-- <a-gltf-model id="itemTwo" class="items" visible="false" src="item/Beach_prop_octopus_01.glb"> -->
     <a-gltf-model id="itemTwo" src="#octopusModel"></a-gltf-model>
         <a-sound id="sound3" src="#octopus" autoplay="false"></a-sound>
 
     </a-gltf-model>
 
-    <!-- <a-gltf-model id="itemThree" visible="false" class="items" src="item/Beach_prop_shrimp_01.glb"> -->
     <a-gltf-model id="itemThree" src="#shrimpModel"></a-gltf-model>
          <a-sound id="sound5" src="#shrimp" autoplay="false"></a-sound>
 
     </a-gltf-model>
 
-    <!-- <a-gltf-model id="itemFour" visible="false" class="items" src="item/Beach_prop_whale_01.glb"> -->
     <a-gltf-model id="itemFour" src="#whaleModel"></a-gltf-model>
 
         <a-sound id="sound4" src="#whale" autoplay="false"></a-sound>
 
     </a-gltf-model>
 
-    <!-- <a-gltf-model id="itemFive" visible="false" class="items" src="item/Beach_prop_ship_01.glb"> -->
     <a-gltf-model id="itemFive" src="#shipModel"></a-gltf-model>
 
         <a-sound id="sound5" src="#ship" autoplay="false"></a-sound>
 
     </a-gltf-model>
 
-    <!-- <a-gltf-model id="itemSix" visible="false" class="items" src="item/Beach_prop_ball_01.glb"> -->
     <a-gltf-model id="itemSix" src="#ballModel"></a-gltf-model>
         <a-sound id="sound6" src="#ball" autoplay="false"></a-sound>
 
@@ -171,17 +164,17 @@
 
 
     <!--noah distractor-->
-    <a-gltf-model id="myDistractor" visible="false" gltf-model="#distractorModel" position="1.75 0.1 -7.224" lookat="#cam" clickable static-body="shape: box; mass: 0; sphereRadius: NaN" aabb-collider="objects:a-entity,.Box; collideNonVisible: false; debug:false;"
+    <a-gltf-model id="myDistractor" visible="false" src="#distractorModel" position="1.75 0.1 -7.224" lookat="#cam" clickable static-body="shape: box; mass: 0; sphereRadius: NaN" aabb-collider="objects:a-entity,.Box; collideNonVisible: false; debug:false;"
         shadow>
 
 
     </a-gltf-model>
-    <a-gltf-model id="noah" rotation="0 -85.20340779831446 0" gltf-model="#distractorModel" position="10.6763 0.3 -0.85876" lookat="#cam" clickable static-body="shape: box; mass: 0; sphereRadius: NaN" aabb-collider="objects: a-entity; collideNonVisible: false; debug:false;"
+    <a-gltf-model id="noah" rotation="0 -85.20340779831446 0" src="#distractorModel" position="10.6763 0.3 -0.85876" lookat="#cam" clickable static-body="shape: box; mass: 0; sphereRadius: NaN" aabb-collider="objects: a-entity; collideNonVisible: false; debug:false;"
         shadow>
 
 
     </a-gltf-model>
-    <a-gltf-model id="distractingPartical" gltf-model="#half" visible="false" animation-mixer shadow>
+    <a-gltf-model id="distractingPartical" src="#half" visible="false" animation-mixer shadow>
     </a-gltf-model>
     <!--Stats-->
     <a-text id="selectenvironment" value="Beach" geometry="primitive:circle" visible="false"></a-text>

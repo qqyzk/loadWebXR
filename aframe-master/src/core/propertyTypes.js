@@ -9,6 +9,7 @@ var urlRegex = /url\((.+)\)/;
 
 // Built-in property types.
 registerPropertyType('audio', '', assetParse, assetStringify);
+registerPropertyType('myaudio', '', myAssetParse, assetStringify);
 registerPropertyType('array', [], arrayParse, arrayStringify, arrayEquals);
 registerPropertyType('asset', '', assetParse, assetStringify);
 registerPropertyType('boolean', false, boolParse);
@@ -17,6 +18,7 @@ registerPropertyType('int', 0, intParse);
 registerPropertyType('number', 0, numberParse);
 registerPropertyType('map', '', assetParse, assetStringify);
 registerPropertyType('model', '', assetParse, assetStringify);
+registerPropertyType('mymodel', '', myAssetParse, assetStringify);
 registerPropertyType('selector', null, selectorParse, selectorStringify, defaultEquals, false);
 registerPropertyType('selectorAll', null, selectorAllParse, selectorAllStringify, arrayEquals, false);
 registerPropertyType('src', '', srcParse, assetStringify);
@@ -80,7 +82,45 @@ function arrayEquals (a, b) {
 
   return true;
 }
+/**
+ * For general assets.
+ *
+ * @param {string} value - Can either be `url(<value>)`, an ID selector to an asset, or
+ *   just string.
+ * @returns {string} Parsed value from `url(<value>)`, src from `<someasset src>`, or
+ *   just string.
+ */
+function myAssetParse (value) {
+  console.log('debug: MyAssetParse', value);
+  var el;
+  var parsedUrl;
 
+  // If an element was provided (e.g. canvas or video), just return it.
+  if (typeof value !== 'string') { return value; }
+
+  // Wrapped `url()` in case of data URI.
+  parsedUrl = value.match(urlRegex);
+  if (parsedUrl) { return parsedUrl[1]; }
+
+  // ID.
+  if (value.charAt(0) === '#') {
+    // el = document.getElementById(value.substring(1));
+    // console.log('debug: myassetParse el', el.tagName);
+    // if (el) {
+    //   // Pass through media elements. If we have the elements, we don't have to call
+    //   // three.js loaders which would re-request the assets.
+    //   if (el.tagName === 'CANVAS' || el.tagName === 'VIDEO' || el.tagName === 'IMG') {
+    //     return el;
+    //   }
+    //   return {'src':el.getAttribute('src'),'value':value};
+    // }
+    // warn('"' + value + '" asset not found.');
+    return value;
+  }
+
+  // Non-wrapped url().
+  return value;
+}
 /**
  * For general assets.
  *
@@ -90,6 +130,7 @@ function arrayEquals (a, b) {
  *   just string.
  */
 function assetParse (value) {
+  console.log('debug: assetParse', value);
   var el;
   var parsedUrl;
 
@@ -103,6 +144,7 @@ function assetParse (value) {
   // ID.
   if (value.charAt(0) === '#') {
     el = document.getElementById(value.substring(1));
+    console.log('debug: assetParse el', el.tagName);
     if (el) {
       // Pass through media elements. If we have the elements, we don't have to call
       // three.js loaders which would re-request the assets.

@@ -20,7 +20,7 @@ export var Component = registerComponent('sound', {
     positional: {default: true},
     refDistance: {default: 1},
     rolloffFactor: {default: 1},
-    src: {type: 'audio'},
+    src: {type: 'myaudio'},
     volume: {default: 1}
   },
 
@@ -81,18 +81,25 @@ export var Component = registerComponent('sound', {
       var self = this;
 
       this.loaded = false;
-      this.audioLoader.load(data.src, function (buffer) {
-        for (i = 0; i < self.pool.children.length; i++) {
-          sound = self.pool.children[i];
-          sound.setBuffer(buffer);
-        }
-        self.loaded = true;
-
-        // Remove this key from cache, otherwise we can't play it again
-        THREE.Cache.remove(data.src);
-        if (self.data.autoplay || self.mustPlay) { self.playSound(self.processSound); }
-        self.el.emit('sound-loaded', self.evtDetail, false);
-      });
+      console.log('debug: sound src', data);
+      var assetEl = document.getElementById(data.src.substring(1));
+      var src = assetEl.getAttribute('src');
+      assetEl.load()
+        .then(()=> {
+          this.audioLoader.load(src, function (buffer) {
+            for (i = 0; i < self.pool.children.length; i++) {
+              sound = self.pool.children[i];
+              sound.setBuffer(buffer);
+            }
+            self.loaded = true;
+    
+            // Remove this key from cache, otherwise we can't play it again
+            THREE.Cache.remove(data.src);
+            if (self.data.autoplay || self.mustPlay) { self.playSound(self.processSound); }
+            self.el.emit('sound-loaded', self.evtDetail, false);
+          });
+        });
+     
     }
   },
 

@@ -61,6 +61,7 @@ export class AScene extends AEntity {
     self.hasLoaded = false;
     self.isPlaying = false;
     self.originalHTML = self.innerHTML;
+    self.firstFrame = true;
   }
 
   addFullScreenStyles () {
@@ -136,6 +137,7 @@ export class AScene extends AEntity {
         self.resize();
       }
     });
+    console.log('debug: a-scene attachedCallbackPostCamera');
     this.play();
 
     // Add to scene index.
@@ -561,6 +563,7 @@ export class AScene extends AEntity {
    * Scene waits for all entities to load.
    */
   play () {
+    console.log('debug: a-scene play');
     var self = this;
     var sceneEl = this;
 
@@ -647,6 +650,7 @@ export class AScene extends AEntity {
    * Renders with request animation frame.
    */
   render (time, frame) {
+    // console.log('debug: a-scene render');
     var renderer = this.renderer;
 
     this.frame = frame;
@@ -661,6 +665,7 @@ export class AScene extends AEntity {
       savedBackground = this.object3D.background;
       this.object3D.background = null;
     }
+    // console.log('debug: scene',this.object3D.children);
     renderer.render(this.object3D, this.camera);
     if (savedBackground) {
       this.object3D.background = savedBackground;
@@ -668,6 +673,11 @@ export class AScene extends AEntity {
     if (this.isPlaying) {
       var renderCamera = renderer.xr.isPresenting ? renderer.xr.getCamera() : this.camera;
       this.tock(this.time, this.delta, renderCamera);
+    }
+    if (this.firstFrame){
+      this.emit('renderfirstframe');
+      console.log('debug: a-scene renderfirstframe emit',this.object3D.children);
+      this.firstFrame = false;
     }
   }
 

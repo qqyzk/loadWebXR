@@ -10,6 +10,7 @@ var DEFAULT_CAMERA_ATTR = 'data-aframe-default-camera';
  */
 export var System = registerSystem('camera', {
   init: function () {
+    console.log('debug: camera system init');
     this.activeCameraEl = null;
 
     this.render = this.render.bind(this);
@@ -38,6 +39,7 @@ export var System = registerSystem('camera', {
 
     // Camera already defined or the one defined it is an spectator one.
     if (sceneEl.camera && !sceneEl.camera.el.getAttribute('camera').spectator) {
+      console.log('debug: cameraready 1');
       sceneEl.emit('cameraready', {cameraEl: sceneEl.camera.el});
       return;
     }
@@ -55,6 +57,7 @@ export var System = registerSystem('camera', {
     for (i = 0; i < cameraEls.length; i++) {
       cameraEls[i].addEventListener('object3dset', function (evt) {
         if (evt.detail.type !== 'camera') { return; }
+        console.log('debug: checkUserCamera');
         self.checkUserCamera(this);
       });
 
@@ -95,6 +98,7 @@ export var System = registerSystem('camera', {
 
     this.initialCameraFound = true;
     sceneEl.camera = cameraEl.getObject3D('camera');
+    console.log('debug: cameraready 2');
     sceneEl.emit('cameraready', {cameraEl: cameraEl});
   },
 
@@ -117,6 +121,7 @@ export var System = registerSystem('camera', {
     defaultCameraEl.addEventListener('object3dset', function (evt) {
       if (evt.detail.type !== 'camera') { return; }
       sceneEl.camera = evt.detail.object;
+      console.log('debug: cameraready 3');  
       sceneEl.emit('cameraready', {cameraEl: defaultCameraEl});
     });
 

@@ -78,7 +78,7 @@ export class AEntity extends ANode {
       this.load();
       return;
     }
-
+    var id = this.id;
     // Wait for asset management system to finish before loading.
     assetsEl = sceneEl.querySelector('a-assets');
     if (assetsEl && !assetsEl.hasLoaded) {
@@ -143,7 +143,7 @@ export class AEntity extends ANode {
         child.el = self;
       });
     }
-
+    // console.log('debug: setObject3D', type, obj);
     // Add.
     this.object3D.add(obj);
     this.object3DMap[type] = obj;
@@ -191,6 +191,7 @@ export class AEntity extends ANode {
     if (!el.object3D) {
       throw new Error("Trying to add an element that doesn't have an `object3D`");
     }
+    // console.log('debug: add2', el.id, this.id);
     this.object3D.add(el.object3D);
     this.emit('child-attached', {el: el});
   }
@@ -229,7 +230,7 @@ export class AEntity extends ANode {
       if (!self.parentEl) { return; }
 
       self.updateComponents();
-      if (self.isScene || self.parentEl.isPlaying) { self.play(); }
+      if (self.isScene || self.parentEl.isPlaying) {console.log('debug: play', self.id); self.play(); }
     });
   }
 
@@ -271,6 +272,7 @@ export class AEntity extends ANode {
    * @param {boolean} isDependency - True if the component is a dependency.
    */
   initComponent (attrName, data, isDependency) {
+   
     var component;
     var componentId;
     var componentInfo;
@@ -297,7 +299,9 @@ export class AEntity extends ANode {
 
     // Initialize dependencies first
     this.initComponentDependencies(componentName);
-
+    if(componentName === 'camera') {
+      console.log('debug: initComponent', componentName,this);
+    }
     // Initialize component
     component = new COMPONENTS[componentName].Component(this, data, componentId);
     if (this.isPlaying) { component.play(); }

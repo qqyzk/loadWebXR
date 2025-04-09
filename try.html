@@ -1,4 +1,112 @@
 <!DOCTYPE html>
 <html>
-<audio src="./realCase/EllieTale-WebXR-main/item/silence.wav" preload="none"></audio>
+<head>
+    <title>分离添加与渲染的Three.js示例</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // 初始化核心组件
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        camera.position.z = 15;
+
+        // 立方体管理系统
+        const cubeManager = {
+            cubes: [],
+            maxCount: 10,
+            
+            createCube() {
+                const geometry = new THREE.BoxGeometry(
+                    Math.random() * 1.5 + 0.5,
+                    Math.random() * 1.5 + 0.5,
+                    Math.random() * 1.5 + 0.5
+                );
+                const material = new THREE.MeshPhongMaterial({
+                    color: new THREE.Color().setHSL(Math.random(), 0.7, 0.5),
+                    shininess: 100
+                });
+                const cube = new THREE.Mesh(geometry, material);
+                
+                cube.position.set(
+                    (Math.random() - 0.5) * 20,
+                    (Math.random() - 0.5) * 20,
+                    (Math.random() - 0.5) * 20
+                );
+                
+                return cube;
+            },
+
+            init() {
+                // 初始立方体
+                const initialCube = this.createCube();
+                scene.add(initialCube);
+                this.cubes.push(initialCube);
+
+                // 启动定时添加
+                let addedCount = 0;
+                const adder = setInterval(() => {
+                    if (addedCount < this.maxCount) {
+                        const cube = this.createCube();
+                        scene.add(cube);
+                        this.cubes.push(cube);
+                        addedCount++;
+                    } else {
+                        clearInterval(adder);
+                    }
+                }, 1000); // 固定1秒间隔
+            },
+
+            update() {
+                const time = Date.now() / 1000;
+                this.cubes.forEach((cube, i) => {
+                    cube.rotation.x = time * (0.5 + i * 0.05);
+                    cube.rotation.y = time * (0.3 + i * 0.03);
+                    cube.position.y = Math.sin(time * 2 + i) * 2;
+                });
+            }
+        };
+
+        // 灯光系统
+        function initLights() {
+            const ambient = new THREE.AmbientLight(0xffffff, 0.4);
+            scene.add(ambient);
+            
+            const pointLight = new THREE.PointLight(0xffffff, 1.2);
+            pointLight.position.set(10, 12, 8);
+            scene.add(pointLight);
+        }
+
+        // 初始化系统
+        cubeManager.init();
+        initLights();
+
+        // 纯净的渲染循环
+        function render() {
+            requestAnimationFrame(render);
+            
+            // 只包含渲染相关操作
+            cubeManager.update();
+            console.log(scene.children.length,cubeManager.cubes.length);
+            renderer.render(scene, camera);
+        }
+
+        // 窗口响应
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // 启动渲染
+        render();
+    </script>
+</body>
 </html>

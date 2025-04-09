@@ -6788,6 +6788,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
    * Add reference from scene to this entity as the camera.
    */
   init: function () {
+    console.log('debug: component camera init');
     var camera;
     var el = this.el;
 
@@ -7771,7 +7772,7 @@ var warn = _utils_index_js__WEBPACK_IMPORTED_MODULE_1__.debug('components:gltf-m
  */
 var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerComponent)('gltf-model', {
   schema: {
-    type: 'model'
+    type: 'mymodel'
   },
   init: function () {
     var self = this;
@@ -7784,10 +7785,12 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
       this.loader.setDRACOLoader(dracoLoader);
     }
     if (meshoptDecoder) {
+      console.log('debug: gltf-model meshoptDecoder', meshoptDecoder);
       this.ready = meshoptDecoder.then(function (meshoptDecoder) {
         self.loader.setMeshoptDecoder(meshoptDecoder);
       });
     } else {
+      console.log('debug: gltf-model meshoptDecoder else', meshoptDecoder);
       this.ready = Promise.resolve();
     }
     if (ktxLoader) {
@@ -7797,13 +7800,36 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
   update: function () {
     var self = this;
     var el = this.el;
-    var src = this.data;
-    if (!src) {
+    var data = this.data;
+    // console.log('debug: gltf-model src', src);
+    if (!data) {
       return;
     }
+    var assetEl = document.getElementById(data.substring(1));
+    var src = assetEl.getAttribute('src');
     this.remove();
-    this.ready.then(function () {
+    // console.log('debug: gltf-model el',assetEl,assetEl.isAssetItem);
+    // assetEl.load().then(function(){
+
+    // });
+    // this.ready.then(function () {
+    //   self.loader.load(src, function gltfLoaded (gltfModel) {
+    //     self.model = gltfModel.scene || gltfModel.scenes[0];
+    //     self.model.animations = gltfModel.animations;
+
+    //     el.setObject3D('mesh', self.model);
+    //     el.emit('model-loaded', {format: 'gltf', model: self.model});
+    //   }, undefined /* onProgress */, function gltfFailed (error) {
+    //     var message = (error && error.message) ? error.message : 'Failed to load glTF model';
+    //     warn(message);
+    //     el.emit('model-error', {format: 'gltf', src: src});
+    //   });
+    // });
+    console.log('debug: assetEl.load', assetEl.load);
+    assetEl.load().then(() => this.ready).then(() => {
+      console.log('debug: assetEl load success', src);
       self.loader.load(src, function gltfLoaded(gltfModel) {
+        console.log('debug: gltf-model loaded', src);
         self.model = gltfModel.scene || gltfModel.scenes[0];
         self.model.animations = gltfModel.animations;
         el.setObject3D('mesh', self.model);
@@ -16395,7 +16421,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
       default: 1
     },
     src: {
-      type: 'audio'
+      type: 'myaudio'
     },
     volume: {
       default: 1
@@ -16455,19 +16481,24 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     if (srcChanged) {
       var self = this;
       this.loaded = false;
-      this.audioLoader.load(data.src, function (buffer) {
-        for (i = 0; i < self.pool.children.length; i++) {
-          sound = self.pool.children[i];
-          sound.setBuffer(buffer);
-        }
-        self.loaded = true;
+      console.log('debug: sound src', data);
+      var assetEl = document.getElementById(data.src.substring(1));
+      var src = assetEl.getAttribute('src');
+      assetEl.load().then(() => {
+        this.audioLoader.load(src, function (buffer) {
+          for (i = 0; i < self.pool.children.length; i++) {
+            sound = self.pool.children[i];
+            sound.setBuffer(buffer);
+          }
+          self.loaded = true;
 
-        // Remove this key from cache, otherwise we can't play it again
-        three__WEBPACK_IMPORTED_MODULE_2__.Cache.remove(data.src);
-        if (self.data.autoplay || self.mustPlay) {
-          self.playSound(self.processSound);
-        }
-        self.el.emit('sound-loaded', self.evtDetail, false);
+          // Remove this key from cache, otherwise we can't play it again
+          three__WEBPACK_IMPORTED_MODULE_2__.Cache.remove(data.src);
+          if (self.data.autoplay || self.mustPlay) {
+            self.playSound(self.processSound);
+          }
+          self.el.emit('sound-loaded', self.evtDetail, false);
+        });
       });
     }
   },
@@ -18998,11 +19029,20 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     if (!this.parentNode.isScene) {
       throw new Error('<a-assets> must be a child of a <a-scene>.');
     }
+    console.log('debug: a-assets connected', this.parentNode);
     await customElements.whenDefined('a-asset-item');
     await Promise.resolve();
     this.collectResources();
-    await this.loadPriorityGroups();
+    console.log('debug:queue', this.priorityQueues);
+    console.log('debug: loading group 1');
+    await this.loadGroup(1);
     this.load();
+    // await Promise.resolve();
+    var loadPriorityGroups = this.loadPriorityGroups.bind(this);
+    this.parentNode.addEventListener('renderfirstframe', async function () {
+      console.log('debug: a-assets renderfirstframe');
+      await loadPriorityGroups([2, 3]);
+    });
   }
   disconnectedCallback() {
     super.disconnectedCallback();
@@ -19027,8 +19067,9 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     if (el.hasAttribute('priority')) return parseInt(el.getAttribute('priority'));
     return 3;
   }
-  async loadPriorityGroups() {
-    for (let priority of [1, 2, 3]) {
+  async loadPriorityGroups(groups) {
+    for (let priority of groups) {
+      console.log('debug: loading group', priority);
       await this.loadGroup(priority);
     }
   }
@@ -19036,8 +19077,6 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     const group = this.priorityQueues[priority];
     if (!group.length) return;
     await Promise.all(group.map(item => {
-      //return item.load(); // AAssetItem
-      // if (item.tagName === 'AUDIO') return this.loadAudio(item); // 处理原生audio
       if (item.tagName === 'A-ASSET-ITEM') {
         return this.loadAssetItem(item);
       } else if (item.tagName === 'AUDIO') {
@@ -19423,7 +19462,7 @@ class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
       this.load();
       return;
     }
-
+    var id = this.id;
     // Wait for asset management system to finish before loading.
     assetsEl = sceneEl.querySelector('a-assets');
     if (assetsEl && !assetsEl.hasLoaded) {
@@ -19488,7 +19527,7 @@ class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
         child.el = self;
       });
     }
-
+    // console.log('debug: setObject3D', type, obj);
     // Add.
     this.object3D.add(obj);
     this.object3DMap[type] = obj;
@@ -19540,6 +19579,7 @@ class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     if (!el.object3D) {
       throw new Error("Trying to add an element that doesn't have an `object3D`");
     }
+    // console.log('debug: add2', el.id, this.id);
     this.object3D.add(el.object3D);
     this.emit('child-attached', {
       el: el
@@ -19584,6 +19624,7 @@ class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
       }
       self.updateComponents();
       if (self.isScene || self.parentEl.isPlaying) {
+        console.log('debug: play', self.id);
         self.play();
       }
     });
@@ -19653,7 +19694,9 @@ class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
 
     // Initialize dependencies first
     this.initComponentDependencies(componentName);
-
+    if (componentName === 'camera') {
+      console.log('debug: initComponent', componentName, this);
+    }
     // Initialize component
     component = new _component_js__WEBPACK_IMPORTED_MODULE_1__.components[componentName].Component(this, data, componentId);
     if (this.isPlaying) {
@@ -21590,6 +21633,7 @@ var urlRegex = /url\((.+)\)/;
 
 // Built-in property types.
 registerPropertyType('audio', '', assetParse, assetStringify);
+registerPropertyType('myaudio', '', myAssetParse, assetStringify);
 registerPropertyType('array', [], arrayParse, arrayStringify, arrayEquals);
 registerPropertyType('asset', '', assetParse, assetStringify);
 registerPropertyType('boolean', false, boolParse);
@@ -21598,6 +21642,7 @@ registerPropertyType('int', 0, intParse);
 registerPropertyType('number', 0, numberParse);
 registerPropertyType('map', '', assetParse, assetStringify);
 registerPropertyType('model', '', assetParse, assetStringify);
+registerPropertyType('mymodel', '', myAssetParse, assetStringify);
 registerPropertyType('selector', null, selectorParse, selectorStringify, defaultEquals, false);
 registerPropertyType('selectorAll', null, selectorAllParse, selectorAllStringify, arrayEquals, false);
 registerPropertyType('src', '', srcParse, assetStringify);
@@ -21672,7 +21717,49 @@ function arrayEquals(a, b) {
   }
   return true;
 }
+/**
+ * For general assets.
+ *
+ * @param {string} value - Can either be `url(<value>)`, an ID selector to an asset, or
+ *   just string.
+ * @returns {string} Parsed value from `url(<value>)`, src from `<someasset src>`, or
+ *   just string.
+ */
+function myAssetParse(value) {
+  console.log('debug: MyAssetParse', value);
+  var el;
+  var parsedUrl;
 
+  // If an element was provided (e.g. canvas or video), just return it.
+  if (typeof value !== 'string') {
+    return value;
+  }
+
+  // Wrapped `url()` in case of data URI.
+  parsedUrl = value.match(urlRegex);
+  if (parsedUrl) {
+    return parsedUrl[1];
+  }
+
+  // ID.
+  if (value.charAt(0) === '#') {
+    // el = document.getElementById(value.substring(1));
+    // console.log('debug: myassetParse el', el.tagName);
+    // if (el) {
+    //   // Pass through media elements. If we have the elements, we don't have to call
+    //   // three.js loaders which would re-request the assets.
+    //   if (el.tagName === 'CANVAS' || el.tagName === 'VIDEO' || el.tagName === 'IMG') {
+    //     return el;
+    //   }
+    //   return {'src':el.getAttribute('src'),'value':value};
+    // }
+    // warn('"' + value + '" asset not found.');
+    return value;
+  }
+
+  // Non-wrapped url().
+  return value;
+}
 /**
  * For general assets.
  *
@@ -21682,6 +21769,7 @@ function arrayEquals(a, b) {
  *   just string.
  */
 function assetParse(value) {
+  console.log('debug: assetParse', value);
   var el;
   var parsedUrl;
 
@@ -21699,6 +21787,7 @@ function assetParse(value) {
   // ID.
   if (value.charAt(0) === '#') {
     el = document.getElementById(value.substring(1));
+    console.log('debug: assetParse el', el.tagName);
     if (el) {
       // Pass through media elements. If we have the elements, we don't have to call
       // three.js loaders which would re-request the assets.
@@ -22033,6 +22122,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
     self.hasLoaded = false;
     self.isPlaying = false;
     self.originalHTML = self.innerHTML;
+    self.firstFrame = true;
   }
   addFullScreenStyles() {
     document.documentElement.classList.add('a-fullscreen');
@@ -22107,6 +22197,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
         self.resize();
       }
     });
+    console.log('debug: a-scene attachedCallbackPostCamera');
     this.play();
 
     // Add to scene index.
@@ -22548,6 +22639,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
    * Scene waits for all entities to load.
    */
   play() {
+    console.log('debug: a-scene play');
     var self = this;
     var sceneEl = this;
     if (this.renderStarted) {
@@ -22642,6 +22734,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
    * Renders with request animation frame.
    */
   render(time, frame) {
+    // console.log('debug: a-scene render');
     var renderer = this.renderer;
     this.frame = frame;
     this.delta = this.clock.getDelta() * 1000;
@@ -22656,6 +22749,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
       savedBackground = this.object3D.background;
       this.object3D.background = null;
     }
+    // console.log('debug: scene',this.object3D.children);
     renderer.render(this.object3D, this.camera);
     if (savedBackground) {
       this.object3D.background = savedBackground;
@@ -22663,6 +22757,11 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
     if (this.isPlaying) {
       var renderCamera = renderer.xr.isPresenting ? renderer.xr.getCamera() : this.camera;
       this.tock(this.time, this.delta, renderCamera);
+    }
+    if (this.firstFrame) {
+      this.emit('renderfirstframe');
+      console.log('debug: a-scene renderfirstframe emit', this.object3D.children);
+      this.firstFrame = false;
     }
   }
   callComponentBehaviors(behavior, time, timeDelta) {
@@ -26286,6 +26385,7 @@ var DEFAULT_CAMERA_ATTR = 'data-aframe-default-camera';
  */
 var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('camera', {
   init: function () {
+    console.log('debug: camera system init');
     this.activeCameraEl = null;
     this.render = this.render.bind(this);
     this.unwrapRender = this.unwrapRender.bind(this);
@@ -26311,6 +26411,7 @@ var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('ca
 
     // Camera already defined or the one defined it is an spectator one.
     if (sceneEl.camera && !sceneEl.camera.el.getAttribute('camera').spectator) {
+      console.log('debug: cameraready 1');
       sceneEl.emit('cameraready', {
         cameraEl: sceneEl.camera.el
       });
@@ -26331,6 +26432,7 @@ var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('ca
         if (evt.detail.type !== 'camera') {
           return;
         }
+        console.log('debug: checkUserCamera');
         self.checkUserCamera(this);
       });
 
@@ -26371,6 +26473,7 @@ var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('ca
     }
     this.initialCameraFound = true;
     sceneEl.camera = cameraEl.getObject3D('camera');
+    console.log('debug: cameraready 2');
     sceneEl.emit('cameraready', {
       cameraEl: cameraEl
     });
@@ -26397,6 +26500,7 @@ var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('ca
         return;
       }
       sceneEl.camera = evt.detail.object;
+      console.log('debug: cameraready 3');
       sceneEl.emit('cameraready', {
         cameraEl: defaultCameraEl
       });
@@ -33399,12 +33503,12 @@ this.files[key]=file;},get:function(key){if(this.enabled===false)return;// conso
 return this.files[key];},remove:function(key){delete this.files[key];},clear:function(){this.files={};}};class LoadingManager{constructor(onLoad,onProgress,onError){const scope=this;let isLoading=false;let itemsLoaded=0;let itemsTotal=0;let urlModifier=undefined;const handlers=[];// Refer to #5689 for the reason why we don't set .onStart
 // in the constructor
 this.onStart=undefined;this.onLoad=onLoad;this.onProgress=onProgress;this.onError=onError;this.itemStart=function(url){itemsTotal++;if(isLoading===false){if(scope.onStart!==undefined){scope.onStart(url,itemsLoaded,itemsTotal);}}isLoading=true;};this.itemEnd=function(url){itemsLoaded++;if(scope.onProgress!==undefined){scope.onProgress(url,itemsLoaded,itemsTotal);}if(itemsLoaded===itemsTotal){isLoading=false;if(scope.onLoad!==undefined){scope.onLoad();}}};this.itemError=function(url){if(scope.onError!==undefined){scope.onError(url);}};this.resolveURL=function(url){if(urlModifier){return urlModifier(url);}return url;};this.setURLModifier=function(transform){urlModifier=transform;return this;};this.addHandler=function(regex,loader){handlers.push(regex,loader);return this;};this.removeHandler=function(regex){const index=handlers.indexOf(regex);if(index!==-1){handlers.splice(index,2);}return this;};this.getHandler=function(file){for(let i=0,l=handlers.length;i<l;i+=2){const regex=handlers[i];const loader=handlers[i+1];if(regex.global)regex.lastIndex=0;// see #17920
-if(regex.test(file)){return loader;}}return null;};}}const DefaultLoadingManager=/*@__PURE__*/new LoadingManager();class Loader{constructor(manager){this.manager=manager!==undefined?manager:DefaultLoadingManager;this.crossOrigin='anonymous';this.withCredentials=false;this.path='';this.resourcePath='';this.requestHeader={};}load(/* url, onLoad, onProgress, onError */){}loadAsync(url,onProgress){const scope=this;return new Promise(function(resolve,reject){scope.load(url,resolve,onProgress,reject);});}parse(/* data */){}setCrossOrigin(crossOrigin){this.crossOrigin=crossOrigin;return this;}setWithCredentials(value){this.withCredentials=value;return this;}setPath(path){this.path=path;return this;}setResourcePath(resourcePath){this.resourcePath=resourcePath;return this;}setRequestHeader(requestHeader){this.requestHeader=requestHeader;return this;}}Loader.DEFAULT_MATERIAL_NAME='__DEFAULT';const loading={};class HttpError extends Error{constructor(message,response){super(message);this.response=response;}}class FileLoader extends Loader{constructor(manager){super(manager);}load(url,onLoad,onProgress,onError){if(url===undefined)url='';if(this.path!==undefined)url=this.path+url;url=this.manager.resolveURL(url);const cached=Cache.get(url);if(cached!==undefined){this.manager.itemStart(url);setTimeout(()=>{if(onLoad)onLoad(cached);this.manager.itemEnd(url);},0);return cached;}// Check if request is duplicate
-if(loading[url]!==undefined){loading[url].push({onLoad:onLoad,onProgress:onProgress,onError:onError});return;}// Initialise array for duplicate requests
+if(regex.test(file)){return loader;}}return null;};}}const DefaultLoadingManager=/*@__PURE__*/new LoadingManager();class Loader{constructor(manager){this.manager=manager!==undefined?manager:DefaultLoadingManager;this.crossOrigin='anonymous';this.withCredentials=false;this.path='';this.resourcePath='';this.requestHeader={};}load(/* url, onLoad, onProgress, onError */){}loadAsync(url,onProgress){const scope=this;return new Promise(function(resolve,reject){scope.load(url,resolve,onProgress,reject);});}parse(/* data */){}setCrossOrigin(crossOrigin){this.crossOrigin=crossOrigin;return this;}setWithCredentials(value){this.withCredentials=value;return this;}setPath(path){this.path=path;return this;}setResourcePath(resourcePath){this.resourcePath=resourcePath;return this;}setRequestHeader(requestHeader){this.requestHeader=requestHeader;return this;}}Loader.DEFAULT_MATERIAL_NAME='__DEFAULT';const loading={};class HttpError extends Error{constructor(message,response){super(message);this.response=response;}}class FileLoader extends Loader{constructor(manager){super(manager);}load(url,onLoad,onProgress,onError){if(url===undefined)url='';if(this.path!==undefined)url=this.path+url;url=this.manager.resolveURL(url);const cached=Cache.get(url);if(cached!==undefined){console.log('debug cached',url);this.manager.itemStart(url);setTimeout(()=>{if(onLoad)onLoad(cached);this.manager.itemEnd(url);},0);return cached;}// Check if request is duplicate
+if(loading[url]!==undefined){loading[url].push({onLoad:onLoad,onProgress:onProgress,onError:onError});console.log('debug: loading',url);return;}// Initialise array for duplicate requests
 loading[url]=[];loading[url].push({onLoad:onLoad,onProgress:onProgress,onError:onError});// create request
 const req=new Request(url,{headers:new Headers(this.requestHeader),credentials:this.withCredentials?'include':'same-origin'// An abort controller could be added within a future PR
 });// record states ( avoid data race )
-const mimeType=this.mimeType;const responseType=this.responseType;// start the fetch
+const mimeType=this.mimeType;const responseType=this.responseType;console.log('debug: fetch',url);// start the fetch
 fetch(req).then(response=>{if(response.status===200||response.status===0){// Some browsers return HTTP Status 0 when using non-http protocol
 // e.g. 'file://' or 'data://'. Handle as success.
 if(response.status===0){console.warn('THREE.FileLoader: HTTP Status 0 received.');}// Workaround: Checking if response.body === undefined for Alipay browser #23548

@@ -33,11 +33,23 @@ class AAssets extends ANode {
     if (!this.parentNode.isScene) {
       throw new Error('<a-assets> must be a child of a <a-scene>.');
     }
+    console.log('debug: a-assets connected',this.parentNode);
+   
     await customElements.whenDefined('a-asset-item');
     await Promise.resolve(); 
     this.collectResources();
-    await this.loadPriorityGroups();
+    console.log('debug:queue', this.priorityQueues);
+    console.log('debug: loading group 1');
+    await this.loadGroup(1);
     this.load();
+    // await Promise.resolve();
+    var loadPriorityGroups = this.loadPriorityGroups.bind(this);
+    this.parentNode.addEventListener('renderfirstframe', async function () {
+      console.log('debug: a-assets renderfirstframe');
+      await loadPriorityGroups([2,3]);
+   
+    });
+   
   }
 
   disconnectedCallback () {
@@ -62,8 +74,9 @@ class AAssets extends ANode {
     if (el.hasAttribute('priority')) return parseInt(el.getAttribute('priority'));
     return 3; 
   }
-  async loadPriorityGroups() {
-    for (let priority of [1, 2, 3]) {
+  async loadPriorityGroups(groups) {
+    for (let priority of groups) {
+      console.log('debug: loading group', priority);
       await this.loadGroup(priority);
 
     }
@@ -73,8 +86,6 @@ class AAssets extends ANode {
     if (!group.length) return;
     await Promise.all(
       group.map(item => {
-        //return item.load(); // AAssetItem
-       // if (item.tagName === 'AUDIO') return this.loadAudio(item); // 处理原生audio
        if (item.tagName === 'A-ASSET-ITEM') {
           return this.loadAssetItem(item);
         } else if (item.tagName === 'AUDIO') {
