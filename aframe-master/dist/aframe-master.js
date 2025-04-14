@@ -6788,7 +6788,6 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
    * Add reference from scene to this entity as the camera.
    */
   init: function () {
-    console.log('debug: component camera init');
     var camera;
     var el = this.el;
 
@@ -7785,12 +7784,10 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
       this.loader.setDRACOLoader(dracoLoader);
     }
     if (meshoptDecoder) {
-      console.log('debug: gltf-model meshoptDecoder', meshoptDecoder);
       this.ready = meshoptDecoder.then(function (meshoptDecoder) {
         self.loader.setMeshoptDecoder(meshoptDecoder);
       });
     } else {
-      console.log('debug: gltf-model meshoptDecoder else', meshoptDecoder);
       this.ready = Promise.resolve();
     }
     if (ktxLoader) {
@@ -7801,35 +7798,14 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     var self = this;
     var el = this.el;
     var data = this.data;
-    // console.log('debug: gltf-model src', src);
     if (!data) {
       return;
     }
     var assetEl = document.getElementById(data.substring(1));
     var src = assetEl.getAttribute('src');
     this.remove();
-    // console.log('debug: gltf-model el',assetEl,assetEl.isAssetItem);
-    // assetEl.load().then(function(){
-
-    // });
-    // this.ready.then(function () {
-    //   self.loader.load(src, function gltfLoaded (gltfModel) {
-    //     self.model = gltfModel.scene || gltfModel.scenes[0];
-    //     self.model.animations = gltfModel.animations;
-
-    //     el.setObject3D('mesh', self.model);
-    //     el.emit('model-loaded', {format: 'gltf', model: self.model});
-    //   }, undefined /* onProgress */, function gltfFailed (error) {
-    //     var message = (error && error.message) ? error.message : 'Failed to load glTF model';
-    //     warn(message);
-    //     el.emit('model-error', {format: 'gltf', src: src});
-    //   });
-    // });
-    console.log('debug: assetEl.load', assetEl.load);
-    assetEl.load().then(() => this.ready).then(() => {
-      console.log('debug: assetEl load success', src);
+    assetEl.loaded().then(() => this.ready).then(() => {
       self.loader.load(src, function gltfLoaded(gltfModel) {
-        console.log('debug: gltf-model loaded', src);
         self.model = gltfModel.scene || gltfModel.scenes[0];
         self.model.animations = gltfModel.animations;
         el.setObject3D('mesh', self.model);
@@ -16481,10 +16457,9 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     if (srcChanged) {
       var self = this;
       this.loaded = false;
-      console.log('debug: sound src', data);
       var assetEl = document.getElementById(data.src.substring(1));
       var src = assetEl.getAttribute('src');
-      assetEl.load().then(() => {
+      assetEl.loaded().then(() => {
         this.audioLoader.load(src, function (buffer) {
           for (i = 0; i < self.pool.children.length; i++) {
             sound = self.pool.children[i];
@@ -19029,7 +19004,6 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     if (!this.parentNode.isScene) {
       throw new Error('<a-assets> must be a child of a <a-scene>.');
     }
-    console.log('debug: a-assets connected', this.parentNode);
     await customElements.whenDefined('a-asset-item');
     await Promise.resolve();
     this.collectResources();
@@ -19037,7 +19011,6 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     console.log('debug: loading group 1');
     await this.loadGroup(1);
     this.load();
-    // await Promise.resolve();
     var loadPriorityGroups = this.loadPriorityGroups.bind(this);
     this.parentNode.addEventListener('renderfirstframe', async function () {
       console.log('debug: a-assets renderfirstframe');
@@ -19075,6 +19048,7 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
   }
   async loadGroup(priority) {
     const group = this.priorityQueues[priority];
+    console.log('debug: loading group', priority, group);
     if (!group.length) return;
     await Promise.all(group.map(item => {
       if (item.tagName === 'A-ASSET-ITEM') {
@@ -19117,10 +19091,17 @@ class AAssetItem extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     this.data = null;
     this.isAssetItem = true;
     this._loadingPromise = null;
+    this._loadedPromise = new Promise(resolve => {
+      this._resolveLoaded = resolve;
+    });
+  }
+  loaded() {
+    return this._loadedPromise;
   }
   load() {
     if (this._loadingPromise) return this._loadingPromise;
     const src = this.getAttribute('src');
+    console.log('debug: loading asset', src);
     const responseType = this.getAttribute('response-type') || inferResponseType(src);
     const id = this.getAttribute('id');
     this._loadingPromise = new Promise((resolve, reject) => {
@@ -19129,6 +19110,7 @@ class AAssetItem extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
         this.data = response;
         _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode.prototype.load.call(this);
         resolve();
+        this._resolveLoaded();
       }, xhr => {
         this.emit('progress', {
           loadedBytes: xhr.loaded,
@@ -19624,7 +19606,6 @@ class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
       }
       self.updateComponents();
       if (self.isScene || self.parentEl.isPlaying) {
-        console.log('debug: play', self.id);
         self.play();
       }
     });
@@ -19694,9 +19675,6 @@ class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
 
     // Initialize dependencies first
     this.initComponentDependencies(componentName);
-    if (componentName === 'camera') {
-      console.log('debug: initComponent', componentName, this);
-    }
     // Initialize component
     component = new _component_js__WEBPACK_IMPORTED_MODULE_1__.components[componentName].Component(this, data, componentId);
     if (this.isPlaying) {
@@ -21726,7 +21704,6 @@ function arrayEquals(a, b) {
  *   just string.
  */
 function myAssetParse(value) {
-  console.log('debug: MyAssetParse', value);
   var el;
   var parsedUrl;
 
@@ -21743,17 +21720,6 @@ function myAssetParse(value) {
 
   // ID.
   if (value.charAt(0) === '#') {
-    // el = document.getElementById(value.substring(1));
-    // console.log('debug: myassetParse el', el.tagName);
-    // if (el) {
-    //   // Pass through media elements. If we have the elements, we don't have to call
-    //   // three.js loaders which would re-request the assets.
-    //   if (el.tagName === 'CANVAS' || el.tagName === 'VIDEO' || el.tagName === 'IMG') {
-    //     return el;
-    //   }
-    //   return {'src':el.getAttribute('src'),'value':value};
-    // }
-    // warn('"' + value + '" asset not found.');
     return value;
   }
 
@@ -21769,7 +21735,6 @@ function myAssetParse(value) {
  *   just string.
  */
 function assetParse(value) {
-  console.log('debug: assetParse', value);
   var el;
   var parsedUrl;
 
@@ -21787,7 +21752,6 @@ function assetParse(value) {
   // ID.
   if (value.charAt(0) === '#') {
     el = document.getElementById(value.substring(1));
-    console.log('debug: assetParse el', el.tagName);
     if (el) {
       // Pass through media elements. If we have the elements, we don't have to call
       // three.js loaders which would re-request the assets.
@@ -22197,7 +22161,6 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
         self.resize();
       }
     });
-    console.log('debug: a-scene attachedCallbackPostCamera');
     this.play();
 
     // Add to scene index.
@@ -22725,7 +22688,15 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
       systems[this.systemNames[i]].tock(time, timeDelta, camera);
     }
   }
-
+  getLeafNodes(scene) {
+    var cnt = 0;
+    scene.traverse(object => {
+      if (object.children.length === 0) {
+        cnt += 1;
+      }
+    });
+    return cnt;
+  }
   /**
    * The render loop.
    *
@@ -22749,7 +22720,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
       savedBackground = this.object3D.background;
       this.object3D.background = null;
     }
-    // console.log('debug: scene',this.object3D.children);
+    console.log('debug: scene', this.getLeafNodes(this.object3D));
     renderer.render(this.object3D, this.camera);
     if (savedBackground) {
       this.object3D.background = savedBackground;
@@ -22760,7 +22731,6 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
     }
     if (this.firstFrame) {
       this.emit('renderfirstframe');
-      console.log('debug: a-scene renderfirstframe emit', this.object3D.children);
       this.firstFrame = false;
     }
   }
@@ -26385,7 +26355,6 @@ var DEFAULT_CAMERA_ATTR = 'data-aframe-default-camera';
  */
 var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('camera', {
   init: function () {
-    console.log('debug: camera system init');
     this.activeCameraEl = null;
     this.render = this.render.bind(this);
     this.unwrapRender = this.unwrapRender.bind(this);
@@ -26411,7 +26380,6 @@ var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('ca
 
     // Camera already defined or the one defined it is an spectator one.
     if (sceneEl.camera && !sceneEl.camera.el.getAttribute('camera').spectator) {
-      console.log('debug: cameraready 1');
       sceneEl.emit('cameraready', {
         cameraEl: sceneEl.camera.el
       });
@@ -26432,7 +26400,6 @@ var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('ca
         if (evt.detail.type !== 'camera') {
           return;
         }
-        console.log('debug: checkUserCamera');
         self.checkUserCamera(this);
       });
 
@@ -26473,7 +26440,6 @@ var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('ca
     }
     this.initialCameraFound = true;
     sceneEl.camera = cameraEl.getObject3D('camera');
-    console.log('debug: cameraready 2');
     sceneEl.emit('cameraready', {
       cameraEl: cameraEl
     });
@@ -26500,7 +26466,6 @@ var System = (0,_core_system_js__WEBPACK_IMPORTED_MODULE_1__.registerSystem)('ca
         return;
       }
       sceneEl.camera = evt.detail.object;
-      console.log('debug: cameraready 3');
       sceneEl.emit('cameraready', {
         cameraEl: defaultCameraEl
       });

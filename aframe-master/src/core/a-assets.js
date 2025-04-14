@@ -33,8 +33,6 @@ class AAssets extends ANode {
     if (!this.parentNode.isScene) {
       throw new Error('<a-assets> must be a child of a <a-scene>.');
     }
-    console.log('debug: a-assets connected',this.parentNode);
-   
     await customElements.whenDefined('a-asset-item');
     await Promise.resolve(); 
     this.collectResources();
@@ -42,7 +40,6 @@ class AAssets extends ANode {
     console.log('debug: loading group 1');
     await this.loadGroup(1);
     this.load();
-    // await Promise.resolve();
     var loadPriorityGroups = this.loadPriorityGroups.bind(this);
     this.parentNode.addEventListener('renderfirstframe', async function () {
       console.log('debug: a-assets renderfirstframe');
@@ -83,6 +80,7 @@ class AAssets extends ANode {
   }
   async loadGroup(priority) {
     const group = this.priorityQueues[priority];
+    console.log('debug: loading group', priority, group);
     if (!group.length) return;
     await Promise.all(
       group.map(item => {
@@ -130,11 +128,18 @@ class AAssetItem extends ANode {
     this.data = null;
     this.isAssetItem = true;
     this._loadingPromise = null;
+    this._loadedPromise = new Promise((resolve) => {
+      this._resolveLoaded = resolve;
+    });
+  }
+  loaded(){
+    return this._loadedPromise;
   }
   load() {
     if (this._loadingPromise) return this._loadingPromise;
     
     const src = this.getAttribute('src');
+    console.log('debug: loading asset', src);
     const responseType = this.getAttribute('response-type') || inferResponseType(src);
     const id = this.getAttribute('id');
     this._loadingPromise = new Promise((resolve, reject) => {
@@ -144,6 +149,7 @@ class AAssetItem extends ANode {
           this.data = response;
           ANode.prototype.load.call(this);
           resolve();
+          this._resolveLoaded();
         },
         xhr => {
           this.emit('progress', {

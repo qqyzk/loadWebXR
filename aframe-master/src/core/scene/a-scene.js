@@ -137,7 +137,6 @@ export class AScene extends AEntity {
         self.resize();
       }
     });
-    console.log('debug: a-scene attachedCallbackPostCamera');
     this.play();
 
     // Add to scene index.
@@ -641,7 +640,15 @@ export class AScene extends AEntity {
       systems[this.systemNames[i]].tock(time, timeDelta, camera);
     }
   }
-
+  getLeafNodes(scene) {
+    var cnt=0;
+    scene.traverse((object) => {
+      if (object.children.length === 0) {
+        cnt+=1
+      }
+    });
+    return cnt;
+  }
   /**
    * The render loop.
    *
@@ -665,7 +672,7 @@ export class AScene extends AEntity {
       savedBackground = this.object3D.background;
       this.object3D.background = null;
     }
-    // console.log('debug: scene',this.object3D.children);
+    console.log('debug: scene',this.getLeafNodes(this.object3D));
     renderer.render(this.object3D, this.camera);
     if (savedBackground) {
       this.object3D.background = savedBackground;
@@ -676,7 +683,6 @@ export class AScene extends AEntity {
     }
     if (this.firstFrame){
       this.emit('renderfirstframe');
-      console.log('debug: a-scene renderfirstframe emit',this.object3D.children);
       this.firstFrame = false;
     }
   }

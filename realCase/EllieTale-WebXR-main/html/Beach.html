@@ -9,30 +9,9 @@
         <a-entity cursor="rayOrigin: mouse"></a-entity>
     </a-camera>
 
-    <!--MenuwithCamera-->
-
-
-    <!--score-->
-    <a-text id="score" value="0" width="20" text="side:  double;  align:  center" scale="0.5 0.5 0.5" geometry="primitive:circle ; " material="emissive:#245a8a; src:../images/atlas png/shell.png;transparent: true" position="-4.11289 2 -11.07439"></a-text>
-    <!--backtomenu-->
-    <a-text id="reload" class="menu" text="side:  double;  align:  center" scale="0.2 0.2 0.2" geometry="primitive:circle ; " material=" src:../images/atlas png/main menu.png;transparent: true" position="3 2 -8.24248"></a-text>
-    <!-- </a-entity> -->
-    <!--Hands-->
-
-    <a-entity progressive-controls></a-entity>
-
-    <a-entity oculus-quest-controls="hand: left"></a-entity>
-
-    <a-entity oculus-quest-controls="hand: right" thumbstick-logging></a-entity>
-
-    <a-entity laser-controls="hand: right" raycaster="objects: .timer,.menu,.Box,#myDistractor; far: 100"></a-entity>
-
-
     <!--Assets-->
 
     <a-assets timeout="500000">
-
-
         <a-asset-item id="target" src="item/Beach_Seashell_lit_v1.02.glb" response-type="arraybuffer" priority="2"></a-asset-item>
         <a-asset-item id="Environment" src="item/Beach_Environment_v1.02.glb" response-type="arraybuffer" priority="2" ></a-asset-item>
         <a-asset-item id="distractorModel" src="item/Noah_hunter_v1.01.glb" response-type="arraybuffer" priority="2"></a-asset-item>
@@ -71,7 +50,25 @@
         <a-asset-item id="whaleModel" src="item/Beach_prop_whale_01.glb" response-type="arraybuffer" priority="3"></a-asset-item>
         <a-asset-item id="shipModel" src="item/Beach_prop_ship_01.glb" response-type="arraybuffer" priority="3"> </a-asset-item>
         <a-asset-item id="ballModel" src="item/Beach_prop_ball_01.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+        <a-asset-item id="mainmenu" src="images/atlas_png/main_menu.png" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="shell" src="images/atlas_png/shell.png" response-type="arraybuffer"></a-asset-item>
     </a-assets>
+    <!--MenuwithCamera-->
+    <!--score-->
+    <a-text id="score" value="0" width="20" text="side:  double;  align:  center" scale="0.5 0.5 0.5" geometry="primitive:circle ; " material="emissive:#245a8a; src:#shell;transparent: true" position="-4.11289 2 -11.07439"></a-text>
+    <!--backtomenu-->
+    <a-text id="reload" class="menu" text="side:  double;  align:  center" scale="0.2 0.2 0.2" geometry="primitive:circle ; " material=" src:#mainmenu;transparent: true" position="3 2 -8.24248"></a-text>
+    <!-- </a-entity> -->
+    <!--Hands-->
+
+    <a-entity progressive-controls></a-entity>
+
+    <a-entity oculus-quest-controls="hand: left"></a-entity>
+
+    <a-entity oculus-quest-controls="hand: right" thumbstick-logging></a-entity>
+
+    <a-entity laser-controls="hand: right" raycaster="objects: .timer,.menu,.Box,#myDistractor; far: 100"></a-entity>
+   
     <!--enviroment-->
 
     <a-gltf-model id="mybeach" src="#Environment" shadow="" animation-mixer position="12 0 -7.13117">

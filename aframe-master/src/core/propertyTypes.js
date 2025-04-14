@@ -91,7 +91,6 @@ function arrayEquals (a, b) {
  *   just string.
  */
 function myAssetParse (value) {
-  console.log('debug: MyAssetParse', value);
   var el;
   var parsedUrl;
 
@@ -104,17 +103,6 @@ function myAssetParse (value) {
 
   // ID.
   if (value.charAt(0) === '#') {
-    // el = document.getElementById(value.substring(1));
-    // console.log('debug: myassetParse el', el.tagName);
-    // if (el) {
-    //   // Pass through media elements. If we have the elements, we don't have to call
-    //   // three.js loaders which would re-request the assets.
-    //   if (el.tagName === 'CANVAS' || el.tagName === 'VIDEO' || el.tagName === 'IMG') {
-    //     return el;
-    //   }
-    //   return {'src':el.getAttribute('src'),'value':value};
-    // }
-    // warn('"' + value + '" asset not found.');
     return value;
   }
 
@@ -130,7 +118,6 @@ function myAssetParse (value) {
  *   just string.
  */
 function assetParse (value) {
-  console.log('debug: assetParse', value);
   var el;
   var parsedUrl;
 
@@ -144,7 +131,6 @@ function assetParse (value) {
   // ID.
   if (value.charAt(0) === '#') {
     el = document.getElementById(value.substring(1));
-    console.log('debug: assetParse el', el.tagName);
     if (el) {
       // Pass through media elements. If we have the elements, we don't have to call
       // three.js loaders which would re-request the assets.

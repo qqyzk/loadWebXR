@@ -81,10 +81,9 @@ export var Component = registerComponent('sound', {
       var self = this;
 
       this.loaded = false;
-      console.log('debug: sound src', data);
       var assetEl = document.getElementById(data.src.substring(1));
       var src = assetEl.getAttribute('src');
-      assetEl.load()
+      assetEl.loaded()
         .then(()=> {
           this.audioLoader.load(src, function (buffer) {
             for (i = 0; i < self.pool.children.length; i++) {

@@ -230,7 +230,7 @@ export class AEntity extends ANode {
       if (!self.parentEl) { return; }
 
       self.updateComponents();
-      if (self.isScene || self.parentEl.isPlaying) {console.log('debug: play', self.id); self.play(); }
+      if (self.isScene || self.parentEl.isPlaying) { self.play(); }
     });
   }
 
@@ -299,9 +299,6 @@ export class AEntity extends ANode {
 
     // Initialize dependencies first
     this.initComponentDependencies(componentName);
-    if(componentName === 'camera') {
-      console.log('debug: initComponent', componentName,this);
-    }
     // Initialize component
     component = new COMPONENTS[componentName].Component(this, data, componentId);
     if (this.isPlaying) { component.play(); }

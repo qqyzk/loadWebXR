@@ -20,7 +20,6 @@ export var Component = registerComponent('camera', {
    * Add reference from scene to this entity as the camera.
    */
   init: function () {
-    console.log('debug: component camera init');
     var camera;
     var el = this.el;
 
