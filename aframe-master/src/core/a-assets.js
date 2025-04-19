@@ -15,6 +15,14 @@ class AAssets extends ANode {
     this.fileLoader = fileLoader;
     this.timeout = null;
     this.priorityQueues = {1: [], 2: [], 3: []};
+    this.renderFirstFrame = true;
+    this.frameTimeBudget = 16.7;
+    this.networkQueues = {1: [], 2: [], 3: []};
+    this.sceneQueues = { 1: [],2: [], 3: []};
+    this.currentPriority = 1;
+    this.currentStage = 0;
+    this.allTasksDone = false;
+    this.sceneTaskDone=0;
   }
 
   async doConnectedCallback () {
@@ -40,13 +48,26 @@ class AAssets extends ANode {
     console.log('debug: loading group 1');
     await this.loadGroup(1);
     this.load();
+    this.currentPriority = 2;
     var loadPriorityGroups = this.loadPriorityGroups.bind(this);
-    this.parentNode.addEventListener('renderfirstframe', async function () {
-      console.log('debug: a-assets renderfirstframe');
-      await loadPriorityGroups([2,3]);
-   
+    this.parentNode.addEventListener('render', async function (event) {
+      // if(self.renderFirstFrame){
+      //   console.log('debug: a-assets renderfirstframe');
+      //   await loadPriorityGroups([2,3]);
+      //   this.emit('all-assets-loaded');
+      //   self.renderFirstFrame = false;
+      // }
+      const startTime = event.detail;
+      // const usedTime = (performance.now() - startTime);
+      // var remainingTime =0;
+      // if(usedTime < self.frameTimeBudget){
+      //   remainingTime = self.frameTimeBudget - usedTime;
+      // }
+      console.log('debug:render');
+      if(!self.allTasksDone){
+        self.doTasks(startTime);
+      }
     });
-   
   }
 
   disconnectedCallback () {
@@ -64,6 +85,7 @@ class AAssets extends ANode {
     elements.forEach(el => {
       const priority = this.getPriority(el);
       this.priorityQueues[priority].push(el);
+      this.networkQueues[priority].push(el);
     });
   }
 
@@ -113,7 +135,68 @@ class AAssets extends ANode {
       audioEl.load();
     });
   }
- 
+  regitsterSceneTask (task) {
+    this.sceneQueues[this.currentPriority].push(task);
+  }
+  doTasks (startTime) {
+    while ( performance.now()-startTime < this.frameTimeBudget && !this.allTasksDone) {
+      if (this.currentStage === 0){
+        this.doNetworkTask();
+        if(this.networkQueues[this.currentPriority].length === 0){
+          this.currentStage = 1;
+        }
+      }else if (this.currentStage === 1){
+        if(this.sceneQueues[this.currentPriority].length !== 0){
+          this.doSceneTask();
+          this.sceneTaskDone++;
+          if(this.sceneTaskDone === this.priorityQueues[this.currentPriority].length){
+            this.currentStage = 0;
+            this.sceneTaskDone = 0;
+            this.currentPriority++;
+            if(this.currentPriority > 3){
+              this.allTasksDone = true;
+              this.parentNode.emit('all-assets-loaded');
+            }
+          }
+        }else{
+          setTimeout(() => {},2);
+        }
+      }
+    }
+  }
+  doNetworkTask () {
+    const item =  this.networkQueues[this.currentPriority].shift();
+    item.load();
+  }
+  doSceneTask () {
+    const task = this.sceneQueues[this.currentPriority].shift();
+    if(task.type === 'gltf-model'){
+      console.log('debug: loading gltf model', task.src);
+      task.loader.load(task.src, function gltfLoaded (gltfModel) {
+          task.theself.model = gltfModel.scene || gltfModel.scenes[0];
+          task.theself.model.animations = gltfModel.animations;
+          task.el.setObject3D('mesh', task.theself.model);
+          task.el.emit('model-loaded', {format: 'gltf', model: task.theself.model});
+        }, undefined /* onProgress */, function gltfFailed (error) {
+          var message = (error && error.message) ? error.message : 'Failed to load glTF model';
+          warn(message);
+          task.el.emit('model-error', {format: 'gltf', src: task.src});
+        });
+    }else if (task.type === 'sound'){
+      task.loader.load(task.src, function (buffer) {
+        for (var i = 0; i < task.theself.pool.children.length; i++) {
+          task.sound = task.theself.pool.children[i];
+          task.sound.setBuffer(buffer);
+        }
+        task.theself.loaded = true;
+
+        // Remove this key from cache, otherwise we can't play it again
+        THREE.Cache.remove(task.src);
+        if (task.theself.data.autoplay || task.theself.mustPlay) { task.theself.playSound(task.theself.processSound); }
+        task.theself.el.emit('sound-loaded', task.theself.evtDetail, false);
+      });
+    }
+  }
  
 }
 
@@ -139,7 +222,7 @@ class AAssetItem extends ANode {
     if (this._loadingPromise) return this._loadingPromise;
     
     const src = this.getAttribute('src');
-    console.log('debug: loading asset', src);
+    // console.log('debug: loading asset', src);
     const responseType = this.getAttribute('response-type') || inferResponseType(src);
     const id = this.getAttribute('id');
     this._loadingPromise = new Promise((resolve, reject) => {

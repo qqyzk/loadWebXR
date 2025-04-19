@@ -61,7 +61,10 @@ export class AScene extends AEntity {
     self.hasLoaded = false;
     self.isPlaying = false;
     self.originalHTML = self.innerHTML;
-    self.firstFrame = true;
+    self.allAssetsLoaded = false;
+    self.afterLoadedFrame = 0;
+    self.remTimes = [];
+    
   }
 
   addFullScreenStyles () {
@@ -104,6 +107,10 @@ export class AScene extends AEntity {
     // Camera set up by camera system.
     this.addEventListener('cameraready', function () {
       self.attachedCallbackPostCamera();
+    });
+    this.addEventListener('all-assets-loaded', function () {
+      self.allAssetsLoaded = true;
+      console.log('debug: all assets loaded');
     });
 
     this.initSystems();
@@ -649,6 +656,21 @@ export class AScene extends AEntity {
     });
     return cnt;
   }
+  saveTimes() {
+    const data = JSON.stringify(this.remTimes, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'performance_data.json';
+    a.style.display = 'none';
+    
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
   /**
    * The render loop.
    *
@@ -658,6 +680,7 @@ export class AScene extends AEntity {
    */
   render (time, frame) {
     // console.log('debug: a-scene render');
+    var startTime =  performance.now();
     var renderer = this.renderer;
 
     this.frame = frame;
@@ -672,7 +695,17 @@ export class AScene extends AEntity {
       savedBackground = this.object3D.background;
       this.object3D.background = null;
     }
-    console.log('debug: scene',this.getLeafNodes(this.object3D));
+    // console.log('debug: scene',this.getLeafNodes(this.object3D),this.delta,this.time);
+    if(!this.allAssetsLoaded || this.afterLoadedFrame < 30){
+      console.log('debug: scene',this.delta,this.allAssetsLoaded);
+      this.remTimes.push({'delta':this.delta,'status':this.allAssetsLoaded});
+      if(this.allAssetsLoaded){
+        this.afterLoadedFrame+=1;
+        if(this.afterLoadedFrame === 30 ){
+          this.saveTimes();
+        }
+      }
+    }
     renderer.render(this.object3D, this.camera);
     if (savedBackground) {
       this.object3D.background = savedBackground;
@@ -681,10 +714,11 @@ export class AScene extends AEntity {
       var renderCamera = renderer.xr.isPresenting ? renderer.xr.getCamera() : this.camera;
       this.tock(this.time, this.delta, renderCamera);
     }
-    if (this.firstFrame){
-      this.emit('renderfirstframe');
-      this.firstFrame = false;
+
+    if(!this.allAssetsLoaded || this.afterLoadedFrame < 30){
+      this.emit('render',startTime);
     }
+  
   }
 
   callComponentBehaviors (behavior, time, timeDelta) {

@@ -7804,23 +7804,25 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     var assetEl = document.getElementById(data.substring(1));
     var src = assetEl.getAttribute('src');
     this.remove();
+    var assets = this.el.sceneEl.querySelector('a-assets');
     assetEl.loaded().then(() => this.ready).then(() => {
-      self.loader.load(src, function gltfLoaded(gltfModel) {
-        self.model = gltfModel.scene || gltfModel.scenes[0];
-        self.model.animations = gltfModel.animations;
-        el.setObject3D('mesh', self.model);
-        el.emit('model-loaded', {
-          format: 'gltf',
-          model: self.model
-        });
-      }, undefined /* onProgress */, function gltfFailed(error) {
-        var message = error && error.message ? error.message : 'Failed to load glTF model';
-        warn(message);
-        el.emit('model-error', {
-          format: 'gltf',
-          src: src
-        });
+      assets.regitsterSceneTask({
+        type: 'gltf-model',
+        src: src,
+        el: self.el,
+        loader: self.loader,
+        theself: self
       });
+      // self.loader.load(src, function gltfLoaded (gltfModel) {
+      //       self.model = gltfModel.scene || gltfModel.scenes[0];
+      //       self.model.animations = gltfModel.animations;
+      //       el.setObject3D('mesh', self.model);
+      //       el.emit('model-loaded', {format: 'gltf', model: self.model});
+      //     }, undefined /* onProgress */, function gltfFailed (error) {
+      //       var message = (error && error.message) ? error.message : 'Failed to load glTF model';
+      //       warn(message);
+      //       el.emit('model-error', {format: 'gltf', src: src});
+      //     });
     });
   },
   remove: function () {
@@ -16459,21 +16461,28 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
       this.loaded = false;
       var assetEl = document.getElementById(data.src.substring(1));
       var src = assetEl.getAttribute('src');
+      var assets = this.el.sceneEl.querySelector('a-assets');
       assetEl.loaded().then(() => {
-        this.audioLoader.load(src, function (buffer) {
-          for (i = 0; i < self.pool.children.length; i++) {
-            sound = self.pool.children[i];
-            sound.setBuffer(buffer);
-          }
-          self.loaded = true;
-
-          // Remove this key from cache, otherwise we can't play it again
-          three__WEBPACK_IMPORTED_MODULE_2__.Cache.remove(data.src);
-          if (self.data.autoplay || self.mustPlay) {
-            self.playSound(self.processSound);
-          }
-          self.el.emit('sound-loaded', self.evtDetail, false);
+        assets.regitsterSceneTask({
+          type: 'sound',
+          src: src,
+          el: self.el,
+          loader: this.audioLoader,
+          theself: self,
+          sound: sound
         });
+        // this.audioLoader.load(src, function (buffer) {
+        //   for (i = 0; i < self.pool.children.length; i++) {
+        //     sound = self.pool.children[i];
+        //     sound.setBuffer(buffer);
+        //   }
+        //   self.loaded = true;
+
+        //   // Remove this key from cache, otherwise we can't play it again
+        //   THREE.Cache.remove(data.src);
+        //   if (self.data.autoplay || self.mustPlay) { self.playSound(self.processSound); }
+        //   self.el.emit('sound-loaded', self.evtDetail, false);
+        // });
       });
     }
   },
@@ -18989,6 +18998,22 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
       2: [],
       3: []
     };
+    this.renderFirstFrame = true;
+    this.frameTimeBudget = 16.7;
+    this.networkQueues = {
+      1: [],
+      2: [],
+      3: []
+    };
+    this.sceneQueues = {
+      1: [],
+      2: [],
+      3: []
+    };
+    this.currentPriority = 1;
+    this.currentStage = 0;
+    this.allTasksDone = false;
+    this.sceneTaskDone = 0;
   }
   async doConnectedCallback() {
     var self = this;
@@ -19011,10 +19036,25 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     console.log('debug: loading group 1');
     await this.loadGroup(1);
     this.load();
+    this.currentPriority = 2;
     var loadPriorityGroups = this.loadPriorityGroups.bind(this);
-    this.parentNode.addEventListener('renderfirstframe', async function () {
-      console.log('debug: a-assets renderfirstframe');
-      await loadPriorityGroups([2, 3]);
+    this.parentNode.addEventListener('render', async function (event) {
+      // if(self.renderFirstFrame){
+      //   console.log('debug: a-assets renderfirstframe');
+      //   await loadPriorityGroups([2,3]);
+      //   this.emit('all-assets-loaded');
+      //   self.renderFirstFrame = false;
+      // }
+      const startTime = event.detail;
+      // const usedTime = (performance.now() - startTime);
+      // var remainingTime =0;
+      // if(usedTime < self.frameTimeBudget){
+      //   remainingTime = self.frameTimeBudget - usedTime;
+      // }
+      console.log('debug:render');
+      if (!self.allTasksDone) {
+        self.doTasks(startTime);
+      }
     });
   }
   disconnectedCallback() {
@@ -19034,6 +19074,7 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     elements.forEach(el => {
       const priority = this.getPriority(el);
       this.priorityQueues[priority].push(el);
+      this.networkQueues[priority].push(el);
     });
   }
   getPriority(el) {
@@ -19079,6 +19120,76 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
       audioEl.load();
     });
   }
+  regitsterSceneTask(task) {
+    this.sceneQueues[this.currentPriority].push(task);
+  }
+  doTasks(startTime) {
+    while (performance.now() - startTime < this.frameTimeBudget && !this.allTasksDone) {
+      if (this.currentStage === 0) {
+        this.doNetworkTask();
+        if (this.networkQueues[this.currentPriority].length === 0) {
+          this.currentStage = 1;
+        }
+      } else if (this.currentStage === 1) {
+        if (this.sceneQueues[this.currentPriority].length !== 0) {
+          this.doSceneTask();
+          this.sceneTaskDone++;
+          if (this.sceneTaskDone === this.priorityQueues[this.currentPriority].length) {
+            this.currentStage = 0;
+            this.sceneTaskDone = 0;
+            this.currentPriority++;
+            if (this.currentPriority > 3) {
+              this.allTasksDone = true;
+              this.parentNode.emit('all-assets-loaded');
+            }
+          }
+        } else {
+          setTimeout(() => {}, 2);
+        }
+      }
+    }
+  }
+  doNetworkTask() {
+    const item = this.networkQueues[this.currentPriority].shift();
+    item.load();
+  }
+  doSceneTask() {
+    const task = this.sceneQueues[this.currentPriority].shift();
+    if (task.type === 'gltf-model') {
+      console.log('debug: loading gltf model', task.src);
+      task.loader.load(task.src, function gltfLoaded(gltfModel) {
+        task.theself.model = gltfModel.scene || gltfModel.scenes[0];
+        task.theself.model.animations = gltfModel.animations;
+        task.el.setObject3D('mesh', task.theself.model);
+        task.el.emit('model-loaded', {
+          format: 'gltf',
+          model: task.theself.model
+        });
+      }, undefined /* onProgress */, function gltfFailed(error) {
+        var message = error && error.message ? error.message : 'Failed to load glTF model';
+        warn(message);
+        task.el.emit('model-error', {
+          format: 'gltf',
+          src: task.src
+        });
+      });
+    } else if (task.type === 'sound') {
+      task.loader.load(task.src, function (buffer) {
+        for (var i = 0; i < task.theself.pool.children.length; i++) {
+          task.sound = task.theself.pool.children[i];
+          task.sound.setBuffer(buffer);
+        }
+        task.theself.loaded = true;
+
+        // Remove this key from cache, otherwise we can't play it again
+        three__WEBPACK_IMPORTED_MODULE_2__.Cache.remove(task.src);
+        if (task.theself.data.autoplay || task.theself.mustPlay) {
+          task.theself.playSound(task.theself.processSound);
+        }
+        task.theself.el.emit('sound-loaded', task.theself.evtDetail, false);
+      });
+    }
+  }
 }
 customElements.define('a-assets', AAssets);
 
@@ -19101,7 +19212,7 @@ class AAssetItem extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
   load() {
     if (this._loadingPromise) return this._loadingPromise;
     const src = this.getAttribute('src');
-    console.log('debug: loading asset', src);
+    // console.log('debug: loading asset', src);
     const responseType = this.getAttribute('response-type') || inferResponseType(src);
     const id = this.getAttribute('id');
     this._loadingPromise = new Promise((resolve, reject) => {
@@ -22086,7 +22197,9 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
     self.hasLoaded = false;
     self.isPlaying = false;
     self.originalHTML = self.innerHTML;
-    self.firstFrame = true;
+    self.allAssetsLoaded = false;
+    self.afterLoadedFrame = 0;
+    self.remTimes = [];
   }
   addFullScreenStyles() {
     document.documentElement.classList.add('a-fullscreen');
@@ -22129,6 +22242,10 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
     // Camera set up by camera system.
     this.addEventListener('cameraready', function () {
       self.attachedCallbackPostCamera();
+    });
+    this.addEventListener('all-assets-loaded', function () {
+      self.allAssetsLoaded = true;
+      console.log('debug: all assets loaded');
     });
     this.initSystems();
     // Compute component order
@@ -22697,6 +22814,21 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
     });
     return cnt;
   }
+  saveTimes() {
+    const data = JSON.stringify(this.remTimes, null, 2);
+    const blob = new Blob([data], {
+      type: 'application/json'
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'performance_data.json';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
   /**
    * The render loop.
    *
@@ -22706,6 +22838,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
    */
   render(time, frame) {
     // console.log('debug: a-scene render');
+    var startTime = performance.now();
     var renderer = this.renderer;
     this.frame = frame;
     this.delta = this.clock.getDelta() * 1000;
@@ -22720,7 +22853,20 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
       savedBackground = this.object3D.background;
       this.object3D.background = null;
     }
-    console.log('debug: scene', this.getLeafNodes(this.object3D));
+    // console.log('debug: scene',this.getLeafNodes(this.object3D),this.delta,this.time);
+    if (!this.allAssetsLoaded || this.afterLoadedFrame < 30) {
+      console.log('debug: scene', this.delta, this.allAssetsLoaded);
+      this.remTimes.push({
+        'delta': this.delta,
+        'status': this.allAssetsLoaded
+      });
+      if (this.allAssetsLoaded) {
+        this.afterLoadedFrame += 1;
+        if (this.afterLoadedFrame === 30) {
+          this.saveTimes();
+        }
+      }
+    }
     renderer.render(this.object3D, this.camera);
     if (savedBackground) {
       this.object3D.background = savedBackground;
@@ -22729,9 +22875,8 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
       var renderCamera = renderer.xr.isPresenting ? renderer.xr.getCamera() : this.camera;
       this.tock(this.time, this.delta, renderCamera);
     }
-    if (this.firstFrame) {
-      this.emit('renderfirstframe');
-      this.firstFrame = false;
+    if (!this.allAssetsLoaded || this.afterLoadedFrame < 30) {
+      this.emit('render', startTime);
     }
   }
   callComponentBehaviors(behavior, time, timeDelta) {

@@ -39,19 +39,27 @@ export var Component = registerComponent('gltf-model', {
     var assetEl = document.getElementById(data.substring(1));
     var src = assetEl.getAttribute('src');
     this.remove();
+    var assets = this.el.sceneEl.querySelector('a-assets');
     assetEl.loaded()
         .then(() => this.ready)
         .then(() => {
-          self.loader.load(src, function gltfLoaded (gltfModel) {
-                self.model = gltfModel.scene || gltfModel.scenes[0];
-                self.model.animations = gltfModel.animations;
-                el.setObject3D('mesh', self.model);
-                el.emit('model-loaded', {format: 'gltf', model: self.model});
-              }, undefined /* onProgress */, function gltfFailed (error) {
-                var message = (error && error.message) ? error.message : 'Failed to load glTF model';
-                warn(message);
-                el.emit('model-error', {format: 'gltf', src: src});
-              });
+          assets.regitsterSceneTask({
+            type: 'gltf-model',
+            src: src,
+            el: self.el,
+            loader: self.loader,
+            theself: self
+          });
+          // self.loader.load(src, function gltfLoaded (gltfModel) {
+          //       self.model = gltfModel.scene || gltfModel.scenes[0];
+          //       self.model.animations = gltfModel.animations;
+          //       el.setObject3D('mesh', self.model);
+          //       el.emit('model-loaded', {format: 'gltf', model: self.model});
+          //     }, undefined /* onProgress */, function gltfFailed (error) {
+          //       var message = (error && error.message) ? error.message : 'Failed to load glTF model';
+          //       warn(message);
+          //       el.emit('model-error', {format: 'gltf', src: src});
+          //     });
         });
         
    

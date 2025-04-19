@@ -83,20 +83,29 @@ export var Component = registerComponent('sound', {
       this.loaded = false;
       var assetEl = document.getElementById(data.src.substring(1));
       var src = assetEl.getAttribute('src');
+      var assets = this.el.sceneEl.querySelector('a-assets');
       assetEl.loaded()
         .then(()=> {
-          this.audioLoader.load(src, function (buffer) {
-            for (i = 0; i < self.pool.children.length; i++) {
-              sound = self.pool.children[i];
-              sound.setBuffer(buffer);
-            }
-            self.loaded = true;
-    
-            // Remove this key from cache, otherwise we can't play it again
-            THREE.Cache.remove(data.src);
-            if (self.data.autoplay || self.mustPlay) { self.playSound(self.processSound); }
-            self.el.emit('sound-loaded', self.evtDetail, false);
+          assets.regitsterSceneTask({
+            type: 'sound',
+            src: src,
+            el: self.el,
+            loader: this.audioLoader,
+            theself: self,
+            sound: sound
           });
+          // this.audioLoader.load(src, function (buffer) {
+          //   for (i = 0; i < self.pool.children.length; i++) {
+          //     sound = self.pool.children[i];
+          //     sound.setBuffer(buffer);
+          //   }
+          //   self.loaded = true;
+    
+          //   // Remove this key from cache, otherwise we can't play it again
+          //   THREE.Cache.remove(data.src);
+          //   if (self.data.autoplay || self.mustPlay) { self.playSound(self.processSound); }
+          //   self.el.emit('sound-loaded', self.evtDetail, false);
+          // });
         });
      
     }
