@@ -19034,24 +19034,12 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     this.collectResources();
     console.log('debug:queue', this.priorityQueues);
     console.log('debug: loading group 1');
-    await this.loadGroup(1);
     this.load();
-    this.currentPriority = 2;
+    await this.loadGroup(1); //network trasfer
+    await this.doGroupSceneTask(1); //scene
     var loadPriorityGroups = this.loadPriorityGroups.bind(this);
     this.parentNode.addEventListener('render', async function (event) {
-      // if(self.renderFirstFrame){
-      //   console.log('debug: a-assets renderfirstframe');
-      //   await loadPriorityGroups([2,3]);
-      //   this.emit('all-assets-loaded');
-      //   self.renderFirstFrame = false;
-      // }
       const startTime = event.detail;
-      // const usedTime = (performance.now() - startTime);
-      // var remainingTime =0;
-      // if(usedTime < self.frameTimeBudget){
-      //   remainingTime = self.frameTimeBudget - usedTime;
-      // }
-      console.log('debug:render');
       if (!self.allTasksDone) {
         self.doTasks(startTime);
       }
@@ -19088,7 +19076,7 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     }
   }
   async loadGroup(priority) {
-    const group = this.priorityQueues[priority];
+    const group = this.networkQueues[priority];
     console.log('debug: loading group', priority, group);
     if (!group.length) return;
     await Promise.all(group.map(item => {
@@ -19096,6 +19084,26 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
         return this.loadAssetItem(item);
       } else if (item.tagName === 'AUDIO') {
         return this.loadAudio(item);
+      }
+    }));
+    console.log('debug: loaded group', priority, this.sceneQueues);
+  }
+  delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  async doGroupSceneTask(priority) {
+    while (this.sceneQueues[this.currentPriority].length < this.priorityQueues[priority].length) {
+      await this.delay(2);
+      console.log('debug: waiting for scene task', this.sceneQueues[this.currentPriority].length, this.priorityQueues[priority].length);
+    }
+    const group = this.sceneQueues[priority];
+    console.log('debug: loading group', priority, group);
+    if (!group.length) return;
+    await Promise.all(group.map(item => {
+      if (item.type === 'gltf-model') {
+        return this.doGLTFTask(item);
+      } else if (item.type === 'sound') {
+        return this.doSoundTask(item);
       }
     }));
   }
@@ -19123,7 +19131,7 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
   regitsterSceneTask(task) {
     this.sceneQueues[this.currentPriority].push(task);
   }
-  doTasks(startTime) {
+  async doTasks(startTime) {
     while (performance.now() - startTime < this.frameTimeBudget && !this.allTasksDone) {
       if (this.currentStage === 0) {
         this.doNetworkTask();
@@ -19144,7 +19152,7 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
             }
           }
         } else {
-          setTimeout(() => {}, 2);
+          await this.delay(2);
         }
       }
     }
@@ -19153,41 +19161,48 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     const item = this.networkQueues[this.currentPriority].shift();
     item.load();
   }
+  doGLTFTask(task) {
+    console.log('debug: loading gltf model', task.src);
+    task.loader.load(task.src, function gltfLoaded(gltfModel) {
+      task.theself.model = gltfModel.scene || gltfModel.scenes[0];
+      task.theself.model.animations = gltfModel.animations;
+      task.el.setObject3D('mesh', task.theself.model);
+      task.el.emit('model-loaded', {
+        format: 'gltf',
+        model: task.theself.model
+      });
+    }, undefined /* onProgress */, function gltfFailed(error) {
+      var message = error && error.message ? error.message : 'Failed to load glTF model';
+      warn(message);
+      task.el.emit('model-error', {
+        format: 'gltf',
+        src: task.src
+      });
+    });
+  }
+  doSoundTask(task) {
+    console.log('debug: loading sound', task.src);
+    task.loader.load(task.src, function (buffer) {
+      for (var i = 0; i < task.theself.pool.children.length; i++) {
+        task.sound = task.theself.pool.children[i];
+        task.sound.setBuffer(buffer);
+      }
+      task.theself.loaded = true;
+
+      // Remove this key from cache, otherwise we can't play it again
+      three__WEBPACK_IMPORTED_MODULE_2__.Cache.remove(task.src);
+      if (task.theself.data.autoplay || task.theself.mustPlay) {
+        task.theself.playSound(task.theself.processSound);
+      }
+      task.theself.el.emit('sound-loaded', task.theself.evtDetail, false);
+    });
+  }
   doSceneTask() {
     const task = this.sceneQueues[this.currentPriority].shift();
     if (task.type === 'gltf-model') {
-      console.log('debug: loading gltf model', task.src);
-      task.loader.load(task.src, function gltfLoaded(gltfModel) {
-        task.theself.model = gltfModel.scene || gltfModel.scenes[0];
-        task.theself.model.animations = gltfModel.animations;
-        task.el.setObject3D('mesh', task.theself.model);
-        task.el.emit('model-loaded', {
-          format: 'gltf',
-          model: task.theself.model
-        });
-      }, undefined /* onProgress */, function gltfFailed(error) {
-        var message = error && error.message ? error.message : 'Failed to load glTF model';
-        warn(message);
-        task.el.emit('model-error', {
-          format: 'gltf',
-          src: task.src
-        });
-      });
+      this.doGLTFTask(task);
     } else if (task.type === 'sound') {
-      task.loader.load(task.src, function (buffer) {
-        for (var i = 0; i < task.theself.pool.children.length; i++) {
-          task.sound = task.theself.pool.children[i];
-          task.sound.setBuffer(buffer);
-        }
-        task.theself.loaded = true;
-
-        // Remove this key from cache, otherwise we can't play it again
-        three__WEBPACK_IMPORTED_MODULE_2__.Cache.remove(task.src);
-        if (task.theself.data.autoplay || task.theself.mustPlay) {
-          task.theself.playSound(task.theself.processSound);
-        }
-        task.theself.el.emit('sound-loaded', task.theself.evtDetail, false);
-      });
+      this.doSoundTask(task);
     }
   }
 }
@@ -22837,7 +22852,6 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
    * Renders with request animation frame.
    */
   render(time, frame) {
-    // console.log('debug: a-scene render');
     var startTime = performance.now();
     var renderer = this.renderer;
     this.frame = frame;
@@ -22856,16 +22870,13 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
     // console.log('debug: scene',this.getLeafNodes(this.object3D),this.delta,this.time);
     if (!this.allAssetsLoaded || this.afterLoadedFrame < 30) {
       console.log('debug: scene', this.delta, this.allAssetsLoaded);
-      this.remTimes.push({
-        'delta': this.delta,
-        'status': this.allAssetsLoaded
-      });
-      if (this.allAssetsLoaded) {
-        this.afterLoadedFrame += 1;
-        if (this.afterLoadedFrame === 30) {
-          this.saveTimes();
-        }
-      }
+      // this.remTimes.push({'delta':this.delta,'status':this.allAssetsLoaded});
+      // if(this.allAssetsLoaded){
+      //   this.afterLoadedFrame+=1;
+      //   if(this.afterLoadedFrame === 30 ){
+      //     this.saveTimes();
+      //   }
+      // }
     }
     renderer.render(this.object3D, this.camera);
     if (savedBackground) {

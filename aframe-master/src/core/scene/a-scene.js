@@ -679,7 +679,6 @@ export class AScene extends AEntity {
    * Renders with request animation frame.
    */
   render (time, frame) {
-    // console.log('debug: a-scene render');
     var startTime =  performance.now();
     var renderer = this.renderer;
 
@@ -698,13 +697,13 @@ export class AScene extends AEntity {
     // console.log('debug: scene',this.getLeafNodes(this.object3D),this.delta,this.time);
     if(!this.allAssetsLoaded || this.afterLoadedFrame < 30){
       console.log('debug: scene',this.delta,this.allAssetsLoaded);
-      this.remTimes.push({'delta':this.delta,'status':this.allAssetsLoaded});
-      if(this.allAssetsLoaded){
-        this.afterLoadedFrame+=1;
-        if(this.afterLoadedFrame === 30 ){
-          this.saveTimes();
-        }
-      }
+      // this.remTimes.push({'delta':this.delta,'status':this.allAssetsLoaded});
+      // if(this.allAssetsLoaded){
+      //   this.afterLoadedFrame+=1;
+      //   if(this.afterLoadedFrame === 30 ){
+      //     this.saveTimes();
+      //   }
+      // }
     }
     renderer.render(this.object3D, this.camera);
     if (savedBackground) {
