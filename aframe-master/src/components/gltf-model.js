@@ -40,15 +40,23 @@ export var Component = registerComponent('gltf-model', {
     var src = assetEl.getAttribute('src');
     this.remove();
     var assets = this.el.sceneEl.querySelector('a-assets');
+    var priority = 3;
+    if (assetEl.hasAttribute('priority')){
+      priority = parseInt(assetEl.getAttribute('priority'));
+    }
+    assets.addSceneTaskCount({
+      priority: priority
+    });
     assetEl.loaded()
         .then(() => this.ready)
         .then(() => {
-          assets.regitsterSceneTask({
+          assets.registerSceneTask({
             type: 'gltf-model',
             src: src,
             el: self.el,
             loader: self.loader,
-            theself: self
+            theself: self,
+            priority: priority
           });
           // self.loader.load(src, function gltfLoaded (gltfModel) {
           //       self.model = gltfModel.scene || gltfModel.scenes[0];

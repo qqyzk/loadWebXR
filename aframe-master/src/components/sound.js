@@ -84,15 +84,23 @@ export var Component = registerComponent('sound', {
       var assetEl = document.getElementById(data.src.substring(1));
       var src = assetEl.getAttribute('src');
       var assets = this.el.sceneEl.querySelector('a-assets');
+      var priority = 3;
+      if (assetEl.hasAttribute('priority')){
+        priority = parseInt(assetEl.getAttribute('priority'));
+      }
+      assets.addSceneTaskCount({
+          priority: priority
+      });
       assetEl.loaded()
         .then(()=> {
-          assets.regitsterSceneTask({
+          assets.registerSceneTask({
             type: 'sound',
             src: src,
             el: self.el,
             loader: this.audioLoader,
             theself: self,
-            sound: sound
+            sound: sound,
+            priority: priority
           });
           // this.audioLoader.load(src, function (buffer) {
           //   for (i = 0; i < self.pool.children.length; i++) {

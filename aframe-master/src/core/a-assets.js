@@ -19,6 +19,7 @@ class AAssets extends ANode {
     this.frameTimeBudget = 16.7;
     this.networkQueues = {1: [], 2: [], 3: []};
     this.sceneQueues = { 1: [],2: [], 3: []};
+    this.sceneTaskCount = { 1: 0, 2: 0, 3: 0};
     this.currentPriority = 1;
     this.currentStage = 0;
     this.allTasksDone = false;
@@ -45,10 +46,9 @@ class AAssets extends ANode {
     await Promise.resolve(); 
     this.collectResources();
     console.log('debug:queue', this.priorityQueues);
-    console.log('debug: loading group 1');
     this.load();
-    await this.loadGroup(1);//network trasfer
-    await this.doGroupSceneTask(1);//scene
+    // await this.loadGroup(1);//network trasfer
+    // await this.doGroupSceneTask(1);//scene
     var loadPriorityGroups = this.loadPriorityGroups.bind(this);
     this.parentNode.addEventListener('render', async function (event) {
       const startTime = event.detail;
@@ -90,7 +90,7 @@ class AAssets extends ANode {
   }
   async loadGroup(priority) {
     const group = this.networkQueues[priority];
-    console.log('debug: loading group', priority, group);
+    console.log('debug: network transfering group', priority, group);
     if (!group.length) return;
     await Promise.all(
       group.map(item => {
@@ -101,7 +101,7 @@ class AAssets extends ANode {
         } 
       })
     );
-    console.log('debug: loaded group', priority,this.sceneQueues);
+    console.log('debug: netword transfered group', priority,this.sceneQueues);
   }
   delay (ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -145,8 +145,11 @@ class AAssets extends ANode {
       audioEl.load();
     });
   }
-  regitsterSceneTask (task) {
-    this.sceneQueues[this.currentPriority].push(task);
+  addSceneTaskCount (task) {
+    this.sceneTaskCount[task.priority] +=1;
+  }
+  registerSceneTask (task) {
+    this.sceneQueues[task.priority].push(task);
   }
   async doTasks (startTime) {
     while ( performance.now()-startTime < this.frameTimeBudget && !this.allTasksDone) {
@@ -159,7 +162,7 @@ class AAssets extends ANode {
         if(this.sceneQueues[this.currentPriority].length !== 0){
           this.doSceneTask();
           this.sceneTaskDone++;
-          if(this.sceneTaskDone === this.priorityQueues[this.currentPriority].length){
+          if(this.sceneTaskDone === this.sceneTaskCount[this.currentPriority]){
             this.currentStage = 0;
             this.sceneTaskDone = 0;
             this.currentPriority++;

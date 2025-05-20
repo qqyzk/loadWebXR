@@ -7805,13 +7805,21 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     var src = assetEl.getAttribute('src');
     this.remove();
     var assets = this.el.sceneEl.querySelector('a-assets');
+    var priority = 3;
+    if (assetEl.hasAttribute('priority')) {
+      priority = parseInt(assetEl.getAttribute('priority'));
+    }
+    assets.addSceneTaskCount({
+      priority: priority
+    });
     assetEl.loaded().then(() => this.ready).then(() => {
-      assets.regitsterSceneTask({
+      assets.registerSceneTask({
         type: 'gltf-model',
         src: src,
         el: self.el,
         loader: self.loader,
-        theself: self
+        theself: self,
+        priority: priority
       });
       // self.loader.load(src, function gltfLoaded (gltfModel) {
       //       self.model = gltfModel.scene || gltfModel.scenes[0];
@@ -16462,14 +16470,22 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
       var assetEl = document.getElementById(data.src.substring(1));
       var src = assetEl.getAttribute('src');
       var assets = this.el.sceneEl.querySelector('a-assets');
+      var priority = 3;
+      if (assetEl.hasAttribute('priority')) {
+        priority = parseInt(assetEl.getAttribute('priority'));
+      }
+      assets.addSceneTaskCount({
+        priority: priority
+      });
       assetEl.loaded().then(() => {
-        assets.regitsterSceneTask({
+        assets.registerSceneTask({
           type: 'sound',
           src: src,
           el: self.el,
           loader: this.audioLoader,
           theself: self,
-          sound: sound
+          sound: sound,
+          priority: priority
         });
         // this.audioLoader.load(src, function (buffer) {
         //   for (i = 0; i < self.pool.children.length; i++) {
@@ -19010,6 +19026,11 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
       2: [],
       3: []
     };
+    this.sceneTaskCount = {
+      1: 0,
+      2: 0,
+      3: 0
+    };
     this.currentPriority = 1;
     this.currentStage = 0;
     this.allTasksDone = false;
@@ -19033,10 +19054,9 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     await Promise.resolve();
     this.collectResources();
     console.log('debug:queue', this.priorityQueues);
-    console.log('debug: loading group 1');
     this.load();
-    await this.loadGroup(1); //network trasfer
-    await this.doGroupSceneTask(1); //scene
+    // await this.loadGroup(1);//network trasfer
+    // await this.doGroupSceneTask(1);//scene
     var loadPriorityGroups = this.loadPriorityGroups.bind(this);
     this.parentNode.addEventListener('render', async function (event) {
       const startTime = event.detail;
@@ -19077,7 +19097,7 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
   }
   async loadGroup(priority) {
     const group = this.networkQueues[priority];
-    console.log('debug: loading group', priority, group);
+    console.log('debug: network transfering group', priority, group);
     if (!group.length) return;
     await Promise.all(group.map(item => {
       if (item.tagName === 'A-ASSET-ITEM') {
@@ -19086,7 +19106,7 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
         return this.loadAudio(item);
       }
     }));
-    console.log('debug: loaded group', priority, this.sceneQueues);
+    console.log('debug: netword transfered group', priority, this.sceneQueues);
   }
   delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -19128,8 +19148,11 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
       audioEl.load();
     });
   }
-  regitsterSceneTask(task) {
-    this.sceneQueues[this.currentPriority].push(task);
+  addSceneTaskCount(task) {
+    this.sceneTaskCount[task.priority] += 1;
+  }
+  registerSceneTask(task) {
+    this.sceneQueues[task.priority].push(task);
   }
   async doTasks(startTime) {
     while (performance.now() - startTime < this.frameTimeBudget && !this.allTasksDone) {
@@ -19142,7 +19165,7 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
         if (this.sceneQueues[this.currentPriority].length !== 0) {
           this.doSceneTask();
           this.sceneTaskDone++;
-          if (this.sceneTaskDone === this.priorityQueues[this.currentPriority].length) {
+          if (this.sceneTaskDone === this.sceneTaskCount[this.currentPriority]) {
             this.currentStage = 0;
             this.sceneTaskDone = 0;
             this.currentPriority++;
@@ -22867,10 +22890,12 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
       savedBackground = this.object3D.background;
       this.object3D.background = null;
     }
-    // console.log('debug: scene',this.getLeafNodes(this.object3D),this.delta,this.time);
     if (!this.allAssetsLoaded || this.afterLoadedFrame < 30) {
-      console.log('debug: scene', this.delta, this.allAssetsLoaded);
-      // this.remTimes.push({'delta':this.delta,'status':this.allAssetsLoaded});
+      console.log('debug: scene', this.getLeafNodes(this.object3D), this.delta, this.time);
+      this.remTimes.push({
+        'delta': this.delta,
+        'status': this.allAssetsLoaded
+      });
       // if(this.allAssetsLoaded){
       //   this.afterLoadedFrame+=1;
       //   if(this.afterLoadedFrame === 30 ){
