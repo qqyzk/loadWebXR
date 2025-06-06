@@ -19057,7 +19057,8 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     this.load();
     // await this.loadGroup(1);//network trasfer
     // await this.doGroupSceneTask(1);//scene
-    var loadPriorityGroups = this.loadPriorityGroups.bind(this);
+    await this.loadFirstPriority();
+    this.parentNode.emit('firstloaded');
     this.parentNode.addEventListener('render', async function (event) {
       const startTime = event.detail;
       if (!self.allTasksDone) {
@@ -19094,6 +19095,33 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
       console.log('debug: loading group', priority);
       await this.loadGroup(priority);
     }
+  }
+  async loadFirstPriority() {
+    console.log('debug: loading first priority group', this.currentPriority);
+    const group = this.networkQueues[1];
+    console.log('debug: network transfering group', 1, group);
+    if (!group.length) return;
+    group.map(item => {
+      if (item.tagName === 'A-ASSET-ITEM') {
+        this.loadAssetItem(item);
+      }
+    });
+    console.log('debug: calculate first priority group', this.currentPriority);
+    while (true) {
+      if (this.sceneQueues[this.currentPriority].length !== 0) {
+        this.doSceneTask();
+        this.sceneTaskDone++;
+        if (this.sceneTaskDone === this.sceneTaskCount[this.currentPriority]) {
+          this.currentStage = 0;
+          this.sceneTaskDone = 0;
+          this.currentPriority++;
+          break;
+        }
+      } else {
+        await this.delay(2);
+      }
+    }
+    console.log('debug: calculate first priority group end', this.currentPriority);
   }
   async loadGroup(priority) {
     const group = this.networkQueues[priority];
@@ -19160,6 +19188,7 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
         this.doNetworkTask();
         if (this.networkQueues[this.currentPriority].length === 0) {
           this.currentStage = 1;
+          console.log('debug: network transfer done, switch to scene task', this.currentPriority);
         }
       } else if (this.currentStage === 1) {
         if (this.sceneQueues[this.currentPriority].length !== 0) {
@@ -19169,6 +19198,7 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
             this.currentStage = 0;
             this.sceneTaskDone = 0;
             this.currentPriority++;
+            console.log('debug: scene task done, switch to next priority', this.currentPriority);
             if (this.currentPriority > 3) {
               this.allTasksDone = true;
               this.parentNode.emit('all-assets-loaded');
@@ -19250,7 +19280,7 @@ class AAssetItem extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
   load() {
     if (this._loadingPromise) return this._loadingPromise;
     const src = this.getAttribute('src');
-    // console.log('debug: loading asset', src);
+    console.log('debug: begin network', src);
     const responseType = this.getAttribute('response-type') || inferResponseType(src);
     const id = this.getAttribute('id');
     this._loadingPromise = new Promise((resolve, reject) => {
@@ -20689,7 +20719,6 @@ class ANode extends HTMLElement {
   disconnectedCallback() {
     this.hasLoaded = false;
   }
-
   /**
    * Wait for children to load, if any.
    * Then emit `loaded` event and set `hasLoaded`.
@@ -22279,11 +22308,15 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
     window.addEventListener('sessionend', this.resize);
     // Camera set up by camera system.
     this.addEventListener('cameraready', function () {
-      self.attachedCallbackPostCamera();
+      self.attachedCallbackPostCamera(self);
     });
     this.addEventListener('all-assets-loaded', function () {
       self.allAssetsLoaded = true;
       console.log('debug: all assets loaded');
+    });
+    this.addEventListener('firstloaded', function () {
+      console.log('debug: a-scene firstloaded');
+      this.play();
     });
     this.initSystems();
     // Compute component order
@@ -22316,7 +22349,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
         self.resize();
       }
     });
-    this.play();
+    // this.play();
 
     // Add to scene index.
     _scenes_js__WEBPACK_IMPORTED_MODULE_3__["default"].push(this);
@@ -22765,6 +22798,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
       return;
     }
     this.addEventListener('loaded', function () {
+      console.log('debug: a-scene loaded');
       var renderer = this.renderer;
       _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity.prototype.play.call(this); // .play() *before* render.
 
@@ -22779,6 +22813,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
           window.performance.mark('render-started');
         }
         _loadingScreen_js__WEBPACK_IMPORTED_MODULE_2__.remove();
+        console.log('debug: a-scene render started');
         renderer.setAnimationLoop(this.render);
         sceneEl.renderStarted = true;
         sceneEl.emit('renderstart');
@@ -22896,12 +22931,12 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
         'delta': this.delta,
         'status': this.allAssetsLoaded
       });
-      // if(this.allAssetsLoaded){
-      //   this.afterLoadedFrame+=1;
-      //   if(this.afterLoadedFrame === 30 ){
-      //     this.saveTimes();
-      //   }
-      // }
+      if (this.allAssetsLoaded) {
+        this.afterLoadedFrame += 1;
+        //   if(this.afterLoadedFrame === 30 ){
+        //     this.saveTimes();
+        //   }
+      }
     }
     renderer.render(this.object3D, this.camera);
     if (savedBackground) {
@@ -33649,12 +33684,12 @@ this.files[key]=file;},get:function(key){if(this.enabled===false)return;// conso
 return this.files[key];},remove:function(key){delete this.files[key];},clear:function(){this.files={};}};class LoadingManager{constructor(onLoad,onProgress,onError){const scope=this;let isLoading=false;let itemsLoaded=0;let itemsTotal=0;let urlModifier=undefined;const handlers=[];// Refer to #5689 for the reason why we don't set .onStart
 // in the constructor
 this.onStart=undefined;this.onLoad=onLoad;this.onProgress=onProgress;this.onError=onError;this.itemStart=function(url){itemsTotal++;if(isLoading===false){if(scope.onStart!==undefined){scope.onStart(url,itemsLoaded,itemsTotal);}}isLoading=true;};this.itemEnd=function(url){itemsLoaded++;if(scope.onProgress!==undefined){scope.onProgress(url,itemsLoaded,itemsTotal);}if(itemsLoaded===itemsTotal){isLoading=false;if(scope.onLoad!==undefined){scope.onLoad();}}};this.itemError=function(url){if(scope.onError!==undefined){scope.onError(url);}};this.resolveURL=function(url){if(urlModifier){return urlModifier(url);}return url;};this.setURLModifier=function(transform){urlModifier=transform;return this;};this.addHandler=function(regex,loader){handlers.push(regex,loader);return this;};this.removeHandler=function(regex){const index=handlers.indexOf(regex);if(index!==-1){handlers.splice(index,2);}return this;};this.getHandler=function(file){for(let i=0,l=handlers.length;i<l;i+=2){const regex=handlers[i];const loader=handlers[i+1];if(regex.global)regex.lastIndex=0;// see #17920
-if(regex.test(file)){return loader;}}return null;};}}const DefaultLoadingManager=/*@__PURE__*/new LoadingManager();class Loader{constructor(manager){this.manager=manager!==undefined?manager:DefaultLoadingManager;this.crossOrigin='anonymous';this.withCredentials=false;this.path='';this.resourcePath='';this.requestHeader={};}load(/* url, onLoad, onProgress, onError */){}loadAsync(url,onProgress){const scope=this;return new Promise(function(resolve,reject){scope.load(url,resolve,onProgress,reject);});}parse(/* data */){}setCrossOrigin(crossOrigin){this.crossOrigin=crossOrigin;return this;}setWithCredentials(value){this.withCredentials=value;return this;}setPath(path){this.path=path;return this;}setResourcePath(resourcePath){this.resourcePath=resourcePath;return this;}setRequestHeader(requestHeader){this.requestHeader=requestHeader;return this;}}Loader.DEFAULT_MATERIAL_NAME='__DEFAULT';const loading={};class HttpError extends Error{constructor(message,response){super(message);this.response=response;}}class FileLoader extends Loader{constructor(manager){super(manager);}load(url,onLoad,onProgress,onError){if(url===undefined)url='';if(this.path!==undefined)url=this.path+url;url=this.manager.resolveURL(url);const cached=Cache.get(url);if(cached!==undefined){console.log('debug cached',url);this.manager.itemStart(url);setTimeout(()=>{if(onLoad)onLoad(cached);this.manager.itemEnd(url);},0);return cached;}// Check if request is duplicate
-if(loading[url]!==undefined){loading[url].push({onLoad:onLoad,onProgress:onProgress,onError:onError});console.log('debug: loading',url);return;}// Initialise array for duplicate requests
+if(regex.test(file)){return loader;}}return null;};}}const DefaultLoadingManager=/*@__PURE__*/new LoadingManager();class Loader{constructor(manager){this.manager=manager!==undefined?manager:DefaultLoadingManager;this.crossOrigin='anonymous';this.withCredentials=false;this.path='';this.resourcePath='';this.requestHeader={};}load(/* url, onLoad, onProgress, onError */){}loadAsync(url,onProgress){const scope=this;return new Promise(function(resolve,reject){scope.load(url,resolve,onProgress,reject);});}parse(/* data */){}setCrossOrigin(crossOrigin){this.crossOrigin=crossOrigin;return this;}setWithCredentials(value){this.withCredentials=value;return this;}setPath(path){this.path=path;return this;}setResourcePath(resourcePath){this.resourcePath=resourcePath;return this;}setRequestHeader(requestHeader){this.requestHeader=requestHeader;return this;}}Loader.DEFAULT_MATERIAL_NAME='__DEFAULT';const loading={};class HttpError extends Error{constructor(message,response){super(message);this.response=response;}}class FileLoader extends Loader{constructor(manager){super(manager);}load(url,onLoad,onProgress,onError){if(url===undefined)url='';if(this.path!==undefined)url=this.path+url;url=this.manager.resolveURL(url);const cached=Cache.get(url);if(cached!==undefined){this.manager.itemStart(url);setTimeout(()=>{if(onLoad)onLoad(cached);this.manager.itemEnd(url);},0);return cached;}// Check if request is duplicate
+if(loading[url]!==undefined){loading[url].push({onLoad:onLoad,onProgress:onProgress,onError:onError});return;}// Initialise array for duplicate requests
 loading[url]=[];loading[url].push({onLoad:onLoad,onProgress:onProgress,onError:onError});// create request
 const req=new Request(url,{headers:new Headers(this.requestHeader),credentials:this.withCredentials?'include':'same-origin'// An abort controller could be added within a future PR
 });// record states ( avoid data race )
-const mimeType=this.mimeType;const responseType=this.responseType;console.log('debug: fetch',url);// start the fetch
+const mimeType=this.mimeType;const responseType=this.responseType;// start the fetch
 fetch(req).then(response=>{if(response.status===200||response.status===0){// Some browsers return HTTP Status 0 when using non-http protocol
 // e.g. 'file://' or 'data://'. Handle as success.
 if(response.status===0){console.warn('THREE.FileLoader: HTTP Status 0 received.');}// Workaround: Checking if response.body === undefined for Alipay browser #23548

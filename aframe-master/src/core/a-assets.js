@@ -49,7 +49,8 @@ class AAssets extends ANode {
     this.load();
     // await this.loadGroup(1);//network trasfer
     // await this.doGroupSceneTask(1);//scene
-    var loadPriorityGroups = this.loadPriorityGroups.bind(this);
+    await this.loadFirstPriority();
+    this.parentNode.emit('firstloaded');
     this.parentNode.addEventListener('render', async function (event) {
       const startTime = event.detail;
       if(!self.allTasksDone){
@@ -67,6 +68,7 @@ class AAssets extends ANode {
     // Filter out all children, as waiting already took place in doConnectedCallback.
     super.load.call(this, null, function () { return false; });
   }
+  
 
   collectResources () {
     const elements = this.getChildren();
@@ -87,6 +89,35 @@ class AAssets extends ANode {
       await this.loadGroup(priority);
 
     }
+  }
+  async loadFirstPriority() {
+    console.log('debug: loading first priority group', this.currentPriority);
+    const group = this.networkQueues[1];
+    console.log('debug: network transfering group',1, group);
+    if (!group.length) return;
+    group.map(item => {
+      if (item.tagName === 'A-ASSET-ITEM') {
+       this.loadAssetItem(item);
+      } 
+    });
+    console.log('debug: calculate first priority group', this.currentPriority);
+    while(true){
+      if(this.sceneQueues[this.currentPriority].length !== 0){
+          this.doSceneTask();
+          this.sceneTaskDone++;
+          if(this.sceneTaskDone === this.sceneTaskCount[this.currentPriority]){
+            this.currentStage = 0;
+            this.sceneTaskDone = 0;
+            this.currentPriority++;
+            break;
+          }
+        }else{
+          await this.delay(2);
+        }
+    }
+    console.log('debug: calculate first priority group end', this.currentPriority);
+      
+   
   }
   async loadGroup(priority) {
     const group = this.networkQueues[priority];
@@ -157,6 +188,7 @@ class AAssets extends ANode {
         this.doNetworkTask();
         if(this.networkQueues[this.currentPriority].length === 0){
           this.currentStage = 1;
+          console.log('debug: network transfer done, switch to scene task', this.currentPriority);
         }
       }else if (this.currentStage === 1){
         if(this.sceneQueues[this.currentPriority].length !== 0){
@@ -166,6 +198,7 @@ class AAssets extends ANode {
             this.currentStage = 0;
             this.sceneTaskDone = 0;
             this.currentPriority++;
+            console.log('debug: scene task done, switch to next priority', this.currentPriority);
             if(this.currentPriority > 3){
               this.allTasksDone = true;
               this.parentNode.emit('all-assets-loaded');
@@ -242,7 +275,7 @@ class AAssetItem extends ANode {
     if (this._loadingPromise) return this._loadingPromise;
     
     const src = this.getAttribute('src');
-    // console.log('debug: loading asset', src);
+    console.log('debug: begin network', src);
     const responseType = this.getAttribute('response-type') || inferResponseType(src);
     const id = this.getAttribute('id');
     this._loadingPromise = new Promise((resolve, reject) => {

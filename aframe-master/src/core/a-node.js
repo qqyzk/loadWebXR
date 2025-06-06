@@ -106,7 +106,6 @@ export class ANode extends HTMLElement {
   disconnectedCallback () {
     this.hasLoaded = false;
   }
-
   /**
    * Wait for children to load, if any.
    * Then emit `loaded` event and set `hasLoaded`.

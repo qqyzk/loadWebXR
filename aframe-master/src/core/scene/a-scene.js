@@ -106,13 +106,16 @@ export class AScene extends AEntity {
     window.addEventListener('sessionend', this.resize);
     // Camera set up by camera system.
     this.addEventListener('cameraready', function () {
-      self.attachedCallbackPostCamera();
+      self.attachedCallbackPostCamera(self);
     });
     this.addEventListener('all-assets-loaded', function () {
       self.allAssetsLoaded = true;
       console.log('debug: all assets loaded');
     });
-
+    this.addEventListener('firstloaded', function () {
+      console.log('debug: a-scene firstloaded');
+      this.play();
+    });
     this.initSystems();
     // Compute component order
     this.componentOrder = determineComponentBehaviorOrder(components, this.componentOrder);
@@ -144,7 +147,7 @@ export class AScene extends AEntity {
         self.resize();
       }
     });
-    this.play();
+    // this.play();
 
     // Add to scene index.
     scenes.push(this);
@@ -577,8 +580,8 @@ export class AScene extends AEntity {
       AEntity.prototype.play.call(this);
       return;
     }
-
-    this.addEventListener('loaded', function () {
+  this.addEventListener('loaded', function () {
+      console.log('debug: a-scene loaded');
       var renderer = this.renderer;
       AEntity.prototype.play.call(this);  // .play() *before* render.
 
@@ -589,6 +592,7 @@ export class AScene extends AEntity {
       if (sceneEl.renderer) {
         if (window.performance) { window.performance.mark('render-started'); }
         loadingScreen.remove();
+        console.log('debug: a-scene render started');
         renderer.setAnimationLoop(this.render);
         sceneEl.renderStarted = true;
         sceneEl.emit('renderstart');
@@ -698,12 +702,12 @@ export class AScene extends AEntity {
     if(!this.allAssetsLoaded || this.afterLoadedFrame < 30){
       console.log('debug: scene',this.getLeafNodes(this.object3D),this.delta,this.time);
       this.remTimes.push({'delta':this.delta,'status':this.allAssetsLoaded});
-      // if(this.allAssetsLoaded){
-      //   this.afterLoadedFrame+=1;
+      if(this.allAssetsLoaded){
+        this.afterLoadedFrame+=1;
       //   if(this.afterLoadedFrame === 30 ){
       //     this.saveTimes();
       //   }
-      // }
+      }
     }
     renderer.render(this.object3D, this.camera);
     if (savedBackground) {
@@ -716,6 +720,7 @@ export class AScene extends AEntity {
 
     if(!this.allAssetsLoaded || this.afterLoadedFrame < 30){
       this.emit('render',startTime);
+
     }
   
   }
