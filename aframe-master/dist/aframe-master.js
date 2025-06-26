@@ -18974,6 +18974,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var fileLoader = new three__WEBPACK_IMPORTED_MODULE_2__.FileLoader();
 var warn = (0,_utils_index_js__WEBPACK_IMPORTED_MODULE_1__.debug)('core:a-assets:warn');
+
 /**
  * Asset management system. Handles blocking on asset loading.
  */
@@ -18983,14 +18984,8 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     this.isAssets = true;
     this.fileLoader = fileLoader;
     this.timeout = null;
-    this.priorityQueues = {
-      1: [],
-      2: [],
-      3: [],
-      4: []
-    };
   }
-  async doConnectedCallback() {
+  doConnectedCallback() {
     var self = this;
     var i;
     var loaded = [];
@@ -19004,12 +18999,91 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     if (!this.parentNode.isScene) {
       throw new Error('<a-assets> must be a child of a <a-scene>.');
     }
-    await customElements.whenDefined('a-asset-item');
-    await Promise.resolve();
-    this.collectResources();
-    console.log('queue', this.priorityQueues);
-    await this.loadPriorityGroups();
-    this.load();
+
+    // Wait for <img>s.
+    imgEls = this.querySelectorAll('img');
+    for (i = 0; i < imgEls.length; i++) {
+      imgEl = fixUpMediaElement(imgEls[i]);
+      loaded.push(new Promise(function (resolve, reject) {
+        // Set in cache because we won't be needing to call three.js loader if we have.
+        // a loaded media element.
+        three__WEBPACK_IMPORTED_MODULE_2__.Cache.add(imgEls[i].getAttribute('src'), imgEl);
+        if (imgEl.complete) {
+          resolve();
+          return;
+        }
+        imgEl.onload = resolve;
+        imgEl.onerror = reject;
+      }));
+    }
+
+    // Wait for <audio>s and <video>s.
+    mediaEls = this.querySelectorAll('audio, video');
+    mediaEls.forEach(audio => {
+      let loadStartTime;
+
+      // 监听开始加载事件
+      audio.addEventListener('loadstart', () => {
+        loadStartTime = performance.now();
+        console.log(`[${audio.id}] 开始加载:`, loadStartTime);
+      });
+
+      // 监听加载完成事件（以 loadeddata 为例）
+      audio.addEventListener('loadeddata', () => {
+        const loadEndTime = performance.now();
+        console.log(`[${audio.id}] 加载完成:`, loadEndTime);
+        console.log(`[${audio.id}] 总耗时: ${loadEndTime - loadStartTime}ms`);
+      });
+
+      // 监听错误事件
+      audio.addEventListener('error', e => {
+        console.error(`[${audio.id}] 加载失败:`, e);
+      });
+    });
+    for (i = 0; i < mediaEls.length; i++) {
+      mediaEl = fixUpMediaElement(mediaEls[i]);
+      if (!mediaEl.src && !mediaEl.srcObject) {
+        warn('Audio/video asset has neither `src` nor `srcObject` attributes.');
+      }
+      loaded.push(mediaElementLoaded(mediaEl));
+    }
+
+    // Wait for <a-asset-item>
+    children = this.getChildren();
+    children.forEach(function (child) {
+      if (!child.isAssetItem || !child.hasAttribute('src')) {
+        return;
+      }
+      loaded.push(new Promise(function waitForLoaded(resolve, reject) {
+        if (child.hasLoaded) {
+          return resolve();
+        }
+        child.addEventListener('loaded', resolve);
+        child.addEventListener('error', reject);
+      }));
+    });
+
+    // Trigger loaded for scene to start rendering.
+    Promise.allSettled(loaded).then(function () {
+      // Make sure the timeout didn't occur.
+      if (self.timeout === null) {
+        return;
+      }
+      self.load();
+    });
+
+    // Timeout to start loading anyways.
+    timeout = parseInt(this.getAttribute('timeout'), 10) || 3000;
+    this.timeout = setTimeout(function () {
+      // Make sure the loading didn't complete.
+      if (self.hasLoaded) {
+        return;
+      }
+      warn('Asset loading timed out in', timeout, 'ms');
+      self.timeout = null;
+      self.emit('timeout');
+      self.load();
+    }, timeout);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
@@ -19023,34 +19097,6 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
       return false;
     });
   }
-  collectResources() {
-    const elements = this.getChildren();
-    elements.forEach(el => {
-      const priority = this.getPriority(el);
-      this.priorityQueues[priority].push(el);
-    });
-  }
-  getPriority(el) {
-    if (el.hasAttribute('priority')) return parseInt(el.getAttribute('priority'));
-    if (el.tagName === 'AUDIO') return 4;
-    return 3;
-  }
-  async loadPriorityGroups() {
-    for (let priority of [1, 2, 3]) {
-      console.log('loading group', priority);
-      await this.loadGroup(priority);
-      console.log('group loaded', priority);
-    }
-  }
-  async loadGroup(priority) {
-    const group = this.priorityQueues[priority];
-    console.log('group', group);
-    if (!group.length) return;
-    await Promise.all(group.map(item => {
-      return item.load(); // AAssetItem
-      // if (item.tagName === 'AUDIO') return this.loadAudio(item); // 处理原生audio
-    }));
-  }
 }
 customElements.define('a-assets', AAssets);
 
@@ -19062,35 +19108,27 @@ class AAssetItem extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     super();
     this.data = null;
     this.isAssetItem = true;
-    this._loadingPromise = null;
   }
-  load() {
-    if (this._loadingPromise) return this._loadingPromise;
-    const src = this.getAttribute('src');
-    const responseType = this.getAttribute('response-type') || inferResponseType(src);
-    const id = this.getAttribute('id');
-    this._loadingPromise = new Promise((resolve, reject) => {
-      console.log('beginload', id, src);
-      fileLoader.setResponseType(responseType);
-      fileLoader.load(src, response => {
-        this.data = response;
-        _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode.prototype.load.call(this);
-        console.log('endload', id, src);
-        resolve();
-      }, xhr => {
-        this.emit('progress', {
-          loadedBytes: xhr.loaded,
-          totalBytes: xhr.total,
-          xhr: xhr
-        });
-      }, error => {
-        this.emit('error', {
-          error
-        }, false);
-        reject(error);
+  connectedCallback() {
+    var self = this;
+    var src = this.getAttribute('src');
+    fileLoader.setResponseType(this.getAttribute('response-type') || inferResponseType(src));
+    var startTime = performance.now();
+    fileLoader.load(src, function handleOnLoad(response) {
+      var endTime = performance.now();
+      self.data = response;
+      _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode.prototype.load.call(self);
+    }, function handleOnProgress(xhr) {
+      self.emit('progress', {
+        loadedBytes: xhr.loaded,
+        totalBytes: xhr.total,
+        xhr: xhr
       });
+    }, function handleOnError(xhr) {
+      self.emit('error', {
+        xhr: xhr
+      }, false);
     });
-    return this._loadingPromise;
   }
 }
 customElements.define('a-asset-item', AAssetItem);
@@ -19103,9 +19141,10 @@ customElements.define('a-asset-item', AAssetItem);
  */
 function mediaElementLoaded(el) {
   if (!el.hasAttribute('autoplay') && el.getAttribute('preload') !== 'auto') {
+    console.log('return', el);
     return;
   }
-
+  console.log('no reture', el);
   // If media specifies autoplay or preload, wait until media is completely buffered.
   return new Promise(function (resolve, reject) {
     if (el.readyState === 4) {
