@@ -5926,7 +5926,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 /* global XRRigidTransform, localStorage */
@@ -6098,7 +6098,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var super_animejs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! super-animejs */ "./node_modules/super-animejs/lib/anime.es.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
@@ -6750,7 +6750,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 
 
@@ -6869,7 +6869,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 /* global MouseEvent, TouchEvent */
@@ -7651,7 +7651,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 
@@ -7758,7 +7758,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three_addons_loaders_GLTFLoader_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three/addons/loaders/GLTFLoader.js */ "./node_modules/three/examples/jsm/loaders/GLTFLoader.js");
+/* harmony import */ var three_addons_loaders_GLTFLoader_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three/addons/loaders/GLTFLoader.js */ "./mylib/three/examples/jsm/loaders/GLTFLoader.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 
@@ -7864,8 +7864,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
-/* harmony import */ var three_addons_loaders_GLTFLoader_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three/addons/loaders/GLTFLoader.js */ "./node_modules/three/examples/jsm/loaders/GLTFLoader.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
+/* harmony import */ var three_addons_loaders_GLTFLoader_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three/addons/loaders/GLTFLoader.js */ "./mylib/three/examples/jsm/loaders/GLTFLoader.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants/index.js */ "./src/constants/index.js");
 
@@ -8363,7 +8363,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _core_a_entity_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/a-entity.js */ "./src/core/a-entity.js");
 /* harmony import */ var _utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/tracked-controls.js */ "./src/utils/tracked-controls.js");
@@ -8751,7 +8751,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 
 
 (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerComponent)('hand-tracking-grab-controls', {
@@ -8953,7 +8953,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants/index.js */ "./src/constants/index.js");
 /* harmony import */ var _utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/tracked-controls.js */ "./src/utils/tracked-controls.js");
 
@@ -9463,7 +9463,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 /* global XRRigidTransform, XRWebGLBinding */
@@ -9884,8 +9884,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
-/* harmony import */ var three_addons_lights_LightProbeGenerator_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! three/addons/lights/LightProbeGenerator.js */ "./node_modules/three/examples/jsm/lights/LightProbeGenerator.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
+/* harmony import */ var three_addons_lights_LightProbeGenerator_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! three/addons/lights/LightProbeGenerator.js */ "./mylib/three/examples/jsm/lights/LightProbeGenerator.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _utils_math_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/math.js */ "./src/utils/math.js");
@@ -10384,7 +10384,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 
 
@@ -10487,7 +10487,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _core_shader_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/shader.js */ "./src/core/shader.js");
 
@@ -10889,7 +10889,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants/index.js */ "./src/constants/index.js");
 /* harmony import */ var _utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/tracked-controls.js */ "./src/utils/tracked-controls.js");
@@ -11082,7 +11082,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _vendor_DeviceOrientationControls_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../vendor/DeviceOrientationControls.js */ "./vendor/DeviceOrientationControls.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
@@ -11760,7 +11760,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _core_shader_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../core/shader.js */ "./src/core/shader.js");
@@ -12083,7 +12083,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants/index.js */ "./src/constants/index.js");
 /* harmony import */ var _utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/tracked-controls.js */ "./src/utils/tracked-controls.js");
@@ -12659,8 +12659,8 @@ function cloneMeshMaterial(object3d) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
-/* harmony import */ var three_addons_math_OBB_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three/addons/math/OBB.js */ "./node_modules/three/examples/jsm/math/OBB.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
+/* harmony import */ var three_addons_math_OBB_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three/addons/math/OBB.js */ "./mylib/three/examples/jsm/math/OBB.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 
 
@@ -12891,9 +12891,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
-/* harmony import */ var three_addons_loaders_OBJLoader_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three/addons/loaders/OBJLoader.js */ "./node_modules/three/examples/jsm/loaders/OBJLoader.js");
-/* harmony import */ var three_addons_loaders_MTLLoader_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three/addons/loaders/MTLLoader.js */ "./node_modules/three/examples/jsm/loaders/MTLLoader.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
+/* harmony import */ var three_addons_loaders_OBJLoader_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three/addons/loaders/OBJLoader.js */ "./mylib/three/examples/jsm/loaders/OBJLoader.js");
+/* harmony import */ var three_addons_loaders_MTLLoader_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three/addons/loaders/MTLLoader.js */ "./mylib/three/examples/jsm/loaders/MTLLoader.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 
@@ -13223,7 +13223,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants/index.js */ "./src/constants/index.js");
 /* harmony import */ var _utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/tracked-controls.js */ "./src/utils/tracked-controls.js");
 
@@ -13439,7 +13439,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 /* global MutationObserver */
@@ -13922,7 +13922,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 
 
@@ -13993,7 +13993,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../core/component.js */ "./src/core/component.js");
 /* global ImageData, Map, Set */
 
@@ -14498,7 +14498,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../core/component.js */ "./src/core/component.js");
 
 
@@ -14802,7 +14802,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../core/component.js */ "./src/core/component.js");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 
 
 
@@ -15228,7 +15228,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../core/component.js */ "./src/core/component.js");
 /* global XRPlane */
 
@@ -15462,7 +15462,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../core/component.js */ "./src/core/component.js");
 /* global XRWebGLBinding */
 
@@ -15619,7 +15619,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../core/component.js */ "./src/core/component.js");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* global ImageData, URL */
 
 
@@ -16284,7 +16284,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 
 
@@ -16353,7 +16353,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 
 
 
@@ -16644,7 +16644,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var load_bmfont__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(load_bmfont__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _core_shader_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../core/shader.js */ "./src/core/shader.js");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 /* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../constants/index.js */ "./src/constants/index.js");
 
@@ -17483,7 +17483,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants/index.js */ "./src/constants/index.js");
 /* harmony import */ var _utils_tracked_controls_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/tracked-controls.js */ "./src/utils/tracked-controls.js");
 
@@ -18238,7 +18238,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _constants_keyboardevent_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants/keyboardevent.js */ "./src/constants/keyboardevent.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
@@ -18498,7 +18498,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Component: () => (/* binding */ Component)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 /* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../constants/index.js */ "./src/constants/index.js");
@@ -18965,7 +18965,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   getFileNameFromURL: () => (/* binding */ getFileNameFromURL),
 /* harmony export */   inferResponseType: () => (/* binding */ inferResponseType)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _a_node_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./a-node.js */ "./src/core/a-node.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 /* global customElements */
@@ -19365,7 +19365,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   AEntity: () => (/* binding */ AEntity)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _a_node_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./a-node.js */ "./src/core/a-node.js");
 /* harmony import */ var _component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./component.js */ "./src/core/component.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
@@ -21517,7 +21517,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   registerGeometry: () => (/* binding */ registerGeometry)
 /* harmony export */ });
 /* harmony import */ var _schema_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./schema.js */ "./src/core/schema.js");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 
 
 var processSchema = _schema_js__WEBPACK_IMPORTED_MODULE_0__.process;
@@ -21987,8 +21987,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   determineComponentBehaviorOrder: () => (/* binding */ determineComponentBehaviorOrder),
 /* harmony export */   setupCanvas: () => (/* binding */ setupCanvas)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! three */ "./mylib/three/build/three.module.js");
 /* harmony import */ var _metaTags_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./metaTags.js */ "./src/core/scene/metaTags.js");
 /* harmony import */ var _wakelock_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./wakelock.js */ "./src/core/scene/wakelock.js");
 /* harmony import */ var _loadingScreen_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./loadingScreen.js */ "./src/core/scene/loadingScreen.js");
@@ -22943,7 +22943,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   remove: () => (/* binding */ remove),
 /* harmony export */   setup: () => (/* binding */ setup)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _constants_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../constants/index.js */ "./src/constants/index.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/index.js */ "./src/utils/index.js");
 
@@ -23492,7 +23492,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   shaderNames: () => (/* binding */ shaderNames),
 /* harmony export */   shaders: () => (/* binding */ shaders)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _schema_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./schema.js */ "./src/core/schema.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 
@@ -23860,7 +23860,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../core/component.js */ "./src/core/component.js");
 
 
@@ -24712,7 +24712,7 @@ function unCamelCase(str) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
@@ -24764,7 +24764,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
@@ -24803,7 +24803,7 @@ var degToRad = three__WEBPACK_IMPORTED_MODULE_1__.MathUtils.degToRad;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
@@ -24858,7 +24858,7 @@ var degToRad = three__WEBPACK_IMPORTED_MODULE_1__.MathUtils.degToRad;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
@@ -24909,7 +24909,7 @@ var degToRad = three__WEBPACK_IMPORTED_MODULE_1__.MathUtils.degToRad;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
@@ -24941,7 +24941,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
@@ -25012,7 +25012,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
@@ -25044,7 +25044,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
@@ -25086,7 +25086,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
@@ -25134,7 +25134,7 @@ var degToRad = three__WEBPACK_IMPORTED_MODULE_1__.MathUtils.degToRad;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
@@ -25185,7 +25185,7 @@ var degToRad = three__WEBPACK_IMPORTED_MODULE_1__.MathUtils.degToRad;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
@@ -25217,7 +25217,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
@@ -25261,7 +25261,7 @@ var degToRad = three__WEBPACK_IMPORTED_MODULE_1__.MathUtils.degToRad;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
@@ -25309,7 +25309,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_geometry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/geometry.js */ "./src/core/geometry.js");
 
 
@@ -25450,15 +25450,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
-/* harmony import */ var three_addons_loaders_DRACOLoader_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three/addons/loaders/DRACOLoader.js */ "./node_modules/three/examples/jsm/loaders/DRACOLoader.js");
-/* harmony import */ var three_addons_loaders_GLTFLoader_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three/addons/loaders/GLTFLoader.js */ "./node_modules/three/examples/jsm/loaders/GLTFLoader.js");
-/* harmony import */ var three_addons_loaders_KTX2Loader_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! three/addons/loaders/KTX2Loader.js */ "./node_modules/three/examples/jsm/loaders/KTX2Loader.js");
-/* harmony import */ var three_addons_math_OBB_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! three/addons/math/OBB.js */ "./node_modules/three/examples/jsm/math/OBB.js");
-/* harmony import */ var three_addons_loaders_OBJLoader_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! three/addons/loaders/OBJLoader.js */ "./node_modules/three/examples/jsm/loaders/OBJLoader.js");
-/* harmony import */ var three_addons_loaders_MTLLoader_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! three/addons/loaders/MTLLoader.js */ "./node_modules/three/examples/jsm/loaders/MTLLoader.js");
-/* harmony import */ var three_addons_utils_BufferGeometryUtils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! three/addons/utils/BufferGeometryUtils.js */ "./node_modules/three/examples/jsm/utils/BufferGeometryUtils.js");
-/* harmony import */ var three_addons_lights_LightProbeGenerator_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! three/addons/lights/LightProbeGenerator.js */ "./node_modules/three/examples/jsm/lights/LightProbeGenerator.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.module.js");
+/* harmony import */ var three_addons_loaders_DRACOLoader_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three/addons/loaders/DRACOLoader.js */ "./mylib/three/examples/jsm/loaders/DRACOLoader.js");
+/* harmony import */ var three_addons_loaders_GLTFLoader_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three/addons/loaders/GLTFLoader.js */ "./mylib/three/examples/jsm/loaders/GLTFLoader.js");
+/* harmony import */ var three_addons_loaders_KTX2Loader_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! three/addons/loaders/KTX2Loader.js */ "./mylib/three/examples/jsm/loaders/KTX2Loader.js");
+/* harmony import */ var three_addons_math_OBB_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! three/addons/math/OBB.js */ "./mylib/three/examples/jsm/math/OBB.js");
+/* harmony import */ var three_addons_loaders_OBJLoader_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! three/addons/loaders/OBJLoader.js */ "./mylib/three/examples/jsm/loaders/OBJLoader.js");
+/* harmony import */ var three_addons_loaders_MTLLoader_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! three/addons/loaders/MTLLoader.js */ "./mylib/three/examples/jsm/loaders/MTLLoader.js");
+/* harmony import */ var three_addons_utils_BufferGeometryUtils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! three/addons/utils/BufferGeometryUtils.js */ "./mylib/three/examples/jsm/utils/BufferGeometryUtils.js");
+/* harmony import */ var three_addons_lights_LightProbeGenerator_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! three/addons/lights/LightProbeGenerator.js */ "./mylib/three/examples/jsm/lights/LightProbeGenerator.js");
 /* harmony import */ var _vendor_DeviceOrientationControls_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../vendor/DeviceOrientationControls.js */ "./vendor/DeviceOrientationControls.js");
 
 
@@ -25502,7 +25502,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Shader: () => (/* binding */ Shader)
 /* harmony export */ });
 /* harmony import */ var _core_shader_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/shader.js */ "./src/core/shader.js");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 
 
@@ -25628,8 +25628,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Shader: () => (/* binding */ Shader)
 /* harmony export */ });
 /* harmony import */ var _core_shader_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/shader.js */ "./src/core/shader.js");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./mylib/three/build/three.module.js");
 
 
 var VERTEX_SHADER = ['#include <common>', '#include <fog_pars_vertex>', '#include <logdepthbuf_pars_vertex>', 'out vec2 vUV;', 'void main(void) {', '  vUV = uv;', '  #include <begin_vertex>', '  #include <project_vertex>', '  #include <logdepthbuf_vertex>', '  #include <fog_vertex>', '}'].join('\n');
@@ -25703,7 +25703,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Shader: () => (/* binding */ Shader)
 /* harmony export */ });
 /* harmony import */ var _core_shader_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/shader.js */ "./src/core/shader.js");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 
 
@@ -25953,8 +25953,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Shader: () => (/* binding */ Shader)
 /* harmony export */ });
 /* harmony import */ var _core_shader_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/shader.js */ "./src/core/shader.js");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./mylib/three/build/three.module.js");
 
 
 var VERTEX_SHADER = ['#include <common>', '#include <fog_pars_vertex>', '#include <logdepthbuf_pars_vertex>', 'out vec2 vUV;', 'void main(void) {', '  vUV = uv;', '  #include <begin_vertex>', '  #include <project_vertex>', '  #include <logdepthbuf_vertex>', '  #include <fog_vertex>', '}'].join('\n');
@@ -26027,7 +26027,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Shader: () => (/* binding */ Shader)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_shader_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/shader.js */ "./src/core/shader.js");
 
 
@@ -26074,7 +26074,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Shader: () => (/* binding */ Shader)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_shader_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/shader.js */ "./src/core/shader.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 
@@ -26736,8 +26736,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   System: () => (/* binding */ System)
 /* harmony export */ });
-/* harmony import */ var three_addons_loaders_DRACOLoader_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three/addons/loaders/DRACOLoader.js */ "./node_modules/three/examples/jsm/loaders/DRACOLoader.js");
-/* harmony import */ var three_addons_loaders_KTX2Loader_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three/addons/loaders/KTX2Loader.js */ "./node_modules/three/examples/jsm/loaders/KTX2Loader.js");
+/* harmony import */ var three_addons_loaders_DRACOLoader_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three/addons/loaders/DRACOLoader.js */ "./mylib/three/examples/jsm/loaders/DRACOLoader.js");
+/* harmony import */ var three_addons_loaders_KTX2Loader_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three/addons/loaders/KTX2Loader.js */ "./mylib/three/examples/jsm/loaders/KTX2Loader.js");
 /* harmony import */ var _core_system_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/system.js */ "./src/core/system.js");
 
 
@@ -26957,7 +26957,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   System: () => (/* binding */ System)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_system_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/system.js */ "./src/core/system.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 /* harmony import */ var _utils_material_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/material.js */ "./src/utils/material.js");
@@ -27367,8 +27367,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   sortFrontToBack: () => (/* binding */ sortFrontToBack),
 /* harmony export */   sortRenderOrderOnly: () => (/* binding */ sortRenderOrderOnly)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./mylib/three/build/three.module.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_system_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/system.js */ "./src/core/system.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 
@@ -27556,7 +27556,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   System: () => (/* binding */ System)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _core_system_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/system.js */ "./src/core/system.js");
 
 
@@ -27783,7 +27783,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   stringify: () => (/* binding */ stringify),
 /* harmony export */   toVector3: () => (/* binding */ toVector3)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _debug_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./debug.js */ "./src/utils/debug.js");
 
 
@@ -28822,7 +28822,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   updateMap: () => (/* binding */ updateMap),
 /* harmony export */   updateMapMaterialFromData: () => (/* binding */ updateMapMaterialFromData)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 /* harmony import */ var _src_loader_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src-loader.js */ "./src/utils/src-loader.js");
 /* harmony import */ var _debug_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./debug.js */ "./src/utils/debug.js");
 /* global HTMLCanvasElement, HTMLVideoElement */
@@ -31688,10 +31688,10 @@ module.exports = "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/200
 
 /***/ }),
 
-/***/ "./node_modules/three/build/three.core.js":
-/*!************************************************!*\
-  !*** ./node_modules/three/build/three.core.js ***!
-  \************************************************/
+/***/ "./mylib/three/build/three.core.js":
+/*!*****************************************!*\
+  !*** ./mylib/three/build/three.core.js ***!
+  \*****************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -33927,10 +33927,10 @@ colorAttribute.needsUpdate=true;}update(){const geometry=this.geometry;const poi
 _camera.projectionMatrixInverse.copy(this.camera.projectionMatrixInverse);// Adjust z values based on coordinate system
 const nearZ=this.camera.coordinateSystem===WebGLCoordinateSystem?-1:0;// center / target
 setPoint('c',pointMap,geometry,_camera,0,0,nearZ);setPoint('t',pointMap,geometry,_camera,0,0,1);// near
-setPoint('n1',pointMap,geometry,_camera,-1,-1,nearZ);setPoint('n2',pointMap,geometry,_camera,w,-1,nearZ);setPoint('n3',pointMap,geometry,_camera,-1,h,nearZ);setPoint('n4',pointMap,geometry,_camera,w,h,nearZ);// far
-setPoint('f1',pointMap,geometry,_camera,-1,-1,1);setPoint('f2',pointMap,geometry,_camera,w,-1,1);setPoint('f3',pointMap,geometry,_camera,-1,h,1);setPoint('f4',pointMap,geometry,_camera,w,h,1);// up
-setPoint('u1',pointMap,geometry,_camera,w*0.7,h*1.1,nearZ);setPoint('u2',pointMap,geometry,_camera,-1*0.7,h*1.1,nearZ);setPoint('u3',pointMap,geometry,_camera,0,h*2,nearZ);// cross
-setPoint('cf1',pointMap,geometry,_camera,-1,0,1);setPoint('cf2',pointMap,geometry,_camera,w,0,1);setPoint('cf3',pointMap,geometry,_camera,0,-1,1);setPoint('cf4',pointMap,geometry,_camera,0,h,1);setPoint('cn1',pointMap,geometry,_camera,-1,0,nearZ);setPoint('cn2',pointMap,geometry,_camera,w,0,nearZ);setPoint('cn3',pointMap,geometry,_camera,0,-1,nearZ);setPoint('cn4',pointMap,geometry,_camera,0,h,nearZ);geometry.getAttribute('position').needsUpdate=true;}dispose(){this.geometry.dispose();this.material.dispose();}}function setPoint(point,pointMap,geometry,camera,x,y,z){_vector.set(x,y,z).unproject(camera);const points=pointMap[point];if(points!==undefined){const position=geometry.getAttribute('position');for(let i=0,l=points.length;i<l;i++){position.setXYZ(points[i],_vector.x,_vector.y,_vector.z);}}}const _box=/*@__PURE__*/new Box3();class BoxHelper extends LineSegments{constructor(object,color=0xffff00){const indices=new Uint16Array([0,1,1,2,2,3,3,0,4,5,5,6,6,7,7,4,0,4,1,5,2,6,3,7]);const positions=new Float32Array(8*3);const geometry=new BufferGeometry();geometry.setIndex(new BufferAttribute(indices,1));geometry.setAttribute('position',new BufferAttribute(positions,3));super(geometry,new LineBasicMaterial({color:color,toneMapped:false}));this.object=object;this.type='BoxHelper';this.matrixAutoUpdate=false;this.update();}update(object){if(object!==undefined){console.warn('THREE.BoxHelper: .update() has no longer arguments.');}if(this.object!==undefined){_box.setFromObject(this.object);}if(_box.isEmpty())return;const min=_box.min;const max=_box.max;/*
+setPoint('n1',pointMap,geometry,_camera,-w,-h,nearZ);setPoint('n2',pointMap,geometry,_camera,w,-h,nearZ);setPoint('n3',pointMap,geometry,_camera,-w,h,nearZ);setPoint('n4',pointMap,geometry,_camera,w,h,nearZ);// far
+setPoint('f1',pointMap,geometry,_camera,-w,-h,1);setPoint('f2',pointMap,geometry,_camera,w,-h,1);setPoint('f3',pointMap,geometry,_camera,-w,h,1);setPoint('f4',pointMap,geometry,_camera,w,h,1);// up
+setPoint('u1',pointMap,geometry,_camera,w*0.7,h*1.1,nearZ);setPoint('u2',pointMap,geometry,_camera,-w*0.7,h*1.1,nearZ);setPoint('u3',pointMap,geometry,_camera,0,h*2,nearZ);// cross
+setPoint('cf1',pointMap,geometry,_camera,-w,0,1);setPoint('cf2',pointMap,geometry,_camera,w,0,1);setPoint('cf3',pointMap,geometry,_camera,0,-h,1);setPoint('cf4',pointMap,geometry,_camera,0,h,1);setPoint('cn1',pointMap,geometry,_camera,-w,0,nearZ);setPoint('cn2',pointMap,geometry,_camera,w,0,nearZ);setPoint('cn3',pointMap,geometry,_camera,0,-h,nearZ);setPoint('cn4',pointMap,geometry,_camera,0,h,nearZ);geometry.getAttribute('position').needsUpdate=true;}dispose(){this.geometry.dispose();this.material.dispose();}}function setPoint(point,pointMap,geometry,camera,x,y,z){_vector.set(x,y,z).unproject(camera);const points=pointMap[point];if(points!==undefined){const position=geometry.getAttribute('position');for(let i=0,l=points.length;i<l;i++){position.setXYZ(points[i],_vector.x,_vector.y,_vector.z);}}}const _box=/*@__PURE__*/new Box3();class BoxHelper extends LineSegments{constructor(object,color=0xffff00){const indices=new Uint16Array([0,1,1,2,2,3,3,0,4,5,5,6,6,7,7,4,0,4,1,5,2,6,3,7]);const positions=new Float32Array(8*3);const geometry=new BufferGeometry();geometry.setIndex(new BufferAttribute(indices,1));geometry.setAttribute('position',new BufferAttribute(positions,3));super(geometry,new LineBasicMaterial({color:color,toneMapped:false}));this.object=object;this.type='BoxHelper';this.matrixAutoUpdate=false;this.update();}update(object){if(object!==undefined){console.warn('THREE.BoxHelper: .update() has no longer arguments.');}if(this.object!==undefined){_box.setFromObject(this.object);}if(_box.isEmpty())return;const min=_box.min;const max=_box.max;/*
 			5____4
 		1/___0/|
 		| 6__|_7
@@ -33986,10 +33986,10 @@ case RED_RGTC1_Format:case SIGNED_RED_RGTC1_Format:return Math.ceil(width/4)*Mat
 
 /***/ }),
 
-/***/ "./node_modules/three/build/three.module.js":
-/*!**************************************************!*\
-  !*** ./node_modules/three/build/three.module.js ***!
-  \**************************************************/
+/***/ "./mylib/three/build/three.module.js":
+/*!*******************************************!*\
+  !*** ./mylib/three/build/three.module.js ***!
+  \*******************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -34415,7 +34415,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   ZeroStencilOp: () => (/* reexport safe */ _three_core_js__WEBPACK_IMPORTED_MODULE_0__.ZeroStencilOp),
 /* harmony export */   createCanvasElement: () => (/* reexport safe */ _three_core_js__WEBPACK_IMPORTED_MODULE_0__.createCanvasElement)
 /* harmony export */ });
-/* harmony import */ var _three_core_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./three.core.js */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var _three_core_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./three.core.js */ "./mylib/three/build/three.core.js");
 /**
  * @license
  * Copyright 2010-2025 Three.js Authors
@@ -35145,7 +35145,7 @@ info.boundary=16;info.storage=12;// evil: vec3 must start on a 16-byte boundary 
 }else if(value.isVector4){// vec4
 info.boundary=16;info.storage=16;}else if(value.isMatrix3){// mat3 (in STD140 a 3x3 matrix is represented as 3x4)
 info.boundary=48;info.storage=48;}else if(value.isMatrix4){// mat4
-info.boundary=64;info.storage=64;}else if(value.isTexture){console.warn('THREE.WebGLRenderer: Texture samplers can not be part of an uniforms group.');}else{console.warn('THREE.WebGLRenderer: Unsupported uniform value type.',value);}return info;}function onUniformsGroupsDispose(event){const uniformsGroup=event.target;uniformsGroup.removeEventListener('dispose',onUniformsGroupsDispose);const index=allocatedBindingPoints.indexOf(uniformsGroup.__bindingPointIndex);allocatedBindingPoints.splice(index,1);gl.deleteBuffer(buffers[uniformsGroup.id]);delete buffers[uniformsGroup.id];delete updateList[uniformsGroup.id];}function dispose(){for(const id in buffers){gl.deleteBuffer(buffers[id]);}allocatedBindingPoints=[];buffers={};updateList={};}return{bind:bind,update:update,dispose:dispose};}class WebGLRenderer{constructor(parameters={}){const{canvas=(0,_three_core_js__WEBPACK_IMPORTED_MODULE_0__.createCanvasElement)(),context=null,depth=true,stencil=false,alpha=false,antialias=false,premultipliedAlpha=true,preserveDrawingBuffer=false,powerPreference='default',failIfMajorPerformanceCaveat=false,reverseDepthBuffer=false,multiviewStereo=false}=parameters;this.isWebGLRenderer=true;let _alpha;if(context!==null){if(typeof WebGLRenderingContext!=='undefined'&&context instanceof WebGLRenderingContext){throw new Error('THREE.WebGLRenderer: WebGL 1 is not supported since r163.');}_alpha=context.getContextAttributes().alpha;}else{_alpha=alpha;}const uintClearColor=new Uint32Array(4);const intClearColor=new Int32Array(4);let currentRenderList=null;let currentRenderState=null;// render() can be called from within a callback triggered by another render.
+info.boundary=64;info.storage=64;}else if(value.isTexture){console.warn('THREE.WebGLRenderer: Texture samplers can not be part of an uniforms group.');}else{console.warn('THREE.WebGLRenderer: Unsupported uniform value type.',value);}return info;}function onUniformsGroupsDispose(event){const uniformsGroup=event.target;uniformsGroup.removeEventListener('dispose',onUniformsGroupsDispose);const index=allocatedBindingPoints.indexOf(uniformsGroup.__bindingPointIndex);allocatedBindingPoints.splice(index,1);gl.deleteBuffer(buffers[uniformsGroup.id]);delete buffers[uniformsGroup.id];delete updateList[uniformsGroup.id];}function dispose(){for(const id in buffers){gl.deleteBuffer(buffers[id]);}allocatedBindingPoints=[];buffers={};updateList={};}return{bind:bind,update:update,dispose:dispose};}class WebGLRenderer{constructor(parameters={}){console.log('debug: THREE.WebGLRenderer hi');const{canvas=(0,_three_core_js__WEBPACK_IMPORTED_MODULE_0__.createCanvasElement)(),context=null,depth=true,stencil=false,alpha=false,antialias=false,premultipliedAlpha=true,preserveDrawingBuffer=false,powerPreference='default',failIfMajorPerformanceCaveat=false,reverseDepthBuffer=false,multiviewStereo=false}=parameters;this.isWebGLRenderer=true;let _alpha;if(context!==null){if(typeof WebGLRenderingContext!=='undefined'&&context instanceof WebGLRenderingContext){throw new Error('THREE.WebGLRenderer: WebGL 1 is not supported since r163.');}_alpha=context.getContextAttributes().alpha;}else{_alpha=alpha;}const uintClearColor=new Uint32Array(4);const intClearColor=new Int32Array(4);let currentRenderList=null;let currentRenderState=null;// render() can be called from within a callback triggered by another render.
 // We track this so that the nested render call gets its list and state isolated from the parent render call.
 const renderListStack=[];const renderStateStack=[];// public properties
 this.domElement=canvas;// Debug configuration container
@@ -35310,10 +35310,10 @@ if(srcTexture.isTexture!==true){// @deprecated, r165
 
 /***/ }),
 
-/***/ "./node_modules/three/examples/jsm/libs/ktx-parse.module.js":
-/*!******************************************************************!*\
-  !*** ./node_modules/three/examples/jsm/libs/ktx-parse.module.js ***!
-  \******************************************************************/
+/***/ "./mylib/three/examples/jsm/libs/ktx-parse.module.js":
+/*!***********************************************************!*\
+  !*** ./mylib/three/examples/jsm/libs/ktx-parse.module.js ***!
+  \***********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -36078,10 +36078,10 @@ function Wi(t, e) {
 
 /***/ }),
 
-/***/ "./node_modules/three/examples/jsm/libs/zstddec.module.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/three/examples/jsm/libs/zstddec.module.js ***!
-  \****************************************************************/
+/***/ "./mylib/three/examples/jsm/libs/zstddec.module.js":
+/*!*********************************************************!*\
+  !*** ./mylib/three/examples/jsm/libs/zstddec.module.js ***!
+  \*********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -36121,10 +36121,10 @@ const C = "AGFzbQEAAAABpQEVYAF/AX9gAn9/AGADf39/AX9gBX9/f39/AX9gAX8AYAJ/fwF/YAR/f
 
 /***/ }),
 
-/***/ "./node_modules/three/examples/jsm/lights/LightProbeGenerator.js":
-/*!***********************************************************************!*\
-  !*** ./node_modules/three/examples/jsm/lights/LightProbeGenerator.js ***!
-  \***********************************************************************/
+/***/ "./mylib/three/examples/jsm/lights/LightProbeGenerator.js":
+/*!****************************************************************!*\
+  !*** ./mylib/three/examples/jsm/lights/LightProbeGenerator.js ***!
+  \****************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -36132,7 +36132,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   LightProbeGenerator: () => (/* binding */ LightProbeGenerator)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 
 class LightProbeGenerator {
   // https://www.ppsloan.org/publications/StupidSH36.pdf
@@ -36349,10 +36349,10 @@ function convertColorToLinear(color, colorSpace) {
 
 /***/ }),
 
-/***/ "./node_modules/three/examples/jsm/loaders/DRACOLoader.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/three/examples/jsm/loaders/DRACOLoader.js ***!
-  \****************************************************************/
+/***/ "./mylib/three/examples/jsm/loaders/DRACOLoader.js":
+/*!*********************************************************!*\
+  !*** ./mylib/three/examples/jsm/loaders/DRACOLoader.js ***!
+  \*********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -36360,7 +36360,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   DRACOLoader: () => (/* binding */ DRACOLoader)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 
 const _taskCache = new WeakMap();
 class DRACOLoader extends three__WEBPACK_IMPORTED_MODULE_0__.Loader {
@@ -36761,10 +36761,10 @@ function DRACOWorker() {
 
 /***/ }),
 
-/***/ "./node_modules/three/examples/jsm/loaders/GLTFLoader.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/three/examples/jsm/loaders/GLTFLoader.js ***!
-  \***************************************************************/
+/***/ "./mylib/three/examples/jsm/loaders/GLTFLoader.js":
+/*!********************************************************!*\
+  !*** ./mylib/three/examples/jsm/loaders/GLTFLoader.js ***!
+  \********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -36772,8 +36772,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   GLTFLoader: () => (/* binding */ GLTFLoader)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
-/* harmony import */ var _utils_BufferGeometryUtils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/BufferGeometryUtils.js */ "./node_modules/three/examples/jsm/utils/BufferGeometryUtils.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
+/* harmony import */ var _utils_BufferGeometryUtils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/BufferGeometryUtils.js */ "./mylib/three/examples/jsm/utils/BufferGeometryUtils.js");
 
 
 class GLTFLoader extends three__WEBPACK_IMPORTED_MODULE_0__.Loader {
@@ -39678,10 +39678,10 @@ function addPrimitiveAttributes(geometry, primitiveDef, parser) {
 
 /***/ }),
 
-/***/ "./node_modules/three/examples/jsm/loaders/KTX2Loader.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/three/examples/jsm/loaders/KTX2Loader.js ***!
-  \***************************************************************/
+/***/ "./mylib/three/examples/jsm/loaders/KTX2Loader.js":
+/*!********************************************************!*\
+  !*** ./mylib/three/examples/jsm/loaders/KTX2Loader.js ***!
+  \********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -39689,11 +39689,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   KTX2Loader: () => (/* binding */ KTX2Loader)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
-/* harmony import */ var _utils_WorkerPool_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/WorkerPool.js */ "./node_modules/three/examples/jsm/utils/WorkerPool.js");
-/* harmony import */ var _libs_ktx_parse_module_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../libs/ktx-parse.module.js */ "./node_modules/three/examples/jsm/libs/ktx-parse.module.js");
-/* harmony import */ var _libs_zstddec_module_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../libs/zstddec.module.js */ "./node_modules/three/examples/jsm/libs/zstddec.module.js");
-/* harmony import */ var _math_ColorSpaces_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../math/ColorSpaces.js */ "./node_modules/three/examples/jsm/math/ColorSpaces.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
+/* harmony import */ var _utils_WorkerPool_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/WorkerPool.js */ "./mylib/three/examples/jsm/utils/WorkerPool.js");
+/* harmony import */ var _libs_ktx_parse_module_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../libs/ktx-parse.module.js */ "./mylib/three/examples/jsm/libs/ktx-parse.module.js");
+/* harmony import */ var _libs_zstddec_module_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../libs/zstddec.module.js */ "./mylib/three/examples/jsm/libs/zstddec.module.js");
+/* harmony import */ var _math_ColorSpaces_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../math/ColorSpaces.js */ "./mylib/three/examples/jsm/math/ColorSpaces.js");
 /**
  * Loader for KTX 2.0 GPU Texture containers.
  *
@@ -40411,10 +40411,10 @@ function parseColorSpace(container) {
 
 /***/ }),
 
-/***/ "./node_modules/three/examples/jsm/loaders/MTLLoader.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/three/examples/jsm/loaders/MTLLoader.js ***!
-  \**************************************************************/
+/***/ "./mylib/three/examples/jsm/loaders/MTLLoader.js":
+/*!*******************************************************!*\
+  !*** ./mylib/three/examples/jsm/loaders/MTLLoader.js ***!
+  \*******************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -40422,7 +40422,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   MTLLoader: () => (/* binding */ MTLLoader)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 
 
 /**
@@ -40777,10 +40777,10 @@ class MaterialCreator {
 
 /***/ }),
 
-/***/ "./node_modules/three/examples/jsm/loaders/OBJLoader.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/three/examples/jsm/loaders/OBJLoader.js ***!
-  \**************************************************************/
+/***/ "./mylib/three/examples/jsm/loaders/OBJLoader.js":
+/*!*******************************************************!*\
+  !*** ./mylib/three/examples/jsm/loaders/OBJLoader.js ***!
+  \*******************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -40788,7 +40788,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   OBJLoader: () => (/* binding */ OBJLoader)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 
 
 // o object_name | g group_name
@@ -41358,10 +41358,10 @@ class OBJLoader extends three__WEBPACK_IMPORTED_MODULE_0__.Loader {
 
 /***/ }),
 
-/***/ "./node_modules/three/examples/jsm/math/ColorSpaces.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/three/examples/jsm/math/ColorSpaces.js ***!
-  \*************************************************************/
+/***/ "./mylib/three/examples/jsm/math/ColorSpaces.js":
+/*!******************************************************!*\
+  !*** ./mylib/three/examples/jsm/math/ColorSpaces.js ***!
+  \******************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -41374,7 +41374,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   LinearRec2020ColorSpace: () => (/* binding */ LinearRec2020ColorSpace),
 /* harmony export */   LinearRec2020ColorSpaceImpl: () => (/* binding */ LinearRec2020ColorSpaceImpl)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 
 
 // Reference: http://www.russellcottrell.com/photo/matrixCalculator.htm
@@ -41437,10 +41437,10 @@ const LinearRec2020ColorSpaceImpl = {
 
 /***/ }),
 
-/***/ "./node_modules/three/examples/jsm/math/OBB.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/three/examples/jsm/math/OBB.js ***!
-  \*****************************************************/
+/***/ "./mylib/three/examples/jsm/math/OBB.js":
+/*!**********************************************!*\
+  !*** ./mylib/three/examples/jsm/math/OBB.js ***!
+  \**********************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -41448,7 +41448,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   OBB: () => (/* binding */ OBB)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 
 
 // module scope helper variables
@@ -41795,10 +41795,10 @@ const obb = new OBB();
 
 /***/ }),
 
-/***/ "./node_modules/three/examples/jsm/utils/BufferGeometryUtils.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/three/examples/jsm/utils/BufferGeometryUtils.js ***!
-  \**********************************************************************/
+/***/ "./mylib/three/examples/jsm/utils/BufferGeometryUtils.js":
+/*!***************************************************************!*\
+  !*** ./mylib/three/examples/jsm/utils/BufferGeometryUtils.js ***!
+  \***************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -41818,7 +41818,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   toCreasedNormals: () => (/* binding */ toCreasedNormals),
 /* harmony export */   toTrianglesDrawMode: () => (/* binding */ toTrianglesDrawMode)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./mylib/three/build/three.core.js");
 
 function computeMikkTSpaceTangents(geometry, MikkTSpace, negateSign = true) {
   if (!MikkTSpace || !MikkTSpace.isReady) {
@@ -42665,10 +42665,10 @@ function toCreasedNormals(geometry, creaseAngle = Math.PI / 3 /* 60 degrees */) 
 
 /***/ }),
 
-/***/ "./node_modules/three/examples/jsm/utils/WorkerPool.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/three/examples/jsm/utils/WorkerPool.js ***!
-  \*************************************************************/
+/***/ "./mylib/three/examples/jsm/utils/WorkerPool.js":
+/*!******************************************************!*\
+  !*** ./mylib/three/examples/jsm/utils/WorkerPool.js ***!
+  \******************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -42755,7 +42755,7 @@ class WorkerPool {
 /***/ ((module) => {
 
 "use strict";
-module.exports = /*#__PURE__*/JSON.parse('{"name":"aframe","version":"1.7.0","description":"A web framework for building virtual reality experiences.","homepage":"https://aframe.io/","main":"./dist/aframe-master.js","module":"./dist/aframe-master.module.min.js","exports":{".":{"import":"./dist/aframe-master.module.min.js","require":"./dist/aframe-master.js"}},"scripts":{"dev":"cross-env INSPECTOR_VERSION=dev webpack serve --port 8080","dist":"node scripts/updateVersionLog.js && npm run dist:min && npm run dist:max && npm run dist:module","dist:max":"webpack --config webpack.config.cjs","dist:min":"webpack --config webpack.prod.config.cjs","dist:module":"webpack --config webpack.module.config.cjs","docs":"markserv --dir docs --port 9001","preghpages":"node ./scripts/preghpages.js","ghpages":"gh-pages -d gh-pages","lint":"standardx -v | snazzy","lint:fix":"standardx --fix","precommit":"npm run lint","prepush":"node scripts/testOnlyCheck.js","prerelease":"node scripts/release.js 1.6.0 1.7.0","start":"npm run dev","start:https":"npm run dev -- --server-type https","start:webgpu":"cross-env WEBGPU=true npm run dev -- --server-type https","test":"karma start ./tests/karma.conf.js","test:docs":"node scripts/docsLint.js","test:firefox":"npm test -- --browsers Firefox","test:chrome":"npm test -- --browsers Chrome","test:nobrowser":"NO_BROWSER=true npm test","test:node":"node ./node_modules/mocha/bin/mocha --ui tdd tests/node"},"repository":"aframevr/aframe","license":"MIT","files":["dist/*","docs/**/*","src/**/*","vendor/**/*"],"dependencies":{"buffer":"^6.0.3","debug":"^4.3.4","deep-assign":"^2.0.0","load-bmfont":"^1.2.3","super-animejs":"^3.1.0","three":"npm:super-three@0.173.5","three-bmfont-text":"dmarcos/three-bmfont-text#eed4878795be9b3e38cf6aec6b903f56acd1f695"},"devDependencies":{"@babel/core":"^7.24.0","babel-loader":"^9.1.3","babel-plugin-istanbul":"^6.1.1","chai":"^4.3.6","chai-shallow-deep-equal":"^1.4.0","chalk":"^1.1.3","cross-env":"^7.0.3","css-loader":"^7.1.2","eslint":"^8.45.0","eslint-config-semistandard":"^17.0.0","eslint-config-standard-jsx":"^11.0.0","gh-pages":"^6.3.0","git-rev":"^0.2.1","glob":"^8.0.3","husky":"^0.11.7","jsdom":"^24.0.0","jsdom-global":"^3.0.2","karma":"^6.4.0","karma-chai-shallow-deep-equal":"0.0.4","karma-chrome-launcher":"^3.1.1","karma-coverage":"^2.2.0","karma-env-preprocessor":"^0.1.1","karma-firefox-launcher":"^2.1.2","karma-mocha":"^2.0.1","karma-mocha-reporter":"^2.2.5","karma-sinon-chai":"^2.0.2","karma-webpack":"^5.0.0","markserv":"github:sukima/markserv#feature/fix-broken-websoketio-link","mocha":"^10.0.0","replace-in-file":"^8.3.0","shelljs":"^0.8.5","sinon":"<12.0.0","sinon-chai":"^3.7.0","snazzy":"^5.0.0","standardx":"^7.0.0","style-loader":"^4.0.0","too-wordy":"ngokevin/too-wordy","webpack":"5.95.0","webpack-cli":"^5.1.4","webpack-dev-server":"~5.0.4","write-good":"^1.0.8"},"link":true,"standardx":{"ignore":["build/**","dist/**","examples/**/shaders/*.js","**/vendor/**"]},"keywords":["3d","aframe","cardboard","components","oculus","three","three.js","rift","vive","vr","quest","meta","web-components","webvr","webxr"],"engines":{"node":">= 4.6.0","npm":">= 2.15.9"}}');
+module.exports = /*#__PURE__*/JSON.parse('{"name":"aframe","version":"1.7.0","description":"A web framework for building virtual reality experiences.","homepage":"https://aframe.io/","main":"./dist/aframe-master.js","module":"./dist/aframe-master.module.min.js","exports":{".":{"import":"./dist/aframe-master.module.min.js","require":"./dist/aframe-master.js"}},"scripts":{"dev":"cross-env INSPECTOR_VERSION=dev webpack serve --port 8080","dist":"node scripts/updateVersionLog.js && npm run dist:min && npm run dist:max && npm run dist:module","dist:max":"webpack --config webpack.config.cjs","dist:min":"webpack --config webpack.prod.config.cjs","dist:module":"webpack --config webpack.module.config.cjs","docs":"markserv --dir docs --port 9001","preghpages":"node ./scripts/preghpages.js","ghpages":"gh-pages -d gh-pages","lint":"standardx -v | snazzy","lint:fix":"standardx --fix","precommit":"npm run lint","prepush":"node scripts/testOnlyCheck.js","prerelease":"node scripts/release.js 1.6.0 1.7.0","start":"npm run dev","start:https":"npm run dev -- --server-type https","start:webgpu":"cross-env WEBGPU=true npm run dev -- --server-type https","test":"karma start ./tests/karma.conf.js","test:docs":"node scripts/docsLint.js","test:firefox":"npm test -- --browsers Firefox","test:chrome":"npm test -- --browsers Chrome","test:nobrowser":"NO_BROWSER=true npm test","test:node":"node ./node_modules/mocha/bin/mocha --ui tdd tests/node"},"repository":"aframevr/aframe","license":"MIT","files":["dist/*","docs/**/*","src/**/*","vendor/**/*"],"dependencies":{"buffer":"^6.0.3","debug":"^4.3.4","deep-assign":"^2.0.0","load-bmfont":"^1.2.3","super-animejs":"^3.1.0","three":"file:./mylib/three","three-ori":"npm:super-three@0.173.5","three-bmfont-text":"dmarcos/three-bmfont-text#eed4878795be9b3e38cf6aec6b903f56acd1f695"},"devDependencies":{"@babel/core":"^7.24.0","babel-loader":"^9.1.3","babel-plugin-istanbul":"^6.1.1","chai":"^4.3.6","chai-shallow-deep-equal":"^1.4.0","chalk":"^1.1.3","cross-env":"^7.0.3","css-loader":"^7.1.2","eslint":"^8.45.0","eslint-config-semistandard":"^17.0.0","eslint-config-standard-jsx":"^11.0.0","gh-pages":"^6.3.0","git-rev":"^0.2.1","glob":"^8.0.3","husky":"^0.11.7","jsdom":"^24.0.0","jsdom-global":"^3.0.2","karma":"^6.4.0","karma-chai-shallow-deep-equal":"0.0.4","karma-chrome-launcher":"^3.1.1","karma-coverage":"^2.2.0","karma-env-preprocessor":"^0.1.1","karma-firefox-launcher":"^2.1.2","karma-mocha":"^2.0.1","karma-mocha-reporter":"^2.2.5","karma-sinon-chai":"^2.0.2","karma-webpack":"^5.0.0","markserv":"github:sukima/markserv#feature/fix-broken-websoketio-link","mocha":"^10.0.0","replace-in-file":"^8.3.0","shelljs":"^0.8.5","sinon":"<12.0.0","sinon-chai":"^3.7.0","snazzy":"^5.0.0","standardx":"^7.0.0","style-loader":"^4.0.0","too-wordy":"ngokevin/too-wordy","webpack":"5.95.0","webpack-cli":"^5.1.4","webpack-dev-server":"~5.0.4","write-good":"^1.0.8"},"link":true,"standardx":{"ignore":["build/**","dist/**","examples/**/shaders/*.js","**/vendor/**"]},"keywords":["3d","aframe","cardboard","components","oculus","three","three.js","rift","vive","vr","quest","meta","web-components","webvr","webxr"],"engines":{"node":">= 4.6.0","npm":">= 2.15.9"}}');
 
 /***/ })
 
