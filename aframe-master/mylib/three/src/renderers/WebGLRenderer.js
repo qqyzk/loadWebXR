@@ -74,8 +74,17 @@ class WebGLRenderer {
 			reverseDepthBuffer = false,
 			multiviewStereo = false,
 		} = parameters;
-
 		this.isWebGLRenderer = true;
+		// collection
+		this._collectionEnabled = false;
+		this._collectedObjects = {
+			allObjects: [],
+			visibleObjects: [],
+			visibleInFrustumObjects: [],
+			allObjectsSource: new Set(),
+			visibleObjectsSource: new Set(),
+			visibleInFrustumObjectsSource: new Set(),
+		};
 
 		let _alpha;
 
@@ -1126,8 +1135,7 @@ class WebGLRenderer {
 
 		if ( typeof self !== 'undefined' ) animation.setContext( self );
 
-		this.setAnimationLoop = function ( callback ) {
-
+		this.setAnimationLoop = function ( callback) {
 			onAnimationFrameCallback = callback;
 			xr.setAnimationLoop( callback );
 
@@ -1139,14 +1147,16 @@ class WebGLRenderer {
 		xr.addEventListener( 'sessionend', onXRSessionEnd );
 
 		// Rendering
+		this.getCollectedObjects = function () {
+			console.log('debug: THREE.WebGLRenderer.getCollectedObjects');
+			this._collectionEnabled = false;
+			return this._collectedObjects;
+		}
 
 		this.render = function ( scene, camera ) {
-
 			if ( camera !== undefined && camera.isCamera !== true ) {
-
 				console.error( 'THREE.WebGLRenderer.render: camera is not an instance of THREE.Camera.' );
 				return;
-
 			}
 
 			if ( _isContextLost === true ) return;
@@ -1191,14 +1201,15 @@ class WebGLRenderer {
 				const depthSensingMesh = _this.xr.getDepthSensingMesh();
 
 				if ( depthSensingMesh !== null ) {
-
-					projectObject( depthSensingMesh, camera, - Infinity, _this.sortObjects );
+					this.projectObject( depthSensingMesh, camera, - Infinity, _this.sortObjects );
 
 				}
 
 			}
-
-			projectObject( scene, camera, 0, _this.sortObjects );
+			if(this._collectionEnabled ){
+				this.collectAllObjects(scene);
+			}
+			this.projectObject( scene, camera, 0, _this.sortObjects );
 
 			currentRenderList.finish();
 
@@ -1239,7 +1250,7 @@ class WebGLRenderer {
 			currentRenderState.setupLights();
 
 			if ( camera.isArrayCamera ) {
-
+			
 				const cameras = camera.cameras;
 
 				if ( transmissiveObjects.length > 0 ) {
@@ -1279,7 +1290,6 @@ class WebGLRenderer {
 				if ( transmissiveObjects.length > 0 ) renderTransmissionPass( opaqueObjects, transmissiveObjects, scene, camera );
 
 				if ( _renderBackground ) background.render( scene );
-
 				renderScene( currentRenderList, scene, camera );
 
 			}
@@ -1336,13 +1346,51 @@ class WebGLRenderer {
 
 		};
 
-		function projectObject( object, camera, groupOrder, sortObjects ) {
+		this.startObjectCollection = function () {
+			this._collectionEnabled = true;
+			this._collectedObjects = {
+			  allObjects: [],
+			  visibleObjects: [],
+			  visibleInFrustumObjects: [],
+			  allObjectsSource: new Set(),
+			  visibleObjectsSource: new Set(),
+			  visibleInFrustumObjectsSource: new Set(),
+			};
+			console.log('debug: THREE.WebGLRenderer.startObjectCollection() - collection enabled',this._collectionEnabled);
+		}
+		this.collectAllObjects = function( object ){
+			//collect all
+			if (this._collectionEnabled && 
+				(object.isMesh || object.isLine || object.isPoints || object.isSprite)) {
+				this._collectedObjects.allObjects.push(object);
+				if( object.src !== null ) {
+					this._collectedObjects.allObjectsSource.add(object.src);
+				}
+			}
+			const children = object.children;
 
+			for ( let i = 0, l = children.length; i < l; i ++ ) {
+
+				this.collectAllObjects( children[ i ] );
+
+			}
+		}
+
+		this.projectObject = function( object, camera, groupOrder, sortObjects ) {
+		
 			if ( object.visible === false ) return;
 
 			const visible = object.layers.test( camera.layers );
 
 			if ( visible ) {
+				//collect visible
+				if (this._collectionEnabled && 
+					(object.isMesh || object.isLine || object.isPoints || object.isSprite)) {
+				  this._collectedObjects.visibleObjects.push(object);
+				  if( object.src !== null ) {
+				  	this._collectedObjects.visibleObjectsSource.add(object.src);
+				  }
+				}
 
 				if ( object.isGroup ) {
 
@@ -1365,7 +1413,13 @@ class WebGLRenderer {
 				} else if ( object.isSprite ) {
 
 					if ( ! object.frustumCulled || _frustum.intersectsSprite( object ) ) {
-
+						//collect frustum visible
+						if (this._collectionEnabled) {
+							this._collectedObjects.visibleInFrustumObjects.push(object);
+							if( object.src !== null ) {
+								this._collectedObjects.visibleInFrustumObjectsSource.add(object.src);
+							}
+						  }
 						if ( sortObjects ) {
 
 							_vector4.setFromMatrixPosition( object.matrixWorld )
@@ -1387,7 +1441,13 @@ class WebGLRenderer {
 				} else if ( object.isMesh || object.isLine || object.isPoints ) {
 
 					if ( ! object.frustumCulled || _frustum.intersectsObject( object ) ) {
-
+						//collect frustum visible
+						if (this._collectionEnabled) {
+							this._collectedObjects.visibleInFrustumObjects.push(object);
+							if( object.src !== null ) {
+								this._collectedObjects.visibleInFrustumObjectsSource.add(object.src);
+							}
+						}
 						const geometry = objects.update( object );
 						const material = object.material;
 
@@ -1444,9 +1504,11 @@ class WebGLRenderer {
 
 			for ( let i = 0, l = children.length; i < l; i ++ ) {
 
-				projectObject( children[ i ], camera, groupOrder, sortObjects );
+				this.projectObject( children[ i ], camera, groupOrder, sortObjects );
 
 			}
+
+		
 
 		}
 

@@ -219,8 +219,9 @@ class AAssets extends ANode {
     task.loader.load(task.src, function gltfLoaded (gltfModel) {
       task.theself.model = gltfModel.scene || gltfModel.scenes[0];
       task.theself.model.animations = gltfModel.animations;
-      task.el.setObject3D('mesh', task.theself.model);
+      task.el.setObject3D('mesh', task.theself.model,task.src);
       task.el.emit('model-loaded', {format: 'gltf', model: task.theself.model});
+      console.log('debug: gltf model loaded', task.src);
     }, undefined /* onProgress */, function gltfFailed (error) {
       var message = (error && error.message) ? error.message : 'Failed to load glTF model';
       warn(message);

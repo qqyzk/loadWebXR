@@ -64,6 +64,7 @@ export class AScene extends AEntity {
     self.allAssetsLoaded = false;
     self.afterLoadedFrame = 0;
     self.remTimes = [];
+    this.waitingForCollection = false;
     
   }
 
@@ -129,7 +130,9 @@ export class AScene extends AEntity {
       navigator.xr.addEventListener('sessiongranted', function () { self.enterVR(); });
     }
   }
-
+  delay (ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
   attachedCallbackPostCamera () {
     var resize;
     var self = this;
@@ -594,6 +597,7 @@ export class AScene extends AEntity {
         loadingScreen.remove();
         console.log('debug: a-scene render started');
         renderer.setAnimationLoop(this.render);
+        
         sceneEl.renderStarted = true;
         sceneEl.emit('renderstart');
       }
@@ -620,6 +624,11 @@ export class AScene extends AEntity {
    * needing to render.
    */
   tick (time, timeDelta) {
+    if (this.waitingForCollection) {
+      const priorityInfo = this.renderer.getCollectedObjects();
+      this.waitingForCollection = false;
+      console.log('debug:', priorityInfo);
+    }
     var i;
     var systems = this.systems;
 
@@ -704,9 +713,11 @@ export class AScene extends AEntity {
       this.remTimes.push({'delta':this.delta,'status':this.allAssetsLoaded});
       if(this.allAssetsLoaded){
         this.afterLoadedFrame+=1;
-      //   if(this.afterLoadedFrame === 30 ){
+        if(this.afterLoadedFrame === 30 ){
       //     this.saveTimes();
-      //   }
+          this.renderer.startObjectCollection();
+          this.waitingForCollection = true;
+        }
       }
     }
     renderer.render(this.object3D, this.camera);

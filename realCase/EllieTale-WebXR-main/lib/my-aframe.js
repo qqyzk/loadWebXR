@@ -19219,11 +19219,12 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     task.loader.load(task.src, function gltfLoaded(gltfModel) {
       task.theself.model = gltfModel.scene || gltfModel.scenes[0];
       task.theself.model.animations = gltfModel.animations;
-      task.el.setObject3D('mesh', task.theself.model);
+      task.el.setObject3D('mesh', task.theself.model, task.src);
       task.el.emit('model-loaded', {
         format: 'gltf',
         model: task.theself.model
       });
+      console.log('debug: gltf model loaded', task.src);
     }, undefined /* onProgress */, function gltfFailed(error) {
       var message = error && error.message ? error.message : 'Failed to load glTF model';
       warn(message);
@@ -19668,7 +19669,7 @@ class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
    * @param {string} type - Developer-set name of the type of object, will be unique per type.
    * @param {THREE.Object3D} obj - A THREE.Object3D.
    */
-  setObject3D(type, obj) {
+  setObject3D(type, obj, src = null) {
     var oldObj;
     var self = this;
     if (!(obj instanceof three__WEBPACK_IMPORTED_MODULE_3__.Object3D)) {
@@ -19682,10 +19683,12 @@ class AEntity extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     }
 
     // Set references to A-Frame entity.
+    obj.src = src;
     obj.el = this;
     if (obj.children.length) {
       obj.traverse(function bindEl(child) {
         child.el = self;
+        child.src = src;
       });
     }
     // console.log('debug: setObject3D', type, obj);
@@ -22267,6 +22270,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
     self.allAssetsLoaded = false;
     self.afterLoadedFrame = 0;
     self.remTimes = [];
+    this.waitingForCollection = false;
   }
   addFullScreenStyles() {
     document.documentElement.classList.add('a-fullscreen');
@@ -22332,6 +22336,9 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
         self.enterVR();
       });
     }
+  }
+  delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
   attachedCallbackPostCamera() {
     var resize;
@@ -22843,6 +22850,11 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
    * needing to render.
    */
   tick(time, timeDelta) {
+    if (this.waitingForCollection) {
+      const priorityInfo = this.renderer.getCollectedObjects();
+      this.waitingForCollection = false;
+      console.log('debug:', priorityInfo);
+    }
     var i;
     var systems = this.systems;
 
@@ -22933,9 +22945,11 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
       });
       if (this.allAssetsLoaded) {
         this.afterLoadedFrame += 1;
-        //   if(this.afterLoadedFrame === 30 ){
-        //     this.saveTimes();
-        //   }
+        if (this.afterLoadedFrame === 30) {
+          //     this.saveTimes();
+          this.renderer.startObjectCollection();
+          this.waitingForCollection = true;
+        }
       }
     }
     renderer.render(this.object3D, this.camera);
@@ -35404,7 +35418,8 @@ info.boundary=16;info.storage=12;// evil: vec3 must start on a 16-byte boundary 
 }else if(value.isVector4){// vec4
 info.boundary=16;info.storage=16;}else if(value.isMatrix3){// mat3 (in STD140 a 3x3 matrix is represented as 3x4)
 info.boundary=48;info.storage=48;}else if(value.isMatrix4){// mat4
-info.boundary=64;info.storage=64;}else if(value.isTexture){console.warn('THREE.WebGLRenderer: Texture samplers can not be part of an uniforms group.');}else{console.warn('THREE.WebGLRenderer: Unsupported uniform value type.',value);}return info;}function onUniformsGroupsDispose(event){const uniformsGroup=event.target;uniformsGroup.removeEventListener('dispose',onUniformsGroupsDispose);const index=allocatedBindingPoints.indexOf(uniformsGroup.__bindingPointIndex);allocatedBindingPoints.splice(index,1);gl.deleteBuffer(buffers[uniformsGroup.id]);delete buffers[uniformsGroup.id];delete updateList[uniformsGroup.id];}function dispose(){for(const id in buffers){gl.deleteBuffer(buffers[id]);}allocatedBindingPoints=[];buffers={};updateList={};}return{bind:bind,update:update,dispose:dispose};}class WebGLRenderer{constructor(parameters={}){console.log('debug: THREE.WebGLRenderer hi');const{canvas=(0,_three_core_js__WEBPACK_IMPORTED_MODULE_0__.createCanvasElement)(),context=null,depth=true,stencil=false,alpha=false,antialias=false,premultipliedAlpha=true,preserveDrawingBuffer=false,powerPreference='default',failIfMajorPerformanceCaveat=false,reverseDepthBuffer=false,multiviewStereo=false}=parameters;this.isWebGLRenderer=true;let _alpha;if(context!==null){if(typeof WebGLRenderingContext!=='undefined'&&context instanceof WebGLRenderingContext){throw new Error('THREE.WebGLRenderer: WebGL 1 is not supported since r163.');}_alpha=context.getContextAttributes().alpha;}else{_alpha=alpha;}const uintClearColor=new Uint32Array(4);const intClearColor=new Int32Array(4);let currentRenderList=null;let currentRenderState=null;// render() can be called from within a callback triggered by another render.
+info.boundary=64;info.storage=64;}else if(value.isTexture){console.warn('THREE.WebGLRenderer: Texture samplers can not be part of an uniforms group.');}else{console.warn('THREE.WebGLRenderer: Unsupported uniform value type.',value);}return info;}function onUniformsGroupsDispose(event){const uniformsGroup=event.target;uniformsGroup.removeEventListener('dispose',onUniformsGroupsDispose);const index=allocatedBindingPoints.indexOf(uniformsGroup.__bindingPointIndex);allocatedBindingPoints.splice(index,1);gl.deleteBuffer(buffers[uniformsGroup.id]);delete buffers[uniformsGroup.id];delete updateList[uniformsGroup.id];}function dispose(){for(const id in buffers){gl.deleteBuffer(buffers[id]);}allocatedBindingPoints=[];buffers={};updateList={};}return{bind:bind,update:update,dispose:dispose};}class WebGLRenderer{constructor(parameters={}){console.log('debug: THREE.WebGLRenderer hi');const{canvas=(0,_three_core_js__WEBPACK_IMPORTED_MODULE_0__.createCanvasElement)(),context=null,depth=true,stencil=false,alpha=false,antialias=false,premultipliedAlpha=true,preserveDrawingBuffer=false,powerPreference='default',failIfMajorPerformanceCaveat=false,reverseDepthBuffer=false,multiviewStereo=false}=parameters;this.isWebGLRenderer=true;// collection
+this._collectionEnabled=false;this._collectedObjects={allObjects:[],visibleObjects:[],visibleInFrustumObjects:[],allObjectsSource:new Set(),visibleObjectsSource:new Set(),visibleInFrustumObjectsSource:new Set()};let _alpha;if(context!==null){if(typeof WebGLRenderingContext!=='undefined'&&context instanceof WebGLRenderingContext){throw new Error('THREE.WebGLRenderer: WebGL 1 is not supported since r163.');}_alpha=context.getContextAttributes().alpha;}else{_alpha=alpha;}const uintClearColor=new Uint32Array(4);const intClearColor=new Int32Array(4);let currentRenderList=null;let currentRenderState=null;// render() can be called from within a callback triggered by another render.
 // We track this so that the nested render call gets its list and state isolated from the parent render call.
 const renderListStack=[];const renderStateStack=[];// public properties
 this.domElement=canvas;// Debug configuration container
@@ -35460,11 +35475,11 @@ checkMaterialsReady();}else{// Otherwise start by waiting a bit to give the mate
 // initialized a chance to finish.
 setTimeout(checkMaterialsReady,10);}});};// Animation Loop
 let onAnimationFrameCallback=null;function onAnimationFrame(time){if(onAnimationFrameCallback)onAnimationFrameCallback(time);}function onXRSessionStart(){animation.stop();}function onXRSessionEnd(){animation.start();}const animation=new WebGLAnimation();animation.setAnimationLoop(onAnimationFrame);if(typeof self!=='undefined')animation.setContext(self);this.setAnimationLoop=function(callback){onAnimationFrameCallback=callback;xr.setAnimationLoop(callback);callback===null?animation.stop():animation.start();};xr.addEventListener('sessionstart',onXRSessionStart);xr.addEventListener('sessionend',onXRSessionEnd);// Rendering
-this.render=function(scene,camera){if(camera!==undefined&&camera.isCamera!==true){console.error('THREE.WebGLRenderer.render: camera is not an instance of THREE.Camera.');return;}if(_isContextLost===true)return;// update scene graph
+this.getCollectedObjects=function(){console.log('debug: THREE.WebGLRenderer.getCollectedObjects');this._collectionEnabled=false;return this._collectedObjects;};this.render=function(scene,camera){if(camera!==undefined&&camera.isCamera!==true){console.error('THREE.WebGLRenderer.render: camera is not an instance of THREE.Camera.');return;}if(_isContextLost===true)return;// update scene graph
 if(scene.matrixWorldAutoUpdate===true)scene.updateMatrixWorld();// update camera matrices and frustum
 if(camera.parent===null&&camera.matrixWorldAutoUpdate===true)camera.updateMatrixWorld();if(xr.enabled===true&&xr.isPresenting===true){if(xr.cameraAutoUpdate===true)xr.updateCamera(camera);camera=xr.getCamera();// use XR camera for rendering
 }//
-if(scene.isScene===true)scene.onBeforeRender(_this,scene,camera,_currentRenderTarget);currentRenderState=renderStates.get(scene,renderStateStack.length);currentRenderState.init(camera);renderStateStack.push(currentRenderState);_projScreenMatrix.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse);_frustum.setFromProjectionMatrix(_projScreenMatrix);_localClippingEnabled=this.localClippingEnabled;_clippingEnabled=clipping.init(this.clippingPlanes,_localClippingEnabled);currentRenderList=renderLists.get(scene,renderListStack.length);currentRenderList.init();renderListStack.push(currentRenderList);if(xr.enabled===true&&xr.isPresenting===true){const depthSensingMesh=_this.xr.getDepthSensingMesh();if(depthSensingMesh!==null){projectObject(depthSensingMesh,camera,-Infinity,_this.sortObjects);}}projectObject(scene,camera,0,_this.sortObjects);currentRenderList.finish();if(_this.sortObjects===true){currentRenderList.sort(_opaqueSort,_transparentSort);}_renderBackground=xr.enabled===false||xr.isPresenting===false||xr.hasDepthSensing()===false;if(_renderBackground){background.addToRenderList(currentRenderList,scene);}//
+if(scene.isScene===true)scene.onBeforeRender(_this,scene,camera,_currentRenderTarget);currentRenderState=renderStates.get(scene,renderStateStack.length);currentRenderState.init(camera);renderStateStack.push(currentRenderState);_projScreenMatrix.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse);_frustum.setFromProjectionMatrix(_projScreenMatrix);_localClippingEnabled=this.localClippingEnabled;_clippingEnabled=clipping.init(this.clippingPlanes,_localClippingEnabled);currentRenderList=renderLists.get(scene,renderListStack.length);currentRenderList.init();renderListStack.push(currentRenderList);if(xr.enabled===true&&xr.isPresenting===true){const depthSensingMesh=_this.xr.getDepthSensingMesh();if(depthSensingMesh!==null){this.projectObject(depthSensingMesh,camera,-Infinity,_this.sortObjects);}}if(this._collectionEnabled){this.collectAllObjects(scene);}this.projectObject(scene,camera,0,_this.sortObjects);currentRenderList.finish();if(_this.sortObjects===true){currentRenderList.sort(_opaqueSort,_transparentSort);}_renderBackground=xr.enabled===false||xr.isPresenting===false||xr.hasDepthSensing()===false;if(_renderBackground){background.addToRenderList(currentRenderList,scene);}//
 this.info.render.frame++;if(_clippingEnabled===true)clipping.beginShadows();const shadowsArray=currentRenderState.state.shadowsArray;shadowMap.render(shadowsArray,scene,camera);if(_clippingEnabled===true)clipping.endShadows();//
 if(this.info.autoReset===true)this.info.reset();// render scene
 const opaqueObjects=currentRenderList.opaque;const transmissiveObjects=currentRenderList.transmissive;currentRenderState.setupLights();if(camera.isArrayCamera){const cameras=camera.cameras;if(transmissiveObjects.length>0){for(let i=0,l=cameras.length;i<l;i++){const camera2=cameras[i];renderTransmissionPass(opaqueObjects,transmissiveObjects,scene,camera2);}}if(_renderBackground)background.render(scene);if(xr.enabled&&xr.isMultiview){textures.setDeferTextureUploads(true);renderScene(currentRenderList,scene,camera,camera.cameras[0].viewport);}else{for(let i=0,l=cameras.length;i<l;i++){const camera2=cameras[i];renderScene(currentRenderList,scene,camera2,camera2.viewport);}}}else{if(transmissiveObjects.length>0)renderTransmissionPass(opaqueObjects,transmissiveObjects,scene,camera);if(_renderBackground)background.render(scene);renderScene(currentRenderList,scene,camera);}//
@@ -35472,7 +35487,11 @@ if(_currentRenderTarget!==null&&_currentActiveMipmapLevel===0){// resolve multis
 textures.updateMultisampleRenderTarget(_currentRenderTarget);// Generate mipmap if we're using any kind of mipmap filtering
 textures.updateRenderTargetMipmap(_currentRenderTarget);}//
 if(scene.isScene===true)scene.onAfterRender(_this,scene,camera);// _gl.finish();
-bindingStates.resetDefaultState();_currentMaterialId=-1;_currentCamera=null;renderStateStack.pop();if(renderStateStack.length>0){currentRenderState=renderStateStack[renderStateStack.length-1];if(_clippingEnabled===true)clipping.setGlobalState(_this.clippingPlanes,currentRenderState.state.camera);}else{currentRenderState=null;}renderListStack.pop();if(renderListStack.length>0){currentRenderList=renderListStack[renderListStack.length-1];}else{currentRenderList=null;}};function projectObject(object,camera,groupOrder,sortObjects){if(object.visible===false)return;const visible=object.layers.test(camera.layers);if(visible){if(object.isGroup){groupOrder=object.renderOrder;}else if(object.isLOD){if(object.autoUpdate===true)object.update(camera);}else if(object.isLight){currentRenderState.pushLight(object);if(object.castShadow){currentRenderState.pushShadow(object);}}else if(object.isSprite){if(!object.frustumCulled||_frustum.intersectsSprite(object)){if(sortObjects){_vector4.setFromMatrixPosition(object.matrixWorld).applyMatrix4(_projScreenMatrix);}const geometry=objects.update(object);const material=object.material;if(material.visible){currentRenderList.push(object,geometry,material,groupOrder,_vector4.z,null);}}}else if(object.isMesh||object.isLine||object.isPoints){if(!object.frustumCulled||_frustum.intersectsObject(object)){const geometry=objects.update(object);const material=object.material;if(sortObjects){if(object.boundingSphere!==undefined){if(object.boundingSphere===null)object.computeBoundingSphere();_vector4.copy(object.boundingSphere.center);}else{if(geometry.boundingSphere===null)geometry.computeBoundingSphere();_vector4.copy(geometry.boundingSphere.center);}_vector4.applyMatrix4(object.matrixWorld).applyMatrix4(_projScreenMatrix);}if(Array.isArray(material)){const groups=geometry.groups;for(let i=0,l=groups.length;i<l;i++){const group=groups[i];const groupMaterial=material[group.materialIndex];if(groupMaterial&&groupMaterial.visible){currentRenderList.push(object,geometry,groupMaterial,groupOrder,_vector4.z,group);}}}else if(material.visible){currentRenderList.push(object,geometry,material,groupOrder,_vector4.z,null);}}}}const children=object.children;for(let i=0,l=children.length;i<l;i++){projectObject(children[i],camera,groupOrder,sortObjects);}}function renderScene(currentRenderList,scene,camera,viewport){const opaqueObjects=currentRenderList.opaque;const transmissiveObjects=currentRenderList.transmissive;const transparentObjects=currentRenderList.transparent;currentRenderState.setupLightsView(camera);if(_clippingEnabled===true)clipping.setGlobalState(_this.clippingPlanes,camera);if(viewport)state.viewport(_currentViewport.copy(viewport));if(opaqueObjects.length>0)renderObjects(opaqueObjects,scene,camera);if(transmissiveObjects.length>0)renderObjects(transmissiveObjects,scene,camera);if(transparentObjects.length>0)renderObjects(transparentObjects,scene,camera);// Ensure depth buffer writing is enabled so it can be cleared on next render
+bindingStates.resetDefaultState();_currentMaterialId=-1;_currentCamera=null;renderStateStack.pop();if(renderStateStack.length>0){currentRenderState=renderStateStack[renderStateStack.length-1];if(_clippingEnabled===true)clipping.setGlobalState(_this.clippingPlanes,currentRenderState.state.camera);}else{currentRenderState=null;}renderListStack.pop();if(renderListStack.length>0){currentRenderList=renderListStack[renderListStack.length-1];}else{currentRenderList=null;}};this.startObjectCollection=function(){this._collectionEnabled=true;this._collectedObjects={allObjects:[],visibleObjects:[],visibleInFrustumObjects:[],allObjectsSource:new Set(),visibleObjectsSource:new Set(),visibleInFrustumObjectsSource:new Set()};console.log('debug: THREE.WebGLRenderer.startObjectCollection() - collection enabled',this._collectionEnabled);};this.collectAllObjects=function(object){//collect all
+if(this._collectionEnabled&&(object.isMesh||object.isLine||object.isPoints||object.isSprite)){this._collectedObjects.allObjects.push(object);if(object.src!==null){this._collectedObjects.allObjectsSource.add(object.src);}}const children=object.children;for(let i=0,l=children.length;i<l;i++){this.collectAllObjects(children[i]);}};this.projectObject=function(object,camera,groupOrder,sortObjects){if(object.visible===false)return;const visible=object.layers.test(camera.layers);if(visible){//collect visible
+if(this._collectionEnabled&&(object.isMesh||object.isLine||object.isPoints||object.isSprite)){this._collectedObjects.visibleObjects.push(object);if(object.src!==null){this._collectedObjects.visibleObjectsSource.add(object.src);}}if(object.isGroup){groupOrder=object.renderOrder;}else if(object.isLOD){if(object.autoUpdate===true)object.update(camera);}else if(object.isLight){currentRenderState.pushLight(object);if(object.castShadow){currentRenderState.pushShadow(object);}}else if(object.isSprite){if(!object.frustumCulled||_frustum.intersectsSprite(object)){//collect frustum visible
+if(this._collectionEnabled){this._collectedObjects.visibleInFrustumObjects.push(object);if(object.src!==null){this._collectedObjects.visibleInFrustumObjectsSource.add(object.src);}}if(sortObjects){_vector4.setFromMatrixPosition(object.matrixWorld).applyMatrix4(_projScreenMatrix);}const geometry=objects.update(object);const material=object.material;if(material.visible){currentRenderList.push(object,geometry,material,groupOrder,_vector4.z,null);}}}else if(object.isMesh||object.isLine||object.isPoints){if(!object.frustumCulled||_frustum.intersectsObject(object)){//collect frustum visible
+if(this._collectionEnabled){this._collectedObjects.visibleInFrustumObjects.push(object);if(object.src!==null){this._collectedObjects.visibleInFrustumObjectsSource.add(object.src);}}const geometry=objects.update(object);const material=object.material;if(sortObjects){if(object.boundingSphere!==undefined){if(object.boundingSphere===null)object.computeBoundingSphere();_vector4.copy(object.boundingSphere.center);}else{if(geometry.boundingSphere===null)geometry.computeBoundingSphere();_vector4.copy(geometry.boundingSphere.center);}_vector4.applyMatrix4(object.matrixWorld).applyMatrix4(_projScreenMatrix);}if(Array.isArray(material)){const groups=geometry.groups;for(let i=0,l=groups.length;i<l;i++){const group=groups[i];const groupMaterial=material[group.materialIndex];if(groupMaterial&&groupMaterial.visible){currentRenderList.push(object,geometry,groupMaterial,groupOrder,_vector4.z,group);}}}else if(material.visible){currentRenderList.push(object,geometry,material,groupOrder,_vector4.z,null);}}}}const children=object.children;for(let i=0,l=children.length;i<l;i++){this.projectObject(children[i],camera,groupOrder,sortObjects);}};function renderScene(currentRenderList,scene,camera,viewport){const opaqueObjects=currentRenderList.opaque;const transmissiveObjects=currentRenderList.transmissive;const transparentObjects=currentRenderList.transparent;currentRenderState.setupLightsView(camera);if(_clippingEnabled===true)clipping.setGlobalState(_this.clippingPlanes,camera);if(viewport)state.viewport(_currentViewport.copy(viewport));if(opaqueObjects.length>0)renderObjects(opaqueObjects,scene,camera);if(transmissiveObjects.length>0)renderObjects(transmissiveObjects,scene,camera);if(transparentObjects.length>0)renderObjects(transparentObjects,scene,camera);// Ensure depth buffer writing is enabled so it can be cleared on next render
 state.buffers.depth.setTest(true);state.buffers.depth.setMask(true);state.buffers.color.setMask(true);state.setPolygonOffset(false);}function renderTransmissionPass(opaqueObjects,transmissiveObjects,scene,camera){const overrideMaterial=scene.isScene===true?scene.overrideMaterial:null;if(overrideMaterial!==null){return;}if(currentRenderState.state.transmissionRenderTarget[camera.id]===undefined){currentRenderState.state.transmissionRenderTarget[camera.id]=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.WebGLRenderTarget(1,1,{generateMipmaps:true,type:extensions.has('EXT_color_buffer_half_float')||extensions.has('EXT_color_buffer_float')?_three_core_js__WEBPACK_IMPORTED_MODULE_0__.HalfFloatType:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.UnsignedByteType,minFilter:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.LinearMipmapLinearFilter,samples:4,stencilBuffer:stencil,resolveDepthBuffer:false,resolveStencilBuffer:false,colorSpace:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.ColorManagement.workingColorSpace});// debug
 /*
 				const geometry = new PlaneGeometry();

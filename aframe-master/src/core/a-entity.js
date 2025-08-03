@@ -121,7 +121,7 @@ export class AEntity extends ANode {
    * @param {string} type - Developer-set name of the type of object, will be unique per type.
    * @param {THREE.Object3D} obj - A THREE.Object3D.
    */
-  setObject3D (type, obj) {
+  setObject3D (type, obj,src=null) {
     var oldObj;
     var self = this;
 
@@ -137,10 +137,12 @@ export class AEntity extends ANode {
     if (oldObj) { this.object3D.remove(oldObj); }
 
     // Set references to A-Frame entity.
+    obj.src = src;
     obj.el = this;
     if (obj.children.length) {
       obj.traverse(function bindEl (child) {
         child.el = self;
+        child.src = src;
       });
     }
     // console.log('debug: setObject3D', type, obj);
