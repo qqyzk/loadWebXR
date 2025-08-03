@@ -22854,6 +22854,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
       const priorityInfo = this.renderer.getCollectedObjects();
       this.waitingForCollection = false;
       console.log('debug:', priorityInfo);
+      this.saveCollection(priorityInfo);
     }
     var i;
     var systems = this.systems;
@@ -22898,6 +22899,27 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
       }
     });
     return cnt;
+  }
+  saveCollection(priorityInfo) {
+    let savedData = {
+      allObjectsSource: Array.from(priorityInfo.allObjectsSource),
+      visibleObjectsSource: Array.from(priorityInfo.visibleObjectsSource),
+      visibleInFrustumObjectsSource: Array.from(priorityInfo.visibleInFrustumObjectsSource)
+    };
+    console.log('debug: saving collection', savedData);
+    const data = JSON.stringify(savedData, null, 2);
+    const blob = new Blob([data], {
+      type: 'application/json'
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'priority.json';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
   saveTimes() {
     const data = JSON.stringify(this.remTimes, null, 2);
