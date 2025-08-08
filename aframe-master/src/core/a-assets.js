@@ -103,7 +103,7 @@ class AAssets extends ANode {
     console.log('debug: calculate first priority group', this.currentPriority);
     while(true){
       if(this.sceneQueues[this.currentPriority].length !== 0){
-          this.doSceneTask();
+          await this.doSceneTask();
           this.sceneTaskDone++;
           if(this.sceneTaskDone === this.sceneTaskCount[this.currentPriority]){
             this.currentStage = 0;
@@ -192,7 +192,7 @@ class AAssets extends ANode {
         }
       }else if (this.currentStage === 1){
         if(this.sceneQueues[this.currentPriority].length !== 0){
-          this.doSceneTask();
+          await this.doSceneTask();
           this.sceneTaskDone++;
           if(this.sceneTaskDone === this.sceneTaskCount[this.currentPriority]){
             this.currentStage = 0;
@@ -216,38 +216,47 @@ class AAssets extends ANode {
   }
   doGLTFTask (task) {
     console.log('debug: loading gltf model', task.src);
-    task.loader.load(task.src, function gltfLoaded (gltfModel) {
-      task.theself.model = gltfModel.scene || gltfModel.scenes[0];
-      task.theself.model.animations = gltfModel.animations;
-      task.el.setObject3D('mesh', task.theself.model);
-      task.el.emit('model-loaded', {format: 'gltf', model: task.theself.model});
-    }, undefined /* onProgress */, function gltfFailed (error) {
-      var message = (error && error.message) ? error.message : 'Failed to load glTF model';
-      warn(message);
-      task.el.emit('model-error', {format: 'gltf', src: task.src});
+    return new Promise((resolve, reject) => {
+      task.loader.load(task.src, function gltfLoaded (gltfModel) {
+        task.theself.model = gltfModel.scene || gltfModel.scenes[0];
+        task.theself.model.animations = gltfModel.animations;
+        task.el.setObject3D('mesh', task.theself.model);
+        task.el.emit('model-loaded', {format: 'gltf', model: task.theself.model});
+        resolve();
+      }, undefined /* onProgress */, function gltfFailed (error) {
+        var message = (error && error.message) ? error.message : 'Failed to load glTF model';
+        warn(message);
+        task.el.emit('model-error', {format: 'gltf', src: task.src});
+        reject(error);
+      });
     });
   }
   doSoundTask (task) {
     console.log('debug: loading sound', task.src);
-    task.loader.load(task.src, function (buffer) {
-      for (var i = 0; i < task.theself.pool.children.length; i++) {
-        task.sound = task.theself.pool.children[i];
-        task.sound.setBuffer(buffer);
-      }
-      task.theself.loaded = true;
+    return new Promise((resolve, reject) => {
+      task.loader.load(task.src, function (buffer) {
+        for (var i = 0; i < task.theself.pool.children.length; i++) {
+          task.sound = task.theself.pool.children[i];
+          task.sound.setBuffer(buffer);
+        }
+        task.theself.loaded = true;
 
-      // Remove this key from cache, otherwise we can't play it again
-      THREE.Cache.remove(task.src);
-      if (task.theself.data.autoplay || task.theself.mustPlay) { task.theself.playSound(task.theself.processSound); }
-      task.theself.el.emit('sound-loaded', task.theself.evtDetail, false);
+        // Remove this key from cache, otherwise we can't play it again
+        THREE.Cache.remove(task.src);
+        if (task.theself.data.autoplay || task.theself.mustPlay) { task.theself.playSound(task.theself.processSound); }
+        task.theself.el.emit('sound-loaded', task.theself.evtDetail, false);
+        resolve();
+      }, undefined /* onProgress */, function (error) {
+        reject(error);
+      });
     });
   }
-  doSceneTask () {
+  async doSceneTask () {
     const task = this.sceneQueues[this.currentPriority].shift();
     if(task.type === 'gltf-model'){
-      this.doGLTFTask(task);
+      await this.doGLTFTask(task);
     }else if (task.type === 'sound'){
-      this.doSoundTask(task);
+      await this.doSoundTask(task);
     }
   }
  
