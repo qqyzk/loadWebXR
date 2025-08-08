@@ -100,7 +100,6 @@ class AAssets extends ANode {
        this.loadAssetItem(item);
       } 
     });
-    console.log('debug: calculate first priority group', this.currentPriority);
     while(true){
       if(this.sceneQueues[this.currentPriority].length !== 0){
           await this.doSceneTask();
@@ -115,9 +114,6 @@ class AAssets extends ANode {
           await this.delay(2);
         }
     }
-    console.log('debug: calculate first priority group end', this.currentPriority);
-      
-   
   }
   async loadGroup(priority) {
     const group = this.networkQueues[priority];
@@ -188,7 +184,7 @@ class AAssets extends ANode {
         this.doNetworkTask();
         if(this.networkQueues[this.currentPriority].length === 0){
           this.currentStage = 1;
-          console.log('debug: network transfer done, switch to scene task', this.currentPriority);
+          console.log('debug: network transfer started, switch to scene task', this.currentPriority);
         }
       }else if (this.currentStage === 1){
         if(this.sceneQueues[this.currentPriority].length !== 0){
@@ -215,24 +211,26 @@ class AAssets extends ANode {
     item.load();
   }
   doGLTFTask (task) {
-    console.log('debug: loading gltf model', task.src);
+    console.log('debug: [START] loading gltf model:', task.src);
     return new Promise((resolve, reject) => {
       task.loader.load(task.src, function gltfLoaded (gltfModel) {
         task.theself.model = gltfModel.scene || gltfModel.scenes[0];
         task.theself.model.animations = gltfModel.animations;
         task.el.setObject3D('mesh', task.theself.model);
         task.el.emit('model-loaded', {format: 'gltf', model: task.theself.model});
+        console.log('debug: [END] loading gltf model:', task.src);
         resolve();
       }, undefined /* onProgress */, function gltfFailed (error) {
         var message = (error && error.message) ? error.message : 'Failed to load glTF model';
         warn(message);
         task.el.emit('model-error', {format: 'gltf', src: task.src});
+        console.log('debug: [ERROR] loading gltf model:', task.src, error);
         reject(error);
       });
     });
   }
   doSoundTask (task) {
-    console.log('debug: loading sound', task.src);
+    console.log('debug: [START] loading sound:', task.src);
     return new Promise((resolve, reject) => {
       task.loader.load(task.src, function (buffer) {
         for (var i = 0; i < task.theself.pool.children.length; i++) {
@@ -245,8 +243,10 @@ class AAssets extends ANode {
         THREE.Cache.remove(task.src);
         if (task.theself.data.autoplay || task.theself.mustPlay) { task.theself.playSound(task.theself.processSound); }
         task.theself.el.emit('sound-loaded', task.theself.evtDetail, false);
+        console.log('debug: [END] loading sound:', task.src);
         resolve();
       }, undefined /* onProgress */, function (error) {
+        console.log('debug: [ERROR] loading sound:', task.src, error);
         reject(error);
       });
     });
@@ -284,7 +284,7 @@ class AAssetItem extends ANode {
     if (this._loadingPromise) return this._loadingPromise;
     
     const src = this.getAttribute('src');
-    console.log('debug: begin network', src);
+    console.log('debug: [START] network transfer:', src);
     const responseType = this.getAttribute('response-type') || inferResponseType(src);
     const id = this.getAttribute('id');
     this._loadingPromise = new Promise((resolve, reject) => {
@@ -293,6 +293,7 @@ class AAssetItem extends ANode {
         response => {
           this.data = response;
           ANode.prototype.load.call(this);
+          console.log('debug: [END] network transfer:', src);
           resolve();
           this._resolveLoaded();
         },
@@ -305,6 +306,7 @@ class AAssetItem extends ANode {
         },
         error => {
           this.emit('error', {error}, false);
+          console.log('debug: [ERROR] network transfer:', src, error);
           reject(error);
         }
       );
