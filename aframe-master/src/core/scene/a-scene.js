@@ -700,8 +700,8 @@ export class AScene extends AEntity {
     }
   
     if(!this.allAssetsLoaded || this.afterLoadedFrame < 30){
-      console.log('debug: scene',this.getLeafNodes(this.object3D),this.delta,this.time);
-      this.remTimes.push({'delta':this.delta,'status':this.allAssetsLoaded});
+      // console.log('debug: scene',this.getLeafNodes(this.object3D),this.delta,this.time);
+      // this.remTimes.push({'delta':this.delta,'status':this.allAssetsLoaded});
       if(this.allAssetsLoaded){
         this.afterLoadedFrame+=1;
       //   if(this.afterLoadedFrame === 30 ){

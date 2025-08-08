@@ -22926,11 +22926,8 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
       this.object3D.background = null;
     }
     if (!this.allAssetsLoaded || this.afterLoadedFrame < 30) {
-      console.log('debug: scene', this.getLeafNodes(this.object3D), this.delta, this.time);
-      this.remTimes.push({
-        'delta': this.delta,
-        'status': this.allAssetsLoaded
-      });
+      // console.log('debug: scene',this.getLeafNodes(this.object3D),this.delta,this.time);
+      // this.remTimes.push({'delta':this.delta,'status':this.allAssetsLoaded});
       if (this.allAssetsLoaded) {
         this.afterLoadedFrame += 1;
         //   if(this.afterLoadedFrame === 30 ){
