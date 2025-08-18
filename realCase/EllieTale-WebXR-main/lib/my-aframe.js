@@ -22280,6 +22280,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
     self.allAssetsLoaded = false;
     self.afterLoadedFrame = 0;
     self.remTimes = [];
+    self.lastFrameTime = 0; // 记录上一帧时间
   }
   addFullScreenStyles() {
     document.documentElement.classList.add('a-fullscreen');
@@ -22938,17 +22939,26 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
       savedBackground = this.object3D.background;
       this.object3D.background = null;
     }
+    renderer.render(this.object3D, this.camera);
     if (!this.allAssetsLoaded || this.afterLoadedFrame < 30) {
-      // console.log('debug: scene',this.getLeafNodes(this.object3D),this.delta,this.time);
-      // this.remTimes.push({'delta':this.delta,'status':this.allAssetsLoaded});
+      var currentTime = performance.now();
+      var monitorDelta = this.lastFrameTime ? currentTime - this.lastFrameTime : 0;
+      this.lastFrameTime = currentTime;
+      console.log('debug: scene', monitorDelta, currentTime);
+      // 跳过第一帧（monitorDelta为0）
+      if (monitorDelta > 0) {
+        this.remTimes.push({
+          'delta': monitorDelta,
+          'status': this.allAssetsLoaded
+        });
+      }
       if (this.allAssetsLoaded) {
         this.afterLoadedFrame += 1;
-        //   if(this.afterLoadedFrame === 30 ){
-        //     this.saveTimes();
-        //   }
+        if (this.afterLoadedFrame === 30) {
+          this.saveTimes();
+        }
       }
     }
-    renderer.render(this.object3D, this.camera);
     if (savedBackground) {
       this.object3D.background = savedBackground;
     }
