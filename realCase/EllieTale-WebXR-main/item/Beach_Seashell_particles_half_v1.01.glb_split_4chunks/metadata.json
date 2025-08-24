@@ -1,0 +1,32 @@
+{
+  "originalModel": "Beach_Seashell_particles_half_v1.01.glb",
+  "splitStrategy": "performance",
+  "totalChunks": 4,
+  "splitInfo": [
+    {
+      "filename": "model_chunk_1.glb",
+      "triangles": 3120,
+      "vertices": 4992,
+      "size": 28936
+    },
+    {
+      "filename": "model_chunk_2.glb",
+      "triangles": 3120,
+      "vertices": 4992,
+      "size": 28864
+    },
+    {
+      "filename": "model_chunk_3.glb",
+      "triangles": 3120,
+      "vertices": 4992,
+      "size": 28936
+    },
+    {
+      "filename": "model_chunk_4.glb",
+      "triangles": 400,
+      "vertices": 640,
+      "size": 7536
+    }
+  ],
+  "timestamp": "2025-08-24T10:53:38.832Z"
+}

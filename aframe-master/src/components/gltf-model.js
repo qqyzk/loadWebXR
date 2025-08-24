@@ -44,10 +44,63 @@ export var Component = registerComponent('gltf-model', {
     if (assetEl.hasAttribute('priority')){
       priority = parseInt(assetEl.getAttribute('priority'));
     }
-    assets.addSceneTaskCount({
-      priority: priority
-    });
-    assetEl.loaded()
+    
+    // Check if this is a chunked model
+    if (assets.isChunkedModel && assets.isChunkedModel(src)) {
+      // Handle chunked model
+      const chunkCount = assets.getChunkCount(src);
+      console.log('🔍 [GLTF-COMPONENT] Chunked model detected:', {
+        src: src,
+        chunkCount: chunkCount,
+        priority: priority
+      });
+      
+      // Add scene task count for chunks
+      assets.addSceneTaskCount({
+        priority: priority
+      });
+      
+      // For chunked models, we need to load all chunks and combine them
+      this.ready.then(() => {
+        const chunkPromises = [];
+        
+        // Download all chunks first
+        for (let i = 1; i <= chunkCount; i++) {
+          const chunkSrc = assets.getChunkSrc(src, i);
+          console.log('📦 [GLTF-COMPONENT] Downloading chunk:', {
+            chunkIndex: i,
+            chunkSrc: chunkSrc
+          });
+          
+          chunkPromises.push(assets.downloadChunk(chunkSrc));
+        }
+        
+        // Wait for all chunks to download, then load them as one combined model
+        Promise.all(chunkPromises).then(() => {
+          console.log('🎯 [GLTF-COMPONENT] All chunks downloaded, registering combined scene task');
+          
+          // Register a single scene task for the combined chunked model
+          assets.registerSceneTask({
+            type: 'gltf-model',
+            src: src, // Use original src for the combined model
+            el: self.el,
+            loader: self.loader,
+            theself: self,
+            priority: priority,
+            isChunked: true,
+            baseSrc: src
+          });
+        }).catch((error) => {
+          console.error('❌ [GLTF-COMPONENT] Failed to download chunks:', error);
+        });
+      });
+    } else {
+      // Handle non-chunked model (original logic)
+      assets.addSceneTaskCount({
+        priority: priority
+      });
+      
+      assetEl.loaded()
         .then(() => this.ready)
         .then(() => {
           assets.registerSceneTask({
@@ -58,19 +111,8 @@ export var Component = registerComponent('gltf-model', {
             theself: self,
             priority: priority
           });
-          // self.loader.load(src, function gltfLoaded (gltfModel) {
-          //       self.model = gltfModel.scene || gltfModel.scenes[0];
-          //       self.model.animations = gltfModel.animations;
-          //       el.setObject3D('mesh', self.model);
-          //       el.emit('model-loaded', {format: 'gltf', model: self.model});
-          //     }, undefined /* onProgress */, function gltfFailed (error) {
-          //       var message = (error && error.message) ? error.message : 'Failed to load glTF model';
-          //       warn(message);
-          //       el.emit('model-error', {format: 'gltf', src: src});
-          //     });
         });
-        
-   
+    }
   },
 
   remove: function () {

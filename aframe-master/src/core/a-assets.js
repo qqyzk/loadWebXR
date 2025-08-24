@@ -75,7 +75,17 @@ class AAssets extends ANode {
     elements.forEach(el => {
       const priority = this.getPriority(el);
       this.priorityQueues[priority].push(el);
-      this.networkQueues[priority].push(el);
+      
+      // Check if this is a chunked model
+      const src = el.getAttribute('src');
+      if (src && this.isChunkedModel(src)) {
+        console.log('🔍 [ASSETS] Chunked model detected, skipping original asset:', src);
+        // Don't add chunked models to networkQueues - they will be handled by gltf-model component
+        // Only add to priorityQueues for reference
+      } else {
+        // Non-chunked model, add to networkQueues as usual
+        this.networkQueues[priority].push(el);
+      }
     });
   }
 
@@ -211,6 +221,15 @@ class AAssets extends ANode {
     item.load();
   }
   doGLTFTask (task) {
+    // Check if this is a chunked model task
+    if (task.isChunked) {
+      return this.doChunkedGLTFTask(task);
+    } else {
+      return this.doNormalGLTFTask(task);
+    }
+  }
+
+  doNormalGLTFTask (task) {
     const taskStartTime = performance.now();
     console.log('debug: [START] loading gltf model:', task.src, 'at:', taskStartTime.toFixed(2));
     return new Promise((resolve, reject) => {
@@ -230,6 +249,74 @@ class AAssets extends ANode {
         warn(message);
         task.el.emit('model-error', {format: 'gltf', src: task.src});
         console.log('debug: [ERROR] loading gltf model:', task.src, 'duration:', taskDuration.toFixed(2) + 'ms', error);
+        reject(error);
+      });
+    });
+  }
+
+  doChunkedGLTFTask (task) {
+    const taskStartTime = performance.now();
+    console.log('debug: [START] loading combined chunked gltf model:', task.baseSrc, 'at:', taskStartTime.toFixed(2));
+    
+    return new Promise((resolve, reject) => {
+      // For chunked models, we need to load all chunks and combine them
+      const chunkCount = this.getChunkCount(task.baseSrc);
+      const chunkPromises = [];
+      
+      // Load each chunk
+      for (let i = 1; i <= chunkCount; i++) {
+        const chunkSrc = this.getChunkSrc(task.baseSrc, i);
+        console.log('debug: [LOADING CHUNK]', chunkSrc);
+        
+        const chunkPromise = new Promise((chunkResolve, chunkReject) => {
+          task.loader.load(chunkSrc, function gltfLoaded (gltfModel) {
+            console.log('debug: [CHUNK LOADED]', chunkSrc);
+            chunkResolve(gltfModel);
+          }, undefined, function gltfFailed (error) {
+            console.error('debug: [CHUNK FAILED]', chunkSrc, chunkSrc, error);
+            chunkReject(error);
+          });
+        });
+        
+        chunkPromises.push(chunkPromise);
+      }
+      
+      // Wait for all chunks to load, then combine them
+      Promise.all(chunkPromises).then((chunkModels) => {
+        const taskEndTime = performance.now();
+        const taskDuration = taskEndTime - taskStartTime;
+        
+        console.log('debug: [COMBINING CHUNKS]', chunkCount, 'chunks');
+        
+        // Create a combined scene by merging all chunk scenes
+        const combinedScene = chunkModels[0].scene || chunkModels[0].scenes[0];
+        
+        // Add other chunks to the combined scene
+        for (let i = 1; i < chunkModels.length; i++) {
+          const chunkScene = chunkModels[i].scene || chunkModels[i].scenes[0];
+          if (chunkScene) {
+            // Clone and add all children from this chunk
+            chunkScene.children.forEach(child => {
+              combinedScene.add(child.clone());
+            });
+          }
+        }
+        
+        // Set the combined model
+        task.theself.model = combinedScene;
+        task.theself.model.animations = chunkModels[0].animations; // Use first chunk's animations
+        task.el.setObject3D('mesh', task.theself.model);
+        task.el.emit('model-loaded', {format: 'gltf', model: task.theself.model, isChunked: true});
+        
+        console.log('debug: [END] loading combined chunked gltf model:', task.baseSrc, 'duration:', taskDuration.toFixed(2) + 'ms');
+        resolve();
+      }).catch((error) => {
+        const taskEndTime = performance.now();
+        const taskDuration = taskEndTime - taskStartTime;
+        var message = (error && error.message) ? error.message : 'Failed to load combined chunked glTF model';
+        warn(message);
+        task.el.emit('model-error', {format: 'gltf', src: task.baseSrc, isChunked: true});
+        console.log('debug: [ERROR] loading combined chunked glTF model:', task.baseSrc, 'duration:', taskDuration.toFixed(2) + 'ms', error);
         reject(error);
       });
     });
@@ -263,6 +350,97 @@ class AAssets extends ANode {
     }else if (task.type === 'sound'){
       await this.doSoundTask(task);
     }
+  }
+
+  /**
+   * Check if a model is chunked (split into multiple parts)
+   * @param {string} src - The source URL of the model
+   * @returns {boolean} - True if the model is chunked
+   */
+  isChunkedModel (src) {
+    if (!src || typeof src !== 'string') return false;
+    
+    // Specify known chunked models explicitly
+    // This is a reliable and performant solution
+    const knownChunkedModels = [
+      'Beach_Environment_v1.02.glb',
+      'Beach_Seashell_particles_half_v1.01.glb',
+      'Elly_2k_03.glb',
+      'Noah_hunter_v1.01.glb'
+    ];
+    
+    const isChunked = knownChunkedModels.some(model => src.includes(model));
+    
+    // Debug logging
+    console.log('🔍 [CHUNK DETECTION]', {
+      src: src,
+      knownChunkedModels: knownChunkedModels,
+      isChunked: isChunked
+    });
+    
+    return isChunked;
+  }
+
+  /**
+   * Get the number of chunks for a chunked model
+   * @param {string} src - The source URL of the model
+   * @returns {number} - The number of chunks, or 0 if not chunked
+   */
+  getChunkCount (src) {
+    if (!this.isChunkedModel(src)) return 0;
+    
+    // Specify chunk count for each known chunked model
+    if (src.includes('Beach_Environment_v1.02.glb')) {
+      return 4; // 4 chunks
+    }
+    if (src.includes('Beach_Seashell_particles_half_v1.01.glb')) {
+      return 4; // 4 chunks
+    }
+    if (src.includes('Elly_2k_03.glb')) {
+      return 2; // 2 chunks
+    }
+    if (src.includes('Noah_hunter_v1.01.glb')) {
+      return 2; // 2 chunks
+    }
+    
+    // Default fallback (should not reach here for known models)
+    console.warn('⚠️ [CHUNK COUNT] Unknown chunked model, using default:', src);
+    return 2;
+  }
+
+  /**
+   * Get the source path for a specific chunk
+   * @param {string} baseSrc - The base source path
+   * @param {number} chunkIndex - The chunk index (1-based)
+   * @returns {string} - The chunk source path
+   */
+  getChunkSrc (baseSrc, chunkIndex) {
+    const basePath = baseSrc;
+    const chunkCount = this.getChunkCount(baseSrc);
+    return `${basePath}_split_${chunkCount}chunks/model_chunk_${chunkIndex}.glb`;
+  }
+
+  /**
+   * Download a single chunk file
+   * @param {string} chunkSrc - The chunk source path
+   * @returns {Promise} - Promise that resolves when chunk is downloaded
+   */
+  downloadChunk (chunkSrc) {
+    console.log('📥 [DOWNLOADING CHUNK]', chunkSrc);
+    
+    // Create a temporary asset-item for chunk download
+    const chunkAssetItem = document.createElement('a-asset-item');
+    chunkAssetItem.setAttribute('src', chunkSrc);
+    chunkAssetItem.setAttribute('id', `chunk_${Date.now()}_${Math.random()}`);
+    
+    // Return the download promise
+    return chunkAssetItem.load().then(() => {
+      console.log('✅ [CHUNK DOWNLOADED]', chunkSrc);
+      return chunkAssetItem.data;
+    }).catch((error) => {
+      console.error('❌ [CHUNK DOWNLOAD FAILED]', chunkSrc, error);
+      throw error;
+    });
   }
  
 }

@@ -174,7 +174,7 @@
 
     <!-- 引入JSZip库 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    
+
     <!-- 使用ES6模块导入 -->
     <script type="importmap">
     {
@@ -534,28 +534,28 @@ ${splitResults.map((result, index) => {
                 const meshVertices = mesh.geometry.attributes.position.count;
 
                 // 检查是否需要创建新块
-                if ((currentTriangles + meshTriangles > maxTriangles) || 
-                    (currentVertices + meshVertices > maxVertices)) {
-                    
-                    if (currentChunk.children.length > 0) {
-                        chunks.push({
-                            group: currentChunk,
-                            triangles: currentTriangles,
-                            vertices: currentVertices,
-                            index: chunkIndex++
-                        });
+                    if ((currentTriangles + meshTriangles > maxTriangles) || 
+                        (currentVertices + meshVertices > maxVertices)) {
+                        
+                        if (currentChunk.children.length > 0) {
+                            chunks.push({
+                                group: currentChunk,
+                                triangles: currentTriangles,
+                                vertices: currentVertices,
+                                index: chunkIndex++
+                            });
+                        }
+                        
+                        currentChunk = new THREE.Group();
+                        currentTriangles = 0;
+                        currentVertices = 0;
                     }
-                    
-                    currentChunk = new THREE.Group();
-                    currentTriangles = 0;
-                    currentVertices = 0;
-                }
 
                 // 添加网格到当前块
                 const clonedMesh = mesh.clone();
-                currentChunk.add(clonedMesh);
-                currentTriangles += meshTriangles;
-                currentVertices += meshVertices;
+                    currentChunk.add(clonedMesh);
+                    currentTriangles += meshTriangles;
+                    currentVertices += meshVertices;
             });
 
             // 添加最后一个块
