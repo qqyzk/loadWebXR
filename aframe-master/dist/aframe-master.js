@@ -19213,9 +19213,12 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     item.load();
   }
   doGLTFTask(task) {
-    console.log('debug: [START] loading gltf model:', task.src);
+    const taskStartTime = performance.now();
+    console.log('debug: [START] loading gltf model:', task.src, 'at:', taskStartTime.toFixed(2));
     return new Promise((resolve, reject) => {
       task.loader.load(task.src, function gltfLoaded(gltfModel) {
+        const taskEndTime = performance.now();
+        const taskDuration = taskEndTime - taskStartTime;
         task.theself.model = gltfModel.scene || gltfModel.scenes[0];
         task.theself.model.animations = gltfModel.animations;
         task.el.setObject3D('mesh', task.theself.model);
@@ -19223,16 +19226,18 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
           format: 'gltf',
           model: task.theself.model
         });
-        console.log('debug: [END] loading gltf model:', task.src);
+        console.log('debug: [END] loading gltf model:', task.src, 'duration:', taskDuration.toFixed(2) + 'ms');
         resolve();
       }, undefined /* onProgress */, function gltfFailed(error) {
+        const taskEndTime = performance.now();
+        const taskDuration = taskEndTime - taskStartTime;
         var message = error && error.message ? error.message : 'Failed to load glTF model';
         warn(message);
         task.el.emit('model-error', {
           format: 'gltf',
           src: task.src
         });
-        console.log('debug: [ERROR] loading gltf model:', task.src, error);
+        console.log('debug: [ERROR] loading gltf model:', task.src, 'duration:', taskDuration.toFixed(2) + 'ms', error);
         reject(error);
       });
     });
@@ -22944,7 +22949,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
       var currentTime = performance.now();
       var monitorDelta = this.lastFrameTime ? currentTime - this.lastFrameTime : 0;
       this.lastFrameTime = currentTime;
-      console.log('debug: scene', monitorDelta, currentTime);
+      console.log('debug: scene frame time:', monitorDelta.toFixed(2) + 'ms, total time:', currentTime.toFixed(2));
       // 跳过第一帧（monitorDelta为0）
       if (monitorDelta > 0) {
         this.remTimes.push({

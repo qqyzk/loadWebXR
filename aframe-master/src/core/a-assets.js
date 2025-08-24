@@ -211,20 +211,25 @@ class AAssets extends ANode {
     item.load();
   }
   doGLTFTask (task) {
-    console.log('debug: [START] loading gltf model:', task.src);
+    const taskStartTime = performance.now();
+    console.log('debug: [START] loading gltf model:', task.src, 'at:', taskStartTime.toFixed(2));
     return new Promise((resolve, reject) => {
       task.loader.load(task.src, function gltfLoaded (gltfModel) {
+        const taskEndTime = performance.now();
+        const taskDuration = taskEndTime - taskStartTime;
         task.theself.model = gltfModel.scene || gltfModel.scenes[0];
         task.theself.model.animations = gltfModel.animations;
         task.el.setObject3D('mesh', task.theself.model);
         task.el.emit('model-loaded', {format: 'gltf', model: task.theself.model});
-        console.log('debug: [END] loading gltf model:', task.src);
+        console.log('debug: [END] loading gltf model:', task.src, 'duration:', taskDuration.toFixed(2) + 'ms');
         resolve();
       }, undefined /* onProgress */, function gltfFailed (error) {
+        const taskEndTime = performance.now();
+        const taskDuration = taskEndTime - taskStartTime;
         var message = (error && error.message) ? error.message : 'Failed to load glTF model';
         warn(message);
         task.el.emit('model-error', {format: 'gltf', src: task.src});
-        console.log('debug: [ERROR] loading gltf model:', task.src, error);
+        console.log('debug: [ERROR] loading gltf model:', task.src, 'duration:', taskDuration.toFixed(2) + 'ms', error);
         reject(error);
       });
     });
