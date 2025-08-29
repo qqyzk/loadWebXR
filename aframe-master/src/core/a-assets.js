@@ -82,17 +82,18 @@ class AAssets extends ANode {
       this.priorityQueues[priority].push(el);
       
       // Check if this is a chunked model
-      const src = el.getAttribute('src');
-      if (src && this.isChunkedModel(src)) {
+      if (this.isChunkedModel(el)) {
+        const src = el.getAttribute('src');
         console.log('🔍 [ASSETS] Chunked model detected, creating chunk tasks:', src);
+        
         // 为每个分块创建网络任务
-        const chunkCount = this.getChunkCount(src);
+        const chunkCount = this.getChunkCount(el);
         for (let i = 1; i <= chunkCount; i++) {
           const chunkTask = {
             type: 'chunk',
             originalAssetEl: el,
             chunkIndex: i,
-            chunkSrc: this.getChunkSrc(src, i),
+            chunkSrc: this.getChunkSrc(el, i),
             baseSrc: src,
             modelId: el.getAttribute('id'),
             priority: priority
@@ -497,28 +498,21 @@ class AAssets extends ANode {
   }
 
   /**
-   * Check if a model is chunked (split into multiple parts)
-   * @param {string} src - The source URL of the model
+   * Check if a model is chunked based on HTML attributes
+   * @param {Element} element - The a-asset-item element
    * @returns {boolean} - True if the model is chunked
    */
-  isChunkedModel (src) {
-    if (!src || typeof src !== 'string') return false;
+  isChunkedModel (element) {
+    if (!element || !element.getAttribute) return false;
     
-    // Specify known chunked models explicitly
-    // This is a reliable and performant solution
-    const knownChunkedModels = [
-      'Beach_Environment_v1.02.glb',
-      'Beach_Seashell_particles_half_v1.01.glb',
-      'Elly_2k_03.glb',
-      'Noah_hunter_v1.01.glb'
-    ];
-    
-    const isChunked = knownChunkedModels.some(model => src.includes(model));
+    const chunked = element.getAttribute('chunked');
+    const isChunked = chunked === 'true';
     
     // Debug logging
     console.log('🔍 [CHUNK DETECTION]', {
-      src: src,
-      knownChunkedModels: knownChunkedModels,
+      id: element.getAttribute('id'),
+      src: element.getAttribute('src'),
+      chunked: chunked,
       isChunked: isChunked
     });
     
@@ -526,41 +520,39 @@ class AAssets extends ANode {
   }
 
   /**
-   * Get the number of chunks for a chunked model
-   * @param {string} src - The source URL of the model
+   * Get the number of chunks for a chunked model from HTML attributes
+   * @param {Element} element - The a-asset-item element
    * @returns {number} - The number of chunks, or 0 if not chunked
    */
-  getChunkCount (src) {
-    if (!this.isChunkedModel(src)) return 0;
+  getChunkCount (element) {
+    if (!this.isChunkedModel(element)) return 0;
     
-    // Specify chunk count for each known chunked model
-    if (src.includes('Beach_Environment_v1.02.glb')) {
-      return 4; // 4 chunks
-    }
-    if (src.includes('Beach_Seashell_particles_half_v1.01.glb')) {
-      return 4; // 4 chunks
-    }
-    if (src.includes('Elly_2k_03.glb')) {
-      return 2; // 2 chunks
-    }
-    if (src.includes('Noah_hunter_v1.01.glb')) {
-      return 2; // 2 chunks
+    const chunkCountAttr = element.getAttribute('chunk-count');
+    const chunkCount = parseInt(chunkCountAttr, 10);
+    
+    if (isNaN(chunkCount) || chunkCount <= 0) {
+      console.warn('⚠️ [CHUNK COUNT] Invalid chunk-count attribute:', chunkCountAttr, 'for element:', element.getAttribute('id'));
+      return 0;
     }
     
-    // Default fallback (should not reach here for known models)
-    console.warn('⚠️ [CHUNK COUNT] Unknown chunked model, using default:', src);
-    return 2;
+    console.log('✅ [CHUNK COUNT]', {
+      id: element.getAttribute('id'),
+      src: element.getAttribute('src'),
+      chunkCount: chunkCount
+    });
+    
+    return chunkCount;
   }
 
   /**
    * Get the source path for a specific chunk
-   * @param {string} baseSrc - The base source path
+   * @param {Element} element - The a-asset-item element
    * @param {number} chunkIndex - The chunk index (1-based)
    * @returns {string} - The chunk source path
    */
-  getChunkSrc (baseSrc, chunkIndex) {
-    const basePath = baseSrc;
-    const chunkCount = this.getChunkCount(baseSrc);
+  getChunkSrc (element, chunkIndex) {
+    const basePath = element.getAttribute('src');
+    const chunkCount = this.getChunkCount(element);
     return `${basePath}_split_${chunkCount}chunks/model_chunk_${chunkIndex}.glb`;
   }
 

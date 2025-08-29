@@ -43,9 +43,9 @@ export var Component = registerComponent('gltf-model', {
     }
 
     // Check if this is a chunked model
-    if (assets.isChunkedModel && assets.isChunkedModel(src)) {
+    if (assets.isChunkedModel && assets.isChunkedModel(assetEl)) {
       // Handle chunked model - 新的分块处理逻辑
-      this.handleChunkedModel(src, priority, assets);
+      this.handleChunkedModel(assetEl, src, priority, assets);
     } else {
       // Handle non-chunked model (original logic)
       assets.addSceneTaskCount({
@@ -73,9 +73,9 @@ export var Component = registerComponent('gltf-model', {
   },
 
   // 新增：处理分块模型
-  handleChunkedModel: function(src, priority, assets) {
+  handleChunkedModel: function(assetEl, src, priority, assets) {
     var self = this;
-    const chunkCount = assets.getChunkCount(src);
+    const chunkCount = assets.getChunkCount(assetEl);
     
     console.log('🔍 [GLTF-COMPONENT] Chunked model detected:', {
       src: src,
