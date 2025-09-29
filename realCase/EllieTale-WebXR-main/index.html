@@ -11,6 +11,48 @@
     <script src="lib/gradientsky.min.js"></script>
     <script src="lib/aframe-area-light-component.min.js"></script>
     <script src="lib/jquery.min.js"></script>
+    <script src="lib/progressive-gltf2.js"></script>
+    
+    <script>
+    (function attachProgressiveLoaderToWindow() {
+    try {
+        if (window.ProgressiveGLTFLoader || window.ProgressiveGLTF) {
+        console.log('[probe] progressive loader already present:', window.ProgressiveGLTFLoader || window.ProgressiveGLTF);
+        return;
+        }
+
+        const candidates = ['ProgressiveGLTFLoader','GLTFStreamingLoader','StreamingGLTFLoader','ProgressiveGLTF','progressiveGltf','PROGRESSIVE_GLTF'];
+        for (const name of candidates) {
+        if (window[name]) {
+            window.ProgressiveGLTFLoader = window[name];
+            console.log('[probe] attached loader from window.' + name + ' -> window.ProgressiveGLTFLoader');
+            return;
+        }
+        }
+
+        for (const k in window) {
+        try {
+            if (!k) continue;
+            if (k.indexOf('THREE') === 0) continue; 
+            const v = window[k];
+            if (!v) continue;
+            if ((typeof v === 'function' && /gltf|progressive|stream/i.test(k)) ||
+                (typeof v === 'object' && typeof v.load === 'function' && /gltf|progressive|stream/i.test(k))) {
+            window.ProgressiveGLTFLoader = v;
+            console.log('[probe] attached loader from window.' + k + ' -> window.ProgressiveGLTFLoader');
+            return;
+            }
+        } catch (e) { /* ignore property access errors */ }
+        }
+
+        console.warn('[probe] no progressive loader found on window');
+    } catch (err) {
+        console.error('[probe] attachProgressiveLoaderToWindow error', err);
+    }
+    })();
+    </script>
+
+    <script src="js/custom/progressive-gltf.js"></script>
     <script src="js/custom/aframe-environment-component.min.js"></script>
     <script src="js/custom/aframe-spe-particles-component.js"></script>
     <script src="js/distractoradvancedmovenment.js"></script>
@@ -22,6 +64,7 @@
     <script src="js/timemanger.js"></script>
     <script src="js/distractormovenment.js"></script>
     <script src="js/menu.js"></script>
+    
     <!-- <script src="https://cdnjs.com/libraries/jquery/1.9.1"></script> -->
 
     <script src="index.js"></script>
