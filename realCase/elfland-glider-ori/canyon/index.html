@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Canyon - Elfland Glider</title>
+    <meta name="description" content="In a tight spot, borrow a key">
+    <meta property="og:title" content="Canyon - In a tight spot, borrow a key" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://dougreeder.github.io/elfland-glider/canyon/" />
+    <meta property="og:image" content=https://dougreeder.github.io/elfland-glider/canyon/Elfland-Glider-screenshot-canyon.jpg" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1024" />
+    <meta property="og:image:height" content="702" />
+    <meta property="og:image:alt" content="screenshot of canyon world" />
+    <meta property="og:description" content="A tranquil action game for VR and mobile. Fly through fantastic worlds, help the merry and mischievous light elves, &amp; avoid the surly and mischievous dark elves." />
+    <meta property="og:site_name" content="Elfland Glider" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.core.min.js"></script>
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-button-controls@^1.1.0/aframe-button-controls.js"></script>
+    <script src="https://unpkg.com/aframe-state-component@^7.1.1/dist/aframe-state-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-dial@^1.2.2/dist/dial.js"></script>
+    <script src="https://unpkg.com/aframe-simple-sun-sky@^1.2.3/simple-sun-sky.js"></script>
+    <script src="https://unpkg.com/aframe-dust-component@^1.1.0/aframe-dust-component.js"></script>
+    <script src="https://unpkg.com/aframe-aabb-collider-component@^3.2.2/dist/aframe-aabb-collider-component.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/DougReeder/aframe-glow@modernize/dist/aframe-glow-component.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.0/dist/aframe-extras.loaders.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Niconne" rel="stylesheet">
+    <!--<script src="https://unpkg.com/aframe-fps-counter-component/dist/aframe-fps-counter-component.min.js"></script>-->
+    <script src="../dist/canyon.js" type="application/javascript"></script>
+</head>
+<body>
+<a-scene canyon background="color:#398bc5">
+    <a-assets>
+        <img id="rock" src="../assets/textures/TexturesCom_Rock_BoulderBase_A_2x2_1K_albedo.jpeg">
+        <img id="steelGrip" src="../assets/textures/TexturesCom_MetalVarious0052_1_M_y.jpg" />
+        <img id="bezel" src="https://unpkg.com/aframe-dial@1.2.0/assets/bezel.png" crossorigin="anonymous" />
+        <a-asset-item id="keyModel" src="../assets/key-Alfonso.glb"></a-asset-item>
+        <a-asset-item id="darkElfModel" src="../assets/konoha_tengu_-_low_poly_realtime_character/scene.gltf"></a-asset-item>
+        <img id="screenshot" src="./screenshot.png" />
+    </a-assets>
+
+    <a-simple-sun-sky sun-position="-1 1 -1" radius="1700"></a-simple-sun-sky>
+
+
+    <a-entity id="terrain" position="0 0 0" class="landscape"
+              geometry="primitive: canyon-terrain; spacing:10"
+              material="shader:canyon; src:#rock"></a-entity>
+
+    <a-entity geometry="primitive:triangle; vertexA:-200 0 -330; vertexB:7083 0 -330; vertexC:-200 0 -7213"
+              material="shader:canyon; src:#rock" class="landscape"></a-entity>
+    <a-entity geometry="primitive:triangle; vertexA:200 0 -330; vertexB:200 0 7213; vertexC:7083 0 -330"
+              material="shader:canyon; src:#rock" class="landscape"></a-entity>
+    <a-entity geometry="primitive:triangle; vertexA:200 0 330; vertexB:-7083 0 330; vertexC:200 0 7213"
+              material="shader:canyon; src:#rock" class="landscape"></a-entity>
+    <a-entity geometry="primitive:triangle; vertexA:-200 0 330; vertexB:-200 0 -7213; vertexC:-7083 0 330"
+              material="shader:canyon; src:#rock" class="landscape"></a-entity>
+
+
+    <a-dust num-points="512" dispersion="50" color="#101010"></a-dust>
+
+    <a-entity class="powerup" position="2 -185 256" material="visible: false"
+              geometry="primitive:triangle; vertexA:-1.5 -1.5 -1.5; vertexB:1.5 -1.5 1.5; vertexC:1.5 1.5 -1.5">
+        <a-icosahedron material="color:red" glow="c: 0.2; color: red; scale: 3.5"></a-icosahedron>
+    </a-entity>
+
+    <a-entity class="powerup" position="-85 -260 -7" material="visible: false"
+              geometry="primitive:triangle; vertexA:-1.5 -1.5 -1.5; vertexB:1.5 -1.5 1.5; vertexC:1.5 1.5 -1.5">
+        <a-icosahedron material="color:red" glow="c: 0.2; color: red; scale: 3.5"></a-icosahedron>
+    </a-entity>
+
+    <a-entity class="powerup" position="69 -205 -211" material="visible: false"
+              geometry="primitive:triangle; vertexA:-1.5 -1.5 -1.5; vertexB:1.5 -1.5 1.5; vertexC:1.5 1.5 -1.5">
+        <a-icosahedron material="color:red" glow="c: 0.2; color: red; scale: 3.5"></a-icosahedron>
+    </a-entity>
+
+<!--    production position="44 -100 -192"-->
+<!--    debug      position="18 -100 60"-->
+    <template id="keyTemplate">
+        <a-sphere radius="2.5" segments-width="9" segments-height="18"
+                  transparent="true" opacity="0.2" color="gold" position="51 -100 -196">
+            <a-entity gltf-model="#keyModel" scale="50 50 50" rotation="15 -45 15"></a-entity>
+        </a-sphere>
+    </template>
+
+    <a-entity id="nextQuestPortal" position="-27 -115 116" scale="5 5 0" bind="visible: questComplete"
+              link="href:../yggdrasil; title: The Tree of Worlds; image:../yggdrasil/screenshot.png; on:hitstart; visualAspectEnabled:true"></a-entity>
+
+    <a-entity gltf-model="#darkElfModel" scale="2 2 2" position="-1 -100.5 115" rotation="2 180 0"
+              animation-mixer="crossFadeDuration: 0.5" raycaster="objects:.landscape,#armature"
+              dark-elf="goalSelector: ">
+        <a-triangle vertex-a="-5 -5 -5" vertex-b="5 -5 5" vertex-c="5 5 -5" material="visible:false"
+                    data-aabb-collider-dynamic
+                    class="proximitySound" data-text="You can't have our key! Go away!"
+                    data-sound-url="you-cant-have-our-key.ogg">
+        </a-triangle>
+    </a-entity>
+
+    <!--<a-entity fps-counter="for90fps:false"></a-entity>-->
+    <!--<a-text id="debugDisplay" position="0 13 -0.5" rotation="0 15 0" width="30" align="left" value="Message" geometry="primitive:plane; width:10; height:1.4;"-->
+            <!--material="color: gray" bind="text.value: stars"></a-text>-->
+
+    <a-entity id="armature" geometry="primitive: box; width: 2; height: 2; depth: 2" material="visible:false"
+              bind__position="gliderPosition" bind__rotation.y="gliderRotationY" armature-tick-state
+              aabb-collider="objects:.proximitySound,.powerup,#key,[link]">
+        <a-entity id="glider" position="0 0 0" bind__rotation.x="gliderRotationX"
+                  raycaster="objects:.landscape; far:1.25;">
+            <a-entity id="wing" position="0 1.5 0" bind__rotation.z="gliderRotationZ" material="visible:false">
+                <a-entity rotation="90 0 0" position="0 0 -1.05" geometry="primitive:plane; height:6.39; width:0.06" material="shader:flat; color:black"></a-entity>
+                <a-entity geometry="primitive:triangle; vertexA:0.03 0 -4.25; vertexB:7.65 0 5.55; vertexC:0.03 0 -3.4;"
+                          material="shader:flat; transparent:true; opacity:0.5; color:black;"></a-entity>
+                <a-entity geometry="primitive:triangle; vertexA:-0.03 0 -4.25; vertexB:-0.03 0 -3.4; vertexC:-7.65 0 5.55;"
+                          material="shader:flat; transparent:true; opacity:0.5; color:black;"></a-entity>
+                <a-entity geometry="primitive:triangle; vertexA:0.03 0 -3.4; vertexB:7.65 0 5.55; vertexC:0.03 0 2.133;"
+                          material="shader:flat; transparent:true; opacity:0.5; color:white;"></a-entity>
+                <a-entity geometry="primitive:triangle; vertexA:-0.03 0 -3.4; vertexB:-0.03 0 2.133; vertexC:-7.65 0 5.55;"
+                          material="shader:flat; transparent:true; opacity:0.5; color:white;"></a-entity>
+            </a-entity>
+            <a-entity id="hud" position="0.85 0.45 -1.00" rotation="30 -20 0"
+                    bind__angle="dial.thetaEnd: hudAirspeedAngle" bind__color="dial.wedgeColor: hudAirspeedColor"
+                    dial="size:0.15; src:#bezel; radius:0.95; innerRadius:0.33; thetaStart:0; thetaEnd:0; backgroundColor:#e4dcc9;">
+            </a-entity>
+        </a-entity>
+        <a-entity id="body">
+            <a-entity camera="far:2600; near:0.05" look-controls></a-entity>
+            <a-entity id="leftController" hand-controls="hand: left; handModelStyle: highPoly; color:#666"></a-entity>
+            <a-entity id="rightController" hand-controls="hand: right; handModelStyle: highPoly; color:#666"
+                      gearvr-controls oculus-go-controls daydream-controls></a-entity>
+            <a-entity id="controlStick" position="0 1.15 -0.4" rotation="0 0 90" visible="false"
+                      geometry="primitive:cylinder; height:0.4; radius: 0.012; segmentsRadial:36;"
+                      material="normalMap:#steelGrip; npot:true; normalTextureRepeat:1 2; normalTextureOffset:107 0; metalness:0.8; roughness:0.4; sphericalEnvMap:#screenshot;"></a-entity>
+            <a-entity id="leftHand" hand-tracking-controls="hand: left; modelColor: gray"></a-entity>
+            <a-entity id="rightHand" hand-tracking-controls="hand: right; modelColor: gray"></a-entity>
+        </a-entity>
+        <a-entity button-controls></a-entity>
+        <a-text id="prelaunchHelp" position="0 0 -1" rotation="0 0 0" width="2" align="center" font="../assets/mozillavr.fnt" value="" visible="true"></a-text>
+        <a-text id="subtitle" position="0 -0.15 -1" rotation="-8.53 0 0" width="2" align="center" font="../assets/mozillavr.fnt" value="" visible="true" color="black"></a-text>
+    </a-entity>
+</a-scene>
+</body>
+</html>
+<!-- Copyright © 2018-2020 by P. Douglas Reeder; Licensed under the GNU GPL-3.0 -->
