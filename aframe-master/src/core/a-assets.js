@@ -583,9 +583,68 @@ class AAssetItem extends ANode {
     
     const src = this.getAttribute('src');
     console.log('debug: [START] network transfer:', src);
+    
+    // Check if this is an image file
+    if (this.isImageFile(src)) {
+      this._loadingPromise = this.loadImage(src);
+    } else {
+      this._loadingPromise = this.loadOtherFile(src);
+    }
+
+    return this._loadingPromise;
+  }
+
+  isImageFile(src) {
+    const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.svg'];
+    const fileName = src.toLowerCase();
+    const isImage = imageExtensions.some(ext => fileName.endsWith(ext));
+    console.log('debug: [IMAGE CHECK]', src, 'isImage:', isImage);
+    return isImage;
+  }
+
+  loadImage(src) {
+    return new Promise((resolve, reject) => {
+      // Use blob response type for images
+      fileLoader.setResponseType('blob');
+      fileLoader.load(src, 
+        response => {
+          // Create img element from blob
+          const img = new Image();
+          img.onload = () => {
+            this.data = img;  // Store img element instead of blob
+            ANode.prototype.load.call(this);
+            console.log('debug: [END] network transfer (image):', src);
+            resolve();
+            this._resolveLoaded();
+          };
+          img.onerror = (error) => {
+            this.emit('error', {error}, false);
+            console.log('debug: [ERROR] network transfer (image):', src, error);
+            reject(error);
+          };
+          // Create object URL from blob and set as img src
+          img.src = URL.createObjectURL(response);
+        },
+        xhr => {
+          this.emit('progress', {
+            loadedBytes: xhr.loaded,
+            totalBytes: xhr.total,
+            xhr: xhr
+          });
+        },
+        error => {
+          this.emit('error', {error}, false);
+          console.log('debug: [ERROR] network transfer (image):', src, error);
+          reject(error);
+        }
+      );
+    });
+  }
+
+  loadOtherFile(src) {
     const responseType = this.getAttribute('response-type') || inferResponseType(src);
     const id = this.getAttribute('id');
-    this._loadingPromise = new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       fileLoader.setResponseType(responseType);
       fileLoader.load(src, 
         response => {
@@ -609,8 +668,6 @@ class AAssetItem extends ANode {
         }
       );
     });
-
-    return this._loadingPromise;
   }
 }
 

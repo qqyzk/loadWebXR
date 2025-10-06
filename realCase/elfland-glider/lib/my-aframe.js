@@ -1,12 +1,12 @@
 (function webpackUniversalModuleDefinition(root, factory) {
-  if(typeof exports === 'object' && typeof module === 'object')
-    module.exports = factory();
-  else if(typeof define === 'function' && define.amd)
-    define([], factory);
-  else if(typeof exports === 'object')
-    exports["AFRAME"] = factory();
-  else
-    root["AFRAME"] = factory();
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["AFRAME"] = factory();
+	else
+		root["AFRAME"] = factory();
 })(self, () => {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
@@ -19599,9 +19599,64 @@ class AAssetItem extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     if (this._loadingPromise) return this._loadingPromise;
     const src = this.getAttribute('src');
     console.log('debug: [START] network transfer:', src);
+
+    // Check if this is an image file
+    if (this.isImageFile(src)) {
+      this._loadingPromise = this.loadImage(src);
+    } else {
+      this._loadingPromise = this.loadOtherFile(src);
+    }
+    return this._loadingPromise;
+  }
+  isImageFile(src) {
+    const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.svg'];
+    const fileName = src.toLowerCase();
+    const isImage = imageExtensions.some(ext => fileName.endsWith(ext));
+    console.log('debug: [IMAGE CHECK]', src, 'isImage:', isImage);
+    return isImage;
+  }
+  loadImage(src) {
+    return new Promise((resolve, reject) => {
+      // Use blob response type for images
+      fileLoader.setResponseType('blob');
+      fileLoader.load(src, response => {
+        // Create img element from blob
+        const img = new Image();
+        img.onload = () => {
+          this.data = img; // Store img element instead of blob
+          _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode.prototype.load.call(this);
+          console.log('debug: [END] network transfer (image):', src);
+          resolve();
+          this._resolveLoaded();
+        };
+        img.onerror = error => {
+          this.emit('error', {
+            error
+          }, false);
+          console.log('debug: [ERROR] network transfer (image):', src, error);
+          reject(error);
+        };
+        // Create object URL from blob and set as img src
+        img.src = URL.createObjectURL(response);
+      }, xhr => {
+        this.emit('progress', {
+          loadedBytes: xhr.loaded,
+          totalBytes: xhr.total,
+          xhr: xhr
+        });
+      }, error => {
+        this.emit('error', {
+          error
+        }, false);
+        console.log('debug: [ERROR] network transfer (image):', src, error);
+        reject(error);
+      });
+    });
+  }
+  loadOtherFile(src) {
     const responseType = this.getAttribute('response-type') || inferResponseType(src);
     const id = this.getAttribute('id');
-    this._loadingPromise = new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       fileLoader.setResponseType(responseType);
       fileLoader.load(src, response => {
         this.data = response;
@@ -19623,7 +19678,6 @@ class AAssetItem extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
         reject(error);
       });
     });
-    return this._loadingPromise;
   }
 }
 customElements.define('a-asset-item', AAssetItem);
@@ -32747,26 +32801,26 @@ for(let i=array.length-1;i>=0;--i){if(array[i]>=65535)return true;// account for
 }return false;}const TYPED_ARRAYS={Int8Array:Int8Array,Uint8Array:Uint8Array,Uint8ClampedArray:Uint8ClampedArray,Int16Array:Int16Array,Uint16Array:Uint16Array,Int32Array:Int32Array,Uint32Array:Uint32Array,Float32Array:Float32Array,Float64Array:Float64Array};function getTypedArray(type,buffer){return new TYPED_ARRAYS[type](buffer);}function createElementNS(name){return document.createElementNS('http://www.w3.org/1999/xhtml',name);}function createCanvasElement(){const canvas=createElementNS('canvas');canvas.style.display='block';return canvas;}const _cache={};function warnOnce(message){if(message in _cache)return;_cache[message]=true;console.warn(message);}function probeAsync(gl,sync,interval){return new Promise(function(resolve,reject){function probe(){switch(gl.clientWaitSync(sync,gl.SYNC_FLUSH_COMMANDS_BIT,0)){case gl.WAIT_FAILED:reject();break;case gl.TIMEOUT_EXPIRED:setTimeout(probe,interval);break;default:resolve();}}setTimeout(probe,interval);});}function toNormalizedProjectionMatrix(projectionMatrix){const m=projectionMatrix.elements;// Convert [-1, 1] to [0, 1] projection matrix
 m[2]=0.5*m[2]+0.5*m[3];m[6]=0.5*m[6]+0.5*m[7];m[10]=0.5*m[10]+0.5*m[11];m[14]=0.5*m[14]+0.5*m[15];}function toReversedProjectionMatrix(projectionMatrix){const m=projectionMatrix.elements;const isPerspectiveMatrix=m[11]===-1;// Reverse [0, 1] projection matrix
 if(isPerspectiveMatrix){m[10]=-m[10]-1;m[14]=-m[14];}else{m[10]=-m[10];m[14]=-m[14]+1;}}const LINEAR_REC709_TO_XYZ=/*@__PURE__*/new Matrix3().set(0.4123908,0.3575843,0.1804808,0.2126390,0.7151687,0.0721923,0.0193308,0.1191948,0.9505322);const XYZ_TO_LINEAR_REC709=/*@__PURE__*/new Matrix3().set(3.2409699,-1.5373832,-0.4986108,-0.9692436,1.8759675,0.0415551,0.0556301,-0.203977,1.0569715);function createColorManagement(){const ColorManagement={enabled:true,workingColorSpace:LinearSRGBColorSpace,/**
-     * Implementations of supported color spaces.
-     *
-     * Required:
-     *	- primaries: chromaticity coordinates [ rx ry gx gy bx by ]
-     *	- whitePoint: reference white [ x y ]
-     *	- transfer: transfer function (pre-defined)
-     *	- toXYZ: Matrix3 RGB to XYZ transform
-     *	- fromXYZ: Matrix3 XYZ to RGB transform
-     *	- luminanceCoefficients: RGB luminance coefficients
-     *
-     * Optional:
-     *  - outputColorSpaceConfig: { drawingBufferColorSpace: ColorSpace }
-     *  - workingColorSpaceConfig: { unpackColorSpace: ColorSpace }
-     *
-     * Reference:
-     * - https://www.russellcottrell.com/photo/matrixCalculator.htm
-     */spaces:{},convert:function(color,sourceColorSpace,targetColorSpace){if(this.enabled===false||sourceColorSpace===targetColorSpace||!sourceColorSpace||!targetColorSpace){return color;}if(this.spaces[sourceColorSpace].transfer===SRGBTransfer){color.r=SRGBToLinear(color.r);color.g=SRGBToLinear(color.g);color.b=SRGBToLinear(color.b);}if(this.spaces[sourceColorSpace].primaries!==this.spaces[targetColorSpace].primaries){color.applyMatrix3(this.spaces[sourceColorSpace].toXYZ);color.applyMatrix3(this.spaces[targetColorSpace].fromXYZ);}if(this.spaces[targetColorSpace].transfer===SRGBTransfer){color.r=LinearToSRGB(color.r);color.g=LinearToSRGB(color.g);color.b=LinearToSRGB(color.b);}return color;},fromWorkingColorSpace:function(color,targetColorSpace){return this.convert(color,this.workingColorSpace,targetColorSpace);},toWorkingColorSpace:function(color,sourceColorSpace){return this.convert(color,sourceColorSpace,this.workingColorSpace);},getPrimaries:function(colorSpace){return this.spaces[colorSpace].primaries;},getTransfer:function(colorSpace){if(colorSpace===NoColorSpace)return LinearTransfer;return this.spaces[colorSpace].transfer;},getLuminanceCoefficients:function(target,colorSpace=this.workingColorSpace){return target.fromArray(this.spaces[colorSpace].luminanceCoefficients);},define:function(colorSpaces){Object.assign(this.spaces,colorSpaces);},// Internal APIs
+		 * Implementations of supported color spaces.
+		 *
+		 * Required:
+		 *	- primaries: chromaticity coordinates [ rx ry gx gy bx by ]
+		 *	- whitePoint: reference white [ x y ]
+		 *	- transfer: transfer function (pre-defined)
+		 *	- toXYZ: Matrix3 RGB to XYZ transform
+		 *	- fromXYZ: Matrix3 XYZ to RGB transform
+		 *	- luminanceCoefficients: RGB luminance coefficients
+		 *
+		 * Optional:
+		 *  - outputColorSpaceConfig: { drawingBufferColorSpace: ColorSpace }
+		 *  - workingColorSpaceConfig: { unpackColorSpace: ColorSpace }
+		 *
+		 * Reference:
+		 * - https://www.russellcottrell.com/photo/matrixCalculator.htm
+		 */spaces:{},convert:function(color,sourceColorSpace,targetColorSpace){if(this.enabled===false||sourceColorSpace===targetColorSpace||!sourceColorSpace||!targetColorSpace){return color;}if(this.spaces[sourceColorSpace].transfer===SRGBTransfer){color.r=SRGBToLinear(color.r);color.g=SRGBToLinear(color.g);color.b=SRGBToLinear(color.b);}if(this.spaces[sourceColorSpace].primaries!==this.spaces[targetColorSpace].primaries){color.applyMatrix3(this.spaces[sourceColorSpace].toXYZ);color.applyMatrix3(this.spaces[targetColorSpace].fromXYZ);}if(this.spaces[targetColorSpace].transfer===SRGBTransfer){color.r=LinearToSRGB(color.r);color.g=LinearToSRGB(color.g);color.b=LinearToSRGB(color.b);}return color;},fromWorkingColorSpace:function(color,targetColorSpace){return this.convert(color,this.workingColorSpace,targetColorSpace);},toWorkingColorSpace:function(color,sourceColorSpace){return this.convert(color,sourceColorSpace,this.workingColorSpace);},getPrimaries:function(colorSpace){return this.spaces[colorSpace].primaries;},getTransfer:function(colorSpace){if(colorSpace===NoColorSpace)return LinearTransfer;return this.spaces[colorSpace].transfer;},getLuminanceCoefficients:function(target,colorSpace=this.workingColorSpace){return target.fromArray(this.spaces[colorSpace].luminanceCoefficients);},define:function(colorSpaces){Object.assign(this.spaces,colorSpaces);},// Internal APIs
 _getMatrix:function(targetMatrix,sourceColorSpace,targetColorSpace){return targetMatrix.copy(this.spaces[sourceColorSpace].toXYZ).multiply(this.spaces[targetColorSpace].fromXYZ);},_getDrawingBufferColorSpace:function(colorSpace){return this.spaces[colorSpace].outputColorSpaceConfig.drawingBufferColorSpace;},_getUnpackColorSpace:function(colorSpace=this.workingColorSpace){return this.spaces[colorSpace].workingColorSpaceConfig.unpackColorSpace;}};/******************************************************************************
-   * sRGB definitions
-   */const REC709_PRIMARIES=[0.640,0.330,0.300,0.600,0.150,0.060];const REC709_LUMINANCE_COEFFICIENTS=[0.2126,0.7152,0.0722];const D65=[0.3127,0.3290];ColorManagement.define({[LinearSRGBColorSpace]:{primaries:REC709_PRIMARIES,whitePoint:D65,transfer:LinearTransfer,toXYZ:LINEAR_REC709_TO_XYZ,fromXYZ:XYZ_TO_LINEAR_REC709,luminanceCoefficients:REC709_LUMINANCE_COEFFICIENTS,workingColorSpaceConfig:{unpackColorSpace:SRGBColorSpace},outputColorSpaceConfig:{drawingBufferColorSpace:SRGBColorSpace}},[SRGBColorSpace]:{primaries:REC709_PRIMARIES,whitePoint:D65,transfer:SRGBTransfer,toXYZ:LINEAR_REC709_TO_XYZ,fromXYZ:XYZ_TO_LINEAR_REC709,luminanceCoefficients:REC709_LUMINANCE_COEFFICIENTS,outputColorSpaceConfig:{drawingBufferColorSpace:SRGBColorSpace}}});return ColorManagement;}const ColorManagement=/*@__PURE__*/createColorManagement();function SRGBToLinear(c){return c<0.04045?c*0.0773993808:Math.pow(c*0.9478672986+0.0521327014,2.4);}function LinearToSRGB(c){return c<0.0031308?c*12.92:1.055*Math.pow(c,0.41666)-0.055;}let _canvas;class ImageUtils{static getDataURL(image){if(/^data:/i.test(image.src)){return image.src;}if(typeof HTMLCanvasElement==='undefined'){return image.src;}let canvas;if(image instanceof HTMLCanvasElement){canvas=image;}else{if(_canvas===undefined)_canvas=createElementNS('canvas');_canvas.width=image.width;_canvas.height=image.height;const context=_canvas.getContext('2d');if(image instanceof ImageData){context.putImageData(image,0,0);}else{context.drawImage(image,0,0,image.width,image.height);}canvas=_canvas;}return canvas.toDataURL('image/png');}static sRGBToLinear(image){if(typeof HTMLImageElement!=='undefined'&&image instanceof HTMLImageElement||typeof HTMLCanvasElement!=='undefined'&&image instanceof HTMLCanvasElement||typeof ImageBitmap!=='undefined'&&image instanceof ImageBitmap){const canvas=createElementNS('canvas');canvas.width=image.width;canvas.height=image.height;const context=canvas.getContext('2d');context.drawImage(image,0,0,image.width,image.height);const imageData=context.getImageData(0,0,image.width,image.height);const data=imageData.data;for(let i=0;i<data.length;i++){data[i]=SRGBToLinear(data[i]/255)*255;}context.putImageData(imageData,0,0);return canvas;}else if(image.data){const data=image.data.slice(0);for(let i=0;i<data.length;i++){if(data instanceof Uint8Array||data instanceof Uint8ClampedArray){data[i]=Math.floor(SRGBToLinear(data[i]/255)*255);}else{// assuming float
+	 * sRGB definitions
+	 */const REC709_PRIMARIES=[0.640,0.330,0.300,0.600,0.150,0.060];const REC709_LUMINANCE_COEFFICIENTS=[0.2126,0.7152,0.0722];const D65=[0.3127,0.3290];ColorManagement.define({[LinearSRGBColorSpace]:{primaries:REC709_PRIMARIES,whitePoint:D65,transfer:LinearTransfer,toXYZ:LINEAR_REC709_TO_XYZ,fromXYZ:XYZ_TO_LINEAR_REC709,luminanceCoefficients:REC709_LUMINANCE_COEFFICIENTS,workingColorSpaceConfig:{unpackColorSpace:SRGBColorSpace},outputColorSpaceConfig:{drawingBufferColorSpace:SRGBColorSpace}},[SRGBColorSpace]:{primaries:REC709_PRIMARIES,whitePoint:D65,transfer:SRGBTransfer,toXYZ:LINEAR_REC709_TO_XYZ,fromXYZ:XYZ_TO_LINEAR_REC709,luminanceCoefficients:REC709_LUMINANCE_COEFFICIENTS,outputColorSpaceConfig:{drawingBufferColorSpace:SRGBColorSpace}}});return ColorManagement;}const ColorManagement=/*@__PURE__*/createColorManagement();function SRGBToLinear(c){return c<0.04045?c*0.0773993808:Math.pow(c*0.9478672986+0.0521327014,2.4);}function LinearToSRGB(c){return c<0.0031308?c*12.92:1.055*Math.pow(c,0.41666)-0.055;}let _canvas;class ImageUtils{static getDataURL(image){if(/^data:/i.test(image.src)){return image.src;}if(typeof HTMLCanvasElement==='undefined'){return image.src;}let canvas;if(image instanceof HTMLCanvasElement){canvas=image;}else{if(_canvas===undefined)_canvas=createElementNS('canvas');_canvas.width=image.width;_canvas.height=image.height;const context=_canvas.getContext('2d');if(image instanceof ImageData){context.putImageData(image,0,0);}else{context.drawImage(image,0,0,image.width,image.height);}canvas=_canvas;}return canvas.toDataURL('image/png');}static sRGBToLinear(image){if(typeof HTMLImageElement!=='undefined'&&image instanceof HTMLImageElement||typeof HTMLCanvasElement!=='undefined'&&image instanceof HTMLCanvasElement||typeof ImageBitmap!=='undefined'&&image instanceof ImageBitmap){const canvas=createElementNS('canvas');canvas.width=image.width;canvas.height=image.height;const context=canvas.getContext('2d');context.drawImage(image,0,0,image.width,image.height);const imageData=context.getImageData(0,0,image.width,image.height);const data=imageData.data;for(let i=0;i<data.length;i++){data[i]=SRGBToLinear(data[i]/255)*255;}context.putImageData(imageData,0,0);return canvas;}else if(image.data){const data=image.data.slice(0);for(let i=0;i<data.length;i++){if(data instanceof Uint8Array||data instanceof Uint8ClampedArray){data[i]=Math.floor(SRGBToLinear(data[i]/255)*255);}else{// assuming float
 data[i]=SRGBToLinear(data[i]);}}return{data:data,width:image.width,height:image.height};}else{console.warn('THREE.ImageUtils.sRGBToLinear(): Unsupported image type. No color space conversion applied.');return image;}}}let _sourceId=0;class Source{constructor(data=null){this.isSource=true;Object.defineProperty(this,'id',{value:_sourceId++});this.uuid=generateUUID();this.data=data;this.dataReady=true;this.version=0;}set needsUpdate(value){if(value===true)this.version++;}toJSON(meta){const isRootObject=meta===undefined||typeof meta==='string';if(!isRootObject&&meta.images[this.uuid]!==undefined){return meta.images[this.uuid];}const output={uuid:this.uuid,url:''};const data=this.data;if(data!==null){let url;if(Array.isArray(data)){// cube texture
 url=[];for(let i=0,l=data.length;i<l;i++){if(data[i].isDataTexture){url.push(serializeImage(data[i].image));}else{url.push(serializeImage(data[i]));}}}else{// texture
 url=serializeImage(data);}output.url=url;}if(!isRootObject){meta.images[this.uuid]=output;}return output;}}function serializeImage(image){if(typeof HTMLImageElement!=='undefined'&&image instanceof HTMLImageElement||typeof HTMLCanvasElement!=='undefined'&&image instanceof HTMLCanvasElement||typeof ImageBitmap!=='undefined'&&image instanceof ImageBitmap){// default images
@@ -33121,73 +33175,73 @@ this.defaultAttributeValues={'color':[1,1,1],'uv':[0,0],'uv1':[0,0]};this.index0
 }}if(Object.keys(this.defines).length>0)data.defines=this.defines;data.vertexShader=this.vertexShader;data.fragmentShader=this.fragmentShader;data.lights=this.lights;data.clipping=this.clipping;const extensions={};for(const key in this.extensions){if(this.extensions[key]===true)extensions[key]=true;}if(Object.keys(extensions).length>0)data.extensions=extensions;return data;}}class Camera extends Object3D{constructor(){super();this.isCamera=true;this.type='Camera';this.matrixWorldInverse=new Matrix4();this.projectionMatrix=new Matrix4();this.projectionMatrixInverse=new Matrix4();this.coordinateSystem=WebGLCoordinateSystem;}copy(source,recursive){super.copy(source,recursive);this.matrixWorldInverse.copy(source.matrixWorldInverse);this.projectionMatrix.copy(source.projectionMatrix);this.projectionMatrixInverse.copy(source.projectionMatrixInverse);this.coordinateSystem=source.coordinateSystem;return this;}getWorldDirection(target){return super.getWorldDirection(target).negate();}updateMatrixWorld(force){super.updateMatrixWorld(force);this.matrixWorldInverse.copy(this.matrixWorld).invert();}updateWorldMatrix(updateParents,updateChildren){super.updateWorldMatrix(updateParents,updateChildren);this.matrixWorldInverse.copy(this.matrixWorld).invert();}clone(){return new this.constructor().copy(this);}}const _v3$1=/*@__PURE__*/new Vector3();const _minTarget=/*@__PURE__*/new Vector2();const _maxTarget=/*@__PURE__*/new Vector2();class PerspectiveCamera extends Camera{constructor(fov=50,aspect=1,near=0.1,far=2000){super();this.isPerspectiveCamera=true;this.type='PerspectiveCamera';this.fov=fov;this.zoom=1;this.near=near;this.far=far;this.focus=10;this.aspect=aspect;this.view=null;this.filmGauge=35;// width of the film (default in millimeters)
 this.filmOffset=0;// horizontal film offset (same unit as gauge)
 this.updateProjectionMatrix();}copy(source,recursive){super.copy(source,recursive);this.fov=source.fov;this.zoom=source.zoom;this.near=source.near;this.far=source.far;this.focus=source.focus;this.aspect=source.aspect;this.view=source.view===null?null:Object.assign({},source.view);this.filmGauge=source.filmGauge;this.filmOffset=source.filmOffset;return this;}/**
-   * Sets the FOV by focal length in respect to the current .filmGauge.
-   *
-   * The default film gauge is 35, so that the focal length can be specified for
-   * a 35mm (full frame) camera.
-   *
-   * @param {number} focalLength - Values for focal length and film gauge must have the same unit.
-   */setFocalLength(focalLength){/** see {@link http://www.bobatkins.com/photography/technical/field_of_view.html} */const vExtentSlope=0.5*this.getFilmHeight()/focalLength;this.fov=RAD2DEG*2*Math.atan(vExtentSlope);this.updateProjectionMatrix();}/**
-   * Calculates the focal length from the current .fov and .filmGauge.
-   *
-   * @returns {number}
-   */getFocalLength(){const vExtentSlope=Math.tan(DEG2RAD*0.5*this.fov);return 0.5*this.getFilmHeight()/vExtentSlope;}getEffectiveFOV(){return RAD2DEG*2*Math.atan(Math.tan(DEG2RAD*0.5*this.fov)/this.zoom);}getFilmWidth(){// film not completely covered in portrait format (aspect < 1)
+	 * Sets the FOV by focal length in respect to the current .filmGauge.
+	 *
+	 * The default film gauge is 35, so that the focal length can be specified for
+	 * a 35mm (full frame) camera.
+	 *
+	 * @param {number} focalLength - Values for focal length and film gauge must have the same unit.
+	 */setFocalLength(focalLength){/** see {@link http://www.bobatkins.com/photography/technical/field_of_view.html} */const vExtentSlope=0.5*this.getFilmHeight()/focalLength;this.fov=RAD2DEG*2*Math.atan(vExtentSlope);this.updateProjectionMatrix();}/**
+	 * Calculates the focal length from the current .fov and .filmGauge.
+	 *
+	 * @returns {number}
+	 */getFocalLength(){const vExtentSlope=Math.tan(DEG2RAD*0.5*this.fov);return 0.5*this.getFilmHeight()/vExtentSlope;}getEffectiveFOV(){return RAD2DEG*2*Math.atan(Math.tan(DEG2RAD*0.5*this.fov)/this.zoom);}getFilmWidth(){// film not completely covered in portrait format (aspect < 1)
 return this.filmGauge*Math.min(this.aspect,1);}getFilmHeight(){// film not completely covered in landscape format (aspect > 1)
 return this.filmGauge/Math.max(this.aspect,1);}/**
-   * Computes the 2D bounds of the camera's viewable rectangle at a given distance along the viewing direction.
-   * Sets minTarget and maxTarget to the coordinates of the lower-left and upper-right corners of the view rectangle.
-   *
-   * @param {number} distance
-   * @param {Vector2} minTarget
-   * @param {Vector2} maxTarget
-   */getViewBounds(distance,minTarget,maxTarget){_v3$1.set(-1,-1,0.5).applyMatrix4(this.projectionMatrixInverse);minTarget.set(_v3$1.x,_v3$1.y).multiplyScalar(-distance/_v3$1.z);_v3$1.set(1,1,0.5).applyMatrix4(this.projectionMatrixInverse);maxTarget.set(_v3$1.x,_v3$1.y).multiplyScalar(-distance/_v3$1.z);}/**
-   * Computes the width and height of the camera's viewable rectangle at a given distance along the viewing direction.
-   *
-   * @param {number} distance
-   * @param {Vector2} target - Vector2 target used to store result where x is width and y is height.
-   * @returns {Vector2}
-   */getViewSize(distance,target){this.getViewBounds(distance,_minTarget,_maxTarget);return target.subVectors(_maxTarget,_minTarget);}/**
-   * Sets an offset in a larger frustum. This is useful for multi-window or
-   * multi-monitor/multi-machine setups.
-   *
-   * For example, if you have 3x2 monitors and each monitor is 1920x1080 and
-   * the monitors are in grid like this
-   *
-   *   +---+---+---+
-   *   | A | B | C |
-   *   +---+---+---+
-   *   | D | E | F |
-   *   +---+---+---+
-   *
-   * then for each monitor you would call it like this
-   *
-   *   const w = 1920;
-   *   const h = 1080;
-   *   const fullWidth = w * 3;
-   *   const fullHeight = h * 2;
-   *
-   *   --A--
-   *   camera.setViewOffset( fullWidth, fullHeight, w * 0, h * 0, w, h );
-   *   --B--
-   *   camera.setViewOffset( fullWidth, fullHeight, w * 1, h * 0, w, h );
-   *   --C--
-   *   camera.setViewOffset( fullWidth, fullHeight, w * 2, h * 0, w, h );
-   *   --D--
-   *   camera.setViewOffset( fullWidth, fullHeight, w * 0, h * 1, w, h );
-   *   --E--
-   *   camera.setViewOffset( fullWidth, fullHeight, w * 1, h * 1, w, h );
-   *   --F--
-   *   camera.setViewOffset( fullWidth, fullHeight, w * 2, h * 1, w, h );
-   *
-   *   Note there is no reason monitors have to be the same size or in a grid.
-   *
-   * @param {number} fullWidth
-   * @param {number} fullHeight
-   * @param {number} x
-   * @param {number} y
-   * @param {number} width
-   * @param {number} height
-   */setViewOffset(fullWidth,fullHeight,x,y,width,height){this.aspect=fullWidth/fullHeight;if(this.view===null){this.view={enabled:true,fullWidth:1,fullHeight:1,offsetX:0,offsetY:0,width:1,height:1};}this.view.enabled=true;this.view.fullWidth=fullWidth;this.view.fullHeight=fullHeight;this.view.offsetX=x;this.view.offsetY=y;this.view.width=width;this.view.height=height;this.updateProjectionMatrix();}clearViewOffset(){if(this.view!==null){this.view.enabled=false;}this.updateProjectionMatrix();}updateProjectionMatrix(){const near=this.near;let top=near*Math.tan(DEG2RAD*0.5*this.fov)/this.zoom;let height=2*top;let width=this.aspect*height;let left=-0.5*width;const view=this.view;if(this.view!==null&&this.view.enabled){const fullWidth=view.fullWidth,fullHeight=view.fullHeight;left+=view.offsetX*width/fullWidth;top-=view.offsetY*height/fullHeight;width*=view.width/fullWidth;height*=view.height/fullHeight;}const skew=this.filmOffset;if(skew!==0)left+=near*skew/this.getFilmWidth();this.projectionMatrix.makePerspective(left,left+width,top,top-height,near,this.far,this.coordinateSystem);this.projectionMatrixInverse.copy(this.projectionMatrix).invert();}toJSON(meta){const data=super.toJSON(meta);data.object.fov=this.fov;data.object.zoom=this.zoom;data.object.near=this.near;data.object.far=this.far;data.object.focus=this.focus;data.object.aspect=this.aspect;if(this.view!==null)data.object.view=Object.assign({},this.view);data.object.filmGauge=this.filmGauge;data.object.filmOffset=this.filmOffset;return data;}}const fov=-90;// negative fov is not an error
+	 * Computes the 2D bounds of the camera's viewable rectangle at a given distance along the viewing direction.
+	 * Sets minTarget and maxTarget to the coordinates of the lower-left and upper-right corners of the view rectangle.
+	 *
+	 * @param {number} distance
+	 * @param {Vector2} minTarget
+	 * @param {Vector2} maxTarget
+	 */getViewBounds(distance,minTarget,maxTarget){_v3$1.set(-1,-1,0.5).applyMatrix4(this.projectionMatrixInverse);minTarget.set(_v3$1.x,_v3$1.y).multiplyScalar(-distance/_v3$1.z);_v3$1.set(1,1,0.5).applyMatrix4(this.projectionMatrixInverse);maxTarget.set(_v3$1.x,_v3$1.y).multiplyScalar(-distance/_v3$1.z);}/**
+	 * Computes the width and height of the camera's viewable rectangle at a given distance along the viewing direction.
+	 *
+	 * @param {number} distance
+	 * @param {Vector2} target - Vector2 target used to store result where x is width and y is height.
+	 * @returns {Vector2}
+	 */getViewSize(distance,target){this.getViewBounds(distance,_minTarget,_maxTarget);return target.subVectors(_maxTarget,_minTarget);}/**
+	 * Sets an offset in a larger frustum. This is useful for multi-window or
+	 * multi-monitor/multi-machine setups.
+	 *
+	 * For example, if you have 3x2 monitors and each monitor is 1920x1080 and
+	 * the monitors are in grid like this
+	 *
+	 *   +---+---+---+
+	 *   | A | B | C |
+	 *   +---+---+---+
+	 *   | D | E | F |
+	 *   +---+---+---+
+	 *
+	 * then for each monitor you would call it like this
+	 *
+	 *   const w = 1920;
+	 *   const h = 1080;
+	 *   const fullWidth = w * 3;
+	 *   const fullHeight = h * 2;
+	 *
+	 *   --A--
+	 *   camera.setViewOffset( fullWidth, fullHeight, w * 0, h * 0, w, h );
+	 *   --B--
+	 *   camera.setViewOffset( fullWidth, fullHeight, w * 1, h * 0, w, h );
+	 *   --C--
+	 *   camera.setViewOffset( fullWidth, fullHeight, w * 2, h * 0, w, h );
+	 *   --D--
+	 *   camera.setViewOffset( fullWidth, fullHeight, w * 0, h * 1, w, h );
+	 *   --E--
+	 *   camera.setViewOffset( fullWidth, fullHeight, w * 1, h * 1, w, h );
+	 *   --F--
+	 *   camera.setViewOffset( fullWidth, fullHeight, w * 2, h * 1, w, h );
+	 *
+	 *   Note there is no reason monitors have to be the same size or in a grid.
+	 *
+	 * @param {number} fullWidth
+	 * @param {number} fullHeight
+	 * @param {number} x
+	 * @param {number} y
+	 * @param {number} width
+	 * @param {number} height
+	 */setViewOffset(fullWidth,fullHeight,x,y,width,height){this.aspect=fullWidth/fullHeight;if(this.view===null){this.view={enabled:true,fullWidth:1,fullHeight:1,offsetX:0,offsetY:0,width:1,height:1};}this.view.enabled=true;this.view.fullWidth=fullWidth;this.view.fullHeight=fullHeight;this.view.offsetX=x;this.view.offsetY=y;this.view.width=width;this.view.height=height;this.updateProjectionMatrix();}clearViewOffset(){if(this.view!==null){this.view.enabled=false;}this.updateProjectionMatrix();}updateProjectionMatrix(){const near=this.near;let top=near*Math.tan(DEG2RAD*0.5*this.fov)/this.zoom;let height=2*top;let width=this.aspect*height;let left=-0.5*width;const view=this.view;if(this.view!==null&&this.view.enabled){const fullWidth=view.fullWidth,fullHeight=view.fullHeight;left+=view.offsetX*width/fullWidth;top-=view.offsetY*height/fullHeight;width*=view.width/fullWidth;height*=view.height/fullHeight;}const skew=this.filmOffset;if(skew!==0)left+=near*skew/this.getFilmWidth();this.projectionMatrix.makePerspective(left,left+width,top,top-height,near,this.far,this.coordinateSystem);this.projectionMatrixInverse.copy(this.projectionMatrix).invert();}toJSON(meta){const data=super.toJSON(meta);data.object.fov=this.fov;data.object.zoom=this.zoom;data.object.near=this.near;data.object.far=this.far;data.object.focus=this.focus;data.object.aspect=this.aspect;if(this.view!==null)data.object.view=Object.assign({},this.view);data.object.filmGauge=this.filmGauge;data.object.filmOffset=this.filmOffset;return data;}}const fov=-90;// negative fov is not an error
 const aspect=1;class CubeCamera extends Object3D{constructor(near,far,renderTarget){super();this.type='CubeCamera';this.renderTarget=renderTarget;this.coordinateSystem=null;this.activeMipmapLevel=0;const cameraPX=new PerspectiveCamera(fov,aspect,near,far);cameraPX.layers=this.layers;this.add(cameraPX);const cameraNX=new PerspectiveCamera(fov,aspect,near,far);cameraNX.layers=this.layers;this.add(cameraNX);const cameraPY=new PerspectiveCamera(fov,aspect,near,far);cameraPY.layers=this.layers;this.add(cameraPY);const cameraNY=new PerspectiveCamera(fov,aspect,near,far);cameraNY.layers=this.layers;this.add(cameraNY);const cameraPZ=new PerspectiveCamera(fov,aspect,near,far);cameraPZ.layers=this.layers;this.add(cameraPZ);const cameraNZ=new PerspectiveCamera(fov,aspect,near,far);cameraNZ.layers=this.layers;this.add(cameraNZ);}updateCoordinateSystem(){const coordinateSystem=this.coordinateSystem;const cameras=this.children.concat();const[cameraPX,cameraNX,cameraPY,cameraNY,cameraPZ,cameraNZ]=cameras;for(const camera of cameras)this.remove(camera);if(coordinateSystem===WebGLCoordinateSystem){cameraPX.up.set(0,1,0);cameraPX.lookAt(1,0,0);cameraNX.up.set(0,1,0);cameraNX.lookAt(-1,0,0);cameraPY.up.set(0,0,-1);cameraPY.lookAt(0,1,0);cameraNY.up.set(0,0,1);cameraNY.lookAt(0,-1,0);cameraPZ.up.set(0,1,0);cameraPZ.lookAt(0,0,1);cameraNZ.up.set(0,1,0);cameraNZ.lookAt(0,0,-1);}else if(coordinateSystem===WebGPUCoordinateSystem){cameraPX.up.set(0,-1,0);cameraPX.lookAt(-1,0,0);cameraNX.up.set(0,-1,0);cameraNX.lookAt(1,0,0);cameraPY.up.set(0,0,1);cameraPY.lookAt(0,1,0);cameraNY.up.set(0,0,-1);cameraNY.lookAt(0,-1,0);cameraPZ.up.set(0,-1,0);cameraPZ.lookAt(0,0,1);cameraNZ.up.set(0,-1,0);cameraNZ.lookAt(0,0,-1);}else{throw new Error('THREE.CubeCamera.updateCoordinateSystem(): Invalid coordinate system: '+coordinateSystem);}for(const camera of cameras){this.add(camera);camera.updateMatrixWorld();}}update(renderer,scene){if(this.parent===null)this.updateMatrixWorld();const{renderTarget,activeMipmapLevel}=this;if(this.coordinateSystem!==renderer.coordinateSystem){this.coordinateSystem=renderer.coordinateSystem;this.updateCoordinateSystem();}const[cameraPX,cameraNX,cameraPY,cameraNY,cameraPZ,cameraNZ]=this.children;const currentRenderTarget=renderer.getRenderTarget();const currentActiveCubeFace=renderer.getActiveCubeFace();const currentActiveMipmapLevel=renderer.getActiveMipmapLevel();const currentXrEnabled=renderer.xr.enabled;renderer.xr.enabled=false;const generateMipmaps=renderTarget.texture.generateMipmaps;renderTarget.texture.generateMipmaps=false;renderer.setRenderTarget(renderTarget,0,activeMipmapLevel);renderer.render(scene,cameraPX);renderer.setRenderTarget(renderTarget,1,activeMipmapLevel);renderer.render(scene,cameraNX);renderer.setRenderTarget(renderTarget,2,activeMipmapLevel);renderer.render(scene,cameraPY);renderer.setRenderTarget(renderTarget,3,activeMipmapLevel);renderer.render(scene,cameraNY);renderer.setRenderTarget(renderTarget,4,activeMipmapLevel);renderer.render(scene,cameraPZ);// mipmaps are generated during the last call of render()
 // at this point, all sides of the cube render target are defined
 renderTarget.texture.generateMipmaps=generateMipmaps;renderer.setRenderTarget(renderTarget,5,activeMipmapLevel);renderer.render(scene,cameraNZ);renderer.setRenderTarget(currentRenderTarget,currentActiveCubeFace,currentActiveMipmapLevel);renderer.xr.enabled=currentXrEnabled;renderTarget.texture.needsPMREMUpdate=true;}}class CubeTexture extends Texture{constructor(images,mapping,wrapS,wrapT,magFilter,minFilter,format,type,anisotropy,colorSpace){images=images!==undefined?images:[];mapping=mapping!==undefined?mapping:CubeReflectionMapping;super(images,mapping,wrapS,wrapT,magFilter,minFilter,format,type,anisotropy,colorSpace);this.isCubeTexture=true;this.flipY=false;}get images(){return this.image;}set images(value){this.image=value;}}class WebGLCubeRenderTarget extends WebGLRenderTarget{constructor(size=1,options={}){super(size,size,options);this.isWebGLCubeRenderTarget=true;const image={width:size,height:size,depth:1};const images=[image,image,image,image,image,image];this.texture=new CubeTexture(images,options.mapping,options.wrapS,options.wrapT,options.magFilter,options.minFilter,options.format,options.type,options.anisotropy,options.colorSpace);// By convention -- likely based on the RenderMan spec from the 1990's -- cube maps are specified by WebGL (and three.js)
@@ -33198,40 +33252,40 @@ renderTarget.texture.generateMipmaps=generateMipmaps;renderer.setRenderTarget(re
 // as a cube texture (this is detected when isRenderTargetTexture is set to true for cube textures).
 this.texture.isRenderTargetTexture=true;this.texture.generateMipmaps=options.generateMipmaps!==undefined?options.generateMipmaps:false;this.texture.minFilter=options.minFilter!==undefined?options.minFilter:LinearFilter;}fromEquirectangularTexture(renderer,texture){this.texture.type=texture.type;this.texture.colorSpace=texture.colorSpace;this.texture.generateMipmaps=texture.generateMipmaps;this.texture.minFilter=texture.minFilter;this.texture.magFilter=texture.magFilter;const shader={uniforms:{tEquirect:{value:null}},vertexShader:/* glsl */`
 
-        varying vec3 vWorldDirection;
+				varying vec3 vWorldDirection;
 
-        vec3 transformDirection( in vec3 dir, in mat4 matrix ) {
+				vec3 transformDirection( in vec3 dir, in mat4 matrix ) {
 
-          return normalize( ( matrix * vec4( dir, 0.0 ) ).xyz );
+					return normalize( ( matrix * vec4( dir, 0.0 ) ).xyz );
 
-        }
+				}
 
-        void main() {
+				void main() {
 
-          vWorldDirection = transformDirection( position, modelMatrix );
+					vWorldDirection = transformDirection( position, modelMatrix );
 
-          #include <begin_vertex>
-          #include <project_vertex>
+					#include <begin_vertex>
+					#include <project_vertex>
 
-        }
-      `,fragmentShader:/* glsl */`
+				}
+			`,fragmentShader:/* glsl */`
 
-        uniform sampler2D tEquirect;
+				uniform sampler2D tEquirect;
 
-        varying vec3 vWorldDirection;
+				varying vec3 vWorldDirection;
 
-        #include <common>
+				#include <common>
 
-        void main() {
+				void main() {
 
-          vec3 direction = normalize( vWorldDirection );
+					vec3 direction = normalize( vWorldDirection );
 
-          vec2 sampleUV = equirectUv( direction );
+					vec2 sampleUV = equirectUv( direction );
 
-          gl_FragColor = texture2D( tEquirect, sampleUV );
+					gl_FragColor = texture2D( tEquirect, sampleUV );
 
-        }
-      `};const geometry=new BoxGeometry(5,5,5);const material=new ShaderMaterial({name:'CubemapFromEquirect',uniforms:cloneUniforms(shader.uniforms),vertexShader:shader.vertexShader,fragmentShader:shader.fragmentShader,side:BackSide,blending:NoBlending});material.uniforms.tEquirect.value=texture;const mesh=new Mesh(geometry,material);const currentMinFilter=texture.minFilter;// Avoid blurred poles
+				}
+			`};const geometry=new BoxGeometry(5,5,5);const material=new ShaderMaterial({name:'CubemapFromEquirect',uniforms:cloneUniforms(shader.uniforms),vertexShader:shader.vertexShader,fragmentShader:shader.fragmentShader,side:BackSide,blending:NoBlending});material.uniforms.tEquirect.value=texture;const mesh=new Mesh(geometry,material);const currentMinFilter=texture.minFilter;// Avoid blurred poles
 if(texture.minFilter===LinearMipmapLinearFilter)texture.minFilter=LinearFilter;const camera=new CubeCamera(1,10,this);camera.update(renderer,mesh);texture.minFilter=currentMinFilter;mesh.geometry.dispose();mesh.material.dispose();return this;}clear(renderer,color,depth,stencil){const currentRenderTarget=renderer.getRenderTarget();for(let i=0;i<6;i++){renderer.setRenderTarget(this,i);renderer.clear(color,depth,stencil);}renderer.setRenderTarget(currentRenderTarget);}}class Group extends Object3D{constructor(){super();this.isGroup=true;this.type='Group';}}const _moveEvent={type:'move'};class WebXRController{constructor(){this._targetRay=null;this._grip=null;this._hand=null;}getHandSpace(){if(this._hand===null){this._hand=new Group();this._hand.matrixAutoUpdate=false;this._hand.visible=false;this._hand.joints={};this._hand.inputState={pinching:false};}return this._hand;}getTargetRaySpace(){if(this._targetRay===null){this._targetRay=new Group();this._targetRay.matrixAutoUpdate=false;this._targetRay.visible=false;this._targetRay.hasLinearVelocity=false;this._targetRay.linearVelocity=new Vector3();this._targetRay.hasAngularVelocity=false;this._targetRay.angularVelocity=new Vector3();}return this._targetRay;}getGripSpace(){if(this._grip===null){this._grip=new Group();this._grip.matrixAutoUpdate=false;this._grip.visible=false;this._grip.hasLinearVelocity=false;this._grip.linearVelocity=new Vector3();this._grip.hasAngularVelocity=false;this._grip.angularVelocity=new Vector3();}return this._grip;}dispatchEvent(event){if(this._targetRay!==null){this._targetRay.dispatchEvent(event);}if(this._grip!==null){this._grip.dispatchEvent(event);}if(this._hand!==null){this._hand.dispatchEvent(event);}return this;}connect(inputSource){if(inputSource&&inputSource.hand){const hand=this._hand;if(hand){for(const inputjoint of inputSource.hand.values()){// Initialize hand with joints when connected
 this._getHandJoint(hand,inputjoint);}}}this.dispatchEvent({type:'connected',data:inputSource});return this;}disconnect(inputSource){this.dispatchEvent({type:'disconnected',data:inputSource});if(this._targetRay!==null){this._targetRay.visible=false;}if(this._grip!==null){this._grip.visible=false;}if(this._hand!==null){this._hand.visible=false;}return this;}update(inputSource,frame,referenceSpace){let inputPose=null;let gripPose=null;let handPose=null;const targetRay=this._targetRay;const grip=this._grip;const hand=this._hand;if(inputSource&&frame.session.visibilityState!=='visible-blurred'){if(hand&&inputSource.hand){handPose=true;for(const inputjoint of inputSource.hand.values()){// Update the joints groups with the XRJoint poses
 const jointPose=frame.getJointPose(inputjoint,referenceSpace);// The transform of this joint will be updated with the joint pose on each frame
@@ -33457,13 +33511,13 @@ This CubicPoly class could be used for reusing some variables and calculations,
 but for three.js curve use, it could be possible inlined and flatten into a single function call
 which can be placed in CurveUtils.
 */function CubicPoly(){let c0=0,c1=0,c2=0,c3=0;/*
-   * Compute coefficients for a cubic polynomial
-   *   p(s) = c0 + c1*s + c2*s^2 + c3*s^3
-   * such that
-   *   p(0) = x0, p(1) = x1
-   *  and
-   *   p'(0) = t0, p'(1) = t1.
-   */function init(x0,x1,t0,t1){c0=x0;c1=t0;c2=-3*x0+3*x1-2*t0-t1;c3=2*x0-2*x1+t0+t1;}return{initCatmullRom:function(x0,x1,x2,x3,tension){init(x1,x2,tension*(x2-x0),tension*(x3-x1));},initNonuniformCatmullRom:function(x0,x1,x2,x3,dt0,dt1,dt2){// compute tangents when parameterized in [t1,t2]
+	 * Compute coefficients for a cubic polynomial
+	 *   p(s) = c0 + c1*s + c2*s^2 + c3*s^3
+	 * such that
+	 *   p(0) = x0, p(1) = x1
+	 *  and
+	 *   p'(0) = t0, p'(1) = t1.
+	 */function init(x0,x1,t0,t1){c0=x0;c1=t0;c2=-3*x0+3*x1-2*t0-t1;c3=2*x0-2*x1+t0+t1;}return{initCatmullRom:function(x0,x1,x2,x3,tension){init(x1,x2,tension*(x2-x0),tension*(x3-x1));},initNonuniformCatmullRom:function(x0,x1,x2,x3,dt0,dt1,dt2){// compute tangents when parameterized in [t1,t2]
 let t1=(x1-x0)/dt0-(x2-x0)/(dt0+dt1)+(x2-x1)/dt1;let t2=(x2-x1)/dt1-(x3-x1)/(dt1+dt2)+(x3-x2)/dt2;// rescale tangents for parametrization in [0,1]
 t1*=dt1;t2*=dt1;init(x1,x2,t1,t2);},calc:function(t){const t2=t*t;const t3=t2*t;return c0+c1*t+c2*t2+c3*t3;}};}//
 const tmp=/*@__PURE__*/new Vector3();const px=/*@__PURE__*/new CubicPoly();const py=/*@__PURE__*/new CubicPoly();const pz=/*@__PURE__*/new CubicPoly();class CatmullRomCurve3 extends Curve{constructor(points=[],closed=false,curveType='centripetal',tension=0.5){super();this.isCatmullRomCurve3=true;this.type='CatmullRomCurve3';this.points=points;this.closed=closed;this.curveType=curveType;this.tension=tension;}getPoint(t,optionalTarget=new Vector3()){const point=optionalTarget;const points=this.points;const l=points.length;const p=(l-(this.closed?0:1))*t;let intPoint=Math.floor(p);let weight=p-intPoint;if(this.closed){intPoint+=intPoint>0?0:(Math.floor(Math.abs(intPoint)/l)+1)*l;}else if(weight===0&&intPoint===l-1){intPoint=l-2;weight=1;}let p0,p3;// 4 points (p1 & p2 defined below)
@@ -34194,12 +34248,12 @@ if(binding!==undefined)binding.getValue(array,offset);}setValue(array,offset){co
 // become no-ops.
 class PropertyBinding{constructor(rootNode,path,parsedPath){this.path=path;this.parsedPath=parsedPath||PropertyBinding.parseTrackName(path);this.node=PropertyBinding.findNode(rootNode,this.parsedPath.nodeName);this.rootNode=rootNode;// initial state of these methods that calls 'bind'
 this.getValue=this._getValue_unbound;this.setValue=this._setValue_unbound;}static create(root,path,parsedPath){if(!(root&&root.isAnimationObjectGroup)){return new PropertyBinding(root,path,parsedPath);}else{return new PropertyBinding.Composite(root,path,parsedPath);}}/**
-   * Replaces spaces with underscores and removes unsupported characters from
-   * node names, to ensure compatibility with parseTrackName().
-   *
-   * @param {string} name Node name to be sanitized.
-   * @return {string}
-   */static sanitizeNodeName(name){return name.replace(/\s/g,'_').replace(_reservedRe,'');}static parseTrackName(trackName){const matches=_trackRe.exec(trackName);if(matches===null){throw new Error('PropertyBinding: Cannot parse trackName: '+trackName);}const results={// directoryName: matches[ 1 ], // (tschw) currently unused
+	 * Replaces spaces with underscores and removes unsupported characters from
+	 * node names, to ensure compatibility with parseTrackName().
+	 *
+	 * @param {string} name Node name to be sanitized.
+	 * @return {string}
+	 */static sanitizeNodeName(name){return name.replace(/\s/g,'_').replace(_reservedRe,'');}static parseTrackName(trackName){const matches=_trackRe.exec(trackName);if(matches===null){throw new Error('PropertyBinding: Cannot parse trackName: '+trackName);}const results={// directoryName: matches[ 1 ], // (tschw) currently unused
 nodeName:matches[2],objectName:matches[3],objectIndex:matches[4],propertyName:matches[5],// required
 propertyIndex:matches[6]};const lastDot=results.nodeName&&results.nodeName.lastIndexOf('.');if(lastDot!==undefined&&lastDot!==-1){const objectName=results.nodeName.substring(lastDot+1);// Object names must be checked against an allowlist. Otherwise, there
 // is no way to parse 'foo.bar.baz': 'baz' must be a property, but
@@ -34426,40 +34480,40 @@ return this.max.x<this.min.x||this.max.y<this.min.y;}getCenter(target){return th
 return target.set((point.x-this.min.x)/(this.max.x-this.min.x),(point.y-this.min.y)/(this.max.y-this.min.y));}intersectsBox(box){// using 4 splitting planes to rule out intersections
 return box.max.x>=this.min.x&&box.min.x<=this.max.x&&box.max.y>=this.min.y&&box.min.y<=this.max.y;}clampPoint(point,target){return target.copy(point).clamp(this.min,this.max);}distanceToPoint(point){return this.clampPoint(point,_vector$4).distanceTo(point);}intersect(box){this.min.max(box.min);this.max.min(box.max);if(this.isEmpty())this.makeEmpty();return this;}union(box){this.min.min(box.min);this.max.max(box.max);return this;}translate(offset){this.min.add(offset);this.max.add(offset);return this;}equals(box){return box.min.equals(this.min)&&box.max.equals(this.max);}}const _startP=/*@__PURE__*/new Vector3();const _startEnd=/*@__PURE__*/new Vector3();class Line3{constructor(start=new Vector3(),end=new Vector3()){this.start=start;this.end=end;}set(start,end){this.start.copy(start);this.end.copy(end);return this;}copy(line){this.start.copy(line.start);this.end.copy(line.end);return this;}getCenter(target){return target.addVectors(this.start,this.end).multiplyScalar(0.5);}delta(target){return target.subVectors(this.end,this.start);}distanceSq(){return this.start.distanceToSquared(this.end);}distance(){return this.start.distanceTo(this.end);}at(t,target){return this.delta(target).multiplyScalar(t).add(this.start);}closestPointToPointParameter(point,clampToLine){_startP.subVectors(point,this.start);_startEnd.subVectors(this.end,this.start);const startEnd2=_startEnd.dot(_startEnd);const startEnd_startP=_startEnd.dot(_startP);let t=startEnd_startP/startEnd2;if(clampToLine){t=clamp(t,0,1);}return t;}closestPointToPoint(point,clampToLine,target){const t=this.closestPointToPointParameter(point,clampToLine);return this.delta(target).multiplyScalar(t).add(this.start);}applyMatrix4(matrix){this.start.applyMatrix4(matrix);this.end.applyMatrix4(matrix);return this;}equals(line){return line.start.equals(this.start)&&line.end.equals(this.end);}clone(){return new this.constructor().copy(this);}}const _vector$3=/*@__PURE__*/new Vector3();class SpotLightHelper extends Object3D{constructor(light,color){super();this.light=light;this.matrixAutoUpdate=false;this.color=color;this.type='SpotLightHelper';const geometry=new BufferGeometry();const positions=[0,0,0,0,0,1,0,0,0,1,0,1,0,0,0,-1,0,1,0,0,0,0,1,1,0,0,0,0,-1,1];for(let i=0,j=1,l=32;i<l;i++,j++){const p1=i/l*Math.PI*2;const p2=j/l*Math.PI*2;positions.push(Math.cos(p1),Math.sin(p1),1,Math.cos(p2),Math.sin(p2),1);}geometry.setAttribute('position',new Float32BufferAttribute(positions,3));const material=new LineBasicMaterial({fog:false,toneMapped:false});this.cone=new LineSegments(geometry,material);this.add(this.cone);this.update();}dispose(){this.cone.geometry.dispose();this.cone.material.dispose();}update(){this.light.updateWorldMatrix(true,false);this.light.target.updateWorldMatrix(true,false);// update the local matrix based on the parent and light target transforms
 if(this.parent){this.parent.updateWorldMatrix(true);this.matrix.copy(this.parent.matrixWorld).invert().multiply(this.light.matrixWorld);}else{this.matrix.copy(this.light.matrixWorld);}this.matrixWorld.copy(this.light.matrixWorld);const coneLength=this.light.distance?this.light.distance:1000;const coneWidth=coneLength*Math.tan(this.light.angle);this.cone.scale.set(coneWidth,coneWidth,coneLength);_vector$3.setFromMatrixPosition(this.light.target.matrixWorld);this.cone.lookAt(_vector$3);if(this.color!==undefined){this.cone.material.color.set(this.color);}else{this.cone.material.color.copy(this.light.color);}}}const _vector$2=/*@__PURE__*/new Vector3();const _boneMatrix=/*@__PURE__*/new Matrix4();const _matrixWorldInv=/*@__PURE__*/new Matrix4();class SkeletonHelper extends LineSegments{constructor(object){const bones=getBoneList(object);const geometry=new BufferGeometry();const vertices=[];const colors=[];const color1=new Color(0,0,1);const color2=new Color(0,1,0);for(let i=0;i<bones.length;i++){const bone=bones[i];if(bone.parent&&bone.parent.isBone){vertices.push(0,0,0);vertices.push(0,0,0);colors.push(color1.r,color1.g,color1.b);colors.push(color2.r,color2.g,color2.b);}}geometry.setAttribute('position',new Float32BufferAttribute(vertices,3));geometry.setAttribute('color',new Float32BufferAttribute(colors,3));const material=new LineBasicMaterial({vertexColors:true,depthTest:false,depthWrite:false,toneMapped:false,transparent:true});super(geometry,material);this.isSkeletonHelper=true;this.type='SkeletonHelper';this.root=object;this.bones=bones;this.matrix=object.matrixWorld;this.matrixAutoUpdate=false;}updateMatrixWorld(force){const bones=this.bones;const geometry=this.geometry;const position=geometry.getAttribute('position');_matrixWorldInv.copy(this.root.matrixWorld).invert();for(let i=0,j=0;i<bones.length;i++){const bone=bones[i];if(bone.parent&&bone.parent.isBone){_boneMatrix.multiplyMatrices(_matrixWorldInv,bone.matrixWorld);_vector$2.setFromMatrixPosition(_boneMatrix);position.setXYZ(j,_vector$2.x,_vector$2.y,_vector$2.z);_boneMatrix.multiplyMatrices(_matrixWorldInv,bone.parent.matrixWorld);_vector$2.setFromMatrixPosition(_boneMatrix);position.setXYZ(j+1,_vector$2.x,_vector$2.y,_vector$2.z);j+=2;}}geometry.getAttribute('position').needsUpdate=true;super.updateMatrixWorld(force);}dispose(){this.geometry.dispose();this.material.dispose();}}function getBoneList(object){const boneList=[];if(object.isBone===true){boneList.push(object);}for(let i=0;i<object.children.length;i++){boneList.push.apply(boneList,getBoneList(object.children[i]));}return boneList;}class PointLightHelper extends Mesh{constructor(light,sphereSize,color){const geometry=new SphereGeometry(sphereSize,4,2);const material=new MeshBasicMaterial({wireframe:true,fog:false,toneMapped:false});super(geometry,material);this.light=light;this.color=color;this.type='PointLightHelper';this.matrix=this.light.matrixWorld;this.matrixAutoUpdate=false;this.update();/*
-  // TODO: delete this comment?
-  const distanceGeometry = new THREE.IcosahedronGeometry( 1, 2 );
-  const distanceMaterial = new THREE.MeshBasicMaterial( { color: hexColor, fog: false, wireframe: true, opacity: 0.1, transparent: true } );
+	// TODO: delete this comment?
+	const distanceGeometry = new THREE.IcosahedronGeometry( 1, 2 );
+	const distanceMaterial = new THREE.MeshBasicMaterial( { color: hexColor, fog: false, wireframe: true, opacity: 0.1, transparent: true } );
 
-  this.lightSphere = new THREE.Mesh( bulbGeometry, bulbMaterial );
-  this.lightDistance = new THREE.Mesh( distanceGeometry, distanceMaterial );
+	this.lightSphere = new THREE.Mesh( bulbGeometry, bulbMaterial );
+	this.lightDistance = new THREE.Mesh( distanceGeometry, distanceMaterial );
 
-  const d = light.distance;
+	const d = light.distance;
 
-  if ( d === 0.0 ) {
+	if ( d === 0.0 ) {
 
-    this.lightDistance.visible = false;
+		this.lightDistance.visible = false;
 
-  } else {
+	} else {
 
-    this.lightDistance.scale.set( d, d, d );
+		this.lightDistance.scale.set( d, d, d );
 
-  }
+	}
 
-  this.add( this.lightDistance );
-  */}dispose(){this.geometry.dispose();this.material.dispose();}update(){this.light.updateWorldMatrix(true,false);if(this.color!==undefined){this.material.color.set(this.color);}else{this.material.color.copy(this.light.color);}/*
-    const d = this.light.distance;
+	this.add( this.lightDistance );
+	*/}dispose(){this.geometry.dispose();this.material.dispose();}update(){this.light.updateWorldMatrix(true,false);if(this.color!==undefined){this.material.color.set(this.color);}else{this.material.color.copy(this.light.color);}/*
+		const d = this.light.distance;
 
-    if ( d === 0.0 ) {
+		if ( d === 0.0 ) {
 
-      this.lightDistance.visible = false;
+			this.lightDistance.visible = false;
 
-    } else {
+		} else {
 
-      this.lightDistance.visible = true;
-      this.lightDistance.scale.set( d, d, d );
+			this.lightDistance.visible = true;
+			this.lightDistance.scale.set( d, d, d );
 
-    }
-    */}}const _vector$1=/*@__PURE__*/new Vector3();const _color1=/*@__PURE__*/new Color();const _color2=/*@__PURE__*/new Color();class HemisphereLightHelper extends Object3D{constructor(light,size,color){super();this.light=light;this.matrix=light.matrixWorld;this.matrixAutoUpdate=false;this.color=color;this.type='HemisphereLightHelper';const geometry=new OctahedronGeometry(size);geometry.rotateY(Math.PI*0.5);this.material=new MeshBasicMaterial({wireframe:true,fog:false,toneMapped:false});if(this.color===undefined)this.material.vertexColors=true;const position=geometry.getAttribute('position');const colors=new Float32Array(position.count*3);geometry.setAttribute('color',new BufferAttribute(colors,3));this.add(new Mesh(geometry,this.material));this.update();}dispose(){this.children[0].geometry.dispose();this.children[0].material.dispose();}update(){const mesh=this.children[0];if(this.color!==undefined){this.material.color.set(this.color);}else{const colors=mesh.geometry.getAttribute('color');_color1.copy(this.light.color);_color2.copy(this.light.groundColor);for(let i=0,l=colors.count;i<l;i++){const color=i<l/2?_color1:_color2;colors.setXYZ(i,color.r,color.g,color.b);}colors.needsUpdate=true;}this.light.updateWorldMatrix(true,false);mesh.lookAt(_vector$1.setFromMatrixPosition(this.light.matrixWorld).negate());}}class GridHelper extends LineSegments{constructor(size=10,divisions=10,color1=0x444444,color2=0x888888){color1=new Color(color1);color2=new Color(color2);const center=divisions/2;const step=size/divisions;const halfSize=size/2;const vertices=[],colors=[];for(let i=0,j=0,k=-halfSize;i<=divisions;i++,k+=step){vertices.push(-halfSize,0,k,halfSize,0,k);vertices.push(k,0,-halfSize,k,0,halfSize);const color=i===center?color1:color2;color.toArray(colors,j);j+=3;color.toArray(colors,j);j+=3;color.toArray(colors,j);j+=3;color.toArray(colors,j);j+=3;}const geometry=new BufferGeometry();geometry.setAttribute('position',new Float32BufferAttribute(vertices,3));geometry.setAttribute('color',new Float32BufferAttribute(colors,3));const material=new LineBasicMaterial({vertexColors:true,toneMapped:false});super(geometry,material);this.type='GridHelper';}dispose(){this.geometry.dispose();this.material.dispose();}}class PolarGridHelper extends LineSegments{constructor(radius=10,sectors=16,rings=8,divisions=64,color1=0x444444,color2=0x888888){color1=new Color(color1);color2=new Color(color2);const vertices=[];const colors=[];// create the sectors
+		}
+		*/}}const _vector$1=/*@__PURE__*/new Vector3();const _color1=/*@__PURE__*/new Color();const _color2=/*@__PURE__*/new Color();class HemisphereLightHelper extends Object3D{constructor(light,size,color){super();this.light=light;this.matrix=light.matrixWorld;this.matrixAutoUpdate=false;this.color=color;this.type='HemisphereLightHelper';const geometry=new OctahedronGeometry(size);geometry.rotateY(Math.PI*0.5);this.material=new MeshBasicMaterial({wireframe:true,fog:false,toneMapped:false});if(this.color===undefined)this.material.vertexColors=true;const position=geometry.getAttribute('position');const colors=new Float32Array(position.count*3);geometry.setAttribute('color',new BufferAttribute(colors,3));this.add(new Mesh(geometry,this.material));this.update();}dispose(){this.children[0].geometry.dispose();this.children[0].material.dispose();}update(){const mesh=this.children[0];if(this.color!==undefined){this.material.color.set(this.color);}else{const colors=mesh.geometry.getAttribute('color');_color1.copy(this.light.color);_color2.copy(this.light.groundColor);for(let i=0,l=colors.count;i<l;i++){const color=i<l/2?_color1:_color2;colors.setXYZ(i,color.r,color.g,color.b);}colors.needsUpdate=true;}this.light.updateWorldMatrix(true,false);mesh.lookAt(_vector$1.setFromMatrixPosition(this.light.matrixWorld).negate());}}class GridHelper extends LineSegments{constructor(size=10,divisions=10,color1=0x444444,color2=0x888888){color1=new Color(color1);color2=new Color(color2);const center=divisions/2;const step=size/divisions;const halfSize=size/2;const vertices=[],colors=[];for(let i=0,j=0,k=-halfSize;i<=divisions;i++,k+=step){vertices.push(-halfSize,0,k,halfSize,0,k);vertices.push(k,0,-halfSize,k,0,halfSize);const color=i===center?color1:color2;color.toArray(colors,j);j+=3;color.toArray(colors,j);j+=3;color.toArray(colors,j);j+=3;color.toArray(colors,j);j+=3;}const geometry=new BufferGeometry();geometry.setAttribute('position',new Float32BufferAttribute(vertices,3));geometry.setAttribute('color',new Float32BufferAttribute(colors,3));const material=new LineBasicMaterial({vertexColors:true,toneMapped:false});super(geometry,material);this.type='GridHelper';}dispose(){this.geometry.dispose();this.material.dispose();}}class PolarGridHelper extends LineSegments{constructor(radius=10,sectors=16,rings=8,divisions=64,color1=0x444444,color2=0x888888){color1=new Color(color1);color2=new Color(color2);const vertices=[];const colors=[];// create the sectors
 if(sectors>1){for(let i=0;i<sectors;i++){const v=i/sectors*(Math.PI*2);const x=Math.sin(v)*radius;const z=Math.cos(v)*radius;vertices.push(0,0,0);vertices.push(x,0,z);const color=i&1?color1:color2;colors.push(color.r,color.g,color.b);colors.push(color.r,color.g,color.b);}}// create the rings
 for(let i=0;i<rings;i++){const color=i&1?color1:color2;const r=radius-radius/rings*i;for(let j=0;j<divisions;j++){// first vertex
 let v=j/divisions*(Math.PI*2);let x=Math.sin(v)*r;let z=Math.cos(v)*r;vertices.push(x,0,z);colors.push(color.r,color.g,color.b);// second vertex
@@ -34517,20 +34571,20 @@ setPoint('n1',pointMap,geometry,_camera,-1,-1,nearZ);setPoint('n2',pointMap,geom
 setPoint('f1',pointMap,geometry,_camera,-1,-1,1);setPoint('f2',pointMap,geometry,_camera,w,-1,1);setPoint('f3',pointMap,geometry,_camera,-1,h,1);setPoint('f4',pointMap,geometry,_camera,w,h,1);// up
 setPoint('u1',pointMap,geometry,_camera,w*0.7,h*1.1,nearZ);setPoint('u2',pointMap,geometry,_camera,-1*0.7,h*1.1,nearZ);setPoint('u3',pointMap,geometry,_camera,0,h*2,nearZ);// cross
 setPoint('cf1',pointMap,geometry,_camera,-1,0,1);setPoint('cf2',pointMap,geometry,_camera,w,0,1);setPoint('cf3',pointMap,geometry,_camera,0,-1,1);setPoint('cf4',pointMap,geometry,_camera,0,h,1);setPoint('cn1',pointMap,geometry,_camera,-1,0,nearZ);setPoint('cn2',pointMap,geometry,_camera,w,0,nearZ);setPoint('cn3',pointMap,geometry,_camera,0,-1,nearZ);setPoint('cn4',pointMap,geometry,_camera,0,h,nearZ);geometry.getAttribute('position').needsUpdate=true;}dispose(){this.geometry.dispose();this.material.dispose();}}function setPoint(point,pointMap,geometry,camera,x,y,z){_vector.set(x,y,z).unproject(camera);const points=pointMap[point];if(points!==undefined){const position=geometry.getAttribute('position');for(let i=0,l=points.length;i<l;i++){position.setXYZ(points[i],_vector.x,_vector.y,_vector.z);}}}const _box=/*@__PURE__*/new Box3();class BoxHelper extends LineSegments{constructor(object,color=0xffff00){const indices=new Uint16Array([0,1,1,2,2,3,3,0,4,5,5,6,6,7,7,4,0,4,1,5,2,6,3,7]);const positions=new Float32Array(8*3);const geometry=new BufferGeometry();geometry.setIndex(new BufferAttribute(indices,1));geometry.setAttribute('position',new BufferAttribute(positions,3));super(geometry,new LineBasicMaterial({color:color,toneMapped:false}));this.object=object;this.type='BoxHelper';this.matrixAutoUpdate=false;this.update();}update(object){if(object!==undefined){console.warn('THREE.BoxHelper: .update() has no longer arguments.');}if(this.object!==undefined){_box.setFromObject(this.object);}if(_box.isEmpty())return;const min=_box.min;const max=_box.max;/*
-      5____4
-    1/___0/|
-    | 6__|_7
-    2/___3/
+			5____4
+		1/___0/|
+		| 6__|_7
+		2/___3/
 
-    0: max.x, max.y, max.z
-    1: min.x, max.y, max.z
-    2: min.x, min.y, max.z
-    3: max.x, min.y, max.z
-    4: max.x, max.y, min.z
-    5: min.x, max.y, min.z
-    6: min.x, min.y, min.z
-    7: max.x, min.y, min.z
-    */const position=this.geometry.attributes.position;const array=position.array;array[0]=max.x;array[1]=max.y;array[2]=max.z;array[3]=min.x;array[4]=max.y;array[5]=max.z;array[6]=min.x;array[7]=min.y;array[8]=max.z;array[9]=max.x;array[10]=min.y;array[11]=max.z;array[12]=max.x;array[13]=max.y;array[14]=min.z;array[15]=min.x;array[16]=max.y;array[17]=min.z;array[18]=min.x;array[19]=min.y;array[20]=min.z;array[21]=max.x;array[22]=min.y;array[23]=min.z;position.needsUpdate=true;this.geometry.computeBoundingSphere();}setFromObject(object){this.object=object;this.update();return this;}copy(source,recursive){super.copy(source,recursive);this.object=source.object;return this;}dispose(){this.geometry.dispose();this.material.dispose();}}class Box3Helper extends LineSegments{constructor(box,color=0xffff00){const indices=new Uint16Array([0,1,1,2,2,3,3,0,4,5,5,6,6,7,7,4,0,4,1,5,2,6,3,7]);const positions=[1,1,1,-1,1,1,-1,-1,1,1,-1,1,1,1,-1,-1,1,-1,-1,-1,-1,1,-1,-1];const geometry=new BufferGeometry();geometry.setIndex(new BufferAttribute(indices,1));geometry.setAttribute('position',new Float32BufferAttribute(positions,3));super(geometry,new LineBasicMaterial({color:color,toneMapped:false}));this.box=box;this.type='Box3Helper';this.geometry.computeBoundingSphere();}updateMatrixWorld(force){const box=this.box;if(box.isEmpty())return;box.getCenter(this.position);box.getSize(this.scale);this.scale.multiplyScalar(0.5);super.updateMatrixWorld(force);}dispose(){this.geometry.dispose();this.material.dispose();}}class PlaneHelper extends Line{constructor(plane,size=1,hex=0xffff00){const color=hex;const positions=[1,-1,0,-1,1,0,-1,-1,0,1,1,0,-1,1,0,-1,-1,0,1,-1,0,1,1,0];const geometry=new BufferGeometry();geometry.setAttribute('position',new Float32BufferAttribute(positions,3));geometry.computeBoundingSphere();super(geometry,new LineBasicMaterial({color:color,toneMapped:false}));this.type='PlaneHelper';this.plane=plane;this.size=size;const positions2=[1,1,0,-1,1,0,-1,-1,0,1,1,0,-1,-1,0,1,-1,0];const geometry2=new BufferGeometry();geometry2.setAttribute('position',new Float32BufferAttribute(positions2,3));geometry2.computeBoundingSphere();this.add(new Mesh(geometry2,new MeshBasicMaterial({color:color,opacity:0.2,transparent:true,depthWrite:false,toneMapped:false})));}updateMatrixWorld(force){this.position.set(0,0,0);this.scale.set(0.5*this.size,0.5*this.size,1);this.lookAt(this.plane.normal);this.translateZ(-this.plane.constant);super.updateMatrixWorld(force);}dispose(){this.geometry.dispose();this.material.dispose();this.children[0].geometry.dispose();this.children[0].material.dispose();}}const _axis=/*@__PURE__*/new Vector3();let _lineGeometry,_coneGeometry;class ArrowHelper extends Object3D{// dir is assumed to be normalized
+		0: max.x, max.y, max.z
+		1: min.x, max.y, max.z
+		2: min.x, min.y, max.z
+		3: max.x, min.y, max.z
+		4: max.x, max.y, min.z
+		5: min.x, max.y, min.z
+		6: min.x, min.y, min.z
+		7: max.x, min.y, min.z
+		*/const position=this.geometry.attributes.position;const array=position.array;array[0]=max.x;array[1]=max.y;array[2]=max.z;array[3]=min.x;array[4]=max.y;array[5]=max.z;array[6]=min.x;array[7]=min.y;array[8]=max.z;array[9]=max.x;array[10]=min.y;array[11]=max.z;array[12]=max.x;array[13]=max.y;array[14]=min.z;array[15]=min.x;array[16]=max.y;array[17]=min.z;array[18]=min.x;array[19]=min.y;array[20]=min.z;array[21]=max.x;array[22]=min.y;array[23]=min.z;position.needsUpdate=true;this.geometry.computeBoundingSphere();}setFromObject(object){this.object=object;this.update();return this;}copy(source,recursive){super.copy(source,recursive);this.object=source.object;return this;}dispose(){this.geometry.dispose();this.material.dispose();}}class Box3Helper extends LineSegments{constructor(box,color=0xffff00){const indices=new Uint16Array([0,1,1,2,2,3,3,0,4,5,5,6,6,7,7,4,0,4,1,5,2,6,3,7]);const positions=[1,1,1,-1,1,1,-1,-1,1,1,-1,1,1,1,-1,-1,1,-1,-1,-1,-1,1,-1,-1];const geometry=new BufferGeometry();geometry.setIndex(new BufferAttribute(indices,1));geometry.setAttribute('position',new Float32BufferAttribute(positions,3));super(geometry,new LineBasicMaterial({color:color,toneMapped:false}));this.box=box;this.type='Box3Helper';this.geometry.computeBoundingSphere();}updateMatrixWorld(force){const box=this.box;if(box.isEmpty())return;box.getCenter(this.position);box.getSize(this.scale);this.scale.multiplyScalar(0.5);super.updateMatrixWorld(force);}dispose(){this.geometry.dispose();this.material.dispose();}}class PlaneHelper extends Line{constructor(plane,size=1,hex=0xffff00){const color=hex;const positions=[1,-1,0,-1,1,0,-1,-1,0,1,1,0,-1,1,0,-1,-1,0,1,-1,0,1,1,0];const geometry=new BufferGeometry();geometry.setAttribute('position',new Float32BufferAttribute(positions,3));geometry.computeBoundingSphere();super(geometry,new LineBasicMaterial({color:color,toneMapped:false}));this.type='PlaneHelper';this.plane=plane;this.size=size;const positions2=[1,1,0,-1,1,0,-1,-1,0,1,1,0,-1,-1,0,1,-1,0];const geometry2=new BufferGeometry();geometry2.setAttribute('position',new Float32BufferAttribute(positions2,3));geometry2.computeBoundingSphere();this.add(new Mesh(geometry2,new MeshBasicMaterial({color:color,opacity:0.2,transparent:true,depthWrite:false,toneMapped:false})));}updateMatrixWorld(force){this.position.set(0,0,0);this.scale.set(0.5*this.size,0.5*this.size,1);this.lookAt(this.plane.normal);this.translateZ(-this.plane.constant);super.updateMatrixWorld(force);}dispose(){this.geometry.dispose();this.material.dispose();this.children[0].geometry.dispose();this.children[0].material.dispose();}}const _axis=/*@__PURE__*/new Vector3();let _lineGeometry,_coneGeometry;class ArrowHelper extends Object3D{// dir is assumed to be normalized
 constructor(dir=new Vector3(0,0,1),origin=new Vector3(0,0,0),length=1,color=0xffff00,headLength=length*0.2,headWidth=headLength*0.2){super();this.type='ArrowHelper';if(_lineGeometry===undefined){_lineGeometry=new BufferGeometry();_lineGeometry.setAttribute('position',new Float32BufferAttribute([0,0,0,0,1,0],3));_coneGeometry=new CylinderGeometry(0,0.5,1,5,1);_coneGeometry.translate(0,-0.5,0);}this.position.copy(origin);this.line=new Line(_lineGeometry,new LineBasicMaterial({color:color,toneMapped:false}));this.line.matrixAutoUpdate=false;this.add(this.line);this.cone=new Mesh(_coneGeometry,new MeshBasicMaterial({color:color,toneMapped:false}));this.cone.matrixAutoUpdate=false;this.add(this.cone);this.setDirection(dir);this.setLength(length,headLength,headWidth);}setDirection(dir){// dir is assumed to be normalized
 if(dir.y>0.99999){this.quaternion.set(0,0,0,1);}else if(dir.y<-0.99999){this.quaternion.set(1,0,0,0);}else{_axis.set(dir.z,0,-dir.x).normalize();const radians=Math.acos(dir.y);this.quaternion.setFromAxisAngle(_axis,radians);}}setLength(length,headLength=length*0.2,headWidth=headLength*0.2){this.line.scale.set(1,Math.max(0.0001,length-headLength),1);// see #17458
 this.line.updateMatrix();this.cone.scale.set(headWidth,headLength,headWidth);this.cone.position.y=length;this.cone.updateMatrix();}setColor(color){this.line.material.color.set(color);this.cone.material.color.set(color);}copy(source){super.copy(source,false);this.line.copy(source.line);this.cone.copy(source.cone);return this;}dispose(){this.line.geometry.dispose();this.line.material.dispose();this.cone.geometry.dispose();this.cone.material.dispose();}}class AxesHelper extends LineSegments{constructor(size=1){const vertices=[0,0,0,size,0,0,0,0,0,0,size,0,0,0,0,0,0,size];const colors=[1,0,0,1,0.6,0,0,1,0,0.6,1,0,0,0,1,0,0.6,1];const geometry=new BufferGeometry();geometry.setAttribute('position',new Float32BufferAttribute(vertices,3));geometry.setAttribute('color',new Float32BufferAttribute(colors,3));const material=new LineBasicMaterial({vertexColors:true,toneMapped:false});super(geometry,material);this.type='AxesHelper';}setColors(xAxisColor,yAxisColor,zAxisColor){const color=new Color();const array=this.geometry.attributes.color.array;color.set(xAxisColor);color.toArray(array,0);color.toArray(array,3);color.set(yAxisColor);color.toArray(array,6);color.toArray(array,9);color.set(zAxisColor);color.toArray(array,12);color.toArray(array,15);this.geometry.attributes.color.needsUpdate=true;return this;}dispose(){this.geometry.dispose();this.material.dispose();}}class ShapePath{constructor(){this.type='ShapePath';this.color=new Color();this.subPaths=[];this.currentPath=null;}moveTo(x,y){this.currentPath=new Path();this.subPaths.push(this.currentPath);this.currentPath.moveTo(x,y);return this;}lineTo(x,y){this.currentPath.lineTo(x,y);return this;}quadraticCurveTo(aCPx,aCPy,aX,aY){this.currentPath.quadraticCurveTo(aCPx,aCPy,aX,aY);return this;}bezierCurveTo(aCP1x,aCP1y,aCP2x,aCP2y,aX,aY){this.currentPath.bezierCurveTo(aCP1x,aCP1y,aCP2x,aCP2y,aX,aY);return this;}splineThru(pts){this.currentPath.splineThru(pts);return this;}toShapes(isCCW){function toShapesNoHoles(inSubpaths){const shapes=[];for(let i=0,l=inSubpaths.length;i<l;i++){const tmpPath=inSubpaths[i];const tmpShape=new Shape();tmpShape.curves=tmpPath.curves;shapes.push(tmpShape);}return shapes;}function isPointInsidePolygon(inPt,inPolygon){const polyLen=inPolygon.length;// inPt on polygon contour => immediate success    or
@@ -35074,211 +35128,211 @@ const _axisDirections=[/*@__PURE__*/new _three_core_js__WEBPACK_IMPORTED_MODULE_
  * Paper: Fast, Accurate Image-Based Lighting
  * https://drive.google.com/file/d/15y8r_UpKlU9SvV4ILb0C3qCPecS8pvLz/view
 */class PMREMGenerator{constructor(renderer){this._renderer=renderer;this._pingPongRenderTarget=null;this._lodMax=0;this._cubeSize=0;this._lodPlanes=[];this._sizeLods=[];this._sigmas=[];this._blurMaterial=null;this._cubemapMaterial=null;this._equirectMaterial=null;this._compileMaterial(this._blurMaterial);}/**
-   * Generates a PMREM from a supplied Scene, which can be faster than using an
-   * image if networking bandwidth is low. Optional sigma specifies a blur radius
-   * in radians to be applied to the scene before PMREM generation. Optional near
-   * and far planes ensure the scene is rendered in its entirety (the cubeCamera
-   * is placed at the origin).
-   *
-   * @param {Scene} scene
-   * @param {number} sigma
-   * @param {number} near
-   * @param {number} far
-   * @return {WebGLRenderTarget}
-   */fromScene(scene,sigma=0,near=0.1,far=100){_oldTarget=this._renderer.getRenderTarget();_oldActiveCubeFace=this._renderer.getActiveCubeFace();_oldActiveMipmapLevel=this._renderer.getActiveMipmapLevel();_oldXrEnabled=this._renderer.xr.enabled;this._renderer.xr.enabled=false;this._setSize(256);const cubeUVRenderTarget=this._allocateTargets();cubeUVRenderTarget.depthBuffer=true;this._sceneToCubeUV(scene,near,far,cubeUVRenderTarget);if(sigma>0){this._blur(cubeUVRenderTarget,0,0,sigma);}this._applyPMREM(cubeUVRenderTarget);this._cleanup(cubeUVRenderTarget);return cubeUVRenderTarget;}/**
-   * Generates a PMREM from an equirectangular texture, which can be either LDR
-   * or HDR. The ideal input image size is 1k (1024 x 512),
-   * as this matches best with the 256 x 256 cubemap output.
-   * The smallest supported equirectangular image size is 64 x 32.
-   *
-   * @param {Texture} equirectangular
-   * @param {WebGLRenderTarget} [renderTarget=null] - Optional render target.
-   * @return {WebGLRenderTarget}
-   */fromEquirectangular(equirectangular,renderTarget=null){return this._fromTexture(equirectangular,renderTarget);}/**
-   * Generates a PMREM from an cubemap texture, which can be either LDR
-   * or HDR. The ideal input cube size is 256 x 256,
-   * as this matches best with the 256 x 256 cubemap output.
-   * The smallest supported cube size is 16 x 16.
-   *
-   * @param {Texture} cubemap
-   * @param {null} [renderTarget=null] - Optional render target.
-   * @return {WebGLRenderTarget}
-   */fromCubemap(cubemap,renderTarget=null){return this._fromTexture(cubemap,renderTarget);}/**
-   * Pre-compiles the cubemap shader. You can get faster start-up by invoking this method during
-   * your texture's network fetch for increased concurrency.
-   */compileCubemapShader(){if(this._cubemapMaterial===null){this._cubemapMaterial=_getCubemapMaterial();this._compileMaterial(this._cubemapMaterial);}}/**
-   * Pre-compiles the equirectangular shader. You can get faster start-up by invoking this method during
-   * your texture's network fetch for increased concurrency.
-   */compileEquirectangularShader(){if(this._equirectMaterial===null){this._equirectMaterial=_getEquirectMaterial();this._compileMaterial(this._equirectMaterial);}}/**
-   * Disposes of the PMREMGenerator's internal memory. Note that PMREMGenerator is a static class,
-   * so you should not need more than one PMREMGenerator object. If you do, calling dispose() on
-   * one of them will cause any others to also become unusable.
-   */dispose(){this._dispose();if(this._cubemapMaterial!==null)this._cubemapMaterial.dispose();if(this._equirectMaterial!==null)this._equirectMaterial.dispose();}// private interface
+	 * Generates a PMREM from a supplied Scene, which can be faster than using an
+	 * image if networking bandwidth is low. Optional sigma specifies a blur radius
+	 * in radians to be applied to the scene before PMREM generation. Optional near
+	 * and far planes ensure the scene is rendered in its entirety (the cubeCamera
+	 * is placed at the origin).
+	 *
+	 * @param {Scene} scene
+	 * @param {number} sigma
+	 * @param {number} near
+	 * @param {number} far
+	 * @return {WebGLRenderTarget}
+	 */fromScene(scene,sigma=0,near=0.1,far=100){_oldTarget=this._renderer.getRenderTarget();_oldActiveCubeFace=this._renderer.getActiveCubeFace();_oldActiveMipmapLevel=this._renderer.getActiveMipmapLevel();_oldXrEnabled=this._renderer.xr.enabled;this._renderer.xr.enabled=false;this._setSize(256);const cubeUVRenderTarget=this._allocateTargets();cubeUVRenderTarget.depthBuffer=true;this._sceneToCubeUV(scene,near,far,cubeUVRenderTarget);if(sigma>0){this._blur(cubeUVRenderTarget,0,0,sigma);}this._applyPMREM(cubeUVRenderTarget);this._cleanup(cubeUVRenderTarget);return cubeUVRenderTarget;}/**
+	 * Generates a PMREM from an equirectangular texture, which can be either LDR
+	 * or HDR. The ideal input image size is 1k (1024 x 512),
+	 * as this matches best with the 256 x 256 cubemap output.
+	 * The smallest supported equirectangular image size is 64 x 32.
+	 *
+	 * @param {Texture} equirectangular
+	 * @param {WebGLRenderTarget} [renderTarget=null] - Optional render target.
+	 * @return {WebGLRenderTarget}
+	 */fromEquirectangular(equirectangular,renderTarget=null){return this._fromTexture(equirectangular,renderTarget);}/**
+	 * Generates a PMREM from an cubemap texture, which can be either LDR
+	 * or HDR. The ideal input cube size is 256 x 256,
+	 * as this matches best with the 256 x 256 cubemap output.
+	 * The smallest supported cube size is 16 x 16.
+	 *
+	 * @param {Texture} cubemap
+	 * @param {null} [renderTarget=null] - Optional render target.
+	 * @return {WebGLRenderTarget}
+	 */fromCubemap(cubemap,renderTarget=null){return this._fromTexture(cubemap,renderTarget);}/**
+	 * Pre-compiles the cubemap shader. You can get faster start-up by invoking this method during
+	 * your texture's network fetch for increased concurrency.
+	 */compileCubemapShader(){if(this._cubemapMaterial===null){this._cubemapMaterial=_getCubemapMaterial();this._compileMaterial(this._cubemapMaterial);}}/**
+	 * Pre-compiles the equirectangular shader. You can get faster start-up by invoking this method during
+	 * your texture's network fetch for increased concurrency.
+	 */compileEquirectangularShader(){if(this._equirectMaterial===null){this._equirectMaterial=_getEquirectMaterial();this._compileMaterial(this._equirectMaterial);}}/**
+	 * Disposes of the PMREMGenerator's internal memory. Note that PMREMGenerator is a static class,
+	 * so you should not need more than one PMREMGenerator object. If you do, calling dispose() on
+	 * one of them will cause any others to also become unusable.
+	 */dispose(){this._dispose();if(this._cubemapMaterial!==null)this._cubemapMaterial.dispose();if(this._equirectMaterial!==null)this._equirectMaterial.dispose();}// private interface
 _setSize(cubeSize){this._lodMax=Math.floor(Math.log2(cubeSize));this._cubeSize=Math.pow(2,this._lodMax);}_dispose(){if(this._blurMaterial!==null)this._blurMaterial.dispose();if(this._pingPongRenderTarget!==null)this._pingPongRenderTarget.dispose();for(let i=0;i<this._lodPlanes.length;i++){this._lodPlanes[i].dispose();}}_cleanup(outputTarget){this._renderer.setRenderTarget(_oldTarget,_oldActiveCubeFace,_oldActiveMipmapLevel);this._renderer.xr.enabled=_oldXrEnabled;outputTarget.scissorTest=false;_setViewport(outputTarget,0,0,outputTarget.width,outputTarget.height);}_fromTexture(texture,renderTarget){if(texture.mapping===_three_core_js__WEBPACK_IMPORTED_MODULE_0__.CubeReflectionMapping||texture.mapping===_three_core_js__WEBPACK_IMPORTED_MODULE_0__.CubeRefractionMapping){this._setSize(texture.image.length===0?16:texture.image[0].width||texture.image[0].image.width);}else{// Equirectangular
 this._setSize(texture.image.width/4);}_oldTarget=this._renderer.getRenderTarget();_oldActiveCubeFace=this._renderer.getActiveCubeFace();_oldActiveMipmapLevel=this._renderer.getActiveMipmapLevel();_oldXrEnabled=this._renderer.xr.enabled;this._renderer.xr.enabled=false;const cubeUVRenderTarget=renderTarget||this._allocateTargets();this._textureToCubeUV(texture,cubeUVRenderTarget);this._applyPMREM(cubeUVRenderTarget);this._cleanup(cubeUVRenderTarget);return cubeUVRenderTarget;}_allocateTargets(){const width=3*Math.max(this._cubeSize,16*7);const height=4*this._cubeSize;const params={magFilter:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.LinearFilter,minFilter:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.LinearFilter,generateMipmaps:false,type:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.HalfFloatType,format:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.RGBAFormat,colorSpace:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.LinearSRGBColorSpace,depthBuffer:false};const cubeUVRenderTarget=_createRenderTarget(width,height,params);if(this._pingPongRenderTarget===null||this._pingPongRenderTarget.width!==width||this._pingPongRenderTarget.height!==height){if(this._pingPongRenderTarget!==null){this._dispose();}this._pingPongRenderTarget=_createRenderTarget(width,height,params);const{_lodMax}=this;({sizeLods:this._sizeLods,lodPlanes:this._lodPlanes,sigmas:this._sigmas}=_createPlanes(_lodMax));this._blurMaterial=_getBlurShader(_lodMax,width,height);}return cubeUVRenderTarget;}_compileMaterial(material){const tmpMesh=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.Mesh(this._lodPlanes[0],material);this._renderer.compile(tmpMesh,_flatCamera);}_sceneToCubeUV(scene,near,far,cubeUVRenderTarget){const fov=90;const aspect=1;const cubeCamera=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.PerspectiveCamera(fov,aspect,near,far);const upSign=[1,-1,1,1,1,1];const forwardSign=[1,1,1,-1,-1,-1];const renderer=this._renderer;const originalAutoClear=renderer.autoClear;const toneMapping=renderer.toneMapping;renderer.getClearColor(_clearColor);renderer.toneMapping=_three_core_js__WEBPACK_IMPORTED_MODULE_0__.NoToneMapping;renderer.autoClear=false;const backgroundMaterial=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.MeshBasicMaterial({name:'PMREM.Background',side:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.BackSide,depthWrite:false,depthTest:false});const backgroundBox=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.Mesh(new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.BoxGeometry(),backgroundMaterial);let useSolidColor=false;const background=scene.background;if(background){if(background.isColor){backgroundMaterial.color.copy(background);scene.background=null;useSolidColor=true;}}else{backgroundMaterial.color.copy(_clearColor);useSolidColor=true;}for(let i=0;i<6;i++){const col=i%3;if(col===0){cubeCamera.up.set(0,upSign[i],0);cubeCamera.lookAt(forwardSign[i],0,0);}else if(col===1){cubeCamera.up.set(0,0,upSign[i]);cubeCamera.lookAt(0,forwardSign[i],0);}else{cubeCamera.up.set(0,upSign[i],0);cubeCamera.lookAt(0,0,forwardSign[i]);}const size=this._cubeSize;_setViewport(cubeUVRenderTarget,col*size,i>2?size:0,size,size);renderer.setRenderTarget(cubeUVRenderTarget);if(useSolidColor){renderer.render(backgroundBox,cubeCamera);}renderer.render(scene,cubeCamera);}backgroundBox.geometry.dispose();backgroundBox.material.dispose();renderer.toneMapping=toneMapping;renderer.autoClear=originalAutoClear;scene.background=background;}_textureToCubeUV(texture,cubeUVRenderTarget){const renderer=this._renderer;const isCubeTexture=texture.mapping===_three_core_js__WEBPACK_IMPORTED_MODULE_0__.CubeReflectionMapping||texture.mapping===_three_core_js__WEBPACK_IMPORTED_MODULE_0__.CubeRefractionMapping;if(isCubeTexture){if(this._cubemapMaterial===null){this._cubemapMaterial=_getCubemapMaterial();}this._cubemapMaterial.uniforms.flipEnvMap.value=texture.isRenderTargetTexture===false?-1:1;}else{if(this._equirectMaterial===null){this._equirectMaterial=_getEquirectMaterial();}}const material=isCubeTexture?this._cubemapMaterial:this._equirectMaterial;const mesh=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.Mesh(this._lodPlanes[0],material);const uniforms=material.uniforms;uniforms['envMap'].value=texture;const size=this._cubeSize;_setViewport(cubeUVRenderTarget,0,0,3*size,2*size);renderer.setRenderTarget(cubeUVRenderTarget);renderer.render(mesh,_flatCamera);}_applyPMREM(cubeUVRenderTarget){const renderer=this._renderer;const autoClear=renderer.autoClear;renderer.autoClear=false;const n=this._lodPlanes.length;for(let i=1;i<n;i++){const sigma=Math.sqrt(this._sigmas[i]*this._sigmas[i]-this._sigmas[i-1]*this._sigmas[i-1]);const poleAxis=_axisDirections[(n-i-1)%_axisDirections.length];this._blur(cubeUVRenderTarget,i-1,i,sigma,poleAxis);}renderer.autoClear=autoClear;}/**
-   * This is a two-pass Gaussian blur for a cubemap. Normally this is done
-   * vertically and horizontally, but this breaks down on a cube. Here we apply
-   * the blur latitudinally (around the poles), and then longitudinally (towards
-   * the poles) to approximate the orthogonally-separable blur. It is least
-   * accurate at the poles, but still does a decent job.
-   *
-   * @param {WebGLRenderTarget} cubeUVRenderTarget
-   * @param {number} lodIn
-   * @param {number} lodOut
-   * @param {number} sigma
-   * @param {Vector3} [poleAxis]
-   */_blur(cubeUVRenderTarget,lodIn,lodOut,sigma,poleAxis){const pingPongRenderTarget=this._pingPongRenderTarget;this._halfBlur(cubeUVRenderTarget,pingPongRenderTarget,lodIn,lodOut,sigma,'latitudinal',poleAxis);this._halfBlur(pingPongRenderTarget,cubeUVRenderTarget,lodOut,lodOut,sigma,'longitudinal',poleAxis);}_halfBlur(targetIn,targetOut,lodIn,lodOut,sigmaRadians,direction,poleAxis){const renderer=this._renderer;const blurMaterial=this._blurMaterial;if(direction!=='latitudinal'&&direction!=='longitudinal'){console.error('blur direction must be either latitudinal or longitudinal!');}// Number of standard deviations at which to cut off the discrete approximation.
+	 * This is a two-pass Gaussian blur for a cubemap. Normally this is done
+	 * vertically and horizontally, but this breaks down on a cube. Here we apply
+	 * the blur latitudinally (around the poles), and then longitudinally (towards
+	 * the poles) to approximate the orthogonally-separable blur. It is least
+	 * accurate at the poles, but still does a decent job.
+	 *
+	 * @param {WebGLRenderTarget} cubeUVRenderTarget
+	 * @param {number} lodIn
+	 * @param {number} lodOut
+	 * @param {number} sigma
+	 * @param {Vector3} [poleAxis]
+	 */_blur(cubeUVRenderTarget,lodIn,lodOut,sigma,poleAxis){const pingPongRenderTarget=this._pingPongRenderTarget;this._halfBlur(cubeUVRenderTarget,pingPongRenderTarget,lodIn,lodOut,sigma,'latitudinal',poleAxis);this._halfBlur(pingPongRenderTarget,cubeUVRenderTarget,lodOut,lodOut,sigma,'longitudinal',poleAxis);}_halfBlur(targetIn,targetOut,lodIn,lodOut,sigmaRadians,direction,poleAxis){const renderer=this._renderer;const blurMaterial=this._blurMaterial;if(direction!=='latitudinal'&&direction!=='longitudinal'){console.error('blur direction must be either latitudinal or longitudinal!');}// Number of standard deviations at which to cut off the discrete approximation.
 const STANDARD_DEVIATIONS=3;const blurMesh=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.Mesh(this._lodPlanes[lodOut],blurMaterial);const blurUniforms=blurMaterial.uniforms;const pixels=this._sizeLods[lodIn]-1;const radiansPerPixel=isFinite(sigmaRadians)?Math.PI/(2*pixels):2*Math.PI/(2*MAX_SAMPLES-1);const sigmaPixels=sigmaRadians/radiansPerPixel;const samples=isFinite(sigmaRadians)?1+Math.floor(STANDARD_DEVIATIONS*sigmaPixels):MAX_SAMPLES;if(samples>MAX_SAMPLES){console.warn(`sigmaRadians, ${sigmaRadians}, is too large and will clip, as it requested ${samples} samples when the maximum is set to ${MAX_SAMPLES}`);}const weights=[];let sum=0;for(let i=0;i<MAX_SAMPLES;++i){const x=i/sigmaPixels;const weight=Math.exp(-x*x/2);weights.push(weight);if(i===0){sum+=weight;}else if(i<samples){sum+=2*weight;}}for(let i=0;i<weights.length;i++){weights[i]=weights[i]/sum;}blurUniforms['envMap'].value=targetIn.texture;blurUniforms['samples'].value=samples;blurUniforms['weights'].value=weights;blurUniforms['latitudinal'].value=direction==='latitudinal';if(poleAxis){blurUniforms['poleAxis'].value=poleAxis;}const{_lodMax}=this;blurUniforms['dTheta'].value=radiansPerPixel;blurUniforms['mipInt'].value=_lodMax-lodIn;const outputSize=this._sizeLods[lodOut];const x=3*outputSize*(lodOut>_lodMax-LOD_MIN?lodOut-_lodMax+LOD_MIN:0);const y=4*(this._cubeSize-outputSize);_setViewport(targetOut,x,y,3*outputSize,2*outputSize);renderer.setRenderTarget(targetOut);renderer.render(blurMesh,_flatCamera);}}function _createPlanes(lodMax){const lodPlanes=[];const sizeLods=[];const sigmas=[];let lod=lodMax;const totalLods=lodMax-LOD_MIN+1+EXTRA_LOD_SIGMA.length;for(let i=0;i<totalLods;i++){const sizeLod=Math.pow(2,lod);sizeLods.push(sizeLod);let sigma=1.0/sizeLod;if(i>lodMax-LOD_MIN){sigma=EXTRA_LOD_SIGMA[i-lodMax+LOD_MIN-1];}else if(i===0){sigma=0;}sigmas.push(sigma);const texelSize=1.0/(sizeLod-2);const min=-texelSize;const max=1+texelSize;const uv1=[min,min,max,min,max,max,min,min,max,max,min,max];const cubeFaces=6;const vertices=6;const positionSize=3;const uvSize=2;const faceIndexSize=1;const position=new Float32Array(positionSize*vertices*cubeFaces);const uv=new Float32Array(uvSize*vertices*cubeFaces);const faceIndex=new Float32Array(faceIndexSize*vertices*cubeFaces);for(let face=0;face<cubeFaces;face++){const x=face%3*2/3-1;const y=face>2?0:-1;const coordinates=[x,y,0,x+2/3,y,0,x+2/3,y+1,0,x,y,0,x+2/3,y+1,0,x,y+1,0];position.set(coordinates,positionSize*vertices*face);uv.set(uv1,uvSize*vertices*face);const fill=[face,face,face,face,face,face];faceIndex.set(fill,faceIndexSize*vertices*face);}const planes=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.BufferGeometry();planes.setAttribute('position',new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.BufferAttribute(position,positionSize));planes.setAttribute('uv',new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.BufferAttribute(uv,uvSize));planes.setAttribute('faceIndex',new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.BufferAttribute(faceIndex,faceIndexSize));lodPlanes.push(planes);if(lod>LOD_MIN){lod--;}}return{lodPlanes,sizeLods,sigmas};}function _createRenderTarget(width,height,params){const cubeUVRenderTarget=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.WebGLRenderTarget(width,height,params);cubeUVRenderTarget.texture.mapping=_three_core_js__WEBPACK_IMPORTED_MODULE_0__.CubeUVReflectionMapping;cubeUVRenderTarget.texture.name='PMREM.cubeUv';cubeUVRenderTarget.scissorTest=true;return cubeUVRenderTarget;}function _setViewport(target,x,y,width,height){target.viewport.set(x,y,width,height);target.scissor.set(x,y,width,height);}function _getBlurShader(lodMax,width,height){const weights=new Float32Array(MAX_SAMPLES);const poleAxis=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.Vector3(0,1,0);const shaderMaterial=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.ShaderMaterial({name:'SphericalGaussianBlur',defines:{'n':MAX_SAMPLES,'CUBEUV_TEXEL_WIDTH':1.0/width,'CUBEUV_TEXEL_HEIGHT':1.0/height,'CUBEUV_MAX_MIP':`${lodMax}.0`},uniforms:{'envMap':{value:null},'samples':{value:1},'weights':{value:weights},'latitudinal':{value:false},'dTheta':{value:0},'mipInt':{value:0},'poleAxis':{value:poleAxis}},vertexShader:_getCommonVertexShader(),fragmentShader:/* glsl */`
 
-      precision mediump float;
-      precision mediump int;
+			precision mediump float;
+			precision mediump int;
 
-      varying vec3 vOutputDirection;
+			varying vec3 vOutputDirection;
 
-      uniform sampler2D envMap;
-      uniform int samples;
-      uniform float weights[ n ];
-      uniform bool latitudinal;
-      uniform float dTheta;
-      uniform float mipInt;
-      uniform vec3 poleAxis;
+			uniform sampler2D envMap;
+			uniform int samples;
+			uniform float weights[ n ];
+			uniform bool latitudinal;
+			uniform float dTheta;
+			uniform float mipInt;
+			uniform vec3 poleAxis;
 
-      #define ENVMAP_TYPE_CUBE_UV
-      #include <cube_uv_reflection_fragment>
+			#define ENVMAP_TYPE_CUBE_UV
+			#include <cube_uv_reflection_fragment>
 
-      vec3 getSample( float theta, vec3 axis ) {
+			vec3 getSample( float theta, vec3 axis ) {
 
-        float cosTheta = cos( theta );
-        // Rodrigues' axis-angle rotation
-        vec3 sampleDirection = vOutputDirection * cosTheta
-          + cross( axis, vOutputDirection ) * sin( theta )
-          + axis * dot( axis, vOutputDirection ) * ( 1.0 - cosTheta );
+				float cosTheta = cos( theta );
+				// Rodrigues' axis-angle rotation
+				vec3 sampleDirection = vOutputDirection * cosTheta
+					+ cross( axis, vOutputDirection ) * sin( theta )
+					+ axis * dot( axis, vOutputDirection ) * ( 1.0 - cosTheta );
 
-        return bilinearCubeUV( envMap, sampleDirection, mipInt );
+				return bilinearCubeUV( envMap, sampleDirection, mipInt );
 
-      }
+			}
 
-      void main() {
+			void main() {
 
-        vec3 axis = latitudinal ? poleAxis : cross( poleAxis, vOutputDirection );
+				vec3 axis = latitudinal ? poleAxis : cross( poleAxis, vOutputDirection );
 
-        if ( all( equal( axis, vec3( 0.0 ) ) ) ) {
+				if ( all( equal( axis, vec3( 0.0 ) ) ) ) {
 
-          axis = vec3( vOutputDirection.z, 0.0, - vOutputDirection.x );
+					axis = vec3( vOutputDirection.z, 0.0, - vOutputDirection.x );
 
-        }
+				}
 
-        axis = normalize( axis );
+				axis = normalize( axis );
 
-        gl_FragColor = vec4( 0.0, 0.0, 0.0, 1.0 );
-        gl_FragColor.rgb += weights[ 0 ] * getSample( 0.0, axis );
+				gl_FragColor = vec4( 0.0, 0.0, 0.0, 1.0 );
+				gl_FragColor.rgb += weights[ 0 ] * getSample( 0.0, axis );
 
-        for ( int i = 1; i < n; i++ ) {
+				for ( int i = 1; i < n; i++ ) {
 
-          if ( i >= samples ) {
+					if ( i >= samples ) {
 
-            break;
+						break;
 
-          }
+					}
 
-          float theta = dTheta * float( i );
-          gl_FragColor.rgb += weights[ i ] * getSample( -1.0 * theta, axis );
-          gl_FragColor.rgb += weights[ i ] * getSample( theta, axis );
+					float theta = dTheta * float( i );
+					gl_FragColor.rgb += weights[ i ] * getSample( -1.0 * theta, axis );
+					gl_FragColor.rgb += weights[ i ] * getSample( theta, axis );
 
-        }
+				}
 
-      }
-    `,blending:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.NoBlending,depthTest:false,depthWrite:false});return shaderMaterial;}function _getEquirectMaterial(){return new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.ShaderMaterial({name:'EquirectangularToCubeUV',uniforms:{'envMap':{value:null}},vertexShader:_getCommonVertexShader(),fragmentShader:/* glsl */`
+			}
+		`,blending:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.NoBlending,depthTest:false,depthWrite:false});return shaderMaterial;}function _getEquirectMaterial(){return new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.ShaderMaterial({name:'EquirectangularToCubeUV',uniforms:{'envMap':{value:null}},vertexShader:_getCommonVertexShader(),fragmentShader:/* glsl */`
 
-      precision mediump float;
-      precision mediump int;
+			precision mediump float;
+			precision mediump int;
 
-      varying vec3 vOutputDirection;
+			varying vec3 vOutputDirection;
 
-      uniform sampler2D envMap;
+			uniform sampler2D envMap;
 
-      #include <common>
+			#include <common>
 
-      void main() {
+			void main() {
 
-        vec3 outputDirection = normalize( vOutputDirection );
-        vec2 uv = equirectUv( outputDirection );
+				vec3 outputDirection = normalize( vOutputDirection );
+				vec2 uv = equirectUv( outputDirection );
 
-        gl_FragColor = vec4( texture2D ( envMap, uv ).rgb, 1.0 );
+				gl_FragColor = vec4( texture2D ( envMap, uv ).rgb, 1.0 );
 
-      }
-    `,blending:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.NoBlending,depthTest:false,depthWrite:false});}function _getCubemapMaterial(){return new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.ShaderMaterial({name:'CubemapToCubeUV',uniforms:{'envMap':{value:null},'flipEnvMap':{value:-1}},vertexShader:_getCommonVertexShader(),fragmentShader:/* glsl */`
+			}
+		`,blending:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.NoBlending,depthTest:false,depthWrite:false});}function _getCubemapMaterial(){return new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.ShaderMaterial({name:'CubemapToCubeUV',uniforms:{'envMap':{value:null},'flipEnvMap':{value:-1}},vertexShader:_getCommonVertexShader(),fragmentShader:/* glsl */`
 
-      precision mediump float;
-      precision mediump int;
+			precision mediump float;
+			precision mediump int;
 
-      uniform float flipEnvMap;
+			uniform float flipEnvMap;
 
-      varying vec3 vOutputDirection;
+			varying vec3 vOutputDirection;
 
-      uniform samplerCube envMap;
+			uniform samplerCube envMap;
 
-      void main() {
+			void main() {
 
-        gl_FragColor = textureCube( envMap, vec3( flipEnvMap * vOutputDirection.x, vOutputDirection.yz ) );
+				gl_FragColor = textureCube( envMap, vec3( flipEnvMap * vOutputDirection.x, vOutputDirection.yz ) );
 
-      }
-    `,blending:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.NoBlending,depthTest:false,depthWrite:false});}function _getCommonVertexShader(){return/* glsl */`
+			}
+		`,blending:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.NoBlending,depthTest:false,depthWrite:false});}function _getCommonVertexShader(){return/* glsl */`
 
-    precision mediump float;
-    precision mediump int;
+		precision mediump float;
+		precision mediump int;
 
-    attribute float faceIndex;
+		attribute float faceIndex;
 
-    varying vec3 vOutputDirection;
+		varying vec3 vOutputDirection;
 
-    // RH coordinate system; PMREM face-indexing convention
-    vec3 getDirection( vec2 uv, float face ) {
+		// RH coordinate system; PMREM face-indexing convention
+		vec3 getDirection( vec2 uv, float face ) {
 
-      uv = 2.0 * uv - 1.0;
+			uv = 2.0 * uv - 1.0;
 
-      vec3 direction = vec3( uv, 1.0 );
+			vec3 direction = vec3( uv, 1.0 );
 
-      if ( face == 0.0 ) {
+			if ( face == 0.0 ) {
 
-        direction = direction.zyx; // ( 1, v, u ) pos x
+				direction = direction.zyx; // ( 1, v, u ) pos x
 
-      } else if ( face == 1.0 ) {
+			} else if ( face == 1.0 ) {
 
-        direction = direction.xzy;
-        direction.xz *= -1.0; // ( -u, 1, -v ) pos y
+				direction = direction.xzy;
+				direction.xz *= -1.0; // ( -u, 1, -v ) pos y
 
-      } else if ( face == 2.0 ) {
+			} else if ( face == 2.0 ) {
 
-        direction.x *= -1.0; // ( -u, v, 1 ) pos z
+				direction.x *= -1.0; // ( -u, v, 1 ) pos z
 
-      } else if ( face == 3.0 ) {
+			} else if ( face == 3.0 ) {
 
-        direction = direction.zyx;
-        direction.xz *= -1.0; // ( -1, v, -u ) neg x
+				direction = direction.zyx;
+				direction.xz *= -1.0; // ( -1, v, -u ) neg x
 
-      } else if ( face == 4.0 ) {
+			} else if ( face == 4.0 ) {
 
-        direction = direction.xzy;
-        direction.xy *= -1.0; // ( -u, -1, v ) neg y
+				direction = direction.xzy;
+				direction.xy *= -1.0; // ( -u, -1, v ) neg y
 
-      } else if ( face == 5.0 ) {
+			} else if ( face == 5.0 ) {
 
-        direction.z *= -1.0; // ( u, v, -1 ) neg z
+				direction.z *= -1.0; // ( u, v, -1 ) neg z
 
-      }
+			}
 
-      return direction;
+			return direction;
 
-    }
+		}
 
-    void main() {
+		void main() {
 
-      vOutputDirection = getDirection( uv, faceIndex );
-      gl_Position = vec4( position, 1.0 );
+			vOutputDirection = getDirection( uv, faceIndex );
+			gl_Position = vec4( position, 1.0 );
 
-    }
-  `;}function WebGLCubeUVMaps(renderer){let cubeUVmaps=new WeakMap();let pmremGenerator=null;function get(texture){if(texture&&texture.isTexture){const mapping=texture.mapping;const isEquirectMap=mapping===_three_core_js__WEBPACK_IMPORTED_MODULE_0__.EquirectangularReflectionMapping||mapping===_three_core_js__WEBPACK_IMPORTED_MODULE_0__.EquirectangularRefractionMapping;const isCubeMap=mapping===_three_core_js__WEBPACK_IMPORTED_MODULE_0__.CubeReflectionMapping||mapping===_three_core_js__WEBPACK_IMPORTED_MODULE_0__.CubeRefractionMapping;// equirect/cube map to cubeUV conversion
+		}
+	`;}function WebGLCubeUVMaps(renderer){let cubeUVmaps=new WeakMap();let pmremGenerator=null;function get(texture){if(texture&&texture.isTexture){const mapping=texture.mapping;const isEquirectMap=mapping===_three_core_js__WEBPACK_IMPORTED_MODULE_0__.EquirectangularReflectionMapping||mapping===_three_core_js__WEBPACK_IMPORTED_MODULE_0__.EquirectangularRefractionMapping;const isCubeMap=mapping===_three_core_js__WEBPACK_IMPORTED_MODULE_0__.CubeReflectionMapping||mapping===_three_core_js__WEBPACK_IMPORTED_MODULE_0__.CubeRefractionMapping;// equirect/cube map to cubeUV conversion
 if(isEquirectMap||isCubeMap){let renderTarget=cubeUVmaps.get(texture);const currentPMREMVersion=renderTarget!==undefined?renderTarget.texture.pmremVersion:0;if(texture.isRenderTargetTexture&&texture.pmremVersion!==currentPMREMVersion){if(pmremGenerator===null)pmremGenerator=new PMREMGenerator(renderer);renderTarget=isEquirectMap?pmremGenerator.fromEquirectangular(texture,renderTarget):pmremGenerator.fromCubemap(texture,renderTarget);renderTarget.texture.pmremVersion=texture.pmremVersion;cubeUVmaps.set(texture,renderTarget);return renderTarget.texture;}else{if(renderTarget!==undefined){return renderTarget.texture;}else{const image=texture.image;if(isEquirectMap&&image&&image.height>0||isCubeMap&&image&&isCubeTextureComplete(image)){if(pmremGenerator===null)pmremGenerator=new PMREMGenerator(renderer);renderTarget=isEquirectMap?pmremGenerator.fromEquirectangular(texture):pmremGenerator.fromCubemap(texture);renderTarget.texture.pmremVersion=texture.pmremVersion;cubeUVmaps.set(texture,renderTarget);texture.addEventListener('dispose',onTextureDispose);return renderTarget.texture;}else{// image not yet ready. try the conversion next frame
 return null;}}}}}return texture;}function isCubeTextureComplete(image){let count=0;const length=6;for(let i=0;i<length;i++){if(image[i]!==undefined)count++;}return count===length;}function onTextureDispose(event){const texture=event.target;texture.removeEventListener('dispose',onTextureDispose);const cubemapUV=cubeUVmaps.get(texture);if(cubemapUV!==undefined){cubeUVmaps.delete(texture);cubemapUV.dispose();}}function dispose(){cubeUVmaps=new WeakMap();if(pmremGenerator!==null){pmremGenerator.dispose();pmremGenerator=null;}}return{get:get,dispose:dispose};}function WebGLExtensions(gl){const extensions={};function getExtension(name){if(extensions[name]!==undefined){return extensions[name];}let extension;switch(name){case'WEBGL_depth_texture':extension=gl.getExtension('WEBGL_depth_texture')||gl.getExtension('MOZ_WEBGL_depth_texture')||gl.getExtension('WEBKIT_WEBGL_depth_texture');break;case'EXT_texture_filter_anisotropic':extension=gl.getExtension('EXT_texture_filter_anisotropic')||gl.getExtension('MOZ_EXT_texture_filter_anisotropic')||gl.getExtension('WEBKIT_EXT_texture_filter_anisotropic');break;case'WEBGL_compressed_texture_s3tc':extension=gl.getExtension('WEBGL_compressed_texture_s3tc')||gl.getExtension('MOZ_WEBGL_compressed_texture_s3tc')||gl.getExtension('WEBKIT_WEBGL_compressed_texture_s3tc');break;case'WEBGL_compressed_texture_pvrtc':extension=gl.getExtension('WEBGL_compressed_texture_pvrtc')||gl.getExtension('WEBKIT_WEBGL_compressed_texture_pvrtc');break;default:extension=gl.getExtension(name);}extensions[name]=extension;return extension;}return{has:function(name){return getExtension(name)!==null;},init:function(){getExtension('EXT_color_buffer_float');getExtension('WEBGL_clip_cull_distance');getExtension('OES_texture_float_linear');getExtension('EXT_color_buffer_half_float');getExtension('WEBGL_multisampled_render_to_texture');getExtension('WEBGL_render_shared_exponent');},get:function(name){const extension=getExtension(name);if(extension===null){(0,_three_core_js__WEBPACK_IMPORTED_MODULE_0__.warnOnce)('THREE.WebGLRenderer: '+name+' extension not supported.');}return extension;}};}function WebGLGeometries(gl,attributes,info,bindingStates){const geometries={};const wireframeAttributes=new WeakMap();function onGeometryDispose(event){const geometry=event.target;if(geometry.index!==null){attributes.remove(geometry.index);}for(const name in geometry.attributes){attributes.remove(geometry.attributes[name]);}geometry.removeEventListener('dispose',onGeometryDispose);delete geometries[geometry.id];const attribute=wireframeAttributes.get(geometry);if(attribute){attributes.remove(attribute);wireframeAttributes.delete(geometry);}bindingStates.releaseStatesOfGeometry(geometry);if(geometry.isInstancedBufferGeometry===true){delete geometry._maxInstanceCount;}//
 info.memory.geometries--;}function get(object,geometry){if(geometries[geometry.id]===true)return geometry;geometry.addEventListener('dispose',onGeometryDispose);geometries[geometry.id]=true;info.memory.geometries++;return geometry;}function update(geometry){const geometryAttributes=geometry.attributes;// Updating index buffer in VAO now. See WebGLBindingStates.
@@ -35454,23 +35508,23 @@ attributes[name]={type:info.type,location:gl.getAttribLocation(program,name),loc
 const includePattern=/^[ \t]*#include +<([\w\d./]+)>/gm;function resolveIncludes(string){return string.replace(includePattern,includeReplacer);}const shaderChunkMap=new Map();function includeReplacer(match,include){let string=ShaderChunk[include];if(string===undefined){const newInclude=shaderChunkMap.get(include);if(newInclude!==undefined){string=ShaderChunk[newInclude];console.warn('THREE.WebGLRenderer: Shader chunk "%s" has been deprecated. Use "%s" instead.',include,newInclude);}else{throw new Error('Can not resolve #include <'+include+'>');}}return resolveIncludes(string);}// Unroll Loops
 const unrollLoopPattern=/#pragma unroll_loop_start\s+for\s*\(\s*int\s+i\s*=\s*(\d+)\s*;\s*i\s*<\s*(\d+)\s*;\s*i\s*\+\+\s*\)\s*{([\s\S]+?)}\s+#pragma unroll_loop_end/g;function unrollLoops(string){return string.replace(unrollLoopPattern,loopReplacer);}function loopReplacer(match,start,end,snippet){let string='';for(let i=parseInt(start);i<parseInt(end);i++){string+=snippet.replace(/\[\s*i\s*\]/g,'[ '+i+' ]').replace(/UNROLLED_LOOP_INDEX/g,i);}return string;}//
 function generatePrecision(parameters){let precisionstring=`precision ${parameters.precision} float;
-  precision ${parameters.precision} int;
-  precision ${parameters.precision} sampler2D;
-  precision ${parameters.precision} samplerCube;
-  precision ${parameters.precision} sampler3D;
-  precision ${parameters.precision} sampler2DArray;
-  precision ${parameters.precision} sampler2DShadow;
-  precision ${parameters.precision} samplerCubeShadow;
-  precision ${parameters.precision} sampler2DArrayShadow;
-  precision ${parameters.precision} isampler2D;
-  precision ${parameters.precision} isampler3D;
-  precision ${parameters.precision} isamplerCube;
-  precision ${parameters.precision} isampler2DArray;
-  precision ${parameters.precision} usampler2D;
-  precision ${parameters.precision} usampler3D;
-  precision ${parameters.precision} usamplerCube;
-  precision ${parameters.precision} usampler2DArray;
-  `;if(parameters.precision==='highp'){precisionstring+='\n#define HIGH_PRECISION';}else if(parameters.precision==='mediump'){precisionstring+='\n#define MEDIUM_PRECISION';}else if(parameters.precision==='lowp'){precisionstring+='\n#define LOW_PRECISION';}return precisionstring;}function generateShadowMapTypeDefine(parameters){let shadowMapTypeDefine='SHADOWMAP_TYPE_BASIC';if(parameters.shadowMapType===_three_core_js__WEBPACK_IMPORTED_MODULE_0__.PCFShadowMap){shadowMapTypeDefine='SHADOWMAP_TYPE_PCF';}else if(parameters.shadowMapType===_three_core_js__WEBPACK_IMPORTED_MODULE_0__.PCFSoftShadowMap){shadowMapTypeDefine='SHADOWMAP_TYPE_PCF_SOFT';}else if(parameters.shadowMapType===_three_core_js__WEBPACK_IMPORTED_MODULE_0__.VSMShadowMap){shadowMapTypeDefine='SHADOWMAP_TYPE_VSM';}return shadowMapTypeDefine;}function generateEnvMapTypeDefine(parameters){let envMapTypeDefine='ENVMAP_TYPE_CUBE';if(parameters.envMap){switch(parameters.envMapMode){case _three_core_js__WEBPACK_IMPORTED_MODULE_0__.CubeReflectionMapping:case _three_core_js__WEBPACK_IMPORTED_MODULE_0__.CubeRefractionMapping:envMapTypeDefine='ENVMAP_TYPE_CUBE';break;case _three_core_js__WEBPACK_IMPORTED_MODULE_0__.CubeUVReflectionMapping:envMapTypeDefine='ENVMAP_TYPE_CUBE_UV';break;}}return envMapTypeDefine;}function generateEnvMapModeDefine(parameters){let envMapModeDefine='ENVMAP_MODE_REFLECTION';if(parameters.envMap){switch(parameters.envMapMode){case _three_core_js__WEBPACK_IMPORTED_MODULE_0__.CubeRefractionMapping:envMapModeDefine='ENVMAP_MODE_REFRACTION';break;}}return envMapModeDefine;}function generateEnvMapBlendingDefine(parameters){let envMapBlendingDefine='ENVMAP_BLENDING_NONE';if(parameters.envMap){switch(parameters.combine){case _three_core_js__WEBPACK_IMPORTED_MODULE_0__.MultiplyOperation:envMapBlendingDefine='ENVMAP_BLENDING_MULTIPLY';break;case _three_core_js__WEBPACK_IMPORTED_MODULE_0__.MixOperation:envMapBlendingDefine='ENVMAP_BLENDING_MIX';break;case _three_core_js__WEBPACK_IMPORTED_MODULE_0__.AddOperation:envMapBlendingDefine='ENVMAP_BLENDING_ADD';break;}}return envMapBlendingDefine;}function generateCubeUVSize(parameters){const imageHeight=parameters.envMapCubeUVHeight;if(imageHeight===null)return null;const maxMip=Math.log2(imageHeight)-2;const texelHeight=1.0/imageHeight;const texelWidth=1.0/(3*Math.max(Math.pow(2,maxMip),7*16));return{texelWidth,texelHeight,maxMip};}function WebGLProgram(renderer,cacheKey,parameters,bindingStates){// TODO Send this event to Three.js DevTools
+	precision ${parameters.precision} int;
+	precision ${parameters.precision} sampler2D;
+	precision ${parameters.precision} samplerCube;
+	precision ${parameters.precision} sampler3D;
+	precision ${parameters.precision} sampler2DArray;
+	precision ${parameters.precision} sampler2DShadow;
+	precision ${parameters.precision} samplerCubeShadow;
+	precision ${parameters.precision} sampler2DArrayShadow;
+	precision ${parameters.precision} isampler2D;
+	precision ${parameters.precision} isampler3D;
+	precision ${parameters.precision} isamplerCube;
+	precision ${parameters.precision} isampler2DArray;
+	precision ${parameters.precision} usampler2D;
+	precision ${parameters.precision} usampler3D;
+	precision ${parameters.precision} usamplerCube;
+	precision ${parameters.precision} usampler2DArray;
+	`;if(parameters.precision==='highp'){precisionstring+='\n#define HIGH_PRECISION';}else if(parameters.precision==='mediump'){precisionstring+='\n#define MEDIUM_PRECISION';}else if(parameters.precision==='lowp'){precisionstring+='\n#define LOW_PRECISION';}return precisionstring;}function generateShadowMapTypeDefine(parameters){let shadowMapTypeDefine='SHADOWMAP_TYPE_BASIC';if(parameters.shadowMapType===_three_core_js__WEBPACK_IMPORTED_MODULE_0__.PCFShadowMap){shadowMapTypeDefine='SHADOWMAP_TYPE_PCF';}else if(parameters.shadowMapType===_three_core_js__WEBPACK_IMPORTED_MODULE_0__.PCFSoftShadowMap){shadowMapTypeDefine='SHADOWMAP_TYPE_PCF_SOFT';}else if(parameters.shadowMapType===_three_core_js__WEBPACK_IMPORTED_MODULE_0__.VSMShadowMap){shadowMapTypeDefine='SHADOWMAP_TYPE_VSM';}return shadowMapTypeDefine;}function generateEnvMapTypeDefine(parameters){let envMapTypeDefine='ENVMAP_TYPE_CUBE';if(parameters.envMap){switch(parameters.envMapMode){case _three_core_js__WEBPACK_IMPORTED_MODULE_0__.CubeReflectionMapping:case _three_core_js__WEBPACK_IMPORTED_MODULE_0__.CubeRefractionMapping:envMapTypeDefine='ENVMAP_TYPE_CUBE';break;case _three_core_js__WEBPACK_IMPORTED_MODULE_0__.CubeUVReflectionMapping:envMapTypeDefine='ENVMAP_TYPE_CUBE_UV';break;}}return envMapTypeDefine;}function generateEnvMapModeDefine(parameters){let envMapModeDefine='ENVMAP_MODE_REFLECTION';if(parameters.envMap){switch(parameters.envMapMode){case _three_core_js__WEBPACK_IMPORTED_MODULE_0__.CubeRefractionMapping:envMapModeDefine='ENVMAP_MODE_REFRACTION';break;}}return envMapModeDefine;}function generateEnvMapBlendingDefine(parameters){let envMapBlendingDefine='ENVMAP_BLENDING_NONE';if(parameters.envMap){switch(parameters.combine){case _three_core_js__WEBPACK_IMPORTED_MODULE_0__.MultiplyOperation:envMapBlendingDefine='ENVMAP_BLENDING_MULTIPLY';break;case _three_core_js__WEBPACK_IMPORTED_MODULE_0__.MixOperation:envMapBlendingDefine='ENVMAP_BLENDING_MIX';break;case _three_core_js__WEBPACK_IMPORTED_MODULE_0__.AddOperation:envMapBlendingDefine='ENVMAP_BLENDING_ADD';break;}}return envMapBlendingDefine;}function generateCubeUVSize(parameters){const imageHeight=parameters.envMapCubeUVHeight;if(imageHeight===null)return null;const maxMip=Math.log2(imageHeight)-2;const texelHeight=1.0/imageHeight;const texelWidth=1.0/(3*Math.max(Math.pow(2,maxMip),7*16));return{texelWidth,texelHeight,maxMip};}function WebGLProgram(renderer,cacheKey,parameters,bindingStates){// TODO Send this event to Three.js DevTools
 // console.log( 'WebGLProgram', cacheKey );
 const gl=renderer.getContext();const defines=parameters.defines;let vertexShader=parameters.vertexShader;let fragmentShader=parameters.fragmentShader;const shadowMapTypeDefine=generateShadowMapTypeDefine(parameters);const envMapTypeDefine=generateEnvMapTypeDefine(parameters);const envMapModeDefine=generateEnvMapModeDefine(parameters);const envMapBlendingDefine=generateEnvMapBlendingDefine(parameters);const envMapCubeUVSize=generateCubeUVSize(parameters);const customVertexExtensions=generateVertexExtensions(parameters);const customDefines=generateDefines(defines);const program=gl.createProgram();let prefixVertex,prefixFragment;let versionString=parameters.glslVersion?'#version '+parameters.glslVersion+'\n':'';const numMultiviewViews=parameters.numMultiviewViews;if(parameters.isRawShaderMaterial){prefixVertex=['#define SHADER_TYPE '+parameters.shaderType,'#define SHADER_NAME '+parameters.shaderName,customDefines].filter(filterEmptyLine).join('\n');if(prefixVertex.length>0){prefixVertex+='\n';}prefixFragment=['#define SHADER_TYPE '+parameters.shaderType,'#define SHADER_NAME '+parameters.shaderName,customDefines].filter(filterEmptyLine).join('\n');if(prefixFragment.length>0){prefixFragment+='\n';}}else{prefixVertex=[generatePrecision(parameters),'#define SHADER_TYPE '+parameters.shaderType,'#define SHADER_NAME '+parameters.shaderName,customDefines,parameters.extensionClipCullDistance?'#define USE_CLIP_DISTANCE':'',parameters.batching?'#define USE_BATCHING':'',parameters.batchingColor?'#define USE_BATCHING_COLOR':'',parameters.instancing?'#define USE_INSTANCING':'',parameters.instancingColor?'#define USE_INSTANCING_COLOR':'',parameters.instancingMorph?'#define USE_INSTANCING_MORPH':'',parameters.useFog&&parameters.fog?'#define USE_FOG':'',parameters.useFog&&parameters.fogExp2?'#define FOG_EXP2':'',parameters.map?'#define USE_MAP':'',parameters.envMap?'#define USE_ENVMAP':'',parameters.envMap?'#define '+envMapModeDefine:'',parameters.lightMap?'#define USE_LIGHTMAP':'',parameters.aoMap?'#define USE_AOMAP':'',parameters.bumpMap?'#define USE_BUMPMAP':'',parameters.normalMap?'#define USE_NORMALMAP':'',parameters.normalMapObjectSpace?'#define USE_NORMALMAP_OBJECTSPACE':'',parameters.normalMapTangentSpace?'#define USE_NORMALMAP_TANGENTSPACE':'',parameters.displacementMap?'#define USE_DISPLACEMENTMAP':'',parameters.emissiveMap?'#define USE_EMISSIVEMAP':'',parameters.anisotropy?'#define USE_ANISOTROPY':'',parameters.anisotropyMap?'#define USE_ANISOTROPYMAP':'',parameters.clearcoatMap?'#define USE_CLEARCOATMAP':'',parameters.clearcoatRoughnessMap?'#define USE_CLEARCOAT_ROUGHNESSMAP':'',parameters.clearcoatNormalMap?'#define USE_CLEARCOAT_NORMALMAP':'',parameters.iridescenceMap?'#define USE_IRIDESCENCEMAP':'',parameters.iridescenceThicknessMap?'#define USE_IRIDESCENCE_THICKNESSMAP':'',parameters.specularMap?'#define USE_SPECULARMAP':'',parameters.specularColorMap?'#define USE_SPECULAR_COLORMAP':'',parameters.specularIntensityMap?'#define USE_SPECULAR_INTENSITYMAP':'',parameters.roughnessMap?'#define USE_ROUGHNESSMAP':'',parameters.metalnessMap?'#define USE_METALNESSMAP':'',parameters.alphaMap?'#define USE_ALPHAMAP':'',parameters.alphaHash?'#define USE_ALPHAHASH':'',parameters.transmission?'#define USE_TRANSMISSION':'',parameters.transmissionMap?'#define USE_TRANSMISSIONMAP':'',parameters.thicknessMap?'#define USE_THICKNESSMAP':'',parameters.sheenColorMap?'#define USE_SHEEN_COLORMAP':'',parameters.sheenRoughnessMap?'#define USE_SHEEN_ROUGHNESSMAP':'',//
 parameters.mapUv?'#define MAP_UV '+parameters.mapUv:'',parameters.alphaMapUv?'#define ALPHAMAP_UV '+parameters.alphaMapUv:'',parameters.lightMapUv?'#define LIGHTMAP_UV '+parameters.lightMapUv:'',parameters.aoMapUv?'#define AOMAP_UV '+parameters.aoMapUv:'',parameters.emissiveMapUv?'#define EMISSIVEMAP_UV '+parameters.emissiveMapUv:'',parameters.bumpMapUv?'#define BUMPMAP_UV '+parameters.bumpMapUv:'',parameters.normalMapUv?'#define NORMALMAP_UV '+parameters.normalMapUv:'',parameters.displacementMapUv?'#define DISPLACEMENTMAP_UV '+parameters.displacementMapUv:'',parameters.metalnessMapUv?'#define METALNESSMAP_UV '+parameters.metalnessMapUv:'',parameters.roughnessMapUv?'#define ROUGHNESSMAP_UV '+parameters.roughnessMapUv:'',parameters.anisotropyMapUv?'#define ANISOTROPYMAP_UV '+parameters.anisotropyMapUv:'',parameters.clearcoatMapUv?'#define CLEARCOATMAP_UV '+parameters.clearcoatMapUv:'',parameters.clearcoatNormalMapUv?'#define CLEARCOAT_NORMALMAP_UV '+parameters.clearcoatNormalMapUv:'',parameters.clearcoatRoughnessMapUv?'#define CLEARCOAT_ROUGHNESSMAP_UV '+parameters.clearcoatRoughnessMapUv:'',parameters.iridescenceMapUv?'#define IRIDESCENCEMAP_UV '+parameters.iridescenceMapUv:'',parameters.iridescenceThicknessMapUv?'#define IRIDESCENCE_THICKNESSMAP_UV '+parameters.iridescenceThicknessMapUv:'',parameters.sheenColorMapUv?'#define SHEEN_COLORMAP_UV '+parameters.sheenColorMapUv:'',parameters.sheenRoughnessMapUv?'#define SHEEN_ROUGHNESSMAP_UV '+parameters.sheenRoughnessMapUv:'',parameters.specularMapUv?'#define SPECULARMAP_UV '+parameters.specularMapUv:'',parameters.specularColorMapUv?'#define SPECULAR_COLORMAP_UV '+parameters.specularColorMapUv:'',parameters.specularIntensityMapUv?'#define SPECULAR_INTENSITYMAP_UV '+parameters.specularIntensityMapUv:'',parameters.transmissionMapUv?'#define TRANSMISSIONMAP_UV '+parameters.transmissionMapUv:'',parameters.thicknessMapUv?'#define THICKNESSMAP_UV '+parameters.thicknessMapUv:'',//
@@ -35627,7 +35681,7 @@ return gl[p]!==undefined?gl[p]:null;}return{convert:convert};}/**
  */class WebGLMultiviewRenderTarget extends _three_core_js__WEBPACK_IMPORTED_MODULE_0__.WebGLRenderTarget{constructor(width,height,numViews,options={}){super(width,height,options);this.depthBuffer=false;this.stencilBuffer=false;this.numViews=numViews;}copy(source){super.copy(source);this.numViews=source.numViews;return this;}}WebGLMultiviewRenderTarget.prototype.isWebGLMultiviewRenderTarget=true;const _occlusion_vertex=`
 void main() {
 
-  gl_Position = vec4( position, 1.0 );
+	gl_Position = vec4( position, 1.0 );
 
 }`;const _occlusion_fragment=`
 uniform sampler2DArray depthColor;
@@ -35636,17 +35690,17 @@ uniform float depthHeight;
 
 void main() {
 
-  vec2 coord = vec2( gl_FragCoord.x / depthWidth, gl_FragCoord.y / depthHeight );
+	vec2 coord = vec2( gl_FragCoord.x / depthWidth, gl_FragCoord.y / depthHeight );
 
-  if ( coord.x >= 1.0 ) {
+	if ( coord.x >= 1.0 ) {
 
-    gl_FragDepth = texture( depthColor, vec3( coord.x - 1.0, coord.y, 1 ) ).r;
+		gl_FragDepth = texture( depthColor, vec3( coord.x - 1.0, coord.y, 1 ) ).r;
 
-  } else {
+	} else {
 
-    gl_FragDepth = texture( depthColor, vec3( coord.x, coord.y, 0 ) ).r;
+		gl_FragDepth = texture( depthColor, vec3( coord.x, coord.y, 0 ) ).r;
 
-  }
+	}
 
 }`;class WebXRDepthSensing{constructor(){this.texture=null;this.mesh=null;this.depthNear=0;this.depthFar=0;}init(renderer,depthData,renderState){if(this.texture===null){const texture=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.Texture();const texProps=renderer.properties.get(texture);texProps.__webglTexture=depthData.texture;if(depthData.depthNear!==renderState.depthNear||depthData.depthFar!==renderState.depthFar){this.depthNear=depthData.depthNear;this.depthFar=depthData.depthFar;}this.texture=texture;}}getMesh(cameraXR){if(this.texture!==null){if(this.mesh===null){const viewport=cameraXR.cameras[0].viewport;const material=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.ShaderMaterial({vertexShader:_occlusion_vertex,fragmentShader:_occlusion_fragment,uniforms:{depthColor:{value:this.texture},depthWidth:{value:viewport.z},depthHeight:{value:viewport.w}}});this.mesh=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.Mesh(new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.PlaneGeometry(20,20),material);}}return this.mesh;}reset(){this.texture=null;this.mesh=null;}getDepthTexture(){return this.texture;}}class WebXRManager extends _three_core_js__WEBPACK_IMPORTED_MODULE_0__.EventDispatcher{constructor(renderer,gl,extensions,useMultiview){super();const scope=this;let session=null;let framebufferScaleFactor=1.0;var poseTarget=null;let referenceSpace=null;let referenceSpaceType='local-floor';// Set default foveation to maximum.
 let foveation=1.0;let customReferenceSpace=null;let pose=null;var layers=[];let glBinding=null;let glProjLayer=null;let glBaseLayer=null;let xrFrame=null;const depthSensing=new WebXRDepthSensing();const attributes=gl.getContextAttributes();let initialRenderTarget=null;let newRenderTarget=null;const controllers=[];const controllerInputSources=[];const currentSize=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.Vector2();let currentPixelRatio=null;//
@@ -35663,15 +35717,15 @@ for(let i=0;i<event.added.length;i++){const inputSource=event.added[i];let contr
 for(let i=0;i<controllers.length;i++){if(i>=controllerInputSources.length){controllerInputSources.push(inputSource);controllerIndex=i;break;}else if(controllerInputSources[i]===null){controllerInputSources[i]=inputSource;controllerIndex=i;break;}}// If all controllers do currently receive input we ignore new ones
 if(controllerIndex===-1)break;}const controller=controllers[controllerIndex];if(controller){controller.connect(inputSource);}}}//
 const cameraLPos=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.Vector3();const cameraRPos=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.Vector3();/**
-     * Assumes 2 cameras that are parallel and share an X-axis, and that
-     * the cameras' projection and world matrices have already been set.
-     * And that near and far planes are identical for both cameras.
-     * Visualization of this technique: https://computergraphics.stackexchange.com/a/4765
-     *
-     * @param {ArrayCamera} camera - The camera to update.
-     * @param {PerspectiveCamera} cameraL - The left camera.
-     * @param {PerspectiveCamera} cameraR - The right camera.
-     */function setProjectionFromUnion(camera,cameraL,cameraR){cameraLPos.setFromMatrixPosition(cameraL.matrixWorld);cameraRPos.setFromMatrixPosition(cameraR.matrixWorld);const ipd=cameraLPos.distanceTo(cameraRPos);const projL=cameraL.projectionMatrix.elements;const projR=cameraR.projectionMatrix.elements;// VR systems will have identical far and near planes, and
+		 * Assumes 2 cameras that are parallel and share an X-axis, and that
+		 * the cameras' projection and world matrices have already been set.
+		 * And that near and far planes are identical for both cameras.
+		 * Visualization of this technique: https://computergraphics.stackexchange.com/a/4765
+		 *
+		 * @param {ArrayCamera} camera - The camera to update.
+		 * @param {PerspectiveCamera} cameraL - The left camera.
+		 * @param {PerspectiveCamera} cameraR - The right camera.
+		 */function setProjectionFromUnion(camera,cameraL,cameraR){cameraLPos.setFromMatrixPosition(cameraL.matrixWorld);cameraRPos.setFromMatrixPosition(cameraR.matrixWorld);const ipd=cameraLPos.distanceTo(cameraRPos);const projL=cameraL.projectionMatrix.elements;const projR=cameraR.projectionMatrix.elements;// VR systems will have identical far and near planes, and
 // most likely identical top and bottom frustum extents.
 // Use the left camera for these values.
 const near=projL[14]/(projL[10]-1);const far=projL[14]/(projL[10]+1);const topFov=(projL[9]+1)/projL[5];const bottomFov=(projL[9]-1)/projL[5];const leftFov=(projL[8]-1)/projL[0];const rightFov=(projR[8]+1)/projR[0];const left=near*leftFov;const right=near*rightFov;// Calculate the new camera's position offset from the
@@ -35736,12 +35790,12 @@ info.boundary=64;info.storage=64;}else if(value.isTexture){console.warn('THREE.W
 const renderListStack=[];const renderStateStack=[];// public properties
 this.domElement=canvas;// Debug configuration container
 this.debug={/**
-       * Enables error checking and reporting when shader programs are being compiled
-       * @type {boolean}
-       */checkShaderErrors:true,/**
-       * Callback for custom error reporting.
-       * @type {?Function}
-       */onShaderError:null};// clearing
+			 * Enables error checking and reporting when shader programs are being compiled
+			 * @type {boolean}
+			 */checkShaderErrors:true,/**
+			 * Callback for custom error reporting.
+			 * @type {?Function}
+			 */onShaderError:null};// clearing
 this.autoClear=true;this.autoClearColor=true;this.autoClearDepth=true;this.autoClearStencil=true;// scene graph
 this.sortObjects=true;// user-defined clipping
 this.clippingPlanes=[];this.localClippingEnabled=false;// physically based shading
@@ -35802,12 +35856,12 @@ if(scene.isScene===true)scene.onAfterRender(_this,scene,camera);// _gl.finish();
 bindingStates.resetDefaultState();_currentMaterialId=-1;_currentCamera=null;renderStateStack.pop();if(renderStateStack.length>0){currentRenderState=renderStateStack[renderStateStack.length-1];if(_clippingEnabled===true)clipping.setGlobalState(_this.clippingPlanes,currentRenderState.state.camera);}else{currentRenderState=null;}renderListStack.pop();if(renderListStack.length>0){currentRenderList=renderListStack[renderListStack.length-1];}else{currentRenderList=null;}};function projectObject(object,camera,groupOrder,sortObjects){if(object.visible===false)return;const visible=object.layers.test(camera.layers);if(visible){if(object.isGroup){groupOrder=object.renderOrder;}else if(object.isLOD){if(object.autoUpdate===true)object.update(camera);}else if(object.isLight){currentRenderState.pushLight(object);if(object.castShadow){currentRenderState.pushShadow(object);}}else if(object.isSprite){if(!object.frustumCulled||_frustum.intersectsSprite(object)){if(sortObjects){_vector4.setFromMatrixPosition(object.matrixWorld).applyMatrix4(_projScreenMatrix);}const geometry=objects.update(object);const material=object.material;if(material.visible){currentRenderList.push(object,geometry,material,groupOrder,_vector4.z,null);}}}else if(object.isMesh||object.isLine||object.isPoints){if(!object.frustumCulled||_frustum.intersectsObject(object)){const geometry=objects.update(object);const material=object.material;if(sortObjects){if(object.boundingSphere!==undefined){if(object.boundingSphere===null)object.computeBoundingSphere();_vector4.copy(object.boundingSphere.center);}else{if(geometry.boundingSphere===null)geometry.computeBoundingSphere();_vector4.copy(geometry.boundingSphere.center);}_vector4.applyMatrix4(object.matrixWorld).applyMatrix4(_projScreenMatrix);}if(Array.isArray(material)){const groups=geometry.groups;for(let i=0,l=groups.length;i<l;i++){const group=groups[i];const groupMaterial=material[group.materialIndex];if(groupMaterial&&groupMaterial.visible){currentRenderList.push(object,geometry,groupMaterial,groupOrder,_vector4.z,group);}}}else if(material.visible){currentRenderList.push(object,geometry,material,groupOrder,_vector4.z,null);}}}}const children=object.children;for(let i=0,l=children.length;i<l;i++){projectObject(children[i],camera,groupOrder,sortObjects);}}function renderScene(currentRenderList,scene,camera,viewport){const opaqueObjects=currentRenderList.opaque;const transmissiveObjects=currentRenderList.transmissive;const transparentObjects=currentRenderList.transparent;currentRenderState.setupLightsView(camera);if(_clippingEnabled===true)clipping.setGlobalState(_this.clippingPlanes,camera);if(viewport)state.viewport(_currentViewport.copy(viewport));if(opaqueObjects.length>0)renderObjects(opaqueObjects,scene,camera);if(transmissiveObjects.length>0)renderObjects(transmissiveObjects,scene,camera);if(transparentObjects.length>0)renderObjects(transparentObjects,scene,camera);// Ensure depth buffer writing is enabled so it can be cleared on next render
 state.buffers.depth.setTest(true);state.buffers.depth.setMask(true);state.buffers.color.setMask(true);state.setPolygonOffset(false);}function renderTransmissionPass(opaqueObjects,transmissiveObjects,scene,camera){const overrideMaterial=scene.isScene===true?scene.overrideMaterial:null;if(overrideMaterial!==null){return;}if(currentRenderState.state.transmissionRenderTarget[camera.id]===undefined){currentRenderState.state.transmissionRenderTarget[camera.id]=new _three_core_js__WEBPACK_IMPORTED_MODULE_0__.WebGLRenderTarget(1,1,{generateMipmaps:true,type:extensions.has('EXT_color_buffer_half_float')||extensions.has('EXT_color_buffer_float')?_three_core_js__WEBPACK_IMPORTED_MODULE_0__.HalfFloatType:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.UnsignedByteType,minFilter:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.LinearMipmapLinearFilter,samples:4,stencilBuffer:stencil,resolveDepthBuffer:false,resolveStencilBuffer:false,colorSpace:_three_core_js__WEBPACK_IMPORTED_MODULE_0__.ColorManagement.workingColorSpace});// debug
 /*
-        const geometry = new PlaneGeometry();
-        const material = new MeshBasicMaterial( { map: _transmissionRenderTarget.texture } );
+				const geometry = new PlaneGeometry();
+				const material = new MeshBasicMaterial( { map: _transmissionRenderTarget.texture } );
 
-        const mesh = new Mesh( geometry, material );
-        scene.add( mesh );
-        */}const transmissionRenderTarget=currentRenderState.state.transmissionRenderTarget[camera.id];const activeViewport=camera.viewport||_currentViewport;transmissionRenderTarget.setSize(activeViewport.z*_this.transmissionResolutionScale,activeViewport.w*_this.transmissionResolutionScale);//
+				const mesh = new Mesh( geometry, material );
+				scene.add( mesh );
+				*/}const transmissionRenderTarget=currentRenderState.state.transmissionRenderTarget[camera.id];const activeViewport=camera.viewport||_currentViewport;transmissionRenderTarget.setSize(activeViewport.z*_this.transmissionResolutionScale,activeViewport.w*_this.transmissionResolutionScale);//
 const currentRenderTarget=_this.getRenderTarget();_this.setRenderTarget(transmissionRenderTarget);_this.getClearColor(_currentClearColor);_currentClearAlpha=_this.getClearAlpha();if(_currentClearAlpha<1)_this.setClearColor(0xffffff,0.5);_this.clear();if(_renderBackground)background.render(scene);// Turn off the features which can affect the frag color for opaque objects pass.
 // Otherwise they are applied twice in opaque objects pass and transmission objects pass.
 const currentToneMapping=_this.toneMapping;_this.toneMapping=_three_core_js__WEBPACK_IMPORTED_MODULE_0__.NoToneMapping;// Remove viewport from camera to avoid nested render calls resetting viewport to it (e.g Reflector).
@@ -41795,14 +41849,14 @@ class OBJLoader extends three__WEBPACK_IMPORTED_MODULE_0__.Loader {
         // Example asset: examples/models/obj/cerberus/Cerberus.obj
 
         /*
-           * http://paulbourke.net/dataformats/obj/
-           *
-           * From chapter "Grouping" Syntax explanation "s group_number":
-           * "group_number is the smoothing group number. To turn off smoothing groups, use a value of 0 or off.
-           * Polygonal elements use group numbers to put elements in different smoothing groups. For free-form
-           * surfaces, smoothing groups are either turned on or off; there is no difference between values greater
-           * than 0."
-           */
+        	 * http://paulbourke.net/dataformats/obj/
+        	 *
+        	 * From chapter "Grouping" Syntax explanation "s group_number":
+        	 * "group_number is the smoothing group number. To turn off smoothing groups, use a value of 0 or off.
+        	 * Polygonal elements use group numbers to put elements in different smoothing groups. For free-form
+        	 * surfaces, smoothing groups are either turned on or off; there is no difference between values greater
+        	 * than 0."
+        	 */
         if (result.length > 1) {
           const value = result[1].trim().toLowerCase();
           state.object.smooth = value !== '0' && value !== 'off';
