@@ -55,9 +55,9 @@
     <!-- <script src="https://unpkg.com/aframe-dial@^1.2.2/dist/dial.js"></script> -->
     <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-particle-system-component@mathutils/dist/aframe-particle-system-component.min.js"></script>
     <link rel="stylesheet" href="style/intro.css">
-    <link rel="preload" href="assets/symbols.png" as="image" type="image/png">
+    <!-- <link rel="preload" href="assets/symbols.png" as="image" type="image/png"> -->
 
-    <link rel="icon" href="assets/favicon.ico">
+    <!-- <link rel="icon" href="assets/favicon.ico"> -->
 
 <!--    <meta name="monetization" content="$ilp.uphold.com/jU9WUDJZNgQi">-->
 </head>
@@ -66,38 +66,38 @@
     <a-assets timeout="10000">
         <a-asset-item id="staffModel" src="assets/gandalfs_staff_sized.glb"></a-asset-item>
         <a-asset-item id="openBook" src="assets/book amborado open blank.glb"></a-asset-item>
-        <img id="controls_diagram_left" src="assets/book_controls_diagram_left.png">
-        <img id="controls_diagram_right" src="assets/book_controls_diagram_right.png">
-        <img id="symbol_quality_left" src="assets/symbol-quality-left.png">
-        <img id="symbol_quality_right" src="assets/symbol-quality-right.png">
-        <img id="bezel" src="assets/magic-circle.png" />
-        <img id="fleurdelis" src="assets/Fleur-De-Lis-Clip-Art-32658.jpeg">
-        <img id="clouds" src="assets/TexturesCom_Skies0236_M_crop.png">
-        <audio id="wind" src="assets/339618__klankbeeld__windy-farmland-march-nl-160310-0868.mp3"></audio>
-        <audio id="pageturn" src="assets/63318__flag2__page-turn-please-turn-over-pto-paper-turn-over.mp3" preload="auto"></audio>
-        <audio id="holdtriggerdown" src="assets/hold-trigger-down.mp3"></audio>
-        <audio id="holdbuttondown" src="assets/hold-button-down.mp3"></audio>
-        <audio id="drawlarger" src="assets/draw-symbol-larger.mp3"></audio>
-        <audio id="drawlikeexample" src="assets/draw-like-example.mp3"></audio>
-        <audio id="proportionsbook" src="assets/proportions-book.mp3"></audio>
-        <audio id="drawaccurately" src="assets/draw-accurately.mp3"></audio>
-        <audio id="good" src="assets/good.mp3"></audio>
-        <audio id="yes" src="assets/yes.mp3"></audio>
-        <audio id="practiceall" src="assets/practice-all-symbols.mp3"></audio>
-        <audio id="keepgoing" src="assets/keep-going.mp3"></audio>
-        <audio id="drawmore" src="assets/draw-more-symbols.mp3"></audio>
-        <audio id="fizzle" src="assets/455289__zembacraftworks__sad-chime-effect.mp3" preload="auto"></audio>
-        <audio id="force" src="assets/340159__flechabr__magic-click.mp3" preload="auto"></audio>
-        <audio id="flame" src="assets/331621__hykenfreak__flame-ignition.mp3" preload="auto"></audio>
-        <audio id="bind" src="assets/178318__robinhood76__04099-magic-string-spell.mp3" preload="auto"></audio>
-        <audio id="portal" src="assets/249818__spookymodem__magic-shield.mp3" preload="auto"></audio>
-        <audio id="liquid" src="assets/337500__eardeer__blub-short-2.mp3" preload="auto"></audio>
-        <audio id="light" src="assets/349465__vr__magic-bell.mp3" preload="auto"></audio>
-        <audio id="irksome" src="assets/44554__pocket__kookaburra.mp3"></audio>
-        <audio id="ominous" src="assets/385818__tec-studio__ominous-horn.mp3"></audio>
-        <audio id="fanfare" src="assets/361684__taranp__horncall-strauss1-eflatmajor.mp3"></audio>
-        <audio id="smash" src="assets/193478__skyklan47__rrmx-wood-metal-glass-explode.mp3"></audio>
-        <audio id="newstaff" src="assets/find-another-staff.ogg"></audio>
+        <a-asset-item id="controls_diagram_left" src="assets/book_controls_diagram_left.png"></a-asset-item>
+        <a-asset-item id="controls_diagram_right" src="assets/book_controls_diagram_right.png"></a-asset-item>
+        <a-asset-item id="symbol_quality_left" src="assets/symbol-quality-left.png"></a-asset-item>
+        <a-asset-item id="symbol_quality_right" src="assets/symbol-quality-right.png"></a-asset-item>
+        <a-asset-item id="bezel" src="assets/magic-circle.png"></a-asset-item>
+        <a-asset-item id="fleurdelis" src="assets/Fleur-De-Lis-Clip-Art-32658.jpeg"></a-asset-item>
+        <a-asset-item id="clouds" src="assets/TexturesCom_Skies0236_M_crop.png"></a-asset-item>
+        <a-asset-item id="wind" src="assets/339618__klankbeeld__windy-farmland-march-nl-160310-0868.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="pageturn" src="assets/63318__flag2__page-turn-please-turn-over-pto-paper-turn-over.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="holdtriggerdown" src="assets/hold-trigger-down.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="holdbuttondown" src="assets/hold-button-down.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="drawlarger" src="assets/draw-symbol-larger.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="drawlikeexample" src="assets/draw-like-example.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="proportionsbook" src="assets/proportions-book.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="drawaccurately" src="assets/draw-accurately.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="good" src="assets/good.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="yes" src="assets/yes.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="practiceall" src="assets/practice-all-symbols.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="keepgoing" src="assets/keep-going.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="drawmore" src="assets/draw-more-symbols.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="fizzle" src="assets/455289__zembacraftworks__sad-chime-effect.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="force" src="assets/340159__flechabr__magic-click.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="flame" src="assets/331621__hykenfreak__flame-ignition.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="bind" src="assets/178318__robinhood76__04099-magic-string-spell.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="portal" src="assets/249818__spookymodem__magic-shield.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="liquid" src="assets/337500__eardeer__blub-short-2.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="light" src="assets/349465__vr__magic-bell.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="irksome" src="assets/44554__pocket__kookaburra.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="ominous" src="assets/385818__tec-studio__ominous-horn.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="fanfare" src="assets/361684__taranp__horncall-strauss1-eflatmajor.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="smash" src="assets/193478__skyklan47__rrmx-wood-metal-glass-explode.mp3" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="newstaff" src="assets/find-another-staff.ogg" response-type="arraybuffer"></a-asset-item>
     </a-assets>
 
     <a-atoll-terrain mean-elevation="5" plateau-radius="5" plateau-elevation-min="0.4" middle-radius="75" unit-size="1.5" far="750"
@@ -107,7 +107,7 @@
     <a-simple-sun-sky radius="800" sun-position="0.8 0.6 0"></a-simple-sun-sky>
     <a-entity id="ambient" light="type:ambient; color:#fff; intensity:0.8"></a-entity>
     <a-entity id="directional" light="type:directional; color:#FFF; intensity:0.7" position="0.8 0.6 0"></a-entity>
-    <!-- <a-entity id="environmentSound" sound="src:#wind; loop:true; volume:0.75; positional:false"></a-entity> -->
+    <a-sound id="environmentSound" src="#wind" loop="true" volume="0.75" positional="false" autoplay="true"></a-sound>
 
     <a-entity id="rig" position="0 5 0" movement-controls="speed:0.2" rig-tick-state aabb-collider="objects:[portal]">
         <a-entity camera="far:1500; near:0.05" position="0 1.6 0" look-controls="pointerLockEnabled:false">
@@ -117,9 +117,10 @@
         </a-entity>
         <a-entity id="leftHand"  hand-controls="hand:left;  color:#555" gesture book></a-entity>
         <a-entity id="rightHand" hand-controls="hand:right; color:#555" gesture></a-entity>
+        <!-- Desktop controls -->
+        <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: [interactive]"></a-entity>
     </a-entity>
-    <!-- <a-entity id="staff" gltf-model="#staffModel" position="0 5.95 -3"></a-entity> -->
-    <!-- <a-sound id="environmentSound" src="#wind" autoplay="true" loop="true" volume="0.75"></a-sound> -->
+   
     <a-gltf-model id="staff" src="#staffModel" position="0 5.95 -3"></a-gltf-model>
     <a-entity id="signboard" visible=false
               text="width:1.5; color:white; transparent:true; font:mozillavr; align:center; baseline:center;"></a-entity>
