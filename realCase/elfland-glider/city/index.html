@@ -88,7 +88,7 @@
 <body>
 <a-scene city background="color:#398bc5">
     <a-assets>
-        <a-asset-item id="dome-obj-mobile" src="dome14.obj" priority="1"></a-asset-item>
+        <a-asset-item id="dome-obj-mobile" src="dome14.obj"></a-asset-item>
         <a-asset-item id="concreteAggregate" src="../assets/textures/TexturesCom_Concrete_ExposedAggregate_512_albedo.jpg" priority="1"></a-asset-item>
         <a-asset-item id="concreteBlocks" src="../assets/textures/TexturesCom_ConcreteBlocks_New_512_albedo.jpg" priority="1"></a-asset-item>
         <a-asset-item id="brick" src="../assets/textures/TexturesCom_Wall_BrickPlain1_512_albedo.jpg" priority="1"></a-asset-item>
@@ -117,9 +117,6 @@
     <a-entity id="terrain" position="-300 0 0" class="landscape"
               geometry="primitive: city-terrain; spacing:100; sunPosition:-1 0.75 1"
               material="shader:settlement; sunPosition:-1 0.75 1"></a-entity>
-    <a-text position="0 3 -995" rotation="0 0 0" width="40" align="center" baseline="bottom" color="yellow"
-            font="../assets/mozillavr.fnt" value="Live in concert\nGabriel Baker"
-            geometry="primitive:plane; width:16; height:5;" material="color: gray"></a-text>
 
     <a-entity geometry="primitive:triangle; vertexA:-1700 0 -1600; vertexB:5000 0 -1600; vertexC:-1700 0 -5000"
               material="shader:settlement; sunPosition:-1 0.75 1" class="landscape"></a-entity>
@@ -155,7 +152,7 @@
             </a-entity>
         </a-entity>
         <a-entity id="body">
-            <a-entity camera="far:6300; near:0.05" look-controls></a-entity>
+            <a-entity camera="far:6300; near:0.05" look-controls wasd-controls></a-entity>
             <a-entity id="leftController" hand-controls="hand: left; handModelStyle: highPoly; color:#666"></a-entity>
             <a-entity id="rightController" hand-controls="hand: right; handModelStyle: highPoly; color:#666"
                       gearvr-controls oculus-go-controls daydream-controls></a-entity>
@@ -166,7 +163,6 @@
             <a-entity id="rightHand" hand-tracking-controls="hand: right; modelColor: gray"></a-entity>
         </a-entity>
         <a-entity button-controls></a-entity>
-        <a-text id="prelaunchHelp" position="0 0 -1" rotation="0 0 0" width="2" align="center" font="../assets/mozillavr.fnt" value="" visible="true"></a-text>
     </a-entity>
 </a-scene>
 </body>
