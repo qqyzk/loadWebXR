@@ -1,0 +1,20 @@
+{
+  "originalModel": "Elly_2k_03.glb",
+  "splitStrategy": "performance",
+  "totalChunks": 2,
+  "splitInfo": [
+    {
+      "filename": "model_chunk_1.glb",
+      "triangles": 14210,
+      "vertices": 8576,
+      "size": 1558844
+    },
+    {
+      "filename": "model_chunk_2.glb",
+      "triangles": 1336,
+      "vertices": 924,
+      "size": 1214132
+    }
+  ],
+  "timestamp": "2025-08-24T10:53:55.398Z"
+}
