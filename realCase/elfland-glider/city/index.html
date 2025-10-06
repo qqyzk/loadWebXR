@@ -89,27 +89,27 @@
 <a-scene city background="color:#398bc5">
     <a-assets>
         <a-asset-item id="dome-obj-mobile" src="dome14.obj"></a-asset-item>
-        <img id="concreteAggregate" src="../assets/textures/TexturesCom_Concrete_ExposedAggregate_512_albedo.jpg" />
-        <img id="concreteBlocks" src="../assets/textures/TexturesCom_ConcreteBlocks_New_512_albedo.jpg" />
-        <img id="brick" src="../assets/textures/TexturesCom_Wall_BrickPlain1_512_albedo.jpg" />
-        <img id="medievalBrick1" src="../assets/textures/TexturesCom_Brick_Medieval_512_albedo.jpg" />
-        <img id="medievalBrick2" src="../assets/textures/TexturesCom_BrickMedievalBlocks0327_5_seamless_S_512.jpeg" />
-        <img id="stoneBlocks" src="../assets/textures/TexturesCom_BrickFacade0002_1_seamless_S.jpeg" />
-        <img id="vr-ok-px" src="../assets/cubemap-vr-ok/px.jpg">
-        <img id="vr-ok-nx" src="../assets/cubemap-vr-ok/nx.jpg">
-        <img id="vr-ok-py" src="../assets/cubemap-vr-ok/py.jpg">
-        <img id="vr-ok-ny" src="../assets/cubemap-vr-ok/ny.jpg">
-        <img id="vr-ok-nz" src="../assets/cubemap-vr-ok/nz.jpg">
-        <img id="reading-room" src="../assets/reading_room_1k.jpg">
-        <img id="hotel-px" src="../assets/MarriottMadisonWest/px.jpg">
-        <img id="hotel-nx" src="../assets/MarriottMadisonWest/nx.jpg">
-        <img id="hotel-py" src="../assets/MarriottMadisonWest/py.jpg">
-        <img id="hotel-ny" src="../assets/MarriottMadisonWest/ny.jpg">
-        <img id="hotel-nz" src="../assets/MarriottMadisonWest/nz.jpg">
-        <img id="steelGrip" src="../assets/textures/TexturesCom_MetalVarious0052_1_M_y.jpg" />
-        <img id="bezel" src="https://unpkg.com/aframe-dial@1.2.0/assets/bezel.png" crossorigin="anonymous" />
-        <img id="screenshot" src="screenshot.png" />
-        <audio id="postlaunchHelp" src="../assets/Find a way out.mp3"></audio>
+        <a-asset-item id="concreteAggregate" src="../assets/textures/TexturesCom_Concrete_ExposedAggregate_512_albedo.jpg" priority="1"></a-asset-item>
+        <a-asset-item id="concreteBlocks" src="../assets/textures/TexturesCom_ConcreteBlocks_New_512_albedo.jpg" priority="1"></a-asset-item>
+        <a-asset-item id="brick" src="../assets/textures/TexturesCom_Wall_BrickPlain1_512_albedo.jpg" priority="1"></a-asset-item>
+        <a-asset-item id="medievalBrick1" src="../assets/textures/TexturesCom_Brick_Medieval_512_albedo.jpg" priority="1"></a-asset-item>
+        <a-asset-item id="medievalBrick2" src="../assets/textures/TexturesCom_BrickMedievalBlocks0327_5_seamless_S_512.jpeg" priority="1"></a-asset-item>
+        <a-asset-item id="stoneBlocks" src="../assets/textures/TexturesCom_BrickFacade0002_1_seamless_S.jpeg" priority="1"></a-asset-item>
+        <a-asset-item id="vr-ok-px" src="../assets/cubemap-vr-ok/px.jpg" priority="2"></a-asset-item>
+        <a-asset-item id="vr-ok-nx" src="../assets/cubemap-vr-ok/nx.jpg" priority="2"></a-asset-item>
+        <a-asset-item id="vr-ok-py" src="../assets/cubemap-vr-ok/py.jpg" priority="2"></a-asset-item>
+        <a-asset-item id="vr-ok-ny" src="../assets/cubemap-vr-ok/ny.jpg" priority="2"></a-asset-item>
+        <a-asset-item id="vr-ok-nz" src="../assets/cubemap-vr-ok/nz.jpg" priority="2"></a-asset-item>
+        <a-asset-item id="reading-room" src="../assets/reading_room_1k.jpg" priority="2"></a-asset-item>
+        <a-asset-item id="hotel-px" src="../assets/MarriottMadisonWest/px.jpg" priority="2"></a-asset-item>
+        <a-asset-item id="hotel-nx" src="../assets/MarriottMadisonWest/nx.jpg" priority="2"></a-asset-item>
+        <a-asset-item id="hotel-py" src="../assets/MarriottMadisonWest/py.jpg" priority="2"></a-asset-item>
+        <a-asset-item id="hotel-ny" src="../assets/MarriottMadisonWest/ny.jpg" priority="2"></a-asset-item>
+        <a-asset-item id="hotel-nz" src="../assets/MarriottMadisonWest/nz.jpg" priority="2"></a-asset-item>
+        <a-asset-item id="steelGrip" src="../assets/textures/TexturesCom_MetalVarious0052_1_M_y.jpg" priority="1"></a-asset-item>
+        <a-asset-item id="bezel" src="https://unpkg.com/aframe-dial@1.2.0/assets/bezel.png" crossorigin="anonymous" priority="1"></a-asset-item>
+        <a-asset-item id="screenshot" src="screenshot.png" priority="3"></a-asset-item>
+        <a-asset-item id="postlaunchHelp" src="../assets/Find a way out.mp3" response-type="arraybuffer" priority="3"></a-asset-item>
     </a-assets>
 
     <a-simple-sun-sky sun-position="-1 0.75 1" radius="5300"></a-simple-sun-sky>
@@ -117,9 +117,6 @@
     <a-entity id="terrain" position="-300 0 0" class="landscape"
               geometry="primitive: city-terrain; spacing:100; sunPosition:-1 0.75 1"
               material="shader:settlement; sunPosition:-1 0.75 1"></a-entity>
-    <a-text position="0 3 -995" rotation="0 0 0" width="40" align="center" baseline="bottom" color="yellow"
-            font="../assets/mozillavr.fnt" value="Live in concert\nGabriel Baker"
-            geometry="primitive:plane; width:16; height:5;" material="color: gray"></a-text>
 
     <a-entity geometry="primitive:triangle; vertexA:-1700 0 -1600; vertexB:5000 0 -1600; vertexC:-1700 0 -5000"
               material="shader:settlement; sunPosition:-1 0.75 1" class="landscape"></a-entity>
@@ -155,7 +152,7 @@
             </a-entity>
         </a-entity>
         <a-entity id="body">
-            <a-entity camera="far:6300; near:0.05" look-controls></a-entity>
+            <a-entity camera="far:6300; near:0.05" look-controls wasd-controls></a-entity>
             <a-entity id="leftController" hand-controls="hand: left; handModelStyle: highPoly; color:#666"></a-entity>
             <a-entity id="rightController" hand-controls="hand: right; handModelStyle: highPoly; color:#666"
                       gearvr-controls oculus-go-controls daydream-controls></a-entity>
@@ -166,7 +163,6 @@
             <a-entity id="rightHand" hand-tracking-controls="hand: right; modelColor: gray"></a-entity>
         </a-entity>
         <a-entity button-controls></a-entity>
-        <a-text id="prelaunchHelp" position="0 0 -1" rotation="0 0 0" width="2" align="center" font="../assets/mozillavr.fnt" value="" visible="true"></a-text>
     </a-entity>
 </a-scene>
 </body>

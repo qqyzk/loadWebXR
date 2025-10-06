@@ -136,23 +136,25 @@ class AAssets extends ANode {
         this.loadChunk(item);
       } else if (item.tagName === 'A-ASSET-ITEM') {
         // 普通资源任务
+        console.log('debug: loading asset item', item);
         this.loadAssetItem(item);
       }
     });
-    
+    console.log('debug: scene queues', this.sceneQueues);
     // 等待场景任务完成
     while(true){
+      console.log('debug: scene queues', this.sceneQueues,this.sceneQueues[this.currentPriority].length);
       if(this.sceneQueues[this.currentPriority].length !== 0){
           await this.doSceneTask();
           this.sceneTaskDone++;
-          if(this.sceneTaskDone === this.sceneTaskCount[this.currentPriority]){
-            this.currentStage = 0;
-            this.sceneTaskDone = 0;
-            this.currentPriority++;
-            break;
-          }
         }else{
           await this.delay(2);
+        }
+        if(this.sceneTaskDone === this.sceneTaskCount[this.currentPriority]){
+          this.currentStage = 0;
+          this.sceneTaskDone = 0;
+          this.currentPriority++;
+          break;
         }
     }
   }
@@ -234,18 +236,19 @@ class AAssets extends ANode {
         if(this.sceneQueues[this.currentPriority].length !== 0){
           await this.doSceneTask();
           this.sceneTaskDone++;
-          if(this.sceneTaskDone === this.sceneTaskCount[this.currentPriority]){
-            this.currentStage = 0;
-            this.sceneTaskDone = 0;
-            this.currentPriority++;
-            console.log('debug: scene task done, switch to next priority', this.currentPriority);
-            if(this.currentPriority > 3){
-              this.allTasksDone = true;
-              this.parentNode.emit('all-assets-loaded');
-            }
-          }
+        
         }else{
           await this.delay(2);
+        }
+        if(this.sceneTaskDone === this.sceneTaskCount[this.currentPriority]){
+          this.currentStage = 0;
+          this.sceneTaskDone = 0;
+          this.currentPriority++;
+          console.log('debug: scene task done, switch to next priority', this.currentPriority);
+          if(this.currentPriority > 3){
+            this.allTasksDone = true;
+            this.parentNode.emit('all-assets-loaded');
+          }
         }
       }
     }
