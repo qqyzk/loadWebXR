@@ -1,1 +1,7 @@
 try.html
+
+# Generated A-Frame builds (created by aframe-master/update.sh)
+realCase/EllieTale-WebXR-main/lib/my-aframe.js
+realCase/barrier-mage/lib/my-aframe.js
+realCase/elfland-glider/lib/my-aframe.js
+simulation/lib/my-aframe.js

@@ -1,0 +1,120 @@
+{
+  "model_generation": {
+    "output_dir": "htmls/models/",
+    "faces_list": [
+      500,
+      5000,
+      4000,
+      3000,
+      1000,
+      3000,
+      3000,
+      2000
+    ]
+  },
+  "audio_processing": {
+    "input_audio": "htmls/audios/test.wav",
+    "clip_length": 5,
+    "output_audio": "htmls/audios/audio_clip.wav"
+  },
+  "web_page": {
+    "title": "A-Frame Scene 3",
+    "output_path": "htmls/index_3.html",
+    "model_count": 8,
+    "models": [
+      {
+        "id": 1,
+        "path": "models/model_500.glb",
+        "full_path": "htmls/models/model_500.glb",
+        "position": [
+          5.26,
+          -7.41,
+          -4.2
+        ],
+        "visible": true
+      },
+      {
+        "id": 2,
+        "path": "models/model_5000.glb",
+        "full_path": "htmls/models/model_5000.glb",
+        "position": [
+          4.42,
+          -6.19,
+          -1.34
+        ],
+        "visible": false
+      },
+      {
+        "id": 3,
+        "path": "models/model_4000.glb",
+        "full_path": "htmls/models/model_4000.glb",
+        "position": [
+          -5.23,
+          3.07,
+          1.24
+        ],
+        "visible": false
+      },
+      {
+        "id": 4,
+        "path": "models/model_3000.glb",
+        "full_path": "htmls/models/model_3000.glb",
+        "position": [
+          -2.66,
+          -0.49,
+          0.17
+        ],
+        "visible": true
+      },
+      {
+        "id": 5,
+        "path": "models/model_1000.glb",
+        "full_path": "htmls/models/model_1000.glb",
+        "position": [
+          1.71,
+          -5.58,
+          -4.14
+        ],
+        "visible": false
+      },
+      {
+        "id": 6,
+        "path": "models/model_3000.glb",
+        "full_path": "htmls/models/model_3000.glb",
+        "position": [
+          -6.98,
+          4.56,
+          -5.37
+        ],
+        "visible": false
+      },
+      {
+        "id": 7,
+        "path": "models/model_3000.glb",
+        "full_path": "htmls/models/model_3000.glb",
+        "position": [
+          6.13,
+          -1.82,
+          -3.78
+        ],
+        "visible": false
+      },
+      {
+        "id": 8,
+        "path": "models/model_2000.glb",
+        "full_path": "htmls/models/model_2000.glb",
+        "position": [
+          -3.2,
+          7.7,
+          -2.89
+        ],
+        "visible": false
+      }
+    ],
+    "audio": {
+      "path": "audios/audio_clip.wav",
+      "length": 5,
+      "autoplay": false
+    }
+  }
+}

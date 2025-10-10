@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# Generated outputs
+htmls/models/*.glb
+htmls/audios/*.wav
+htmls/audios/*.mp3
+htmls/index_*.html
+
+# Keep example files
+!htmls/audios/test.wav
+
+# Generated A-Frame library
+lib/my-aframe.js
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+

@@ -19265,10 +19265,11 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
   async doTasks(startTime) {
     while (performance.now() - startTime < this.frameTimeBudget && !this.allTasksDone) {
       if (this.currentStage === 0) {
-        this.doNetworkTask();
-        if (this.networkQueues[this.currentPriority].length === 0) {
+        if (this.networkQueues[this.currentPriority].length > 0) {
+          this.doNetworkTask();
+        } else {
           this.currentStage = 1;
-          console.log('debug: network transfer started, switch to scene task', this.currentPriority);
+          console.log('debug: network queue empty, switch to scene task', this.currentPriority);
         }
       } else if (this.currentStage === 1) {
         if (this.sceneQueues[this.currentPriority].length !== 0) {

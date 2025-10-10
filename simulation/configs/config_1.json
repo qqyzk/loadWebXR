@@ -1,0 +1,84 @@
+{
+  "model_generation": {
+    "output_dir": "htmls/models/",
+    "faces_list": [
+      500,
+      5000,
+      1000,
+      500,
+      3000
+    ]
+  },
+  "audio_processing": {
+    "input_audio": "htmls/audios/test.wav",
+    "clip_length": 10,
+    "output_audio": "htmls/audios/audio_clip.wav"
+  },
+  "web_page": {
+    "title": "A-Frame Scene 1",
+    "output_path": "htmls/index_1.html",
+    "model_count": 5,
+    "models": [
+      {
+        "id": 1,
+        "path": "models/model_500.glb",
+        "full_path": "htmls/models/model_500.glb",
+        "position": [
+          0.22,
+          -1.42,
+          -1.66
+        ],
+        "visible": false
+      },
+      {
+        "id": 2,
+        "path": "models/model_5000.glb",
+        "full_path": "htmls/models/model_5000.glb",
+        "position": [
+          1.75,
+          7.47,
+          -6.51
+        ],
+        "visible": false
+      },
+      {
+        "id": 3,
+        "path": "models/model_1000.glb",
+        "full_path": "htmls/models/model_1000.glb",
+        "position": [
+          1.85,
+          -5.16,
+          -7.02
+        ],
+        "visible": true
+      },
+      {
+        "id": 4,
+        "path": "models/model_500.glb",
+        "full_path": "htmls/models/model_500.glb",
+        "position": [
+          -6.88,
+          7.07,
+          -3.51
+        ],
+        "visible": true
+      },
+      {
+        "id": 5,
+        "path": "models/model_3000.glb",
+        "full_path": "htmls/models/model_3000.glb",
+        "position": [
+          -5.64,
+          6.14,
+          4.89
+        ],
+        "visible": true
+      }
+    ],
+    "audio": {
+      "path": "audios/audio_clip.wav",
+      "length": 10,
+      "autoplay": false
+    }
+  }
+}
