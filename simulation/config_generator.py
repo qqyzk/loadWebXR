@@ -2,18 +2,6 @@ import argparse
 import json
 import os
 import random
-import math
-
-
-def in_view(x, y, z, fov=60):
-    """
-    判断 (x, y, z) 是否在相机视野范围内
-    相机位于 (0, 1.6, 0)，朝向 -z
-    """
-    if z >= 0:  # 在相机后方
-        return False
-    angle = math.degrees(math.atan2(x, -z))  # 相机朝向 -z，所以用 -z
-    return abs(angle) <= fov / 2
 
 
 def generate_config(config_id: int):
@@ -49,28 +37,26 @@ def generate_config(config_id: int):
             model_filename
         ).replace("\\", "/")
 
-        # 随机生成位置 
-        x = random.uniform(-10, 10)
-        y = random.uniform(0, 3)
-        z = random.uniform(-15, 5)
-
-        # 根据位置计算 priority 
-        priority = 1 if in_view(x, y, z) else 3
-
-        start_t = round((priority - 1) * interval, 3)
-        end_t = round(min(priority * interval, clip_length), 3)
+        # 随机生成位置 (完全对称的空间分布)
+        x = random.uniform(-8, 8)
+        y = random.uniform(-8, 8)
+        z = random.uniform(-8, 8)
+        
+        # 50%概率可见
+        visible = random.random() < 0.5
 
         models.append({
             "id": idx,
             "path": model_relative_path,
             "full_path": model_full_path,
             "position": [round(x, 2), round(y, 2), round(z, 2)],
-            "priority": priority,
-            "start_time": start_t,
-            "end_time": end_t
+            "visible": visible
         })
 
     audio_relative_path = os.path.relpath("htmls/audios/audio_clip.wav", webpage_output_dir).replace("\\", "/")
+    
+    # 20%概率自动播放
+    audio_autoplay = random.random() < 0.2
 
     web_page = {
         "title": f"A-Frame Scene {config_id}",
@@ -80,7 +66,7 @@ def generate_config(config_id: int):
         "audio": {
             "path": audio_relative_path,
             "length": clip_length,
-            "priority": 2
+            "autoplay": audio_autoplay
         }
     }
 

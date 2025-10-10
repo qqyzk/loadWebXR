@@ -2,16 +2,16 @@
   "model_generation": {
     "output_dir": "htmls/models/",
     "faces_list": [
-      5000,
-      2000,
-      4000,
       500,
-      2000
+      5000,
+      1000,
+      500,
+      3000
     ]
   },
   "audio_processing": {
     "input_audio": "htmls/audios/test.wav",
-    "clip_length": 6,
+    "clip_length": 10,
     "output_audio": "htmls/audios/audio_clip.wav"
   },
   "web_page": {
@@ -21,74 +21,64 @@
     "models": [
       {
         "id": 1,
-        "path": "models/model_5000.glb",
-        "full_path": "htmls/models/model_5000.glb",
+        "path": "models/model_500.glb",
+        "full_path": "htmls/models/model_500.glb",
         "position": [
-          -7.99,
-          1.07,
-          -7.95
+          0.22,
+          -1.42,
+          -1.66
         ],
-        "priority": 3,
-        "start_time": 2.4,
-        "end_time": 3.6
+        "visible": false
       },
       {
         "id": 2,
-        "path": "models/model_2000.glb",
-        "full_path": "htmls/models/model_2000.glb",
+        "path": "models/model_5000.glb",
+        "full_path": "htmls/models/model_5000.glb",
         "position": [
-          1.46,
-          1.94,
-          -5.96
+          1.75,
+          7.47,
+          -6.51
         ],
-        "priority": 1,
-        "start_time": 0.0,
-        "end_time": 1.2
+        "visible": false
       },
       {
         "id": 3,
-        "path": "models/model_4000.glb",
-        "full_path": "htmls/models/model_4000.glb",
+        "path": "models/model_1000.glb",
+        "full_path": "htmls/models/model_1000.glb",
         "position": [
-          7.69,
-          1.94,
-          3.67
+          1.85,
+          -5.16,
+          -7.02
         ],
-        "priority": 3,
-        "start_time": 2.4,
-        "end_time": 3.6
+        "visible": true
       },
       {
         "id": 4,
         "path": "models/model_500.glb",
         "full_path": "htmls/models/model_500.glb",
         "position": [
-          -3.01,
-          2.19,
-          -3.49
+          -6.88,
+          7.07,
+          -3.51
         ],
-        "priority": 3,
-        "start_time": 2.4,
-        "end_time": 3.6
+        "visible": true
       },
       {
         "id": 5,
-        "path": "models/model_2000.glb",
-        "full_path": "htmls/models/model_2000.glb",
+        "path": "models/model_3000.glb",
+        "full_path": "htmls/models/model_3000.glb",
         "position": [
-          -9.11,
-          0.74,
-          -8.31
+          -5.64,
+          6.14,
+          4.89
         ],
-        "priority": 3,
-        "start_time": 2.4,
-        "end_time": 3.6
+        "visible": true
       }
     ],
     "audio": {
       "path": "audios/audio_clip.wav",
-      "length": 6,
-      "priority": 2
+      "length": 10,
+      "autoplay": false
     }
   }
 }

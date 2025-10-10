@@ -2,19 +2,19 @@
   "model_generation": {
     "output_dir": "htmls/models/",
     "faces_list": [
-      3000,
+      5000,
       500,
       2000,
-      2000,
+      4000,
+      4000,
+      500,
       1000,
-      5000,
-      5000,
-      3000
+      5000
     ]
   },
   "audio_processing": {
     "input_audio": "htmls/audios/test.wav",
-    "clip_length": 2,
+    "clip_length": 6,
     "output_audio": "htmls/audios/audio_clip.wav"
   },
   "web_page": {
@@ -24,112 +24,97 @@
     "models": [
       {
         "id": 1,
-        "path": "models/model_3000.glb",
-        "full_path": "htmls/models/model_3000.glb",
+        "path": "models/model_5000.glb",
+        "full_path": "htmls/models/model_5000.glb",
         "position": [
-          6.41,
-          0.4,
-          -10.83
+          -2.57,
+          -3.3,
+          5.57
         ],
-        "priority": 3,
-        "start_time": 0.0,
-        "end_time": 0.25
+        "visible": false
       },
       {
         "id": 2,
         "path": "models/model_500.glb",
         "full_path": "htmls/models/model_500.glb",
         "position": [
-          -8.17,
-          0.13,
-          -4.02
+          -2.26,
+          1.67,
+          1.12
         ],
-        "priority": 3,
-        "start_time": 0.25,
-        "end_time": 0.5
+        "visible": true
       },
       {
         "id": 3,
         "path": "models/model_2000.glb",
         "full_path": "htmls/models/model_2000.glb",
         "position": [
-          -0.84,
-          0.98,
-          3.71
+          3.07,
+          -4.56,
+          -4.51
         ],
-        "priority": 3,
-        "start_time": 0.5,
-        "end_time": 0.75
+        "visible": true
       },
       {
         "id": 4,
-        "path": "models/model_2000.glb",
-        "full_path": "htmls/models/model_2000.glb",
+        "path": "models/model_4000.glb",
+        "full_path": "htmls/models/model_4000.glb",
         "position": [
-          0.51,
-          0.03,
-          -14.34
+          4.42,
+          -5.46,
+          -4.86
         ],
-        "priority": 1,
-        "start_time": 0.75,
-        "end_time": 1.0
+        "visible": false
       },
       {
         "id": 5,
-        "path": "models/model_1000.glb",
-        "full_path": "htmls/models/model_1000.glb",
+        "path": "models/model_4000.glb",
+        "full_path": "htmls/models/model_4000.glb",
         "position": [
-          -6.9,
-          1.16,
-          -10.27
+          -0.71,
+          -6.96,
+          -7.73
         ],
-        "priority": 3,
-        "start_time": 1.0,
-        "end_time": 1.25
+        "visible": false
       },
       {
         "id": 6,
-        "path": "models/model_5000.glb",
-        "full_path": "htmls/models/model_5000.glb",
+        "path": "models/model_500.glb",
+        "full_path": "htmls/models/model_500.glb",
         "position": [
-          3.98,
-          0.1,
-          -11.79
+          6.08,
+          4.83,
+          4.64
         ],
-        "priority": 1,
-        "start_time": 1.25,
-        "end_time": 1.5
+        "visible": false
       },
       {
         "id": 7,
-        "path": "models/model_5000.glb",
-        "full_path": "htmls/models/model_5000.glb",
+        "path": "models/model_1000.glb",
+        "full_path": "htmls/models/model_1000.glb",
         "position": [
-          -6.71,
-          2.44,
-          2.47
+          0.06,
+          -3.61,
+          4.11
         ],
-        "priority": 3,
-        "start_time": 1.5,
-        "end_time": 1.75
+        "visible": false
       },
       {
         "id": 8,
-        "path": "models/model_3000.glb",
-        "full_path": "htmls/models/model_3000.glb",
+        "path": "models/model_5000.glb",
+        "full_path": "htmls/models/model_5000.glb",
         "position": [
-          0.2,
-          0.28,
-          -13.67
+          2.02,
+          5.68,
+          0.2
         ],
-        "priority": 1,
-        "start_time": 1.75,
-        "end_time": 2.0
+        "visible": false
       }
     ],
     "audio": {
       "path": "audios/audio_clip.wav",
-      "length": 2
+      "length": 6,
+      "autoplay": false
     }
   }
 }
