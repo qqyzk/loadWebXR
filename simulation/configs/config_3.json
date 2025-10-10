@@ -1,0 +1,121 @@
+{
+  "model_generation": {
+    "output_dir": "htmls/models/",
+    "faces_list": [
+      3000,
+      1000,
+      2000,
+      500,
+      1000,
+      4000,
+      500
+    ]
+  },
+  "audio_processing": {
+    "input_audio": "htmls/audios/test.wav",
+    "clip_length": 4,
+    "output_audio": "htmls/audios/audio_clip.wav"
+  },
+  "web_page": {
+    "title": "A-Frame Scene 3",
+    "output_path": "htmls/index_3.html",
+    "model_count": 7,
+    "models": [
+      {
+        "id": 1,
+        "path": "models/model_3000.glb",
+        "full_path": "htmls/models/model_3000.glb",
+        "position": [
+          3.97,
+          0.38,
+          -6.49
+        ],
+        "priority": 3,
+        "start_time": 0.0,
+        "end_time": 0.571
+      },
+      {
+        "id": 2,
+        "path": "models/model_1000.glb",
+        "full_path": "htmls/models/model_1000.glb",
+        "position": [
+          9.97,
+          0.79,
+          -1.28
+        ],
+        "priority": 3,
+        "start_time": 0.571,
+        "end_time": 1.143
+      },
+      {
+        "id": 3,
+        "path": "models/model_2000.glb",
+        "full_path": "htmls/models/model_2000.glb",
+        "position": [
+          4.95,
+          0.67,
+          -4.09
+        ],
+        "priority": 3,
+        "start_time": 1.143,
+        "end_time": 1.714
+      },
+      {
+        "id": 4,
+        "path": "models/model_500.glb",
+        "full_path": "htmls/models/model_500.glb",
+        "position": [
+          0.69,
+          2.04,
+          -14.77
+        ],
+        "priority": 1,
+        "start_time": 1.714,
+        "end_time": 2.286
+      },
+      {
+        "id": 5,
+        "path": "models/model_1000.glb",
+        "full_path": "htmls/models/model_1000.glb",
+        "position": [
+          -1.82,
+          1.71,
+          -8.44
+        ],
+        "priority": 1,
+        "start_time": 2.286,
+        "end_time": 2.857
+      },
+      {
+        "id": 6,
+        "path": "models/model_4000.glb",
+        "full_path": "htmls/models/model_4000.glb",
+        "position": [
+          -6.59,
+          1.32,
+          -3.12
+        ],
+        "priority": 3,
+        "start_time": 2.857,
+        "end_time": 3.429
+      },
+      {
+        "id": 7,
+        "path": "models/model_500.glb",
+        "full_path": "htmls/models/model_500.glb",
+        "position": [
+          1.12,
+          0.83,
+          -2.54
+        ],
+        "priority": 1,
+        "start_time": 3.429,
+        "end_time": 4.0
+      }
+    ],
+    "audio": {
+      "path": "audios/audio_clip.wav",
+      "length": 4
+    }
+  }
+}
