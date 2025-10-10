@@ -20,6 +20,9 @@ htmls/index_*.html
 # Keep example files
 !htmls/audios/test.wav
 
+# Generated A-Frame library
+lib/my-aframe.js
+
 # IDE
 .vscode/
 .idea/

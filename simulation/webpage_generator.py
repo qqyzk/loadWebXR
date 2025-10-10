@@ -50,7 +50,7 @@ def generate_webpage(config_path="config.json"):
   <head>
     <meta charset="utf-8">
     <title>{title}</title>
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="../lib/my-aframe.js"></script>
   </head>
   <body>
     <a-scene>
