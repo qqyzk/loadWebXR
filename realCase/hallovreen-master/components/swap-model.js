@@ -20,6 +20,19 @@ AFRAME.registerComponent('swap-model', {
     this.soundId = null;
     this.animating = false;
 
+    // Sound mapping for a-sound elements
+    this.soundMap = {
+      'bat': 'batSound',
+      'feet': 'feetSound', 
+      'hand': 'handSound',
+      'pumpkin_laugh': 'pumpkinLaughSound',
+      'skeleton': 'skeletonSound',
+      'vampire': 'vampireSound',
+      'werewolf': 'werewolfSound',
+      'witch_laugh': 'witchLaughSound',
+      'zombi': 'zombiSound'
+    };
+
     this.el.addEventListener('click', this.swapModel.bind(this));
     this.data.to.addEventListener('animation-finished', this.animationEnd.bind(this));
 
@@ -34,8 +47,15 @@ AFRAME.registerComponent('swap-model', {
     this.data.to.setAttribute("visible", true);
     this.data.to.setAttribute("animation-mixer", "repetitions: 1;");
     
-    if ( (this.soundId == null && !this.animating) || (!sounds.playing(this.soundId) && !this.animating ) ) {
-      this.soundId = sounds.play(this.data.sound);
+    // Play sound using a-sound
+    if (this.data.sound != null && !this.animating) {
+      var soundId = this.soundMap[this.data.sound];
+      if (soundId) {
+        var soundElement = document.getElementById(soundId);
+        if (soundElement && soundElement.components && soundElement.components.sound) {
+          soundElement.components.sound.playSound();
+        }
+      }
       document.getElementById('score').emit('found', {sound: this.data.sound});
     }
     

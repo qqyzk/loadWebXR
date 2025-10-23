@@ -11,7 +11,6 @@
     <!-- <meta property="og:url" content="https://www.jorgefuentes.net/projects/halloVReen/"> -->
     <!-- <meta property="og:image" content="https://www.jorgefuentes.net/projects/halloVReen/halloVReen_screenshot.jpg"> -->
 
-    <script src="components/howler.min.js"></script>
     <script src="mylib/my-aframe.js"></script>
     <script src="components/correct-gamma.js"></script>
     <script src="components/aframe-extras.min.js"></script>
@@ -23,61 +22,6 @@
     <script>
 
       var clicksEnabled = false;
-
-      var bgAudio = new Howl({
-        src: ['sounds/bgsound.ogg', 'sounds/bgsound.mp3'],
-        autoplay: false,
-        loop: true,
-        volume: 0.2
-      });
-
-      var sounds = new Howl({
-        "src": [
-          "sounds/sounds.ogg",
-          "sounds/sounds.m4a",
-          "sounds/sounds.mp3",
-          "sounds/sounds.ac3"
-        ],
-        "sprite": {
-          "bat": [
-            0,
-            649.342403628118
-          ],
-          "feet": [
-            2000,
-            7185.736961451248
-          ],
-          "hand": [
-            11000,
-            1777.7777777777785
-          ],
-          "pumpkin_laugh": [
-            14000,
-            2480.408163265306
-          ],
-          "skeleton": [
-            18000,
-            2680.2040816326526
-          ],
-          "vampire": [
-            22000,
-            5199.36507936508
-          ],
-          "werewolf": [
-            29000,
-            7582.040816326533
-          ],
-          "witch_laugh": [
-            38000,
-            2906.258503401361
-          ],
-          "zombi": [
-            42000,
-            1635.192743764172
-          ]
-        },
-        volume: 2
-      });
 
     </script>
 
@@ -99,6 +43,20 @@
         <a-asset-item id="hand" src="models/hand.gltf"></a-asset-item>
         <a-asset-item id="feet" src="models/feet.gltf"></a-asset-item>
         <a-asset-item id="bat" src="models/bat.gltf"></a-asset-item>
+        
+        <!-- Audio Assets -->
+        <a-asset-item id="bgsound" src="sounds/bgsound.ogg" response-type="arraybuffer" preload="auto" priority="1"></a-asset-item>
+        
+        <!-- Individual Sound Effects -->
+        <a-asset-item id="batSound" src="sounds/individual/bat.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
+        <a-asset-item id="feetSound" src="sounds/individual/feet.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
+        <a-asset-item id="handSound" src="sounds/individual/hand.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
+        <a-asset-item id="pumpkinLaughSound" src="sounds/individual/pumpkin_laugh.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
+        <a-asset-item id="skeletonSound" src="sounds/individual/skeleton.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
+        <a-asset-item id="vampireSound" src="sounds/individual/vampire.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
+        <a-asset-item id="werewolfSound" src="sounds/individual/werewolf.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
+        <a-asset-item id="witchLaughSound" src="sounds/individual/witch_laugh.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
+        <a-asset-item id="zombiSound" src="sounds/individual/zombi.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
       </a-assets>
 
       <a-camera>
@@ -117,6 +75,20 @@
 
       <!-- Hidden element to trigger autoplay component -->
       <a-entity autoplay style="display: none;"></a-entity>
+
+      <!-- Background Music -->
+      <a-sound id="bgMusic" src="#bgsound" sound-autoplay="false" loop="true" volume="0.2"></a-sound>
+      
+      <!-- Individual Sound Effects -->
+      <a-sound id="batSound" src="#batSound" sound-autoplay="false" volume="2"></a-sound>
+      <a-sound id="feetSound" src="#feetSound" sound-autoplay="false" volume="2"></a-sound>
+      <a-sound id="handSound" src="#handSound" sound-autoplay="false" volume="2"></a-sound>
+      <a-sound id="pumpkinLaughSound" src="#pumpkinLaughSound" sound-autoplay="false" volume="2"></a-sound>
+      <a-sound id="skeletonSound" src="#skeletonSound" sound-autoplay="false" volume="2"></a-sound>
+      <a-sound id="vampireSound" src="#vampireSound" sound-autoplay="false" volume="2"></a-sound>
+      <a-sound id="werewolfSound" src="#werewolfSound" sound-autoplay="false" volume="2"></a-sound>
+      <a-sound id="witchLaughSound" src="#witchLaughSound" sound-autoplay="false" volume="2"></a-sound>
+      <a-sound id="zombiSound" src="#zombiSound" sound-autoplay="false" volume="2"></a-sound>
 
       <a-entity
         gltf-model="#village_trees_outer"
