@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#" lang="en_US">
+  <head>
+    <meta charset="utf-8">
+    <title>HalloVReen · a webVR experiment for kids by Jorge Fuentes</title>
+    <meta name="description" content="It's All Hallow's Eve and the citizens of Creepville are restless! Can you spot them all? A webVR experience by Jorge Fuentes made with A-Frame. Compatible with Google Cardboard up to Oculus Rift and Go, Vive, Gear VR.">
+    <meta property="og:title" content="HalloVReen">
+    <meta property="og:description" content="It's All Hallow's Eve and the citizens of Creepville are restless! Can you spot them all? A webVR experience by Jorge Fuentes made with A-Frame. Compatible with Google Cardboard up to Oculus Rift and Go, Vive, Gear VR.">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="website">
+    <!-- <meta property="og:url" content="https://www.jorgefuentes.net/projects/halloVReen/"> -->
+    <!-- <meta property="og:image" content="https://www.jorgefuentes.net/projects/halloVReen/halloVReen_screenshot.jpg"> -->
+
+    <script src="components/aframe-v1.2.0.min.js"></script>
+    <script src="components/correct-gamma.js"></script>
+    <script src="components/aframe-extras.min.js"></script>
+    <script src="components/animation-control.js"></script>
+    <script src="components/swap-model.js"></script>
+    <script src="components/autoplay.js"></script>
+    <script src="components/score.js"></script>
+    
+    <script src="components/progressive-gltf2.js"></script>
+    <script>
+    (function attachProgressiveLoaderToWindow() {
+    try {
+        if (window.ProgressiveGLTFLoader || window.ProgressiveGLTF) {
+        console.log('[probe] progressive loader already present:', window.ProgressiveGLTFLoader || window.ProgressiveGLTF);
+        return;
+        }
+
+        const candidates = ['ProgressiveGLTFLoader','GLTFStreamingLoader','StreamingGLTFLoader','ProgressiveGLTF','progressiveGltf','PROGRESSIVE_GLTF'];
+        for (const name of candidates) {
+        if (window[name]) {
+            window.ProgressiveGLTFLoader = window[name];
+            console.log('[probe] attached loader from window.' + name + ' -> window.ProgressiveGLTFLoader');
+            return;
+        }
+        }
+
+        for (const k in window) {
+        try {
+            if (!k) continue;
+            if (k.indexOf('THREE') === 0) continue; 
+            const v = window[k];
+            if (!v) continue;
+            if ((typeof v === 'function' && /gltf|progressive|stream/i.test(k)) ||
+                (typeof v === 'object' && typeof v.load === 'function' && /gltf|progressive|stream/i.test(k))) {
+            window.ProgressiveGLTFLoader = v;
+            console.log('[probe] attached loader from window.' + k + ' -> window.ProgressiveGLTFLoader');
+            return;
+            }
+        } catch (e) { /* ignore property access errors */ }
+        }
+
+        console.warn('[probe] no progressive loader found on window');
+    } catch (err) {
+        console.error('[probe] attachProgressiveLoaderToWindow error', err);
+    }
+    })();
+    </script>
+
+    <script src="components/progressive-gltf.js"></script>
+    <script>
+
+      var clicksEnabled = false;
+
+    </script>
+
+  </head>
+  <body>
+    <a-scene fog="type: linear; color: #597360; near: 2; far: 30;" background="color: #000" correct-gamma>
+      <a-assets timeout="30000">
+        <!-- 音频资产保持不变 -->
+        <a-asset-item id="bgsound" src="sounds/bgsound.ogg" response-type="arraybuffer" preload="auto" priority="1"></a-asset-item>
+        <a-asset-item id="batSound" src="sounds/individual/bat.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
+        <a-asset-item id="feetSound" src="sounds/individual/feet.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
+        <a-asset-item id="handSound" src="sounds/individual/hand.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
+        <a-asset-item id="pumpkinLaughSound" src="sounds/individual/pumpkin_laugh.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
+        <a-asset-item id="skeletonSound" src="sounds/individual/skeleton.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
+        <a-asset-item id="vampireSound" src="sounds/individual/vampire.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
+        <a-asset-item id="werewolfSound" src="sounds/individual/werewolf.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
+        <a-asset-item id="witchLaughSound" src="sounds/individual/witch_laugh.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
+        <a-asset-item id="zombiSound" src="sounds/individual/zombi.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
+      </a-assets>
+
+      <!-- 用渐进式加载替换所有模型 -->
+      <a-entity
+        progressive-gltf="src: models/village_trees_outer.gltf"
+        position="0 0 0"
+        rotation="0 30 0"
+      ></a-entity>
+      <a-entity
+        progressive-gltf="src: models/village_trees_middle.gltf"
+        position="0 0 0"
+        rotation="0 30 0"
+      ></a-entity>
+      <a-entity
+        progressive-gltf="src: models/village_trees_inner.gltf"
+        position="0 0 0"
+        rotation="0 30 0"
+      ></a-entity>
+
+      <a-entity
+        progressive-gltf="src: models/village.gltf"
+        position="0 0 0"
+        rotation="0 30 0"
+        animation-mixer
+      >
+        <a-entity light="type:point;color:#f389e1;intensity:0.5;distance:15;penumbra:1" position="0 3 0"></a-entity>
+
+        <!-- 各个模型的目标实体也要改成渐进式加载 -->
+        <a-entity
+          id="skeletonTarget"
+          progressive-gltf="src: models/skeleton.gltf"
+          position="7.441 0.802 -0.526"
+          rotation="0 -80 0"
+          scale="1 1 1"
+          class="clickable"
+          animation-mixer="clip: idle; crossFadeDuration: 0.5;"
+        >
+          <a-box
+            width="2" depth="0.5" height="2"
+            position="0 1 0"
+            visible="false"
+            class="clickable"
+            animation-control="sound: skeleton; target: #skeletonTarget; clip: dance; repetitions: 0; crossFadeDuration: 0.5;"
+          >
+          </a-box>
+        </a-entity>
+
+        <a-entity
+          id="zombiTarget"
+          progressive-gltf="src: models/zombi.gltf"
+          position="-0.747 0.665 -9.681"
+          rotation="0 0 0"
+          scale="1.25 1.25 1.25"
+          animation-mixer="clip: idle; crossFadeDuration: 1;"
+        >
+          <a-box
+            width="2" depth="0.5" height="2"
+            position="0 1 0"
+            visible="false"
+            class="clickable"
+            animation-control="sound: zombi; target: #zombiTarget; clip: dance; repetitions: 0; crossFadeDuration: 1;"
+          >
+          </a-box>
+        </a-entity>
+
+        <a-entity
+          position="-3 0 -6.8"
+          rotation="0 25 0"
+        >
+          <a-entity
+            id="pumpkin_happyTarget"
+            progressive-gltf="src: models/pumpkin_happy.gltf"
+            scale="1 1 1"
+            class="clickable"
+            visible="true"
+            animation-mixer
+            swap-model="from: #pumpkin_happyTarget; to: #pumpkin_evilTarget; sound: pumpkin_laugh;"
+          >
+          </a-entity>
+
+          <a-entity
+            id="pumpkin_evilTarget"
+            progressive-gltf="src: models/pumpkin_evil.gltf"
+            scale="1 1 1"
+            position="0 -10 0"
+            visible="true"
+          >
+          </a-entity>
+        </a-entity>
+
+        <a-entity
+          id="handTarget"
+          progressive-gltf="src: models/hand.gltf"
+          scale="1 1 1"
+          class="clickable"
+          visible="true"
+          position="-4.35 -0.2 2.85"
+          rotation="0 120 0"
+          animation-mixer="clip: idle;"
+          animation-control="sound: hand; target: #handTarget; clip: animation; repetitions: 0;"
+        >
+        </a-entity>
+
+        <a-entity
+          id="feetTarget"
+          progressive-gltf="src: models/feet.gltf"
+          scale="1 1 1"
+          class="clickable"
+          visible="true"
+          position="-3.8 -0.1 -3.5"
+          rotation="0 57 0"
+          animation-mixer="clip: idle;"
+          animation-control="sound: feet; target: #feetTarget; clip: animation; repetitions: 0;"
+        >
+        </a-entity>
+
+        <a-entity
+          id="vampireTarget"
+          progressive-gltf="src: models/vampire.gltf"
+          class="clickable"
+          visible="true"
+          position="-5.6 0.04 -0.46"
+          rotation="0 83.89 0"
+          scale="1 1 1"
+          animation-mixer="clip: idle;"
+          animation-control="lightOn: #vampireLight; sound: vampire; target: #vampireTarget; clip: animation; repetitions: 0;"
+        >
+          <a-entity
+            id="vampireLight"
+            light="type:spot; color:#EE3030; intensity:10;distance:3;penumbra:1"
+            position="0.06 0.9 0.9"
+            rotation="58.6 -13.3 -24.8"
+          >
+          </a-entity>
+        </a-entity>
+
+        <a-entity
+          id="werewolfTarget"
+          progressive-gltf="src: models/werewolf.gltf"
+          class="clickable"
+          visible="true"
+          position="-3 11 -13"
+          scale="1 1 1"
+          animation-mixer="clip: idle;"
+        >
+          <a-box
+            position="-0.55 3 2.3"
+            width="10.87" height="6.2" depth="1"
+            rotation="0 10.53 0"
+            visible="false"
+            class="clickable"
+            animation-control="sound: werewolf; target: #werewolfTarget; clip: animation; repetitions: 0;"
+          >
+          </a-box>
+        </a-entity>
+
+        <a-entity
+          id="witchTarget"
+          progressive-gltf="src: models/witch.gltf"
+          scale="1 1 1"
+          animation-mixer="clip: idle; crossFadeDuration: 1;"
+        >
+          <a-box
+            width="5" depth="6" height="4"
+            position="-16.62 11.17 -1.15"
+            visible="false"
+            class="clickable"
+            animation-control="sound: witch_laugh; target: #witchTarget; clip: animation; repetitions: 0; crossFadeDuration: 1;"
+          >
+          </a-box>
+        </a-entity>
+
+        <a-entity
+          id="batTarget"
+          progressive-gltf="src: models/bat.gltf"
+          scale="1 1 1"
+          class="clickable"
+          visible="true"
+          position="0 0 0"
+          rotation="0 0 0"
+          animation-mixer="clip: idle; crossFadeDuration: 0;"
+          animation-control="sound: bat; target: #batTarget; clip: animation; repetitions: 0; crossFadeDuration: 0;"
+        >
+        </a-entity>
+
+      </a-entity>
+    </a-scene>
+
+
+  </body>
+</html>
