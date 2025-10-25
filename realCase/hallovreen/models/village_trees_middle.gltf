@@ -1,0 +1,221 @@
+{
+  "asset": {
+    "generator": "glTF-Transform v4.2.1",
+    "version": "2.0"
+  },
+  "accessors": [
+    {
+      "type": "SCALAR",
+      "componentType": 5123,
+      "count": 357,
+      "normalized": false,
+      "byteOffset": 0,
+      "bufferView": 0
+    },
+    {
+      "type": "VEC3",
+      "componentType": 5120,
+      "count": 177,
+      "normalized": true,
+      "byteOffset": 0,
+      "bufferView": 1
+    },
+    {
+      "type": "VEC3",
+      "componentType": 5122,
+      "count": 177,
+      "max": [
+        32767,
+        15345,
+        32655
+      ],
+      "min": [
+        -32767,
+        -15345,
+        -32655
+      ],
+      "normalized": true,
+      "byteOffset": 0,
+      "bufferView": 2
+    },
+    {
+      "type": "VEC2",
+      "componentType": 5123,
+      "count": 177,
+      "normalized": true,
+      "byteOffset": 0,
+      "bufferView": 3
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 1,
+      "byteOffset": 0,
+      "byteLength": 714,
+      "target": 34963,
+      "extensions": {
+        "EXT_meshopt_compression": {
+          "buffer": 0,
+          "byteOffset": 0,
+          "byteLength": 136,
+          "mode": "TRIANGLES",
+          "byteStride": 2,
+          "count": 357
+        }
+      }
+    },
+    {
+      "buffer": 1,
+      "byteOffset": 716,
+      "byteLength": 708,
+      "target": 34962,
+      "byteStride": 4,
+      "extensions": {
+        "EXT_meshopt_compression": {
+          "buffer": 0,
+          "byteOffset": 136,
+          "byteLength": 308,
+          "mode": "ATTRIBUTES",
+          "filter": "OCTAHEDRAL",
+          "byteStride": 4,
+          "count": 177
+        }
+      }
+    },
+    {
+      "buffer": 1,
+      "byteOffset": 1424,
+      "byteLength": 1416,
+      "target": 34962,
+      "byteStride": 8,
+      "extensions": {
+        "EXT_meshopt_compression": {
+          "buffer": 0,
+          "byteOffset": 444,
+          "byteLength": 1137,
+          "mode": "ATTRIBUTES",
+          "byteStride": 8,
+          "count": 177
+        }
+      }
+    },
+    {
+      "buffer": 1,
+      "byteOffset": 2840,
+      "byteLength": 708,
+      "target": 34962,
+      "byteStride": 4,
+      "extensions": {
+        "EXT_meshopt_compression": {
+          "buffer": 0,
+          "byteOffset": 1584,
+          "byteLength": 703,
+          "mode": "ATTRIBUTES",
+          "byteStride": 4,
+          "count": 177
+        }
+      }
+    }
+  ],
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    }
+  ],
+  "images": [
+    {
+      "name": "village_trees_03c",
+      "mimeType": "image/png",
+      "uri": "village_trees_03c.png"
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "village_trees_middle.bin",
+      "byteLength": 2288
+    },
+    {
+      "byteLength": 3548,
+      "extensions": {
+        "EXT_meshopt_compression": {
+          "fallback": true
+        }
+      }
+    }
+  ],
+  "materials": [
+    {
+      "name": "trees",
+      "alphaMode": "BLEND",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "baseColorTexture": {
+          "index": 0
+        }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "tree8.003",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 2,
+            "TEXCOORD_0": 3
+          },
+          "mode": 4,
+          "material": 0,
+          "indices": 0
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "tree8.001",
+      "translation": [
+        -0.751205628496056,
+        4.959157415972743,
+        -2.6799117703321107
+      ],
+      "rotation": [
+        -0.08819003994031527,
+        0.852702044131866,
+        0.02790181645851343,
+        0.5141431933898748
+      ],
+      "scale": [
+        19.720253739740066,
+        19.720257423703476,
+        19.720253703895317
+      ],
+      "mesh": 0
+    }
+  ],
+  "scenes": [
+    {
+      "name": "Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "scene": 0,
+  "extensionsUsed": [
+    "EXT_meshopt_compression",
+    "KHR_mesh_quantization"
+  ],
+  "extensionsRequired": [
+    "EXT_meshopt_compression",
+    "KHR_mesh_quantization"
+  ]
+}

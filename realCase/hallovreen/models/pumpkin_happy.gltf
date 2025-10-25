@@ -1,0 +1,447 @@
+{
+  "asset": {
+    "generator": "glTF-Transform v4.2.1",
+    "version": "2.0"
+  },
+  "accessors": [
+    {
+      "type": "SCALAR",
+      "componentType": 5126,
+      "count": 49,
+      "max": [
+        1.6333333253860474
+      ],
+      "min": [
+        0
+      ],
+      "normalized": false,
+      "byteOffset": 0,
+      "bufferView": 0
+    },
+    {
+      "type": "VEC4",
+      "componentType": 5122,
+      "count": 49,
+      "normalized": true,
+      "byteOffset": 0,
+      "bufferView": 1
+    },
+    {
+      "type": "VEC4",
+      "componentType": 5122,
+      "count": 49,
+      "normalized": true,
+      "byteOffset": 392,
+      "bufferView": 1
+    },
+    {
+      "type": "SCALAR",
+      "componentType": 5123,
+      "count": 1947,
+      "normalized": false,
+      "byteOffset": 0,
+      "bufferView": 2
+    },
+    {
+      "type": "VEC4",
+      "componentType": 5121,
+      "count": 629,
+      "normalized": false,
+      "byteOffset": 0,
+      "bufferView": 3
+    },
+    {
+      "type": "VEC3",
+      "componentType": 5120,
+      "count": 629,
+      "normalized": true,
+      "byteOffset": 0,
+      "bufferView": 4
+    },
+    {
+      "type": "VEC4",
+      "componentType": 5126,
+      "count": 629,
+      "normalized": false,
+      "byteOffset": 0,
+      "bufferView": 5
+    },
+    {
+      "type": "MAT4",
+      "componentType": 5126,
+      "count": 3,
+      "normalized": false,
+      "byteOffset": 0,
+      "bufferView": 6
+    },
+    {
+      "type": "VEC3",
+      "componentType": 5122,
+      "count": 629,
+      "max": [
+        32747,
+        24975,
+        32767
+      ],
+      "min": [
+        -32747,
+        -24975,
+        -32767
+      ],
+      "normalized": true,
+      "byteOffset": 0,
+      "bufferView": 7
+    },
+    {
+      "type": "VEC2",
+      "componentType": 5123,
+      "count": 629,
+      "normalized": true,
+      "byteOffset": 0,
+      "bufferView": 8
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 1,
+      "byteOffset": 0,
+      "byteLength": 196,
+      "extensions": {
+        "EXT_meshopt_compression": {
+          "buffer": 0,
+          "byteOffset": 0,
+          "byteLength": 193,
+          "mode": "ATTRIBUTES",
+          "byteStride": 4,
+          "count": 49
+        }
+      }
+    },
+    {
+      "buffer": 1,
+      "byteOffset": 196,
+      "byteLength": 784,
+      "extensions": {
+        "EXT_meshopt_compression": {
+          "buffer": 0,
+          "byteOffset": 196,
+          "byteLength": 200,
+          "mode": "ATTRIBUTES",
+          "filter": "QUATERNION",
+          "byteStride": 8,
+          "count": 98
+        }
+      }
+    },
+    {
+      "buffer": 1,
+      "byteOffset": 980,
+      "byteLength": 3894,
+      "target": 34963,
+      "extensions": {
+        "EXT_meshopt_compression": {
+          "buffer": 0,
+          "byteOffset": 396,
+          "byteLength": 679,
+          "mode": "TRIANGLES",
+          "byteStride": 2,
+          "count": 1947
+        }
+      }
+    },
+    {
+      "buffer": 1,
+      "byteOffset": 4876,
+      "byteLength": 2516,
+      "target": 34962,
+      "byteStride": 4,
+      "extensions": {
+        "EXT_meshopt_compression": {
+          "buffer": 0,
+          "byteOffset": 1076,
+          "byteLength": 468,
+          "mode": "ATTRIBUTES",
+          "byteStride": 4,
+          "count": 629
+        }
+      }
+    },
+    {
+      "buffer": 1,
+      "byteOffset": 7392,
+      "byteLength": 2516,
+      "target": 34962,
+      "byteStride": 4,
+      "extensions": {
+        "EXT_meshopt_compression": {
+          "buffer": 0,
+          "byteOffset": 1544,
+          "byteLength": 1329,
+          "mode": "ATTRIBUTES",
+          "filter": "OCTAHEDRAL",
+          "byteStride": 4,
+          "count": 629
+        }
+      }
+    },
+    {
+      "buffer": 1,
+      "byteOffset": 9908,
+      "byteLength": 10064,
+      "target": 34962,
+      "byteStride": 16,
+      "extensions": {
+        "EXT_meshopt_compression": {
+          "buffer": 0,
+          "byteOffset": 2876,
+          "byteLength": 4763,
+          "mode": "ATTRIBUTES",
+          "byteStride": 16,
+          "count": 629
+        }
+      }
+    },
+    {
+      "buffer": 1,
+      "byteOffset": 19972,
+      "byteLength": 192,
+      "extensions": {
+        "EXT_meshopt_compression": {
+          "buffer": 0,
+          "byteOffset": 7640,
+          "byteLength": 230,
+          "mode": "ATTRIBUTES",
+          "byteStride": 64,
+          "count": 3
+        }
+      }
+    },
+    {
+      "buffer": 1,
+      "byteOffset": 20164,
+      "byteLength": 5032,
+      "target": 34962,
+      "byteStride": 8,
+      "extensions": {
+        "EXT_meshopt_compression": {
+          "buffer": 0,
+          "byteOffset": 7872,
+          "byteLength": 3809,
+          "mode": "ATTRIBUTES",
+          "byteStride": 8,
+          "count": 629
+        }
+      }
+    },
+    {
+      "buffer": 1,
+      "byteOffset": 25196,
+      "byteLength": 2516,
+      "target": 34962,
+      "byteStride": 4,
+      "extensions": {
+        "EXT_meshopt_compression": {
+          "buffer": 0,
+          "byteOffset": 11684,
+          "byteLength": 2379,
+          "mode": "ATTRIBUTES",
+          "byteStride": 4,
+          "count": 629
+        }
+      }
+    }
+  ],
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    }
+  ],
+  "images": [
+    {
+      "name": "Pumpkins_HappyEvil",
+      "mimeType": "image/png",
+      "uri": "Pumpkins_HappyEvil.png"
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "pumpkin_happy.bin",
+      "byteLength": 14064
+    },
+    {
+      "byteLength": 27712,
+      "extensions": {
+        "EXT_meshopt_compression": {
+          "fallback": true
+        }
+      }
+    }
+  ],
+  "materials": [
+    {
+      "name": "pumpkin_evil",
+      "doubleSided": true,
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "emissiveFactor": [
+        0.5225215554237366,
+        0.5225215554237366,
+        0.5225215554237366
+      ],
+      "emissiveTexture": {
+        "index": 0
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "pumpkin_happy",
+      "primitives": [
+        {
+          "attributes": {
+            "JOINTS_0": 4,
+            "NORMAL": 5,
+            "WEIGHTS_0": 6,
+            "POSITION": 8,
+            "TEXCOORD_0": 9
+          },
+          "mode": 4,
+          "material": 0,
+          "indices": 3
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "Armature.001"
+    },
+    {
+      "name": "pumpkin_happy",
+      "rotation": [
+        -1.545430627913889e-8,
+        0.7071068286895728,
+        1.5454308829218252e-8,
+        0.7071067336835187
+      ],
+      "scale": [
+        0.02310101617299266,
+        0.023101015016436573,
+        0.023101016172992667
+      ],
+      "mesh": 0,
+      "skin": 0
+    },
+    {
+      "name": "Armature.001_Bone",
+      "children": [
+        3
+      ]
+    },
+    {
+      "name": "Armature.001_Bone.001",
+      "translation": [
+        0,
+        0.3711223006248474,
+        0
+      ],
+      "rotation": [
+        0,
+        -1.7645097827312384e-8,
+        0.13132813572883606,
+        0.9913389682769775
+      ],
+      "children": [
+        4
+      ]
+    },
+    {
+      "name": "Armature.001_Bone.002",
+      "translation": [
+        0,
+        0.5337339043617249,
+        0
+      ],
+      "rotation": [
+        1.3604648074760917e-8,
+        1.3376399010667228e-7,
+        -0.11412406712770462,
+        0.9934664964675903
+      ]
+    }
+  ],
+  "skins": [
+    {
+      "inverseBindMatrices": 7,
+      "skeleton": 0,
+      "joints": [
+        2,
+        3,
+        4
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "name": "pumpkin_happy",
+      "samplers": [
+        {
+          "input": 0,
+          "output": 1,
+          "interpolation": "LINEAR"
+        },
+        {
+          "input": 0,
+          "output": 2,
+          "interpolation": "LINEAR"
+        }
+      ],
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "node": 3,
+            "path": "rotation"
+          }
+        },
+        {
+          "sampler": 1,
+          "target": {
+            "node": 4,
+            "path": "rotation"
+          }
+        }
+      ]
+    }
+  ],
+  "scenes": [
+    {
+      "name": "Scene",
+      "nodes": [
+        0,
+        1,
+        2
+      ]
+    }
+  ],
+  "scene": 0,
+  "extensionsUsed": [
+    "EXT_meshopt_compression",
+    "KHR_mesh_quantization"
+  ],
+  "extensionsRequired": [
+    "EXT_meshopt_compression",
+    "KHR_mesh_quantization"
+  ]
+}
