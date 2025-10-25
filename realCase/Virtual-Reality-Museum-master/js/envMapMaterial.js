@@ -15,7 +15,7 @@ AFRAME.registerShader('envMapMaterial', {
 
 
         var envMap = new THREE.CubeTextureLoader().load( urls );
-        envMap.format = THREE.RGBAFormat;
+        envMap.format = THREE.RGBFormat;
         envMap.mapping = THREE.CubeReflectionMapping;
 
 

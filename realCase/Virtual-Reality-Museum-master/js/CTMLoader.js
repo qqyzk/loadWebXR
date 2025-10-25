@@ -10,12 +10,26 @@
 
 THREE.CTMLoader = function () {
 
-	THREE.Loader.call( this );
+	// Base constructor - compatible with newer Three.js versions
+	this.manager = THREE.DefaultLoadingManager;
 
 };
 
-THREE.CTMLoader.prototype = Object.create( THREE.Loader.prototype );
-THREE.CTMLoader.prototype.constructor = THREE.CTMLoader;
+// Add missing Loader methods for compatibility
+THREE.CTMLoader.prototype.extractUrlBase = function ( url ) {
+	var parts = url.split( '/' );
+	if ( parts.length === 1 ) return './';
+	parts.pop();
+	return parts.join( '/' ) + '/';
+};
+
+THREE.CTMLoader.prototype.createMaterial = function ( materialData, basePath ) {
+	var material = new THREE.MeshPhongMaterial();
+	if ( materialData.map ) {
+		material.map = new THREE.TextureLoader().load( basePath + materialData.map );
+	}
+	return material;
+};
 
 // Load multiple CTM parts defined in JSON
 
@@ -193,8 +207,10 @@ THREE.CTMLoader.prototype.createModel = function ( file, callback ) {
 
 	var Model = function () {
 
-		THREE.BufferGeometry.call( this );
-
+		// Create BufferGeometry instance properly for newer Three.js
+		var geometry = new THREE.BufferGeometry();
+		
+		// Copy properties to this instance
 		this.materials = [];
 
 		var indices = file.body.indices,
@@ -219,31 +235,31 @@ THREE.CTMLoader.prototype.createModel = function ( file, callback ) {
 
 		}
 
-		this.setIndex( new THREE.BufferAttribute( indices, 1 ) );
-		this.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
+		geometry.setIndex( new THREE.BufferAttribute( indices, 1 ) );
+		geometry.setAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
 
 		if ( normals !== undefined ) {
 
-			this.addAttribute( 'normal', new THREE.BufferAttribute( normals, 3 ) );
+			geometry.setAttribute( 'normal', new THREE.BufferAttribute( normals, 3 ) );
 
 		}
 
 		if ( uvs !== undefined ) {
 
-			this.addAttribute( 'uv', new THREE.BufferAttribute( uvs, 2 ) );
+			geometry.setAttribute( 'uv', new THREE.BufferAttribute( uvs, 2 ) );
 
 		}
 
 		if ( colors !== undefined ) {
 
-			this.addAttribute( 'color', new THREE.BufferAttribute( colors, 4 ) );
+			geometry.setAttribute( 'color', new THREE.BufferAttribute( colors, 4 ) );
 
 		}
 
-	};
+		// Return the geometry instead of using prototype inheritance
+		return geometry;
 
-	Model.prototype = Object.create( THREE.BufferGeometry.prototype );
-	Model.prototype.constructor = Model;
+	};
 
 	var geometry = new Model();
 
