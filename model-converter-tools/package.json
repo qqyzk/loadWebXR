@@ -1,0 +1,28 @@
+{
+  "name": "model-converter-tools",
+  "version": "1.0.0",
+  "description": "Tools for converting OBJ/CTM models to GLTF format",
+  "main": "obj-to-gltf-converter.js",
+  "scripts": {
+    "convert": "node obj-to-gltf-converter.js",
+    "test-floor": "node test-floor-conversion.js",
+    "convert-all": "node convert-all-models.js"
+  },
+  "dependencies": {
+    "canvas": "^2.11.2",
+    "jsdom": "^22.1.0",
+    "three": "^0.158.0"
+  },
+  "keywords": [
+    "3d",
+    "models",
+    "conversion",
+    "obj",
+    "gltf",
+    "three.js",
+    "mtl",
+    "texture"
+  ],
+  "author": "",
+  "license": "MIT"
+}

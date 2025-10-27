@@ -1,0 +1,62 @@
+{
+  "timestamp": "2025-10-27T05:13:50.898Z",
+  "total": 9,
+  "successful": 9,
+  "failed": 0,
+  "results": [
+    {
+      "success": true,
+      "modelName": "floor",
+      "outputPath": "/Users/biweichen/Documents/loadWebXR/code/realCase/Virtual-Reality-Museum-master/models/floor.glb",
+      "fileSize": 10068800
+    },
+    {
+      "success": true,
+      "modelName": "hall",
+      "outputPath": "/Users/biweichen/Documents/loadWebXR/code/realCase/Virtual-Reality-Museum-master/models/hall.glb",
+      "fileSize": 4651764
+    },
+    {
+      "success": true,
+      "modelName": "hall_low_floor",
+      "outputPath": "/Users/biweichen/Documents/loadWebXR/code/realCase/Virtual-Reality-Museum-master/models/hall_low_floor.glb",
+      "fileSize": 1532
+    },
+    {
+      "success": true,
+      "modelName": "acropolis",
+      "outputPath": "/Users/biweichen/Documents/loadWebXR/code/realCase/Virtual-Reality-Museum-master/models/acropolis.glb",
+      "fileSize": 746136
+    },
+    {
+      "success": true,
+      "modelName": "castle_lake",
+      "outputPath": "/Users/biweichen/Documents/loadWebXR/code/realCase/Virtual-Reality-Museum-master/models/castle_lake.glb",
+      "fileSize": 1169012
+    },
+    {
+      "success": true,
+      "modelName": "good_samaritan",
+      "outputPath": "/Users/biweichen/Documents/loadWebXR/code/realCase/Virtual-Reality-Museum-master/models/good_samaritan.glb",
+      "fileSize": 1545728
+    },
+    {
+      "success": true,
+      "modelName": "moonlight",
+      "outputPath": "/Users/biweichen/Documents/loadWebXR/code/realCase/Virtual-Reality-Museum-master/models/moonlight.glb",
+      "fileSize": 1029576
+    },
+    {
+      "success": true,
+      "modelName": "podiums",
+      "outputPath": "/Users/biweichen/Documents/loadWebXR/code/realCase/Virtual-Reality-Museum-master/models/podiums.glb",
+      "fileSize": 916088
+    },
+    {
+      "success": true,
+      "modelName": "lamps",
+      "outputPath": "/Users/biweichen/Documents/loadWebXR/code/realCase/Virtual-Reality-Museum-master/models/lamps.glb",
+      "fileSize": 955752
+    }
+  ]
+}
