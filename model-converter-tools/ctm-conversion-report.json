@@ -1,0 +1,81 @@
+{
+  "timestamp": "2025-10-27T06:00:10.262Z",
+  "type": "CTM to GLB conversion",
+  "total": 12,
+  "successful": 12,
+  "failed": 0,
+  "results": [
+    {
+      "success": true,
+      "modelName": "david",
+      "outputPath": "/Users/biweichen/Documents/loadWebXR/code/realCase/Virtual-Reality-Museum-master/models/david.glb",
+      "fileSize": 641920
+    },
+    {
+      "success": true,
+      "modelName": "female_head",
+      "outputPath": "/Users/biweichen/Documents/loadWebXR/code/realCase/Virtual-Reality-Museum-master/models/female_head.glb",
+      "fileSize": 1040708
+    },
+    {
+      "success": true,
+      "modelName": "lion",
+      "outputPath": "/Users/biweichen/Documents/loadWebXR/code/realCase/Virtual-Reality-Museum-master/models/lion.glb",
+      "fileSize": 509712
+    },
+    {
+      "success": true,
+      "modelName": "greek_bust",
+      "outputPath": "/Users/biweichen/Documents/loadWebXR/code/realCase/Virtual-Reality-Museum-master/models/greek_bust.glb",
+      "fileSize": 765876
+    },
+    {
+      "success": true,
+      "modelName": "old_man",
+      "outputPath": "/Users/biweichen/Documents/loadWebXR/code/realCase/Virtual-Reality-Museum-master/models/old_man.glb",
+      "fileSize": 597784
+    },
+    {
+      "success": true,
+      "modelName": "nefertiti",
+      "outputPath": "/Users/biweichen/Documents/loadWebXR/code/realCase/Virtual-Reality-Museum-master/models/nefertiti.glb",
+      "fileSize": 711196
+    },
+    {
+      "success": true,
+      "modelName": "fractal_1",
+      "outputPath": "/Users/biweichen/Documents/loadWebXR/code/realCase/Virtual-Reality-Museum-master/models/fractal_1.glb",
+      "fileSize": 1117264
+    },
+    {
+      "success": true,
+      "modelName": "fractal_2",
+      "outputPath": "/Users/biweichen/Documents/loadWebXR/code/realCase/Virtual-Reality-Museum-master/models/fractal_2.glb",
+      "fileSize": 935044
+    },
+    {
+      "success": true,
+      "modelName": "fractal_3",
+      "outputPath": "/Users/biweichen/Documents/loadWebXR/code/realCase/Virtual-Reality-Museum-master/models/fractal_3.glb",
+      "fileSize": 1537616
+    },
+    {
+      "success": true,
+      "modelName": "female_helmet",
+      "outputPath": "/Users/biweichen/Documents/loadWebXR/code/realCase/Virtual-Reality-Museum-master/models/female_helmet.glb",
+      "fileSize": 1584708
+    },
+    {
+      "success": true,
+      "modelName": "monk_uv",
+      "outputPath": "/Users/biweichen/Documents/loadWebXR/code/realCase/Virtual-Reality-Museum-master/models/monk_uv.glb",
+      "fileSize": 732964
+    },
+    {
+      "success": true,
+      "modelName": "david_bike_hall_3",
+      "outputPath": "/Users/biweichen/Documents/loadWebXR/code/realCase/Virtual-Reality-Museum-master/models/david_bike_hall_3.glb",
+      "fileSize": 374052
+    }
+  ]
+}

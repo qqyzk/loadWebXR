@@ -3,4 +3,5 @@ try.html
 # Generated A-Frame builds (created by aframe-master/update.sh)
 realCase/EllieTale-WebXR-main/lib/my-aframe.js
 realCase/hallovreen-master/mylib/my-aframe.js
+realCase/Virtual-Reality-Museum-master/mylib/my-aframe.js
 simulation/lib/my-aframe.js

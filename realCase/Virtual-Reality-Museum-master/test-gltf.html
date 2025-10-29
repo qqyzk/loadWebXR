@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Model Format Comparison: OBJ vs GLTF vs GLB</title>
+    <script src="mylib/my-aframe.js"></script>
+    <script src="js/lzma.js"></script>
+    <script src="js/ctm.js"></script>
+    <script src="js/CTMLoader.js"></script>
+    <script src="js/ctm_component.js"></script>
+</head>
+<body>
+    <a-scene>
+        <!-- Basic lighting -->
+        <a-entity light="type: directional; color: #FFF; intensity: 0.5" position="2 20 0"></a-entity>
+        <a-entity light="type: ambient; color: #FFF"></a-entity>
+        
+        <!-- Camera -->
+        <a-camera position="0 1.6 3" look-controls></a-camera>
+        
+        <!-- Assets -->
+        <a-assets>
+            <!-- Original OBJ model with external texture -->
+            <a-asset-item id="floor-obj" src="models/floor.obj"></a-asset-item>
+            <img id="floor-texture" src="textures/floor.jpg">
+            <!-- Converted models with embedded textures -->
+            <a-asset-item id="floor-gltf-textured" src="models/floor_with_textures.gltf"></a-asset-item>
+            <a-asset-item id="floor-glb-textured" src="models/floor_with_textures.glb"></a-asset-item>
+        </a-assets>
+        
+        <!-- Model Comparison: OBJ vs GLTF vs GLB -->
+        <!-- Original OBJ model (left) -->
+        <a-entity 
+            obj-model="obj: #floor-obj;" 
+            material="src: #floor-texture;" 
+            position="-2.5 0 -2" 
+            scale="0.2 0.2 0.2"
+            rotation="0 0 0">
+        </a-entity>
+        
+        <!-- Converted GLTF with textures (center) -->
+        <a-entity 
+            gltf-model="#floor-gltf-textured" 
+            position="0 0 -2" 
+            scale="0.2 0.2 0.2"
+            rotation="0 0 0">
+        </a-entity>
+        
+        <!-- Converted GLB with textures (right) -->
+        <a-entity 
+            gltf-model="#floor-glb-textured" 
+            position="2.5 0 -2" 
+            scale="0.2 0.2 0.2"
+            rotation="0 0 0">
+        </a-entity>
+        
+        <!-- Labels -->
+        <a-text 
+            value="Original OBJ\n+ External Texture\n(356B + separate files)" 
+            position="-2.5 1.0 -1.5" 
+            align="center" 
+            color="white"
+            scale="0.4 0.4 0.4">
+        </a-text>
+        
+        <a-text 
+            value="Converted GLTF\n+ Embedded Textures\n(13MB, all-in-one)" 
+            position="0 1.0 -1.5" 
+            align="center" 
+            color="white"
+            scale="0.4 0.4 0.4">
+        </a-text>
+        
+        <a-text 
+            value="Converted GLB\n+ Embedded Textures\n(9.6MB, binary)" 
+            position="2.5 1.0 -1.5" 
+            align="center" 
+            color="white"
+            scale="0.4 0.4 0.4">
+        </a-text>
+        
+        <!-- Title -->
+        <a-text 
+            value="OBJ → GLTF/GLB Conversion Comparison\nSame Model, Different Formats" 
+            position="0 1.8 -1" 
+            align="center" 
+            color="#FFD700"
+            scale="0.6 0.6 0.6">
+        </a-text>
+        
+        <!-- Comparison arrows -->
+        <a-text 
+            value="→" 
+            position="-1.25 0.3 -1.8" 
+            align="center" 
+            color="#00FF00"
+            scale="1.2 1.2 1.2">
+        </a-text>
+        
+        <a-text 
+            value="→" 
+            position="1.25 0.3 -1.8" 
+            align="center" 
+            color="#00FF00"
+            scale="1.2 1.2 1.2">
+        </a-text>
+        
+        <!-- Ground plane -->
+        <a-plane position="0 0 0" rotation="-90 0 0" width="10" height="10" color="#ccc"></a-plane>
+    </a-scene>
+</body>
+</html>
