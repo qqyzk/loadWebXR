@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!-- Meta -->
+    <meta charset="utf-8">
+    <title>Virtual Reality Museum in A-Frame</title>
+
+    <meta property="og:title" content="Virtual Reality Museum in A-Frame" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="./" />
+    <meta property="og:description" content="WebVR demo that displays art " />
+	<meta property="article:tag" content="WebVR" />
+	<meta property="article:tag" content="A-Frame" />
+	<meta property="article:section" content="Virtual Reality" />
+
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta name="twitter:title" content="Virtual Reality Museum in A-Frame">
+    <meta name="twitter:description" content="WebVR demo that displays art ">
+
+    <meta name="description" content="Virtual-Reality-Museum - WebVR demo that displays art using A-Frame">
+	<meta name="author" content="">
+		
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+
+    <script src="mylib/my-aframe.js"></script>
+    <script src="js/progressive-gltf2.js"></script>
+    <script src="js/progressive-gltf.js"></script>
+
+    <script src="js/lzma.js"></script>
+    <script src="js/ctm.js"></script>
+    <script src="js/CTMLoader.js?v=3"></script>
+
+    <script src="js/spheres_anim.js?v=2"></script>
+    <script src="js/anim_1.js?v=2"></script>
+    <script src="js/anim_2.js?v=2"></script>
+    <script src="js/envMapMaterial.js"></script>
+    <script src="js/ctm_component.js?v=2"></script>
+    <script src="js/mobile_component.js"></script>
+
+  </head>
+
+  <body>
+
+
+    <div id="container" class="container">
+      <div class="info">
+        <div class="company"><a href="http://www.cecropiasolutions.com" target="_blank">cecropiasolutions.com</a></div>
+        <div class="title">The Hall</div>
+        <a class="button" id="start_experience" href="#">start experience</a>
+        <div class="instructions">
+          <div><strong>VR</strong>: Hand controllers and teleport with trigger.</div>
+          <div><strong>Desktop</strong>: Keyboard (WASD/arrows) and mouse.</div>
+          <div><strong>Mobile</strong>: Gaze cursor and teleportation.</div>
+        </div>
+      </div>
+    </div>
+
+
+    <a-scene>
+
+      <a-entity mobile></a-entity>
+
+      <a-entity light="type: directional; color: #FFF; intensity: 0.5" position="2 20 0"></a-entity>
+      <a-entity light="type: ambient; color: #FFF"></a-entity>
+
+      <!-- Custom components with animations -->
+      <a-entity anim_1></a-entity>
+      <a-entity anim_2></a-entity>
+
+      <a-assets>
+        <!-- 音频资源 -->
+        <a-asset-item id="museum-audio-1" src="audio/84529__cmusounddesign__02-museum.ogg" response-type="arraybuffer"></a-asset-item>
+        <a-asset-item id="museum-audio-2" src="audio/219462__cediez__musee-victoria-londres-grand-escalier.ogg" response-type="arraybuffer"></a-asset-item>
+
+        <!-- 3D模型资源 -->
+
+      </a-assets>
+
+      <a-sky color="#EEEEFF"></a-sky>
+
+      <a-entity progressive-gltf="src: models/floor.glb" id="floor"></a-entity>
+      <a-entity progressive-gltf="src: models/hall.glb" id="hall"></a-entity>
+      <a-entity progressive-gltf="src: models/hall_low_floor.glb" id="hall_low_floor"></a-entity>
+      <a-entity progressive-gltf="src: models/acropolis.glb"></a-entity>
+      <a-entity progressive-gltf="src: models/castle_lake.glb"></a-entity>
+      <a-entity progressive-gltf="src: models/good_samaritan.glb"></a-entity>
+      <a-entity progressive-gltf="src: models/moonlight.glb"></a-entity>
+      <a-entity progressive-gltf="src: models/podiums.glb"></a-entity>
+      <a-entity progressive-gltf="src: models/lamps.glb"></a-entity>
+      <a-entity progressive-gltf="src: models/david.glb"></a-entity>
+      <a-entity progressive-gltf="src: models/female_head.glb"></a-entity>
+      <a-entity progressive-gltf="src: models/lion.glb"></a-entity>
+      <a-entity progressive-gltf="src: models/greek_bust.glb"></a-entity>
+      <a-entity progressive-gltf="src: models/old_man.glb"></a-entity>
+      <a-entity progressive-gltf="src: models/nefertiti.glb"></a-entity>
+      <a-entity progressive-gltf="src: models/fractal_1.glb"></a-entity>
+      <a-entity progressive-gltf="src: models/fractal_2.glb"></a-entity>
+      <a-entity progressive-gltf="src: models/fractal_3.glb"></a-entity>
+      <a-entity progressive-gltf="src: models/female_helmet.glb"></a-entity>
+      <a-entity progressive-gltf="src: models/monk_uv.glb"></a-entity>
+      <a-entity progressive-gltf="src: models/david_bike_hall_3.glb"></a-entity>
+
+      <!-- 音频实体 - 按照EllieTale模式 -->
+      <a-sound src="#museum-audio-1" autoplay="true" loop="true" position="1 1 0"></a-sound>
+      <a-sound src="#museum-audio-2" autoplay="true" loop="true" position="1 1 10"></a-sound>
+
+    </a-scene>
+
+    <script src="main.js"></script>
+
+</body>
+</html>
