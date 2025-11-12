@@ -46,7 +46,7 @@
       <div class="info">
         <div class="company"><a href="http://www.cecropiasolutions.com" target="_blank">cecropiasolutions.com</a></div>
         <div class="title">The Hall</div>
-        <a class="button" id="start_experience" href="#">start experience</a>
+        <a class="button" id="ttff-start-button" href="#">start experience</a>
         <div class="instructions">
           <div><strong>VR</strong>: Hand controllers and teleport with trigger.</div>
           <div><strong>Desktop</strong>: Keyboard (WASD/arrows) and mouse.</div>
@@ -55,7 +55,8 @@
       </div>
     </div>
 
-
+    <!-- Scene template - will be injected after Start button click -->
+    <template id="scene-template">
     <a-scene>
 
       <a-entity mobile></a-entity>
@@ -135,6 +136,10 @@
       <a-sound src="#museum-audio-2" autoplay="true" loop="true" position="1 1 10"></a-sound>
 
     </a-scene>
+    </template>
+
+    <!-- Scene will be injected here -->
+    <div id="scene-container"></div>
 
     <script src="main.js"></script>
 

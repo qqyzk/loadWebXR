@@ -1,6 +1,11 @@
-var startExperienteBtn = document.getElementById('start_experience');
+var startExperienteBtn = document.getElementById('ttff-start-button');
 
 startExperienteBtn.onclick = function(){
+    // Remove the start overlay
     document.getElementById('container').outerHTML = '';
-    document.getElementsByTagName('a-scene')[0].style.zIndex = 'auto';
+    
+    // Inject the a-scene from template
+    var template = document.getElementById('scene-template');
+    var sceneContent = template.content.cloneNode(true);
+    document.getElementById('scene-container').appendChild(sceneContent);
 };
