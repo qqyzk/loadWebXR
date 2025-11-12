@@ -68,8 +68,12 @@
       for (var i = 0; i < models.length; i++) {
         var model = models[i];
         // Check if model is visible (not hidden by visible="false")
-        var visible = model.getAttribute('visible');
-        if (visible === null || visible === '' || visible === 'true') {
+        var visibleAttr = model.getAttribute('visible');
+        // If visible attribute is not set, or set to true, consider it visible
+        // Also check if element is in the DOM and not display:none
+        var isVisible = (visibleAttr === null || visibleAttr === '' || visibleAttr === 'true');
+        
+        if (isVisible) {
           this.modelsToLoad.push(model);
         }
       }
