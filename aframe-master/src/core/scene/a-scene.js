@@ -61,6 +61,9 @@ export class AScene extends AEntity {
     self.hasLoaded = false;
     self.isPlaying = false;
     self.originalHTML = self.innerHTML;
+
+    // Track first render for TTFF measurement
+    self.firstRenderDone = false;
   }
 
   addFullScreenStyles () {
@@ -661,6 +664,23 @@ export class AScene extends AEntity {
       savedBackground = this.object3D.background;
       this.object3D.background = null;
     }
+
+    // Emit first-render event for TTFF measurement
+    if (!this.firstRenderDone) {
+      this.firstRenderDone = true;
+      var firstRenderTime = window.performance ? window.performance.now() : Date.now();
+
+      // Store in global metrics
+      if (!window.aframeMetrics) {
+        window.aframeMetrics = {};
+      }
+      window.aframeMetrics.firstRenderTime = firstRenderTime;
+
+      // Emit event that applications can listen to
+      this.emit('first-render', { time: firstRenderTime });
+      console.log('[A-Frame] First render at:', firstRenderTime.toFixed(2), 'ms');
+    }
+
     renderer.render(this.object3D, this.camera);
     if (savedBackground) {
       this.object3D.background = savedBackground;

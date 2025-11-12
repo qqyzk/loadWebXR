@@ -22059,6 +22059,9 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
     self.hasLoaded = false;
     self.isPlaying = false;
     self.originalHTML = self.innerHTML;
+
+    // Track first render for TTFF measurement
+    self.firstRenderDone = false;
   }
   addFullScreenStyles() {
     document.documentElement.classList.add('a-fullscreen');
@@ -22681,6 +22684,24 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
       // restore it again after rendering.
       savedBackground = this.object3D.background;
       this.object3D.background = null;
+    }
+
+    // Emit first-render event for TTFF measurement
+    if (!this.firstRenderDone) {
+      this.firstRenderDone = true;
+      var firstRenderTime = window.performance ? window.performance.now() : Date.now();
+
+      // Store in global metrics
+      if (!window.aframeMetrics) {
+        window.aframeMetrics = {};
+      }
+      window.aframeMetrics.firstRenderTime = firstRenderTime;
+
+      // Emit event that applications can listen to
+      this.emit('first-render', {
+        time: firstRenderTime
+      });
+      console.log('[A-Frame] First render at:', firstRenderTime.toFixed(2), 'ms');
     }
     renderer.render(this.object3D, this.camera);
     if (savedBackground) {
@@ -42956,7 +42977,7 @@ if (_utils_index_js__WEBPACK_IMPORTED_MODULE_16__.device.isBrowserEnvironment) {
   __webpack_require__(/*! ./style/aframe.css */ "./src/style/aframe.css");
   __webpack_require__(/*! ./style/rStats.css */ "./src/style/rStats.css");
 }
-console.log('A-Frame Version: 1.7.0 (Date 2025-03-12, Commit #1b9650f1)');
+console.log('A-Frame Version: 1.7.0 (Date 2025-11-12, Commit #436093e)');
 console.log('THREE Version (https://github.com/supermedium/three.js):', _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].REVISION);
 
 // Wait for ready state, unless user asynchronously initializes A-Frame.
