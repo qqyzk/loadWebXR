@@ -104,24 +104,24 @@
       <a-sound id="witchLaughSound" src="#witchLaughSound" sound-autoplay="false" volume="2"></a-sound>
       <a-sound id="zombiSound" src="#zombiSound" sound-autoplay="false" volume="2"></a-sound>
 
-      <a-entity
-        gltf-model="#village_trees_outer"
+      <a-gltf-model
+        src="#village_trees_outer"
         position="0 0 0"
         rotation="0 30 0"
-      ></a-entity>
-      <a-entity
-        gltf-model="#village_trees_middle"
+      ></a-gltf-model>
+      <a-gltf-model
+        src="#village_trees_middle"
         position="0 0 0"
         rotation="0 30 0"
-      ></a-entity>
-      <a-entity
-        gltf-model="#village_trees_inner"
+      ></a-gltf-model>
+      <a-gltf-model
+        src="#village_trees_inner"
         position="0 0 0"
         rotation="0 30 0"
-      ></a-entity>
+      ></a-gltf-model>
 
-      <a-entity
-        gltf-model="#village"
+      <a-gltf-model
+        src="#village"
         position="0 0 0"
         rotation="0 30 0"
         animation-mixer
@@ -129,9 +129,9 @@
 
         <a-entity light="type:point;color:#f389e1;intensity:0.5;distance:15;penumbra:1" position="0 3 0"></a-entity>
 
-        <a-entity
+        <a-gltf-model
           id="skeletonTarget"
-          gltf-model="#skeleton"
+          src="#skeleton"
           position="7.441 0.802 -0.526"
           rotation="0 -80 0"
           scale="1 1 1"
@@ -146,11 +146,11 @@
             animation-control="sound: skeleton; target: #skeletonTarget; clip: dance; repetitions: 0; crossFadeDuration: 0.5;"
           >
           </a-box>
-        </a-entity>
+        </a-gltf-model>
 
-        <a-entity
+        <a-gltf-model
           id="zombiTarget"
-          gltf-model="#zombi"
+          src="#zombi"
           position="-0.747 0.665 -9.681"
           rotation="0 0 0"
           scale="1.25 1.25 1.25"
@@ -164,36 +164,36 @@
             animation-control="sound: zombi; target: #zombiTarget; clip: dance; repetitions: 0; crossFadeDuration: 1;"
           >
           </a-box>
-        </a-entity>
+        </a-gltf-model>
 
         <a-entity
           position="-3 0 -6.8"
           rotation="0 25 0"
         >
-          <a-entity
+          <a-gltf-model
             id="pumpkin_happyTarget"
-            gltf-model="#pumpkin_happy"
+            src="#pumpkin_happy"
             scale="1 1 1"
             class="clickable"
             visible="true"
             animation-mixer
             swap-model="from: #pumpkin_happyTarget; to: #pumpkin_evilTarget; sound: pumpkin_laugh;"
           >
-          </a-entity>
+          </a-gltf-model>
 
-          <a-entity
+          <a-gltf-model
             id="pumpkin_evilTarget"
-            gltf-model="#pumpkin_evil"
+            src="#pumpkin_evil"
             scale="1 1 1"
             position="0 -10 0"
             visible="true"
           >
-          </a-entity>
+          </a-gltf-model>
         </a-entity>
 
-        <a-entity
+        <a-gltf-model
           id="handTarget"
-          gltf-model="#hand"
+          src="#hand"
           scale="1 1 1"
           class="clickable"
           visible="true"
@@ -202,11 +202,11 @@
           animation-mixer="clip: idle;"
           animation-control="sound: hand; target: #handTarget; clip: animation; repetitions: 0;"
         >
-        </a-entity>
+        </a-gltf-model>
 
-        <a-entity
+        <a-gltf-model
           id="feetTarget"
-          gltf-model="#feet"
+          src="#feet"
           scale="1 1 1"
           class="clickable"
           visible="true"
@@ -215,11 +215,11 @@
           animation-mixer="clip: idle;"
           animation-control="sound: feet; target: #feetTarget; clip: animation; repetitions: 0;"
         >
-        </a-entity>
+        </a-gltf-model>
 
-        <a-entity
+        <a-gltf-model
           id="vampireTarget"
-          gltf-model="#vampire"
+          src="#vampire"
           class="clickable"
           visible="true"
           position="-5.6 0.04 -0.46"
@@ -235,11 +235,11 @@
             rotation="58.6 -13.3 -24.8"
           >
           </a-entity>
-        </a-entity>
+        </a-gltf-model>
 
-        <a-entity
+        <a-gltf-model
           id="werewolfTarget"
-          gltf-model="#werewolf"
+          src="#werewolf"
           class="clickable"
           visible="true"
           position="-3 11 -13"
@@ -255,11 +255,11 @@
             animation-control="sound: werewolf; target: #werewolfTarget; clip: animation; repetitions: 0;"
           >
           </a-box>
-        </a-entity>
+        </a-gltf-model>
 
-        <a-entity
+        <a-gltf-model
           id="witchTarget"
-          gltf-model="#witch"
+          src="#witch"
           scale="1 1 1"
           animation-mixer="clip: idle; crossFadeDuration: 1;"
         >
@@ -271,11 +271,11 @@
             animation-control="sound: witch_laugh; target: #witchTarget; clip: animation; repetitions: 0; crossFadeDuration: 1;"
           >
           </a-box>
-        </a-entity>
+        </a-gltf-model>
 
-        <a-entity
+        <a-gltf-model
           id="batTarget"
-          gltf-model="#bat"
+          src="#bat"
           scale="1 1 1"
           class="clickable"
           visible="true"
@@ -284,9 +284,9 @@
           animation-mixer="clip: idle; crossFadeDuration: 0;"
           animation-control="sound: bat; target: #batTarget; clip: animation; repetitions: 0; crossFadeDuration: 0;"
         >
-        </a-entity>
+        </a-gltf-model>
 
-      </a-entity>
+      </a-gltf-model>
 
 
     <a-entity id="score" score position="0 1.073 -4.23" scale="5 5 5" rotation="-10.9 0 1.5">
@@ -316,6 +316,9 @@
         document.getElementById('scene-container').appendChild(sceneContent);
       });
     </script>
+
+    <!-- TTFF Measurement Script -->
+    <script src="ttff-measurement-baseline.js"></script>
 
   </body>
 </html>
