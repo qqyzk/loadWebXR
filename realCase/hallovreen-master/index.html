@@ -27,6 +27,20 @@
 
   </head>
   <body>
+    <!-- TTFF Start Overlay -->
+    <div id="ttff-start-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+         background: rgba(0, 0, 0, 0.9); z-index: 9999; display: flex; align-items: center; 
+         justify-content: center; flex-direction: column; color: white; font-family: Arial, sans-serif;">
+      <h1 style="font-size: 48px; margin-bottom: 20px;">HalloVReen</h1>
+      <p style="font-size: 20px; margin-bottom: 40px;">It's All Hallow's Eve and the citizens of Creepville are restless!</p>
+      <button id="ttff-start-button" style="font-size: 24px; padding: 20px 60px; background: #ff6600; 
+              border: none; color: white; cursor: pointer; border-radius: 10px; font-weight: bold;">
+        START EXPERIENCE
+      </button>
+    </div>
+
+    <!-- Scene template - will be injected after Start button click -->
+    <template id="scene-template">
     <a-scene fog="type: linear; color: #597360; near: 2; far: 30;" background="color: #000" correct-gamma>
       <a-assets timeout="30000">
         <a-asset-item id="skeleton" src="models/skeleton.gltf"></a-asset-item>
@@ -285,6 +299,23 @@
     </a-entity>
 
     </a-scene>
+    </template>
+
+    <!-- Scene will be injected here -->
+    <div id="scene-container"></div>
+
+    <script>
+      // Handle start button click
+      document.getElementById('ttff-start-button').addEventListener('click', function() {
+        // Hide the overlay
+        document.getElementById('ttff-start-overlay').style.display = 'none';
+        
+        // Inject the a-scene from template
+        var template = document.getElementById('scene-template');
+        var sceneContent = template.content.cloneNode(true);
+        document.getElementById('scene-container').appendChild(sceneContent);
+      });
+    </script>
 
   </body>
 </html>
