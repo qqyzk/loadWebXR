@@ -665,7 +665,9 @@ export class AScene extends AEntity {
       this.object3D.background = null;
     }
 
-    // Emit first-render event for TTFF measurement
+    renderer.render(this.object3D, this.camera);
+
+    // Emit first-render event for TTFF measurement (after actual render)
     if (!this.firstRenderDone) {
       this.firstRenderDone = true;
       var firstRenderTime = window.performance ? window.performance.now() : Date.now();
@@ -680,8 +682,6 @@ export class AScene extends AEntity {
       this.emit('first-render', { time: firstRenderTime });
       console.log('[A-Frame] First render at:', firstRenderTime.toFixed(2), 'ms');
     }
-
-    renderer.render(this.object3D, this.camera);
     if (savedBackground) {
       this.object3D.background = savedBackground;
     }
