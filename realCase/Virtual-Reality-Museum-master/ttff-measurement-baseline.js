@@ -95,10 +95,6 @@
       
       model.addEventListener('model-loaded', function onModelLoaded(event) {
         self.modelsLoaded++;
-        var currentTime = window.performance ? window.performance.now() : Date.now();
-        var elapsed = currentTime - self.startTime;
-        console.log('[TTFF] Model loaded (' + self.modelsLoaded + '/' + self.modelsToLoad.length + '):', 
-                    modelId, 'at', elapsed.toFixed(2), 'ms');
         
         if (self.modelsLoaded >= self.modelsToLoad.length) {
           self.allModelsLoaded = true;
@@ -131,8 +127,6 @@
       scene.addEventListener('first-render', function onFirstRender(event) {
         self.firstRenderDone = true;
         var firstRenderTime = event.detail.time;
-        var elapsed = firstRenderTime - self.startTime;
-        console.log('[TTFF] First render completed at:', elapsed.toFixed(2), 'ms from start');
         
         self.checkCompletion();
         
