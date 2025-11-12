@@ -65,7 +65,8 @@ export class AScene extends AEntity {
     self.afterLoadedFrame = 0;
     self.remTimes = [];
     self.lastFrameTime = 0;  // 记录上一帧时间
-    
+    self.firstRenderDone = false;  // Track first render for TTFF
+
   }
 
   addFullScreenStyles () {
@@ -702,6 +703,23 @@ export class AScene extends AEntity {
   
  
     renderer.render(this.object3D, this.camera);
+
+    // Emit first-render event for TTFF measurement (after actual render)
+    if (!this.firstRenderDone) {
+      this.firstRenderDone = true;
+      var firstRenderTime = window.performance ? window.performance.now() : Date.now();
+
+      // Store in global metrics
+      if (!window.aframeMetrics) {
+        window.aframeMetrics = {};
+      }
+      window.aframeMetrics.firstRenderTime = firstRenderTime;
+
+      // Emit event that applications can listen to
+      this.emit('first-render', { time: firstRenderTime });
+      console.log('[A-Frame] First render at:', firstRenderTime.toFixed(2), 'ms');
+    }
+
     if(!this.allAssetsLoaded || this.afterLoadedFrame < 30){
       var currentTime = performance.now();
       var monitorDelta = this.lastFrameTime ? currentTime - this.lastFrameTime : 0;
