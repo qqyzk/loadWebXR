@@ -1,0 +1,32 @@
+{
+  "allObjectsSource": [
+    "item/Beach_Environment_v1.02.glb",
+    "item/Beach_Seashell_lit_v1.02.glb",
+    "item/Beach_prop_fishingRod_01.glb",
+    "item/Beach_prop_sharky_01.glb",
+    "item/Beach_prop_octopus_01.glb",
+    "item/Beach_prop_shrimp_01.glb",
+    "item/Beach_prop_whale_01.glb",
+    "item/Beach_prop_ship_01.glb",
+    "item/Beach_prop_ball_01.glb",
+    "item/Elly_2k_03.glb",
+    "item/Noah_hunter_v1.01.glb",
+    "item/Beach_Seashell_particles_half_v1.01.glb"
+  ],
+  "visibleObjectsSource": [
+    "item/Beach_Environment_v1.02.glb",
+    "item/Beach_Seashell_lit_v1.02.glb",
+    "item/Beach_prop_fishingRod_01.glb",
+    "item/Beach_prop_sharky_01.glb",
+    "item/Beach_prop_octopus_01.glb",
+    "item/Beach_prop_shrimp_01.glb",
+    "item/Beach_prop_whale_01.glb",
+    "item/Beach_prop_ship_01.glb",
+    "item/Beach_prop_ball_01.glb",
+    "item/Elly_2k_03.glb"
+  ],
+  "visibleInFrustumObjectsSource": [
+    "item/Beach_Environment_v1.02.glb",
+    "item/Beach_Seashell_lit_v1.02.glb"
+  ]
+}

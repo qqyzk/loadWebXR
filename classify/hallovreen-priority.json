@@ -1,0 +1,43 @@
+{
+  "allObjectsSource": [
+    "models/village_trees_outer.gltf",
+    "models/village_trees_middle.gltf",
+    "models/village_trees_inner.gltf",
+    "models/skeleton.gltf",
+    "models/zombi.gltf",
+    "models/pumpkin_happy.gltf",
+    "models/pumpkin_evil.gltf",
+    "models/hand.gltf",
+    "models/feet.gltf",
+    "models/vampire.gltf",
+    "models/werewolf.gltf",
+    "models/witch.gltf",
+    "models/bat.gltf",
+    "models/village.gltf"
+  ],
+  "visibleObjectsSource": [
+    "models/village_trees_outer.gltf",
+    "models/village_trees_middle.gltf",
+    "models/village_trees_inner.gltf",
+    "models/skeleton.gltf",
+    "models/zombi.gltf",
+    "models/pumpkin_happy.gltf",
+    "models/pumpkin_evil.gltf",
+    "models/hand.gltf",
+    "models/feet.gltf",
+    "models/vampire.gltf",
+    "models/werewolf.gltf",
+    "models/witch.gltf",
+    "models/bat.gltf",
+    "models/village.gltf"
+  ],
+  "visibleInFrustumObjectsSource": [
+    "models/village_trees_outer.gltf",
+    "models/village_trees_middle.gltf",
+    "models/village_trees_inner.gltf",
+    "models/zombi.gltf",
+    "models/werewolf.gltf",
+    "models/bat.gltf",
+    "models/village.gltf"
+  ]
+}

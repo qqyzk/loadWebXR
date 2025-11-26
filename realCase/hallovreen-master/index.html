@@ -43,34 +43,34 @@
     <template id="scene-template">
     <a-scene fog="type: linear; color: #597360; near: 2; far: 30;" background="color: #000" correct-gamma>
       <a-assets timeout="30000">
-        <a-asset-item id="skeleton" src="models/skeleton.gltf"></a-asset-item>
-        <a-asset-item id="village" src="models/village.gltf"></a-asset-item>
-        <a-asset-item id="village_trees_outer" src="models/village_trees_outer.gltf"></a-asset-item>
-        <a-asset-item id="village_trees_middle" src="models/village_trees_middle.gltf"></a-asset-item>
-        <a-asset-item id="village_trees_inner" src="models/village_trees_inner.gltf"></a-asset-item>
-        <a-asset-item id="zombi" src="models/zombi.gltf"></a-asset-item>
-        <a-asset-item id="werewolf" src="models/werewolf.gltf"></a-asset-item>
-        <a-asset-item id="witch" src="models/witch.gltf"></a-asset-item>
-        <a-asset-item id="vampire" src="models/vampire.gltf"></a-asset-item>
-        <a-asset-item id="pumpkin_happy" src="models/pumpkin_happy.gltf"></a-asset-item>
-        <a-asset-item id="pumpkin_evil" src="models/pumpkin_evil.gltf"></a-asset-item>
-        <a-asset-item id="hand" src="models/hand.gltf"></a-asset-item>
-        <a-asset-item id="feet" src="models/feet.gltf"></a-asset-item>
-        <a-asset-item id="bat" src="models/bat.gltf"></a-asset-item>
+        <a-asset-item id="skeleton" src="models/skeleton.gltf" priority="2"></a-asset-item>
+        <a-asset-item id="village" src="models/village.gltf" priority="1"></a-asset-item>
+        <a-asset-item id="village_trees_outer" src="models/village_trees_outer.gltf" priority="1"></a-asset-item>
+        <a-asset-item id="village_trees_middle" src="models/village_trees_middle.gltf" priority="1"></a-asset-item>
+        <a-asset-item id="village_trees_inner" src="models/village_trees_inner.gltf" priority="1"></a-asset-item>
+        <a-asset-item id="zombi" src="models/zombi.gltf" priority="1"></a-asset-item>
+        <a-asset-item id="werewolf" src="models/werewolf.gltf" priority="1"></a-asset-item>
+        <a-asset-item id="witch" src="models/witch.gltf" priority="2"></a-asset-item>
+        <a-asset-item id="vampire" src="models/vampire.gltf" priority="2"></a-asset-item>
+        <a-asset-item id="pumpkin_happy" src="models/pumpkin_happy.gltf" priority="2"></a-asset-item>
+        <a-asset-item id="pumpkin_evil" src="models/pumpkin_evil.gltf" priority="2"></a-asset-item>
+        <a-asset-item id="hand" src="models/hand.gltf" priority="2"></a-asset-item>
+        <a-asset-item id="feet" src="models/feet.gltf" priority="2"></a-asset-item>
+        <a-asset-item id="bat" src="models/bat.gltf" priority="1"></a-asset-item>
         
         <!-- Audio Assets -->
-        <a-asset-item id="bgsound" src="sounds/bgsound.ogg" response-type="arraybuffer" preload="auto" priority="1"></a-asset-item>
+        <a-asset-item id="bgsound" src="sounds/bgsound.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
         
         <!-- Individual Sound Effects -->
-        <a-asset-item id="batSound" src="sounds/individual/bat.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
-        <a-asset-item id="feetSound" src="sounds/individual/feet.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
-        <a-asset-item id="handSound" src="sounds/individual/hand.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
-        <a-asset-item id="pumpkinLaughSound" src="sounds/individual/pumpkin_laugh.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
-        <a-asset-item id="skeletonSound" src="sounds/individual/skeleton.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
-        <a-asset-item id="vampireSound" src="sounds/individual/vampire.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
-        <a-asset-item id="werewolfSound" src="sounds/individual/werewolf.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
-        <a-asset-item id="witchLaughSound" src="sounds/individual/witch_laugh.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
-        <a-asset-item id="zombiSound" src="sounds/individual/zombi.ogg" response-type="arraybuffer" preload="auto" priority="2"></a-asset-item>
+        <a-asset-item id="batSound" src="sounds/individual/bat.ogg" response-type="arraybuffer" preload="auto" priority="3"></a-asset-item>
+        <a-asset-item id="feetSound" src="sounds/individual/feet.ogg" response-type="arraybuffer" preload="auto" priority="3"></a-asset-item>
+        <a-asset-item id="handSound" src="sounds/individual/hand.ogg" response-type="arraybuffer" preload="auto" priority="3"></a-asset-item>
+        <a-asset-item id="pumpkinLaughSound" src="sounds/individual/pumpkin_laugh.ogg" response-type="arraybuffer" preload="auto" priority="3"></a-asset-item>
+        <a-asset-item id="skeletonSound" src="sounds/individual/skeleton.ogg" response-type="arraybuffer" preload="auto" priority="3"></a-asset-item>
+        <a-asset-item id="vampireSound" src="sounds/individual/vampire.ogg" response-type="arraybuffer" preload="auto" priority="3"></a-asset-item>
+        <a-asset-item id="werewolfSound" src="sounds/individual/werewolf.ogg" response-type="arraybuffer" preload="auto" priority="3"></a-asset-item>
+        <a-asset-item id="witchLaughSound" src="sounds/individual/witch_laugh.ogg" response-type="arraybuffer" preload="auto" priority="3"></a-asset-item>
+        <a-asset-item id="zombiSound" src="sounds/individual/zombi.ogg" response-type="arraybuffer" preload="auto" priority="3"></a-asset-item>
       </a-assets>
 
       <a-camera>
