@@ -22685,8 +22685,9 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
       savedBackground = this.object3D.background;
       this.object3D.background = null;
     }
+    renderer.render(this.object3D, this.camera);
 
-    // Emit first-render event for TTFF measurement
+    // Emit first-render event for TTFF measurement (after actual render)
     if (!this.firstRenderDone) {
       this.firstRenderDone = true;
       var firstRenderTime = window.performance ? window.performance.now() : Date.now();
@@ -22703,7 +22704,6 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
       });
       console.log('[A-Frame] First render at:', firstRenderTime.toFixed(2), 'ms');
     }
-    renderer.render(this.object3D, this.camera);
     if (savedBackground) {
       this.object3D.background = savedBackground;
     }
@@ -42977,7 +42977,7 @@ if (_utils_index_js__WEBPACK_IMPORTED_MODULE_16__.device.isBrowserEnvironment) {
   __webpack_require__(/*! ./style/aframe.css */ "./src/style/aframe.css");
   __webpack_require__(/*! ./style/rStats.css */ "./src/style/rStats.css");
 }
-console.log('A-Frame Version: 1.7.0 (Date 2025-11-12, Commit #436093e)');
+console.log('A-Frame Version: 1.7.0 (Date 2025-03-12, Commit #1b9650f1)');
 console.log('THREE Version (https://github.com/supermedium/three.js):', _lib_three_js__WEBPACK_IMPORTED_MODULE_1__["default"].REVISION);
 
 // Wait for ready state, unless user asynchronously initializes A-Frame.

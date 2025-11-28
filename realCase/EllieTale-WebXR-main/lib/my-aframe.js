@@ -22059,6 +22059,9 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
     self.hasLoaded = false;
     self.isPlaying = false;
     self.originalHTML = self.innerHTML;
+
+    // Track first render for TTFF measurement
+    self.firstRenderDone = false;
   }
   addFullScreenStyles() {
     document.documentElement.classList.add('a-fullscreen');
@@ -22683,6 +22686,24 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
       this.object3D.background = null;
     }
     renderer.render(this.object3D, this.camera);
+
+    // Emit first-render event for TTFF measurement (after actual render)
+    if (!this.firstRenderDone) {
+      this.firstRenderDone = true;
+      var firstRenderTime = window.performance ? window.performance.now() : Date.now();
+
+      // Store in global metrics
+      if (!window.aframeMetrics) {
+        window.aframeMetrics = {};
+      }
+      window.aframeMetrics.firstRenderTime = firstRenderTime;
+
+      // Emit event that applications can listen to
+      this.emit('first-render', {
+        time: firstRenderTime
+      });
+      console.log('[A-Frame] First render at:', firstRenderTime.toFixed(2), 'ms');
+    }
     if (savedBackground) {
       this.object3D.background = savedBackground;
     }
