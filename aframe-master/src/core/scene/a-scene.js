@@ -672,13 +672,26 @@ export class AScene extends AEntity {
   }
   saveCollection(priorityInfo) {
     let savedData = {
+      device: {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        aspectRatio: (window.innerWidth / window.innerHeight).toFixed(3),
+        userAgent: navigator.userAgent
+      },
       allObjectsSource: Array.from(priorityInfo.allObjectsSource),
       visibleObjectsSource: Array.from(priorityInfo.visibleObjectsSource),
       visibleInFrustumObjectsSource: Array.from(priorityInfo.visibleInFrustumObjectsSource),
     }
     console.log('debug: saving collection', savedData);
-    const data = JSON.stringify(savedData, null, 2);
-    const blob = new Blob([data], { type: 'application/json' });
+    
+    // 输出完整JSON到console，方便复制
+    const jsonString = JSON.stringify(savedData, null, 2);
+    console.log('========== COPY THIS JSON ==========');
+    console.log(jsonString);
+    console.log('====================================');
+    
+    // 也下载文件
+    const blob = new Blob([jsonString], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;

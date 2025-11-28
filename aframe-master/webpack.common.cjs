@@ -36,6 +36,14 @@ if (process.env.WEBGPU === 'true') {
       'three$': path.resolve(__dirname, 'node_modules/three/build/three.webgpu.js')
     }
   };
+} else {
+  // Use custom modified three.js from mylib/three
+  config.resolve = {
+    alias: {
+      'three$': path.resolve(__dirname, 'mylib/three/src/Three.js'),
+      'three/': path.resolve(__dirname, 'mylib/three/')
+    }
+  };
 }
 
 module.exports = config;
