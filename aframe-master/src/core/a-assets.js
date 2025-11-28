@@ -50,7 +50,7 @@ class AAssets extends ANode {
     await customElements.whenDefined('a-asset-item');
     await Promise.resolve(); 
     this.collectResources();
-    console.log('debug:queue', this.priorityQueues);
+    // console.log('debug:queue', this.priorityQueues);
     this.load();
     // await this.loadGroup(1);//network trasfer
     // await this.doGroupSceneTask(1);//scene
@@ -84,7 +84,7 @@ class AAssets extends ANode {
       // Check if this is a chunked model
       if (this.isChunkedModel(el)) {
         const src = el.getAttribute('src');
-        console.log('🔍 [ASSETS] Chunked model detected, creating chunk tasks:', src);
+        // console.log('🔍 [ASSETS] Chunked model detected, creating chunk tasks:', src);
         
         // 为每个分块创建网络任务
         const chunkCount = this.getChunkCount(el);
@@ -103,7 +103,7 @@ class AAssets extends ANode {
           // 为每个分块创建Promise
           this.createChunkPromise(src, i);
           
-          console.log('🔍 [ASSETS] Created chunk task:', chunkTask.chunkSrc);
+          // console.log('🔍 [ASSETS] Created chunk task:', chunkTask.chunkSrc);
         }
       } else {
         // Non-chunked model, add to networkQueues as usual
@@ -118,15 +118,15 @@ class AAssets extends ANode {
   }
   async loadPriorityGroups(groups) {
     for (let priority of groups) {
-      console.log('debug: loading group', priority);
+      // console.log('debug: loading group', priority);
       await this.loadGroup(priority);
 
     }
   }
   async loadFirstPriority() {
-    console.log('debug: loading first priority group', this.currentPriority);
+    // console.log('debug: loading first priority group', this.currentPriority);
     const group = this.networkQueues[1];
-    console.log('debug: network transfering group',1, group);
+    // console.log('debug: network transfering group',1, group);
     if (!group.length) return;
     
     // 处理网络传输任务（支持分块任务）
@@ -136,14 +136,14 @@ class AAssets extends ANode {
         this.loadChunk(item);
       } else if (item.tagName === 'A-ASSET-ITEM') {
         // 普通资源任务
-        console.log('debug: loading asset item', item);
+        // console.log('debug: loading asset item', item);
         this.loadAssetItem(item);
       }
     });
-    console.log('debug: scene queues', this.sceneQueues);
+    // console.log('debug: scene queues', this.sceneQueues);
     // 等待场景任务完成
     while(true){
-      console.log('debug: scene queues', this.sceneQueues,this.sceneQueues[this.currentPriority].length);
+      // console.log('debug: scene queues', this.sceneQueues,this.sceneQueues[this.currentPriority].length);
       if(this.sceneQueues[this.currentPriority].length !== 0){
           await this.doSceneTask();
           this.sceneTaskDone++;
@@ -160,7 +160,7 @@ class AAssets extends ANode {
   }
   async loadGroup(priority) {
     const group = this.networkQueues[priority];
-    console.log('debug: network transfering group', priority, group);
+    // console.log('debug: network transfering group', priority, group);
     if (!group.length) return;
     await Promise.all(
       group.map(item => {
@@ -174,7 +174,7 @@ class AAssets extends ANode {
         } 
       })
     );
-    console.log('debug: netword transfered group', priority,this.sceneQueues);
+    // console.log('debug: netword transfered group', priority,this.sceneQueues);
   }
   delay (ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -182,10 +182,10 @@ class AAssets extends ANode {
   async doGroupSceneTask(priority) {
     while(this.sceneQueues[this.currentPriority].length  < this.priorityQueues[priority].length){
       await this.delay(2);
-      console.log('debug: waiting for scene task', this.sceneQueues[this.currentPriority].length, this.priorityQueues[priority].length);
+      // console.log('debug: waiting for scene task', this.sceneQueues[this.currentPriority].length, this.priorityQueues[priority].length);
     }
     const group = this.sceneQueues[priority];
-    console.log('debug: loading group', priority, group);
+    // console.log('debug: loading group', priority, group);
     if (!group.length) return;
     await Promise.all(
       group.map(item => {
@@ -231,7 +231,7 @@ class AAssets extends ANode {
           this.doNetworkTask();
         } else {
           this.currentStage = 1;
-          console.log('debug: network queue empty, switch to scene task', this.currentPriority);
+          // console.log('debug: network queue empty, switch to scene task', this.currentPriority);
         }
       }else if (this.currentStage === 1){
         if(this.sceneQueues[this.currentPriority].length !== 0){
@@ -245,7 +245,7 @@ class AAssets extends ANode {
           this.currentStage = 0;
           this.sceneTaskDone = 0;
           this.currentPriority++;
-          console.log('debug: scene task done, switch to next priority', this.currentPriority);
+          // console.log('debug: scene task done, switch to next priority', this.currentPriority);
           if(this.currentPriority > 3){
             this.allTasksDone = true;
             this.parentNode.emit('all-assets-loaded');
@@ -266,7 +266,7 @@ class AAssets extends ANode {
 
   // 新增：加载单个分块
   loadChunk (chunkTask) {
-    console.log('debug: [START] chunk network transfer:', chunkTask.chunkSrc);
+    // console.log('debug: [START] chunk network transfer:', chunkTask.chunkSrc);
     
     return new Promise((resolve, reject) => {
       fileLoader.setResponseType('arraybuffer');
@@ -278,12 +278,12 @@ class AAssets extends ANode {
           // 解决对应的Promise
           this.resolveChunkPromise(chunkTask.baseSrc, chunkTask.chunkIndex);
           
-          console.log('debug: [END] chunk network transfer:', chunkTask.chunkSrc);
+          // console.log('debug: [END] chunk network transfer:', chunkTask.chunkSrc);
           resolve();
         },
         undefined,
         error => {
-          console.log('debug: [ERROR] chunk network transfer:', chunkTask.chunkSrc, error);
+          // console.log('debug: [ERROR] chunk network transfer:', chunkTask.chunkSrc, error);
           reject(error);
         }
       );
@@ -296,7 +296,7 @@ class AAssets extends ANode {
       this.chunkData[baseSrc] = {};
     }
     this.chunkData[baseSrc][chunkIndex] = data;
-    console.log('debug: [CHUNK DATA STORED]', baseSrc, 'chunk:', chunkIndex);
+    // console.log('debug: [CHUNK DATA STORED]', baseSrc, 'chunk:', chunkIndex);
   }
 
   // 新增：检查分块数据是否准备好
@@ -322,7 +322,7 @@ class AAssets extends ANode {
       this.chunkResolvers[baseSrc][chunkIndex] = resolve;
     });
     
-    console.log('debug: [CHUNK PROMISE CREATED]', baseSrc, 'chunk:', chunkIndex);
+    // console.log('debug: [CHUNK PROMISE CREATED]', baseSrc, 'chunk:', chunkIndex);
   }
 
   // 新增：获取分块Promise
@@ -334,7 +334,7 @@ class AAssets extends ANode {
   resolveChunkPromise (baseSrc, chunkIndex) {
     if (this.chunkResolvers[baseSrc] && this.chunkResolvers[baseSrc][chunkIndex]) {
       this.chunkResolvers[baseSrc][chunkIndex]();
-      console.log('debug: [CHUNK PROMISE RESOLVED]', baseSrc, 'chunk:', chunkIndex);
+      // console.log('debug: [CHUNK PROMISE RESOLVED]', baseSrc, 'chunk:', chunkIndex);
     }
   }
   doGLTFTask (task) {
@@ -343,7 +343,7 @@ class AAssets extends ANode {
 
   doNormalGLTFTask (task) {
     const taskStartTime = performance.now();
-    console.log('debug: [START] loading gltf model:', task.src, 'at:', taskStartTime.toFixed(2));
+    // console.log('debug: [START] loading gltf model:', task.src, 'at:', taskStartTime.toFixed(2));
     return new Promise((resolve, reject) => {
       task.loader.load(task.src, function gltfLoaded (gltfModel) {
         const taskEndTime = performance.now();
@@ -352,7 +352,7 @@ class AAssets extends ANode {
         task.theself.model.animations = gltfModel.animations;
         task.el.setObject3D('mesh', task.theself.model);
         task.el.emit('model-loaded', {format: 'gltf', model: task.theself.model});
-        console.log('debug: [END] loading gltf model:', task.src, 'duration:', taskDuration.toFixed(2) + 'ms');
+        // console.log('debug: [END] loading gltf model:', task.src, 'duration:', taskDuration.toFixed(2) + 'ms');
         resolve();
       }, undefined /* onProgress */, function gltfFailed (error) {
         const taskEndTime = performance.now();
@@ -360,7 +360,7 @@ class AAssets extends ANode {
         var message = (error && error.message) ? error.message : 'Failed to load glTF model';
         warn(message);
         task.el.emit('model-error', {format: 'gltf', src: task.src});
-        console.log('debug: [ERROR] loading gltf model:', task.src, 'duration:', taskDuration.toFixed(2) + 'ms', error);
+        // console.log('debug: [ERROR] loading gltf model:', task.src, 'duration:', taskDuration.toFixed(2) + 'ms', error);
         reject(error);
       });
     });
@@ -368,7 +368,7 @@ class AAssets extends ANode {
 
   
   doSoundTask (task) {
-    console.log('debug: [START] loading sound:', task.src);
+    // console.log('debug: [START] loading sound:', task.src);
     return new Promise((resolve, reject) => {
       task.loader.load(task.src, function (buffer) {
         for (var i = 0; i < task.theself.pool.children.length; i++) {
@@ -381,10 +381,10 @@ class AAssets extends ANode {
         THREE.Cache.remove(task.src);
         if (task.theself.data.autoplay || task.theself.mustPlay) { task.theself.playSound(task.theself.processSound); }
         task.theself.el.emit('sound-loaded', task.theself.evtDetail, false);
-        console.log('debug: [END] loading sound:', task.src);
+        // console.log('debug: [END] loading sound:', task.src);
         resolve();
       }, undefined /* onProgress */, function (error) {
-        console.log('debug: [ERROR] loading sound:', task.src, error);
+        // console.log('debug: [ERROR] loading sound:', task.src, error);
         reject(error);
       });
     });
@@ -403,7 +403,7 @@ class AAssets extends ANode {
   // 新增：处理单个分块的GLTF加载
   doChunkGLTFTask (task) {
     const taskStartTime = performance.now();
-    console.log('debug: [START] loading chunk gltf:', task.baseSrc, 'chunk:', task.chunkIndex);
+    // console.log('debug: [START] loading chunk gltf:', task.baseSrc, 'chunk:', task.chunkIndex);
     
     return new Promise((resolve, reject) => {
       const chunkData = this.getChunkData(task.baseSrc, task.chunkIndex);
@@ -432,15 +432,15 @@ class AAssets extends ANode {
           task.el.setObject3D('mesh', combinedModel);
           task.el.emit('model-loaded', {format: 'gltf', model: combinedModel, isChunked: true});
           
-          console.log('debug: [COMBINED MODEL COMPLETE]', task.baseSrc);
+          // console.log('debug: [COMBINED MODEL COMPLETE]', task.baseSrc);
         }
         
-        console.log('debug: [END] loading chunk gltf:', task.baseSrc, 'chunk:', task.chunkIndex, 'duration:', taskDuration.toFixed(2) + 'ms');
+        // console.log('debug: [END] loading chunk gltf:', task.baseSrc, 'chunk:', task.chunkIndex, 'duration:', taskDuration.toFixed(2) + 'ms');
         resolve();
       }, (error) => {
         const taskEndTime = performance.now();
         const taskDuration = taskEndTime - taskStartTime;
-        console.log('debug: [ERROR] loading chunk gltf:', task.baseSrc, 'chunk:', task.chunkIndex, 'duration:', taskDuration.toFixed(2) + 'ms', error);
+        // console.log('debug: [ERROR] loading chunk gltf:', task.baseSrc, 'chunk:', task.chunkIndex, 'duration:', taskDuration.toFixed(2) + 'ms', error);
         reject(error);
       });
     });
@@ -452,7 +452,7 @@ class AAssets extends ANode {
       this.loadedChunks[baseSrc] = {};
     }
     this.loadedChunks[baseSrc][chunkIndex] = gltfModel;
-    console.log('debug: [CHUNK MODEL STORED]', baseSrc, 'chunk:', chunkIndex);
+    // console.log('debug: [CHUNK MODEL STORED]', baseSrc, 'chunk:', chunkIndex);
   }
 
   // 新增：检查所有分块是否都加载完成
@@ -469,7 +469,7 @@ class AAssets extends ANode {
 
   // 新增：组合所有分块
   combineChunks (baseSrc, totalChunks) {
-    console.log('debug: [COMBINING CHUNKS]', baseSrc, totalChunks, 'chunks');
+    // console.log('debug: [COMBINING CHUNKS]', baseSrc, totalChunks, 'chunks');
     
     const chunks = this.loadedChunks[baseSrc];
     
@@ -489,14 +489,14 @@ class AAssets extends ANode {
           combinedScene.add(child.clone());
         });
         
-        console.log('debug: [CHUNK COMBINED]', i, 'children count:', chunkScene.children.length);
+        // console.log('debug: [CHUNK COMBINED]', i, 'children count:', chunkScene.children.length);
       }
     }
     
     // 保留第一个分块的动画（如果有的话）
     combinedScene.animations = firstChunk.animations || [];
     
-    console.log('debug: [COMBINE COMPLETE]', baseSrc, 'total children:', combinedScene.children.length);
+    // console.log('debug: [COMBINE COMPLETE]', baseSrc, 'total children:', combinedScene.children.length);
     
     return combinedScene;
   }
@@ -513,12 +513,12 @@ class AAssets extends ANode {
     const isChunked = chunked === 'true';
     
     // Debug logging
-    console.log('🔍 [CHUNK DETECTION]', {
-      id: element.getAttribute('id'),
-      src: element.getAttribute('src'),
-      chunked: chunked,
-      isChunked: isChunked
-    });
+    // console.log('🔍 [CHUNK DETECTION]', {
+    //   id: element.getAttribute('id'),
+    //   src: element.getAttribute('src'),
+    //   chunked: chunked,
+    //   isChunked: isChunked
+    // });
     
     return isChunked;
   }
@@ -535,15 +535,15 @@ class AAssets extends ANode {
     const chunkCount = parseInt(chunkCountAttr, 10);
     
     if (isNaN(chunkCount) || chunkCount <= 0) {
-      console.warn('⚠️ [CHUNK COUNT] Invalid chunk-count attribute:', chunkCountAttr, 'for element:', element.getAttribute('id'));
+      // console.warn('⚠️ [CHUNK COUNT] Invalid chunk-count attribute:', chunkCountAttr, 'for element:', element.getAttribute('id'));
       return 0;
     }
     
-    console.log('✅ [CHUNK COUNT]', {
-      id: element.getAttribute('id'),
-      src: element.getAttribute('src'),
-      chunkCount: chunkCount
-    });
+    // console.log('✅ [CHUNK COUNT]', {
+    //   id: element.getAttribute('id'),
+    //   src: element.getAttribute('src'),
+    //   chunkCount: chunkCount
+    // });
     
     return chunkCount;
   }
@@ -586,7 +586,7 @@ class AAssetItem extends ANode {
     if (this._loadingPromise) return this._loadingPromise;
     
     const src = this.getAttribute('src');
-    console.log('debug: [START] network transfer:', src);
+    // console.log('debug: [START] network transfer:', src);
     
     // Check if this is an image file
     if (this.isImageFile(src)) {
@@ -602,7 +602,7 @@ class AAssetItem extends ANode {
     const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.svg'];
     const fileName = src.toLowerCase();
     const isImage = imageExtensions.some(ext => fileName.endsWith(ext));
-    console.log('debug: [IMAGE CHECK]', src, 'isImage:', isImage);
+    // console.log('debug: [IMAGE CHECK]', src, 'isImage:', isImage);
     return isImage;
   }
 
@@ -617,13 +617,13 @@ class AAssetItem extends ANode {
           img.onload = () => {
             this.data = img;  // Store img element instead of blob
             ANode.prototype.load.call(this);
-            console.log('debug: [END] network transfer (image):', src);
+            // console.log('debug: [END] network transfer (image):', src);
             resolve();
             this._resolveLoaded();
           };
           img.onerror = (error) => {
             this.emit('error', {error}, false);
-            console.log('debug: [ERROR] network transfer (image):', src, error);
+            // console.log('debug: [ERROR] network transfer (image):', src, error);
             reject(error);
           };
           // Create object URL from blob and set as img src
@@ -638,7 +638,7 @@ class AAssetItem extends ANode {
         },
         error => {
           this.emit('error', {error}, false);
-          console.log('debug: [ERROR] network transfer (image):', src, error);
+          // console.log('debug: [ERROR] network transfer (image):', src, error);
           reject(error);
         }
       );
@@ -654,7 +654,7 @@ class AAssetItem extends ANode {
         response => {
           this.data = response;
           ANode.prototype.load.call(this);
-          console.log('debug: [END] network transfer:', src);
+          // console.log('debug: [END] network transfer:', src);
           resolve();
           this._resolveLoaded();
         },
@@ -667,7 +667,7 @@ class AAssetItem extends ANode {
         },
         error => {
           this.emit('error', {error}, false);
-          console.log('debug: [ERROR] network transfer:', src, error);
+          // console.log('debug: [ERROR] network transfer:', src, error);
           reject(error);
         }
       );

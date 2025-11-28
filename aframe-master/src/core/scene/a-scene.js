@@ -720,23 +720,24 @@ export class AScene extends AEntity {
       console.log('[A-Frame] First render at:', firstRenderTime.toFixed(2), 'ms');
     }
 
-    if(!this.allAssetsLoaded || this.afterLoadedFrame < 30){
-      var currentTime = performance.now();
-      var monitorDelta = this.lastFrameTime ? currentTime - this.lastFrameTime : 0;
-      this.lastFrameTime = currentTime;
-      console.log('debug: scene frame time:', monitorDelta.toFixed(2) + 'ms, total time:', currentTime.toFixed(2));
-      // 跳过第一帧（monitorDelta为0）
-      if (monitorDelta > 0) {
-        this.remTimes.push({'delta': monitorDelta, 'status': this.allAssetsLoaded});
-      }
-      
-      if(this.allAssetsLoaded){
-        this.afterLoadedFrame+=1;
-        if(this.afterLoadedFrame === 30 ){
-          this.saveTimes();
-        }
-      }
-    }
+    // Performance monitoring code - commented out for performance testing
+    // if(!this.allAssetsLoaded || this.afterLoadedFrame < 30){
+    //   var currentTime = performance.now();
+    //   var monitorDelta = this.lastFrameTime ? currentTime - this.lastFrameTime : 0;
+    //   this.lastFrameTime = currentTime;
+    //   console.log('debug: scene frame time:', monitorDelta.toFixed(2) + 'ms, total time:', currentTime.toFixed(2));
+    //   // 跳过第一帧（monitorDelta为0）
+    //   if (monitorDelta > 0) {
+    //     this.remTimes.push({'delta': monitorDelta, 'status': this.allAssetsLoaded});
+    //   }
+    //   
+    //   if(this.allAssetsLoaded){
+    //     this.afterLoadedFrame+=1;
+    //     if(this.afterLoadedFrame === 30 ){
+    //       this.saveTimes();
+    //     }
+    //   }
+    // }
     if (savedBackground) {
       this.object3D.background = savedBackground;
     }
