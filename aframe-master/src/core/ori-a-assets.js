@@ -50,25 +50,25 @@ class AAssets extends ANode {
         imgEl.onerror = reject;
       }));
     }
-   
+
     // Wait for <audio>s and <video>s.
     mediaEls = this.querySelectorAll('audio, video');
     mediaEls.forEach(audio => {
       let loadStartTime;
-  
+
       // 监听开始加载事件
       audio.addEventListener('loadstart', () => {
         loadStartTime = performance.now();
         console.log(`[${audio.id}] 开始加载:`, loadStartTime);
       });
-  
+
       // 监听加载完成事件（以 loadeddata 为例）
       audio.addEventListener('loadeddata', () => {
         const loadEndTime = performance.now();
         console.log(`[${audio.id}] 加载完成:`, loadEndTime);
         console.log(`[${audio.id}] 总耗时: ${loadEndTime - loadStartTime}ms`);
       });
-  
+
       // 监听错误事件
       audio.addEventListener('error', (e) => {
         console.error(`[${audio.id}] 加载失败:`, e);
@@ -93,7 +93,7 @@ class AAssets extends ANode {
         child.addEventListener('error', reject);
       }));
     });
-    
+
     // Trigger loaded for scene to start rendering.
     Promise.allSettled(loaded).then(function () {
       // Make sure the timeout didn't occur.
@@ -142,10 +142,10 @@ class AAssetItem extends ANode {
     fileLoader.setResponseType(
       this.getAttribute('response-type') || inferResponseType(src));
     var startTime = performance.now();
-    console.log('beginload',src,startTime)
+    console.log('beginload', src, startTime);
     fileLoader.load(src, function handleOnLoad (response) {
       var endTime = performance.now();
-      console.log('endload',src,endTime,endTime-startTime)
+      console.log('endload', src, endTime, endTime - startTime);
       self.data = response;
       ANode.prototype.load.call(self);
     }, function handleOnProgress (xhr) {
@@ -170,10 +170,10 @@ customElements.define('a-asset-item', AAssetItem);
  */
 function mediaElementLoaded (el) {
   if (!el.hasAttribute('autoplay') && el.getAttribute('preload') !== 'auto') {
-    console.log('return',el.getAttribute('preload'),el.preload)
+    console.log('return', el.getAttribute('preload'), el.preload);
     return;
   }
-  console.log('noreturn',el)
+  console.log('noreturn', el);
   // If media specifies autoplay or preload, wait until media is completely buffered.
   return new Promise(function (resolve, reject) {
     if (el.readyState === 4) { return resolve(); }  // Already loaded.

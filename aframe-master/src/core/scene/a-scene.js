@@ -66,7 +66,6 @@ export class AScene extends AEntity {
     self.remTimes = [];
     self.lastFrameTime = 0;  // 记录上一帧时间
     self.firstRenderDone = false;  // Track first render for TTFF
-
   }
 
   addFullScreenStyles () {
@@ -582,7 +581,7 @@ export class AScene extends AEntity {
       AEntity.prototype.play.call(this);
       return;
     }
-  this.addEventListener('loaded', function () {
+    this.addEventListener('loaded', function () {
       console.log('debug: a-scene loaded');
       var renderer = this.renderer;
       AEntity.prototype.play.call(this);  // .play() *before* render.
@@ -653,30 +652,33 @@ export class AScene extends AEntity {
       systems[this.systemNames[i]].tock(time, timeDelta, camera);
     }
   }
-  getLeafNodes(scene) {
-    var cnt=0;
+
+  getLeafNodes (scene) {
+    var cnt = 0;
     scene.traverse((object) => {
       if (object.children.length === 0) {
-        cnt+=1
+        cnt += 1;
       }
     });
     return cnt;
   }
-  saveTimes() {
+
+  saveTimes () {
     const data = JSON.stringify(this.remTimes, null, 2);
     const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    
+
     const a = document.createElement('a');
     a.href = url;
     a.download = 'performance_data.json';
     a.style.display = 'none';
-    
+
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   }
+
   /**
    * The render loop.
    *
@@ -700,8 +702,7 @@ export class AScene extends AEntity {
       savedBackground = this.object3D.background;
       this.object3D.background = null;
     }
-  
- 
+
     renderer.render(this.object3D, this.camera);
 
     // Emit first-render event for TTFF measurement (after actual render)
@@ -730,7 +731,7 @@ export class AScene extends AEntity {
     //   if (monitorDelta > 0) {
     //     this.remTimes.push({'delta': monitorDelta, 'status': this.allAssetsLoaded});
     //   }
-    //   
+    //
     //   if(this.allAssetsLoaded){
     //     this.afterLoadedFrame+=1;
     //     if(this.afterLoadedFrame === 30 ){
@@ -746,11 +747,9 @@ export class AScene extends AEntity {
       this.tock(this.time, this.delta, renderCamera);
     }
 
-    if(!this.allAssetsLoaded || this.afterLoadedFrame < 30){
-      this.emit('render',startTime);
-
+    if (!this.allAssetsLoaded || this.afterLoadedFrame < 30) {
+      this.emit('render', startTime);
     }
-  
   }
 
   callComponentBehaviors (behavior, time, timeDelta) {

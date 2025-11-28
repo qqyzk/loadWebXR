@@ -272,7 +272,6 @@ export class AEntity extends ANode {
    * @param {boolean} isDependency - True if the component is a dependency.
    */
   initComponent (attrName, data, isDependency) {
-   
     var component;
     var componentId;
     var componentInfo;

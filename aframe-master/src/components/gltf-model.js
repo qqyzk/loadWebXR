@@ -73,21 +73,21 @@ export var Component = registerComponent('gltf-model', {
   },
 
   // 新增：处理分块模型
-  handleChunkedModel: function(assetEl, src, priority, assets) {
+  handleChunkedModel: function (assetEl, src, priority, assets) {
     var self = this;
     const chunkCount = assets.getChunkCount(assetEl);
-    
+
     // console.log('🔍 [GLTF-COMPONENT] Chunked model detected:', {
     //   src: src,
     //   chunkCount: chunkCount,
     //   priority: priority
     // });
-    
+
     // 为每个分块增加场景任务计数
     for (let i = 1; i <= chunkCount; i++) {
       assets.addSceneTaskCount({ priority: priority });
     }
-    
+
     // 等待每个分块的网络传输完成，然后注册GLTF加载任务
     this.ready.then(() => {
       for (let i = 1; i <= chunkCount; i++) {
@@ -95,7 +95,7 @@ export var Component = registerComponent('gltf-model', {
         if (chunkPromise) {
           chunkPromise.then(() => {
             // console.log('📦 [GLTF-COMPONENT] Chunk network complete, registering scene task:', i);
-            
+
             // 单个分块网络传输完成，注册GLTF加载任务
             assets.registerSceneTask({
               type: 'chunk-gltf',
@@ -113,7 +113,6 @@ export var Component = registerComponent('gltf-model', {
         }
       }
     });
-  },
-
+  }
 
 });

@@ -85,14 +85,14 @@ export var Component = registerComponent('sound', {
       var src = assetEl.getAttribute('src');
       var assets = this.el.sceneEl.querySelector('a-assets');
       var priority = 3;
-      if (assetEl.hasAttribute('priority')){
+      if (assetEl.hasAttribute('priority')) {
         priority = parseInt(assetEl.getAttribute('priority'));
       }
       assets.addSceneTaskCount({
-          priority: priority
+        priority: priority
       });
       assetEl.loaded()
-        .then(()=> {
+        .then(() => {
           assets.registerSceneTask({
             type: 'sound',
             src: src,
@@ -108,14 +108,13 @@ export var Component = registerComponent('sound', {
           //     sound.setBuffer(buffer);
           //   }
           //   self.loaded = true;
-    
+
           //   // Remove this key from cache, otherwise we can't play it again
           //   THREE.Cache.remove(data.src);
           //   if (self.data.autoplay || self.mustPlay) { self.playSound(self.processSound); }
           //   self.el.emit('sound-loaded', self.evtDetail, false);
           // });
         });
-     
     }
   },
 
