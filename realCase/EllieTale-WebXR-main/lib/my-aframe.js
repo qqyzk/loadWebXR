@@ -22687,6 +22687,12 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
     }
     renderer.render(this.object3D, this.camera);
 
+    // Emit render event every frame for TTFF measurement (baseline version)
+    var renderTime = window.performance ? window.performance.now() : Date.now();
+    this.emit('render', {
+      time: renderTime
+    });
+
     // Emit first-render event for TTFF measurement (after actual render)
     if (!this.firstRenderDone) {
       this.firstRenderDone = true;

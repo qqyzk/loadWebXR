@@ -2,8 +2,11 @@
  * TTFF (Time To First Frame) Measurement Script - Baseline Version
  * 
  * This script measures the time from clicking the start button until:
- * 1. All visible GLTF models are loaded (model-loaded events)
- * 2. The first frame is actually rendered (first-render event)
+ * 1. All priority-1 GLTF models are loaded (model-loaded events)
+ * 2. These models are rendered at least once (render event after model-loaded)
+ * 
+ * Note: In baseline, rendering starts early (doesn't wait for models).
+ * This script ensures we measure until priority-1 models are both loaded AND rendered.
  * 
  * Usage: Include this script in your HTML before the closing </body> tag
  */
@@ -13,13 +16,14 @@
 
   var TTFFMeasurement = {
     startTime: null,
-    firstRenderDone: false,
-    allModelsLoaded: false,
-    modelsToLoad: [],
-    modelsLoaded: 0,
+    firstRenderTime: null,
+    renderAfterModelsLoaded: false,
+    allPriority1ModelsLoaded: false,
+    priority1ModelsToLoad: [],
+    priority1ModelsLoaded: 0,
     
     init: function() {
-      console.log('[TTFF] Baseline measurement script initialized');
+      console.log('[TTFF-BASELINE] Baseline measurement script initialized (priority-1)');
       this.attachButtonListener();
     },
     
@@ -28,17 +32,14 @@
       var button = document.getElementById('ttff-start-button');
       
       if (!button) {
-        console.error('[TTFF] Start button with id "ttff-start-button" not found');
+        console.error('[TTFF-BASELINE] Start button with id "ttff-start-button" not found');
         return;
       }
-      
-      // Store original onclick handler
-      var originalOnClick = button.onclick;
       
       button.addEventListener('click', function() {
         // Record start time
         self.startTime = window.performance ? window.performance.now() : Date.now();
-        console.log('[TTFF] Start button clicked at:', self.startTime.toFixed(2), 'ms');
+        console.log('[TTFF-BASELINE] Start button clicked at:', self.startTime.toFixed(2), 'ms');
         
         // Store in global metrics
         if (!window.aframeMetrics) {
@@ -46,45 +47,61 @@
         }
         window.aframeMetrics.ttffStartTime = self.startTime;
         
-        // Wait for scene to be injected, then collect models
+        // Wait for scene to be injected, then collect priority-1 models
         setTimeout(function() {
-          self.collectModels();
-          self.attachSceneListener();
+          self.collectPriority1Models();
         }, 100);
       }, true); // Use capture phase to run before other handlers
     },
     
-    collectModels: function() {
+    collectPriority1Models: function() {
       var scene = document.querySelector('a-scene');
       if (!scene) {
-        console.error('[TTFF] a-scene not found');
+        console.error('[TTFF-BASELINE] a-scene not found');
         return;
       }
       
-      // Find all <a-gltf-model> elements that are visible
+      // Find all <a-gltf-model> elements that are visible and priority-1
       var models = scene.querySelectorAll('a-gltf-model');
-      this.modelsToLoad = [];
+      this.priority1ModelsToLoad = [];
       
       for (var i = 0; i < models.length; i++) {
         var model = models[i];
+        
         // Check if model is visible (not hidden by visible="false")
-        // Note: getAttribute('visible') returns a boolean, not a string
         var visible = model.getAttribute('visible');
-        if (visible !== false) {
-          this.modelsToLoad.push(model);
+        if (visible === false) {
+          continue;
+        }
+        
+        // Check the priority by looking at the asset item
+        var src = model.getAttribute('src');
+        if (!src) {
+          continue;
+        }
+        
+        // src is a reference to an asset item, e.g., "#target"
+        var assetId = src.replace('#', '');
+        var assetItem = document.getElementById(assetId);
+        
+        if (assetItem) {
+          var priority = assetItem.getAttribute('priority');
+          if (priority === '1' || priority === 1) {
+            this.priority1ModelsToLoad.push(model);
+          }
         }
       }
       
-      console.log('[TTFF] Found', this.modelsToLoad.length, 'visible models to wait for');
+      console.log('[TTFF-BASELINE] Found', this.priority1ModelsToLoad.length, 'priority-1 models to wait for');
       
-      if (this.modelsToLoad.length === 0) {
-        // No models to load, mark as all loaded
-        this.allModelsLoaded = true;
-        this.checkCompletion();
+      if (this.priority1ModelsToLoad.length === 0) {
+        // No priority-1 models to load, wait for next render
+        this.allPriority1ModelsLoaded = true;
+        this.waitForRenderAfterModelsLoaded();
       } else {
-        // Attach listeners to each model
-        for (var j = 0; j < this.modelsToLoad.length; j++) {
-          this.attachModelListener(this.modelsToLoad[j], j);
+        // Attach listeners to each priority-1 model
+        for (var j = 0; j < this.priority1ModelsToLoad.length; j++) {
+          this.attachModelListener(this.priority1ModelsToLoad[j], j);
         }
       }
     },
@@ -94,20 +111,21 @@
       var modelId = model.id || model.getAttribute('src') || ('model-' + index);
       
       model.addEventListener('model-loaded', function onModelLoaded(event) {
-        self.modelsLoaded++;
+        self.priority1ModelsLoaded++;
         
-        if (self.modelsLoaded >= self.modelsToLoad.length) {
-          self.allModelsLoaded = true;
-          var allModelsTime = window.performance ? window.performance.now() : Date.now();
-          console.log('[TTFF] All models loaded at:', (allModelsTime - self.startTime).toFixed(2), 'ms');
+        if (self.priority1ModelsLoaded >= self.priority1ModelsToLoad.length) {
+          self.allPriority1ModelsLoaded = true;
+          var allPriority1ModelsTime = window.performance ? window.performance.now() : Date.now();
+          console.log('[TTFF-BASELINE] All priority-1 models loaded at:', (allPriority1ModelsTime - self.startTime).toFixed(2), 'ms');
           
           // Store in global metrics
           if (!window.aframeMetrics) {
             window.aframeMetrics = {};
           }
-          window.aframeMetrics.allModelsLoadedTime = allModelsTime;
+          window.aframeMetrics.allPriority1ModelsLoadedTime = allPriority1ModelsTime;
           
-          self.checkCompletion();
+          // Now wait for these models to be rendered
+          self.waitForRenderAfterModelsLoaded();
         }
         
         // Remove listener after it fires
@@ -115,34 +133,40 @@
       });
     },
     
-    attachSceneListener: function() {
+    waitForRenderAfterModelsLoaded: function() {
       var self = this;
       var scene = document.querySelector('a-scene');
       
       if (!scene) {
-        console.error('[TTFF] a-scene not found for first-render listener');
+        console.error('[TTFF-BASELINE] a-scene not found for render listener');
         return;
       }
       
-      scene.addEventListener('first-render', function onFirstRender(event) {
-        self.firstRenderDone = true;
-        var firstRenderTime = event.detail.time;
+      console.log('[TTFF-BASELINE] Priority-1 models loaded, waiting for next render...');
+      
+      // Listen for the next render event to ensure loaded models have been rendered
+      scene.addEventListener('render', function onRender(event) {
+        self.renderAfterModelsLoaded = true;
+        self.firstRenderTime = event.detail.time;
+        console.log('[TTFF-BASELINE] Render after models loaded at:', (self.firstRenderTime - self.startTime).toFixed(2), 'ms');
+        
+        // Remove listener after first render
+        scene.removeEventListener('render', onRender);
         
         self.checkCompletion();
-        
-        // Remove listener after it fires
-        scene.removeEventListener('first-render', onFirstRender);
       });
     },
     
     checkCompletion: function() {
-      if (this.allModelsLoaded && this.firstRenderDone) {
-        var endTime = window.performance ? window.performance.now() : Date.now();
+      if (this.allPriority1ModelsLoaded && this.renderAfterModelsLoaded) {
+        // Use the actual render time, not current time
+        var endTime = this.firstRenderTime;
         var ttff = endTime - this.startTime;
         
         console.log('========================================');
-        console.log('[TTFF] *** MEASUREMENT COMPLETE ***');
-        console.log('[TTFF] Time To First Frame (Baseline):', ttff.toFixed(2), 'ms');
+        console.log('[TTFF-BASELINE] *** MEASUREMENT COMPLETE ***');
+        console.log('[TTFF-BASELINE] Time To First Frame (Baseline):', ttff.toFixed(2), 'ms');
+        console.log('[TTFF-BASELINE] Priority-1 models loaded:', this.priority1ModelsLoaded);
         console.log('========================================');
         
         // Store final result in global metrics
@@ -151,14 +175,14 @@
         }
         window.aframeMetrics.ttff = ttff;
         window.aframeMetrics.ttffEndTime = endTime;
-        window.aframeMetrics.totalModelsLoaded = this.modelsLoaded;
+        window.aframeMetrics.priority1ModelsLoaded = this.priority1ModelsLoaded;
         
         // Emit custom event for external listeners
         if (typeof CustomEvent !== 'undefined') {
           var event = new CustomEvent('ttff-complete', {
             detail: {
               ttff: ttff,
-              modelsLoaded: this.modelsLoaded,
+              priority1ModelsLoaded: this.priority1ModelsLoaded,
               startTime: this.startTime,
               endTime: endTime
             }
@@ -182,4 +206,3 @@
   window.TTFFMeasurement = TTFFMeasurement;
   
 })();
-
