@@ -581,24 +581,26 @@ export class AScene extends AEntity {
       AEntity.prototype.play.call(this);
       return;
     }
-    this.addEventListener('loaded', function () {
-      console.log('debug: a-scene loaded');
-      var renderer = this.renderer;
-      AEntity.prototype.play.call(this);  // .play() *before* render.
+    
+    // Note: play() is called by the 'firstloaded' event handler (see doConnectedCallback)
+    // At this point, priority-1 assets have been loaded, so we can start rendering immediately
+    console.log('debug: a-scene play called after firstloaded - starting render immediately');
+    
+    var renderer = this.renderer;
+    AEntity.prototype.play.call(this);  // .play() *before* render.
 
-      if (sceneEl.renderStarted) { return; }
-      sceneEl.resize();
+    if (sceneEl.renderStarted) { return; }
+    sceneEl.resize();
 
-      // Kick off render loop.
-      if (sceneEl.renderer) {
-        if (window.performance) { window.performance.mark('render-started'); }
-        loadingScreen.remove();
-        console.log('debug: a-scene render started');
-        renderer.setAnimationLoop(this.render);
-        sceneEl.renderStarted = true;
-        sceneEl.emit('renderstart');
-      }
-    });
+    // Kick off render loop immediately since priority-1 assets are ready
+    if (sceneEl.renderer) {
+      if (window.performance) { window.performance.mark('render-started'); }
+      loadingScreen.remove();
+      console.log('debug: a-scene render started');
+      renderer.setAnimationLoop(this.render);
+      sceneEl.renderStarted = true;
+      sceneEl.emit('renderstart');
+    }
 
     // setTimeout to wait for all nodes to attach and run their callbacks.
     setTimeout(function () {
@@ -718,7 +720,6 @@ export class AScene extends AEntity {
 
       // Emit event that applications can listen to
       this.emit('first-render', { time: firstRenderTime });
-      console.log('[A-Frame] First render at:', firstRenderTime.toFixed(2), 'ms');
     }
 
     // Performance monitoring code - commented out for performance testing

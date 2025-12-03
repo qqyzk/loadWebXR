@@ -17,6 +17,7 @@
   var TTFFMeasurement = {
     startTime: null,
     firstRenderDone: false,
+    firstRenderTime: null,
     allPriority1ModelsLoaded: false,
     priority1ModelsToLoad: [],
     priority1ModelsLoaded: 0,
@@ -143,7 +144,8 @@
       
       scene.addEventListener('first-render', function onFirstRender(event) {
         self.firstRenderDone = true;
-        var firstRenderTime = event.detail.time;
+        // Store the actual first render time from the event
+        self.firstRenderTime = event.detail.time;
         
         self.checkCompletion();
         
@@ -154,7 +156,8 @@
     
     checkCompletion: function() {
       if (this.allPriority1ModelsLoaded && this.firstRenderDone) {
-        var endTime = window.performance ? window.performance.now() : Date.now();
+        // Use the actual first render time from the event, not current time
+        var endTime = this.firstRenderTime;
         var ttff = endTime - this.startTime;
         
         console.log('========================================');
