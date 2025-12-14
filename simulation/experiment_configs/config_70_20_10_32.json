@@ -1,0 +1,485 @@
+{
+  "model_generation": {
+    "output_dir": "htmls/models/",
+    "faces_list": [
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000
+    ]
+  },
+  "audio_processing": {
+    "input_audio": "htmls/audios/test.wav",
+    "clip_length": 6,
+    "output_audio": "htmls/audios/audio_clip.wav"
+  },
+  "web_page": {
+    "title": "Experiment 70_20_10 N=32",
+    "output_path": "htmls/index_70_20_10_32.html",
+    "model_count": 32,
+    "models": [
+      {
+        "id": 1,
+        "path": "models/model_1.glb",
+        "full_path": "htmls/models/model_1.glb",
+        "position": [
+          7.19,
+          7.6,
+          -1.53
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 2,
+        "path": "models/model_2.glb",
+        "full_path": "htmls/models/model_2.glb",
+        "position": [
+          -2.36,
+          6.15,
+          -5.1
+        ],
+        "visible": true,
+        "priority": 2,
+        "faces": 5000
+      },
+      {
+        "id": 3,
+        "path": "models/model_3.glb",
+        "full_path": "htmls/models/model_3.glb",
+        "position": [
+          -5.1,
+          4.01,
+          -0.22
+        ],
+        "visible": true,
+        "priority": 3,
+        "faces": 5000
+      },
+      {
+        "id": 4,
+        "path": "models/model_4.glb",
+        "full_path": "htmls/models/model_4.glb",
+        "position": [
+          1.28,
+          2.21,
+          6.53
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 5,
+        "path": "models/model_5.glb",
+        "full_path": "htmls/models/model_5.glb",
+        "position": [
+          4.83,
+          7.92,
+          6.37
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 6,
+        "path": "models/model_6.glb",
+        "full_path": "htmls/models/model_6.glb",
+        "position": [
+          6.47,
+          7.57,
+          -3.42
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 7,
+        "path": "models/model_7.glb",
+        "full_path": "htmls/models/model_7.glb",
+        "position": [
+          4.91,
+          -1.6,
+          -5.23
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 8,
+        "path": "models/model_8.glb",
+        "full_path": "htmls/models/model_8.glb",
+        "position": [
+          -6.21,
+          6.48,
+          2.61
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 9,
+        "path": "models/model_9.glb",
+        "full_path": "htmls/models/model_9.glb",
+        "position": [
+          0.46,
+          0.27,
+          6.02
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 10,
+        "path": "models/model_10.glb",
+        "full_path": "htmls/models/model_10.glb",
+        "position": [
+          -6.92,
+          -6.93,
+          0.62
+        ],
+        "visible": true,
+        "priority": 3,
+        "faces": 5000
+      },
+      {
+        "id": 11,
+        "path": "models/model_11.glb",
+        "full_path": "htmls/models/model_11.glb",
+        "position": [
+          -2.0,
+          -5.14,
+          -4.12
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 12,
+        "path": "models/model_12.glb",
+        "full_path": "htmls/models/model_12.glb",
+        "position": [
+          -2.92,
+          4.44,
+          -5.46
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 13,
+        "path": "models/model_13.glb",
+        "full_path": "htmls/models/model_13.glb",
+        "position": [
+          -2.56,
+          1.51,
+          -5.4
+        ],
+        "visible": true,
+        "priority": 2,
+        "faces": 5000
+      },
+      {
+        "id": 14,
+        "path": "models/model_14.glb",
+        "full_path": "htmls/models/model_14.glb",
+        "position": [
+          1.07,
+          3.42,
+          6.38
+        ],
+        "visible": true,
+        "priority": 2,
+        "faces": 5000
+      },
+      {
+        "id": 15,
+        "path": "models/model_15.glb",
+        "full_path": "htmls/models/model_15.glb",
+        "position": [
+          -6.41,
+          -7.01,
+          -0.44
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 16,
+        "path": "models/model_16.glb",
+        "full_path": "htmls/models/model_16.glb",
+        "position": [
+          1.49,
+          4.04,
+          -0.9
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 17,
+        "path": "models/model_17.glb",
+        "full_path": "htmls/models/model_17.glb",
+        "position": [
+          3.77,
+          5.16,
+          -0.72
+        ],
+        "visible": true,
+        "priority": 3,
+        "faces": 5000
+      },
+      {
+        "id": 18,
+        "path": "models/model_18.glb",
+        "full_path": "htmls/models/model_18.glb",
+        "position": [
+          -7.23,
+          6.1,
+          2.89
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 19,
+        "path": "models/model_19.glb",
+        "full_path": "htmls/models/model_19.glb",
+        "position": [
+          7.85,
+          5.18,
+          4.87
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 20,
+        "path": "models/model_20.glb",
+        "full_path": "htmls/models/model_20.glb",
+        "position": [
+          2.29,
+          -3.24,
+          -6.75
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 21,
+        "path": "models/model_21.glb",
+        "full_path": "htmls/models/model_21.glb",
+        "position": [
+          -7.63,
+          -1.27,
+          2.71
+        ],
+        "visible": true,
+        "priority": 2,
+        "faces": 5000
+      },
+      {
+        "id": 22,
+        "path": "models/model_22.glb",
+        "full_path": "htmls/models/model_22.glb",
+        "position": [
+          1.77,
+          -4.5,
+          -1.06
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 23,
+        "path": "models/model_23.glb",
+        "full_path": "htmls/models/model_23.glb",
+        "position": [
+          4.85,
+          3.21,
+          -3.64
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 24,
+        "path": "models/model_24.glb",
+        "full_path": "htmls/models/model_24.glb",
+        "position": [
+          5.84,
+          -2.72,
+          -6.3
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 25,
+        "path": "models/model_25.glb",
+        "full_path": "htmls/models/model_25.glb",
+        "position": [
+          4.34,
+          0.61,
+          -7.52
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 26,
+        "path": "models/model_26.glb",
+        "full_path": "htmls/models/model_26.glb",
+        "position": [
+          -1.6,
+          5.22,
+          3.92
+        ],
+        "visible": true,
+        "priority": 3,
+        "faces": 5000
+      },
+      {
+        "id": 27,
+        "path": "models/model_27.glb",
+        "full_path": "htmls/models/model_27.glb",
+        "position": [
+          7.68,
+          -4.78,
+          5.17
+        ],
+        "visible": true,
+        "priority": 2,
+        "faces": 5000
+      },
+      {
+        "id": 28,
+        "path": "models/model_28.glb",
+        "full_path": "htmls/models/model_28.glb",
+        "position": [
+          -4.18,
+          5.73,
+          7.5
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 29,
+        "path": "models/model_29.glb",
+        "full_path": "htmls/models/model_29.glb",
+        "position": [
+          4.41,
+          2.03,
+          -7.79
+        ],
+        "visible": true,
+        "priority": 2,
+        "faces": 5000
+      },
+      {
+        "id": 30,
+        "path": "models/model_30.glb",
+        "full_path": "htmls/models/model_30.glb",
+        "position": [
+          -7.23,
+          -2.3,
+          4.0
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 31,
+        "path": "models/model_31.glb",
+        "full_path": "htmls/models/model_31.glb",
+        "position": [
+          -5.39,
+          6.34,
+          3.96
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 32,
+        "path": "models/model_32.glb",
+        "full_path": "htmls/models/model_32.glb",
+        "position": [
+          -4.5,
+          0.78,
+          4.41
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      }
+    ],
+    "audio": {
+      "path": "audios/audio_clip.wav",
+      "length": 6,
+      "autoplay": false,
+      "priority": 3
+    },
+    "experiment_config": {
+      "priority_distribution": {
+        "P1": 0.7,
+        "P2": 0.2,
+        "P3": 0.1
+      },
+      "priority_counts": {
+        "P1": 22,
+        "P2": 6,
+        "P3": 4
+      }
+    }
+  }
+}

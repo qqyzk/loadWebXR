@@ -1,0 +1,299 @@
+{
+  "total_configs": 24,
+  "priority_distributions": {
+    "70_20_10": {
+      "P1": 0.7,
+      "P2": 0.2,
+      "P3": 0.1
+    },
+    "50_30_20": {
+      "P1": 0.5,
+      "P2": 0.3,
+      "P3": 0.2
+    },
+    "20_30_50": {
+      "P1": 0.2,
+      "P2": 0.3,
+      "P3": 0.5
+    },
+    "10_20_70": {
+      "P1": 0.1,
+      "P2": 0.2,
+      "P3": 0.7
+    }
+  },
+  "model_counts": [
+    8,
+    16,
+    32,
+    64,
+    128,
+    256
+  ],
+  "configs": [
+    {
+      "id": 1,
+      "file": "config_70_20_10_8.json",
+      "distribution": "70_20_10",
+      "model_count": 8,
+      "priority_counts": {
+        "P1": 5,
+        "P2": 1,
+        "P3": 2
+      }
+    },
+    {
+      "id": 2,
+      "file": "config_70_20_10_16.json",
+      "distribution": "70_20_10",
+      "model_count": 16,
+      "priority_counts": {
+        "P1": 11,
+        "P2": 3,
+        "P3": 2
+      }
+    },
+    {
+      "id": 3,
+      "file": "config_70_20_10_32.json",
+      "distribution": "70_20_10",
+      "model_count": 32,
+      "priority_counts": {
+        "P1": 22,
+        "P2": 6,
+        "P3": 4
+      }
+    },
+    {
+      "id": 4,
+      "file": "config_70_20_10_64.json",
+      "distribution": "70_20_10",
+      "model_count": 64,
+      "priority_counts": {
+        "P1": 44,
+        "P2": 12,
+        "P3": 8
+      }
+    },
+    {
+      "id": 5,
+      "file": "config_70_20_10_128.json",
+      "distribution": "70_20_10",
+      "model_count": 128,
+      "priority_counts": {
+        "P1": 89,
+        "P2": 25,
+        "P3": 14
+      }
+    },
+    {
+      "id": 6,
+      "file": "config_70_20_10_256.json",
+      "distribution": "70_20_10",
+      "model_count": 256,
+      "priority_counts": {
+        "P1": 179,
+        "P2": 51,
+        "P3": 26
+      }
+    },
+    {
+      "id": 7,
+      "file": "config_50_30_20_8.json",
+      "distribution": "50_30_20",
+      "model_count": 8,
+      "priority_counts": {
+        "P1": 4,
+        "P2": 2,
+        "P3": 2
+      }
+    },
+    {
+      "id": 8,
+      "file": "config_50_30_20_16.json",
+      "distribution": "50_30_20",
+      "model_count": 16,
+      "priority_counts": {
+        "P1": 8,
+        "P2": 4,
+        "P3": 4
+      }
+    },
+    {
+      "id": 9,
+      "file": "config_50_30_20_32.json",
+      "distribution": "50_30_20",
+      "model_count": 32,
+      "priority_counts": {
+        "P1": 16,
+        "P2": 9,
+        "P3": 7
+      }
+    },
+    {
+      "id": 10,
+      "file": "config_50_30_20_64.json",
+      "distribution": "50_30_20",
+      "model_count": 64,
+      "priority_counts": {
+        "P1": 32,
+        "P2": 19,
+        "P3": 13
+      }
+    },
+    {
+      "id": 11,
+      "file": "config_50_30_20_128.json",
+      "distribution": "50_30_20",
+      "model_count": 128,
+      "priority_counts": {
+        "P1": 64,
+        "P2": 38,
+        "P3": 26
+      }
+    },
+    {
+      "id": 12,
+      "file": "config_50_30_20_256.json",
+      "distribution": "50_30_20",
+      "model_count": 256,
+      "priority_counts": {
+        "P1": 128,
+        "P2": 76,
+        "P3": 52
+      }
+    },
+    {
+      "id": 13,
+      "file": "config_20_30_50_8.json",
+      "distribution": "20_30_50",
+      "model_count": 8,
+      "priority_counts": {
+        "P1": 1,
+        "P2": 2,
+        "P3": 5
+      }
+    },
+    {
+      "id": 14,
+      "file": "config_20_30_50_16.json",
+      "distribution": "20_30_50",
+      "model_count": 16,
+      "priority_counts": {
+        "P1": 3,
+        "P2": 4,
+        "P3": 9
+      }
+    },
+    {
+      "id": 15,
+      "file": "config_20_30_50_32.json",
+      "distribution": "20_30_50",
+      "model_count": 32,
+      "priority_counts": {
+        "P1": 6,
+        "P2": 9,
+        "P3": 17
+      }
+    },
+    {
+      "id": 16,
+      "file": "config_20_30_50_64.json",
+      "distribution": "20_30_50",
+      "model_count": 64,
+      "priority_counts": {
+        "P1": 12,
+        "P2": 19,
+        "P3": 33
+      }
+    },
+    {
+      "id": 17,
+      "file": "config_20_30_50_128.json",
+      "distribution": "20_30_50",
+      "model_count": 128,
+      "priority_counts": {
+        "P1": 25,
+        "P2": 38,
+        "P3": 65
+      }
+    },
+    {
+      "id": 18,
+      "file": "config_20_30_50_256.json",
+      "distribution": "20_30_50",
+      "model_count": 256,
+      "priority_counts": {
+        "P1": 51,
+        "P2": 76,
+        "P3": 129
+      }
+    },
+    {
+      "id": 19,
+      "file": "config_10_20_70_8.json",
+      "distribution": "10_20_70",
+      "model_count": 8,
+      "priority_counts": {
+        "P1": 0,
+        "P2": 1,
+        "P3": 7
+      }
+    },
+    {
+      "id": 20,
+      "file": "config_10_20_70_16.json",
+      "distribution": "10_20_70",
+      "model_count": 16,
+      "priority_counts": {
+        "P1": 1,
+        "P2": 3,
+        "P3": 12
+      }
+    },
+    {
+      "id": 21,
+      "file": "config_10_20_70_32.json",
+      "distribution": "10_20_70",
+      "model_count": 32,
+      "priority_counts": {
+        "P1": 3,
+        "P2": 6,
+        "P3": 23
+      }
+    },
+    {
+      "id": 22,
+      "file": "config_10_20_70_64.json",
+      "distribution": "10_20_70",
+      "model_count": 64,
+      "priority_counts": {
+        "P1": 6,
+        "P2": 12,
+        "P3": 46
+      }
+    },
+    {
+      "id": 23,
+      "file": "config_10_20_70_128.json",
+      "distribution": "10_20_70",
+      "model_count": 128,
+      "priority_counts": {
+        "P1": 12,
+        "P2": 25,
+        "P3": 91
+      }
+    },
+    {
+      "id": 24,
+      "file": "config_10_20_70_256.json",
+      "distribution": "10_20_70",
+      "model_count": 256,
+      "priority_counts": {
+        "P1": 25,
+        "P2": 51,
+        "P3": 180
+      }
+    }
+  ]
+}

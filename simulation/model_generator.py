@@ -90,12 +90,27 @@ def batch_generate(config_path="config.json"):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    for faces in faces_list:
-        mesh = generate_mesh_by_faces(num_faces=faces)
-        output_file = os.path.join(output_dir, f"model_{faces}.glb")
-        mesh.export(output_file)
-        print(f"导出到: {output_file}")
-        print(f"实际生成面数: {len(mesh.faces)} 个三角面")
+    # 从web_page配置中获取模型信息（带编号）
+    web_page_cfg = config.get("web_page", {})
+    models = web_page_cfg.get("models", [])
+    
+    if models:
+        # 使用编号生成模型
+        for model in models:
+            model_id = model["id"]
+            faces = model.get("faces", 1000)
+            mesh = generate_mesh_by_faces(num_faces=faces)
+            output_file = os.path.join(output_dir, f"model_{model_id}.glb")
+            mesh.export(output_file)
+            print(f"导出到: {output_file} (faces={faces})")
+    else:
+        # 兼容旧配置：使用faces_list生成
+        for faces in faces_list:
+            mesh = generate_mesh_by_faces(num_faces=faces)
+            output_file = os.path.join(output_dir, f"model_{faces}.glb")
+            mesh.export(output_file)
+            print(f"导出到: {output_file}")
+            print(f"实际生成面数: {len(mesh.faces)} 个三角面")
 
 
 if __name__ == "__main__":

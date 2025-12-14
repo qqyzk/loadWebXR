@@ -1,0 +1,261 @@
+{
+  "model_generation": {
+    "output_dir": "htmls/models/",
+    "faces_list": [
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000,
+      5000
+    ]
+  },
+  "audio_processing": {
+    "input_audio": "htmls/audios/test.wav",
+    "clip_length": 3,
+    "output_audio": "htmls/audios/audio_clip.wav"
+  },
+  "web_page": {
+    "title": "Experiment 70_20_10 N=16",
+    "output_path": "htmls/index_70_20_10_16.html",
+    "model_count": 16,
+    "models": [
+      {
+        "id": 1,
+        "path": "models/model_1.glb",
+        "full_path": "htmls/models/model_1.glb",
+        "position": [
+          -3.14,
+          -6.4,
+          1.56
+        ],
+        "visible": true,
+        "priority": 2,
+        "faces": 5000
+      },
+      {
+        "id": 2,
+        "path": "models/model_2.glb",
+        "full_path": "htmls/models/model_2.glb",
+        "position": [
+          -4.55,
+          7.73,
+          4.42
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 3,
+        "path": "models/model_3.glb",
+        "full_path": "htmls/models/model_3.glb",
+        "position": [
+          -6.43,
+          -4.95,
+          -2.09
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 4,
+        "path": "models/model_4.glb",
+        "full_path": "htmls/models/model_4.glb",
+        "position": [
+          -0.86,
+          -2.28,
+          -3.76
+        ],
+        "visible": true,
+        "priority": 3,
+        "faces": 5000
+      },
+      {
+        "id": 5,
+        "path": "models/model_5.glb",
+        "full_path": "htmls/models/model_5.glb",
+        "position": [
+          -6.9,
+          -7.52,
+          6.29
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 6,
+        "path": "models/model_6.glb",
+        "full_path": "htmls/models/model_6.glb",
+        "position": [
+          3.95,
+          -2.58,
+          -6.83
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 7,
+        "path": "models/model_7.glb",
+        "full_path": "htmls/models/model_7.glb",
+        "position": [
+          2.58,
+          5.88,
+          2.24
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 8,
+        "path": "models/model_8.glb",
+        "full_path": "htmls/models/model_8.glb",
+        "position": [
+          -2.03,
+          -5.83,
+          -0.17
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 9,
+        "path": "models/model_9.glb",
+        "full_path": "htmls/models/model_9.glb",
+        "position": [
+          6.43,
+          -4.35,
+          -7.72
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 10,
+        "path": "models/model_10.glb",
+        "full_path": "htmls/models/model_10.glb",
+        "position": [
+          -7.79,
+          -4.46,
+          -2.2
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 11,
+        "path": "models/model_11.glb",
+        "full_path": "htmls/models/model_11.glb",
+        "position": [
+          -1.96,
+          -4.66,
+          -4.91
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 12,
+        "path": "models/model_12.glb",
+        "full_path": "htmls/models/model_12.glb",
+        "position": [
+          0.07,
+          -5.47,
+          7.1
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 13,
+        "path": "models/model_13.glb",
+        "full_path": "htmls/models/model_13.glb",
+        "position": [
+          7.09,
+          4.95,
+          -0.89
+        ],
+        "visible": true,
+        "priority": 1,
+        "faces": 5000
+      },
+      {
+        "id": 14,
+        "path": "models/model_14.glb",
+        "full_path": "htmls/models/model_14.glb",
+        "position": [
+          -6.25,
+          -1.2,
+          -7.91
+        ],
+        "visible": true,
+        "priority": 3,
+        "faces": 5000
+      },
+      {
+        "id": 15,
+        "path": "models/model_15.glb",
+        "full_path": "htmls/models/model_15.glb",
+        "position": [
+          -4.99,
+          5.96,
+          4.4
+        ],
+        "visible": true,
+        "priority": 2,
+        "faces": 5000
+      },
+      {
+        "id": 16,
+        "path": "models/model_16.glb",
+        "full_path": "htmls/models/model_16.glb",
+        "position": [
+          7.6,
+          6.46,
+          3.57
+        ],
+        "visible": true,
+        "priority": 2,
+        "faces": 5000
+      }
+    ],
+    "audio": {
+      "path": "audios/audio_clip.wav",
+      "length": 3,
+      "autoplay": false,
+      "priority": 3
+    },
+    "experiment_config": {
+      "priority_distribution": {
+        "P1": 0.7,
+        "P2": 0.2,
+        "P3": 0.1
+      },
+      "priority_counts": {
+        "P1": 11,
+        "P2": 3,
+        "P3": 2
+      }
+    }
+  }
+}
