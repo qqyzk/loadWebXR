@@ -14,7 +14,7 @@
   },
   "audio_processing": {
     "input_audio": "htmls/audios/test.wav",
-    "clip_length": 5,
+    "clip_length": 7,
     "output_audio": "htmls/audios/audio_clip.wav"
   },
   "web_page": {
@@ -27,12 +27,12 @@
         "path": "models/model_1.glb",
         "full_path": "htmls/models/model_1.glb",
         "position": [
-          -6.46,
-          -4.99,
-          -1.28
+          0.8,
+          -0.87,
+          0.53
         ],
         "visible": true,
-        "priority": 3,
+        "priority": 1,
         "faces": 5000
       },
       {
@@ -40,9 +40,9 @@
         "path": "models/model_2.glb",
         "full_path": "htmls/models/model_2.glb",
         "position": [
-          -0.34,
-          -3.89,
-          -5.96
+          -4.36,
+          1.96,
+          5.43
         ],
         "visible": true,
         "priority": 3,
@@ -53,9 +53,9 @@
         "path": "models/model_3.glb",
         "full_path": "htmls/models/model_3.glb",
         "position": [
-          6.35,
-          -1.67,
-          1.78
+          5.26,
+          2.47,
+          -6.0
         ],
         "visible": true,
         "priority": 2,
@@ -66,9 +66,9 @@
         "path": "models/model_4.glb",
         "full_path": "htmls/models/model_4.glb",
         "position": [
-          5.65,
-          1.55,
-          5.31
+          -6.99,
+          -2.72,
+          -4.13
         ],
         "visible": true,
         "priority": 3,
@@ -79,12 +79,12 @@
         "path": "models/model_5.glb",
         "full_path": "htmls/models/model_5.glb",
         "position": [
-          2.61,
-          -5.14,
-          -0.32
+          0.35,
+          -0.93,
+          1.3
         ],
         "visible": true,
-        "priority": 1,
+        "priority": 3,
         "faces": 5000
       },
       {
@@ -92,9 +92,9 @@
         "path": "models/model_6.glb",
         "full_path": "htmls/models/model_6.glb",
         "position": [
-          4.74,
-          -2.91,
-          -6.95
+          -4.39,
+          6.82,
+          6.39
         ],
         "visible": true,
         "priority": 3,
@@ -105,9 +105,9 @@
         "path": "models/model_7.glb",
         "full_path": "htmls/models/model_7.glb",
         "position": [
-          -2.61,
-          6.72,
-          -5.43
+          2.91,
+          2.44,
+          -1.17
         ],
         "visible": true,
         "priority": 3,
@@ -118,9 +118,9 @@
         "path": "models/model_8.glb",
         "full_path": "htmls/models/model_8.glb",
         "position": [
-          -3.49,
-          -1.58,
-          -7.96
+          -3.69,
+          0.98,
+          7.51
         ],
         "visible": true,
         "priority": 2,
@@ -129,7 +129,7 @@
     ],
     "audio": {
       "path": "audios/audio_clip.wav",
-      "length": 5,
+      "length": 7,
       "autoplay": false,
       "priority": 3
     },
