@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Experiment 50_30_20 N=16</title>
+    <script src="../lib/my-aframe.js"></script>
+  </head>
+  <body>
+    <!-- TTFF Start Overlay -->
+    <div id="ttff-start-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+         background: rgba(0, 0, 0, 0.9); z-index: 9999; display: flex; align-items: center; 
+         justify-content: center; flex-direction: column; color: white; font-family: Arial, sans-serif;">
+      <h1 style="font-size: 48px; margin-bottom: 20px;">Experiment 50_30_20 N=16</h1>
+      <p style="font-size: 20px; margin-bottom: 40px;">Simulation Scene for Performance Testing</p>
+      <button id="ttff-start-button" style="font-size: 24px; padding: 20px 60px; background: #ff6600; 
+              border: none; color: white; cursor: pointer; border-radius: 10px; font-weight: bold;">
+        START EXPERIENCE
+      </button>
+    </div>
+
+    <!-- Scene template - will be injected after Start button click -->
+    <template id="scene-template">
+    <a-scene>
+      <!-- Camera -->
+      <a-camera position="0 1.6 0">
+        <a-entity cursor="rayOrigin: mouse"></a-entity>
+      </a-camera>
+
+      <!-- Assets -->
+      <a-assets timeout="500000">
+      <a-asset-item id="model_1" src="models/model_1.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_2" src="models/model_2.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_3" src="models/model_3.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_4" src="models/model_4.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_5" src="models/model_5.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_6" src="models/model_6.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_7" src="models/model_7.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_8" src="models/model_8.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_9" src="models/model_9.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_10" src="models/model_10.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_11" src="models/model_11.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_12" src="models/model_12.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_13" src="models/model_13.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_14" src="models/model_14.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_15" src="models/model_15.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_16" src="models/model_16.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      </a-assets>
+
+      <!-- Models -->
+    <a-gltf-model src="#model_1" position="7.0 -2.58 -5.97" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_2" position="-5.51 -3.02 -3.37" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_3" position="3.6 -0.53 -3.72" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_4" position="4.62 -1.41 -3.3" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_5" position="-6.03 -3.33 2.2" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_6" position="-6.31 -7.33 5.99" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_7" position="-5.29 5.5 -3.77" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_8" position="5.61 5.28 -4.98" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_9" position="2.92 7.19 -6.2" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_10" position="1.64 -3.09 -2.18" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_11" position="-1.8 -4.36 0.99" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_12" position="-4.06 -7.9 -1.91" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_13" position="1.44 1.03 2.44" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_14" position="-6.41 -3.73 2.62" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_15" position="7.12 5.87 -5.09" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_16" position="6.05 -3.48 6.38" scale="0.3 0.3 0.3"></a-gltf-model>
+
+      <!-- Audio -->
+
+    </a-scene>
+    </template>
+
+    <!-- TTFF Measurement Script -->
+    <script src="../ttff-measurement-baseline.js"></script>
+    
+    <!-- Scene Injection Script -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var button = document.getElementById('ttff-start-button');
+        var overlay = document.getElementById('ttff-start-overlay');
+        var template = document.getElementById('scene-template');
+        
+        button.addEventListener('click', function() {
+          // Inject scene from template
+          var sceneContent = template.content.cloneNode(true);
+          document.body.appendChild(sceneContent);
+          
+          // Hide overlay
+          overlay.style.display = 'none';
+        }, true);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Experiment 50_30_20 N=128</title>
+    <script src="../lib/my-aframe.js"></script>
+  </head>
+  <body>
+    <!-- TTFF Start Overlay -->
+    <div id="ttff-start-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+         background: rgba(0, 0, 0, 0.9); z-index: 9999; display: flex; align-items: center; 
+         justify-content: center; flex-direction: column; color: white; font-family: Arial, sans-serif;">
+      <h1 style="font-size: 48px; margin-bottom: 20px;">Experiment 50_30_20 N=128</h1>
+      <p style="font-size: 20px; margin-bottom: 40px;">Simulation Scene for Performance Testing</p>
+      <button id="ttff-start-button" style="font-size: 24px; padding: 20px 60px; background: #ff6600; 
+              border: none; color: white; cursor: pointer; border-radius: 10px; font-weight: bold;">
+        START EXPERIENCE
+      </button>
+    </div>
+
+    <!-- Scene template - will be injected after Start button click -->
+    <template id="scene-template">
+    <a-scene>
+      <!-- Camera -->
+      <a-camera position="0 1.6 0">
+        <a-entity cursor="rayOrigin: mouse"></a-entity>
+      </a-camera>
+
+      <!-- Assets -->
+      <a-assets timeout="500000">
+      <a-asset-item id="model_1" src="models/model_1.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_2" src="models/model_2.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_3" src="models/model_3.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_4" src="models/model_4.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_5" src="models/model_5.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_6" src="models/model_6.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_7" src="models/model_7.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_8" src="models/model_8.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_9" src="models/model_9.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_10" src="models/model_10.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_11" src="models/model_11.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_12" src="models/model_12.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_13" src="models/model_13.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_14" src="models/model_14.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_15" src="models/model_15.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_16" src="models/model_16.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_17" src="models/model_17.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_18" src="models/model_18.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_19" src="models/model_19.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_20" src="models/model_20.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_21" src="models/model_21.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_22" src="models/model_22.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_23" src="models/model_23.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_24" src="models/model_24.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_25" src="models/model_25.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_26" src="models/model_26.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_27" src="models/model_27.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_28" src="models/model_28.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_29" src="models/model_29.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_30" src="models/model_30.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_31" src="models/model_31.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_32" src="models/model_32.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_33" src="models/model_33.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_34" src="models/model_34.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_35" src="models/model_35.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_36" src="models/model_36.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_37" src="models/model_37.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_38" src="models/model_38.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_39" src="models/model_39.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_40" src="models/model_40.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_41" src="models/model_41.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_42" src="models/model_42.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_43" src="models/model_43.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_44" src="models/model_44.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_45" src="models/model_45.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_46" src="models/model_46.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_47" src="models/model_47.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_48" src="models/model_48.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_49" src="models/model_49.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_50" src="models/model_50.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_51" src="models/model_51.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_52" src="models/model_52.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_53" src="models/model_53.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_54" src="models/model_54.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_55" src="models/model_55.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_56" src="models/model_56.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_57" src="models/model_57.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_58" src="models/model_58.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_59" src="models/model_59.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_60" src="models/model_60.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_61" src="models/model_61.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_62" src="models/model_62.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_63" src="models/model_63.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_64" src="models/model_64.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_65" src="models/model_65.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_66" src="models/model_66.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_67" src="models/model_67.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_68" src="models/model_68.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_69" src="models/model_69.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_70" src="models/model_70.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_71" src="models/model_71.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_72" src="models/model_72.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_73" src="models/model_73.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_74" src="models/model_74.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_75" src="models/model_75.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_76" src="models/model_76.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_77" src="models/model_77.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_78" src="models/model_78.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_79" src="models/model_79.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_80" src="models/model_80.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_81" src="models/model_81.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_82" src="models/model_82.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_83" src="models/model_83.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_84" src="models/model_84.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_85" src="models/model_85.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_86" src="models/model_86.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_87" src="models/model_87.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_88" src="models/model_88.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_89" src="models/model_89.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_90" src="models/model_90.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_91" src="models/model_91.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_92" src="models/model_92.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_93" src="models/model_93.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_94" src="models/model_94.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_95" src="models/model_95.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_96" src="models/model_96.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_97" src="models/model_97.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_98" src="models/model_98.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_99" src="models/model_99.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_100" src="models/model_100.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_101" src="models/model_101.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_102" src="models/model_102.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_103" src="models/model_103.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_104" src="models/model_104.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_105" src="models/model_105.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_106" src="models/model_106.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_107" src="models/model_107.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_108" src="models/model_108.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_109" src="models/model_109.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_110" src="models/model_110.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_111" src="models/model_111.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_112" src="models/model_112.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_113" src="models/model_113.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_114" src="models/model_114.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_115" src="models/model_115.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_116" src="models/model_116.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_117" src="models/model_117.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_118" src="models/model_118.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_119" src="models/model_119.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_120" src="models/model_120.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_121" src="models/model_121.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_122" src="models/model_122.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_123" src="models/model_123.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_124" src="models/model_124.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_125" src="models/model_125.glb" response-type="arraybuffer" priority="1"></a-asset-item>
+      <a-asset-item id="model_126" src="models/model_126.glb" response-type="arraybuffer" priority="3"></a-asset-item>
+      <a-asset-item id="model_127" src="models/model_127.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      <a-asset-item id="model_128" src="models/model_128.glb" response-type="arraybuffer" priority="2"></a-asset-item>
+      </a-assets>
+
+      <!-- Models -->
+    <a-gltf-model src="#model_1" position="-5.88 3.83 0.95" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_2" position="7.25 4.86 -1.42" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_3" position="5.85 7.5 -2.52" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_4" position="5.41 -7.92 3.29" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_5" position="5.94 4.09 -0.99" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_6" position="4.55 2.07 -1.1" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_7" position="-6.32 -3.54 2.75" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_8" position="3.59 -1.67 1.09" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_9" position="0.84 1.85 -5.1" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_10" position="7.82 4.91 4.12" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_11" position="7.58 2.3 1.95" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_12" position="0.66 2.11 6.64" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_13" position="7.53 2.78 -3.68" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_14" position="1.96 -0.46 5.73" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_15" position="0.69 0.68 -1.46" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_16" position="-7.27 -5.36 5.15" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_17" position="-2.61 -1.35 -0.23" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_18" position="-1.45 -5.9 -7.22" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_19" position="-5.64 -0.74 7.92" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_20" position="6.22 1.97 -6.85" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_21" position="-7.79 -2.55 5.1" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_22" position="1.86 6.23 0.48" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_23" position="-1.55 -2.17 -3.42" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_24" position="-1.82 4.08 1.61" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_25" position="-3.83 0.66 -4.79" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_26" position="5.92 3.3 -5.72" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_27" position="-2.48 -1.69 7.22" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_28" position="4.63 6.16 7.64" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_29" position="3.86 6.01 -6.33" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_30" position="7.45 2.25 2.91" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_31" position="-3.67 -6.31 -5.44" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_32" position="5.81 6.88 7.07" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_33" position="6.67 7.03 -1.02" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_34" position="-0.41 -2.53 -2.38" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_35" position="6.89 -4.73 -1.64" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_36" position="6.82 -5.82 7.74" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_37" position="-6.05 6.91 3.75" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_38" position="6.13 1.04 3.97" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_39" position="7.43 7.96 4.18" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_40" position="6.42 5.98 3.71" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_41" position="-4.77 7.13 0.43" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_42" position="0.95 -0.86 -2.31" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_43" position="4.56 -2.86 4.59" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_44" position="-6.4 -5.37 0.08" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_45" position="-2.45 7.68 -1.97" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_46" position="0.99 -3.17 7.49" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_47" position="5.89 -4.78 -3.15" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_48" position="2.13 -3.12 -7.94" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_49" position="-5.1 1.83 -3.9" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_50" position="4.2 6.65 5.25" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_51" position="-0.7 -1.4 -0.81" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_52" position="-2.89 -7.59 4.22" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_53" position="-0.07 6.78 -1.54" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_54" position="7.11 -6.69 0.48" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_55" position="-7.55 -6.11 -0.8" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_56" position="6.55 -2.32 7.35" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_57" position="-5.69 1.79 -3.53" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_58" position="-1.39 4.49 -5.38" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_59" position="3.23 -5.69 4.01" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_60" position="0.96 -6.37 2.02" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_61" position="1.43 3.79 2.82" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_62" position="4.42 4.44 2.24" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_63" position="-1.17 -5.79 0.59" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_64" position="0.99 5.75 -3.79" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_65" position="0.28 -1.3 0.42" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_66" position="-5.19 -6.16 7.92" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_67" position="4.14 -6.28 5.9" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_68" position="6.65 -0.56 -5.41" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_69" position="7.1 -7.05 2.98" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_70" position="-4.24 -1.72 -0.19" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_71" position="2.48 5.43 -1.99" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_72" position="4.7 4.07 0.85" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_73" position="-5.73 1.28 0.47" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_74" position="5.07 3.62 -0.18" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_75" position="7.17 -2.66 1.06" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_76" position="-4.17 -3.84 4.59" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_77" position="-1.42 3.64 -2.17" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_78" position="-1.81 0.45 4.02" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_79" position="-4.01 4.18 6.05" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_80" position="-4.73 -7.58 0.55" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_81" position="-3.38 -7.36 0.64" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_82" position="3.53 4.36 -2.45" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_83" position="1.99 -0.46 -4.74" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_84" position="-5.95 5.45 -7.26" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_85" position="-3.77 3.93 -0.94" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_86" position="-1.44 -4.52 -4.16" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_87" position="-2.92 -4.24 5.36" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_88" position="2.57 -4.13 1.53" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_89" position="-2.48 5.18 6.72" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_90" position="7.48 -7.22 -3.63" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_91" position="-0.05 -0.95 -4.16" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_92" position="-5.21 7.25 5.97" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_93" position="6.13 3.77 -0.21" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_94" position="4.11 3.93 -6.83" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_95" position="-5.77 -6.39 0.34" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_96" position="-1.85 2.96 2.37" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_97" position="-0.3 -1.94 -4.71" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_98" position="5.45 5.23 6.95" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_99" position="-0.19 1.11 -3.64" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_100" position="7.85 -2.45 -6.23" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_101" position="-3.92 -5.57 5.66" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_102" position="-4.53 -0.49 -6.71" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_103" position="-4.39 3.21 5.24" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_104" position="-0.49 6.77 -7.18" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_105" position="-6.73 -7.09 1.57" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_106" position="7.35 1.42 1.12" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_107" position="-1.56 -1.74 -6.24" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_108" position="4.44 5.62 -5.91" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_109" position="2.48 7.89 7.81" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_110" position="3.15 -2.73 6.42" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_111" position="5.55 -4.75 3.08" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_112" position="4.62 5.73 1.05" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_113" position="3.25 -4.13 -0.55" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_114" position="-2.52 6.26 5.32" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_115" position="4.49 -4.26 2.46" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_116" position="5.83 2.09 0.35" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_117" position="4.22 -2.99 3.17" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_118" position="1.38 0.33 -3.13" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_119" position="2.0 -2.5 -7.41" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_120" position="-1.42 -4.26 5.39" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_121" position="-4.98 1.09 -5.45" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_122" position="-7.47 0.14 -1.83" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_123" position="6.5 7.72 -1.22" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_124" position="-7.4 2.11 -0.68" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_125" position="-5.33 3.92 -3.39" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_126" position="3.76 6.85 6.34" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_127" position="-5.87 2.91 -7.95" scale="0.3 0.3 0.3"></a-gltf-model>
+    <a-gltf-model src="#model_128" position="-4.63 1.33 5.39" scale="0.3 0.3 0.3"></a-gltf-model>
+
+      <!-- Audio -->
+
+    </a-scene>
+    </template>
+
+    <!-- TTFF Measurement Script -->
+    <script src="../ttff-measurement-baseline.js"></script>
+    
+    <!-- Scene Injection Script -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var button = document.getElementById('ttff-start-button');
+        var overlay = document.getElementById('ttff-start-overlay');
+        var template = document.getElementById('scene-template');
+        
+        button.addEventListener('click', function() {
+          // Inject scene from template
+          var sceneContent = template.content.cloneNode(true);
+          document.body.appendChild(sceneContent);
+          
+          // Hide overlay
+          overlay.style.display = 'none';
+        }, true);
+      });
+    </script>
+  </body>
+</html>

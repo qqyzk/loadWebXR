@@ -61,7 +61,7 @@ def main():
         else:
             print("=== Step 2: Audio processing skipped ===")
 
-        # Step 3: 网页生成
+        # Step 3: 网页生成 (自动检测分支)
         if not args.skip_webpage:
             try:
                 print("=== Step 3: Webpage generation ===")
