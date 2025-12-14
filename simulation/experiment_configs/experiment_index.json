@@ -235,9 +235,9 @@
       "distribution": "10_20_70",
       "model_count": 8,
       "priority_counts": {
-        "P1": 0,
+        "P1": 1,
         "P2": 1,
-        "P3": 7
+        "P3": 6
       }
     },
     {

@@ -57,6 +57,14 @@ def generate_config(config_id: int, model_count=None, priority_distribution=None
         p2_count = int(model_count * p2_ratio)
         p3_count = model_count - p1_count - p2_count  # 确保总数正确
         
+        # 确保P1至少有1个模型（用于TTFF测试）
+        if p1_count == 0 and model_count > 0:
+            p1_count = 1
+            if p3_count > 0:
+                p3_count -= 1
+            elif p2_count > 0:
+                p2_count -= 1
+        
         priorities.extend([1] * p1_count)
         priorities.extend([2] * p2_count)
         priorities.extend([3] * p3_count)

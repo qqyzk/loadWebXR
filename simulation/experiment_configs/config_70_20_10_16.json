@@ -22,7 +22,7 @@
   },
   "audio_processing": {
     "input_audio": "htmls/audios/test.wav",
-    "clip_length": 3,
+    "clip_length": 7,
     "output_audio": "htmls/audios/audio_clip.wav"
   },
   "web_page": {
@@ -35,12 +35,12 @@
         "path": "models/model_1.glb",
         "full_path": "htmls/models/model_1.glb",
         "position": [
-          -3.14,
-          -6.4,
-          1.56
+          2.32,
+          -7.67,
+          -3.31
         ],
         "visible": true,
-        "priority": 2,
+        "priority": 1,
         "faces": 5000
       },
       {
@@ -48,12 +48,12 @@
         "path": "models/model_2.glb",
         "full_path": "htmls/models/model_2.glb",
         "position": [
-          -4.55,
-          7.73,
-          4.42
+          -5.41,
+          -6.5,
+          -0.5
         ],
         "visible": true,
-        "priority": 1,
+        "priority": 2,
         "faces": 5000
       },
       {
@@ -61,12 +61,12 @@
         "path": "models/model_3.glb",
         "full_path": "htmls/models/model_3.glb",
         "position": [
-          -6.43,
-          -4.95,
-          -2.09
+          7.46,
+          -0.63,
+          -6.54
         ],
         "visible": true,
-        "priority": 1,
+        "priority": 3,
         "faces": 5000
       },
       {
@@ -74,12 +74,12 @@
         "path": "models/model_4.glb",
         "full_path": "htmls/models/model_4.glb",
         "position": [
-          -0.86,
-          -2.28,
-          -3.76
+          1.24,
+          -7.26,
+          1.77
         ],
         "visible": true,
-        "priority": 3,
+        "priority": 2,
         "faces": 5000
       },
       {
@@ -87,9 +87,9 @@
         "path": "models/model_5.glb",
         "full_path": "htmls/models/model_5.glb",
         "position": [
-          -6.9,
-          -7.52,
-          6.29
+          5.12,
+          0.6,
+          -5.56
         ],
         "visible": true,
         "priority": 1,
@@ -100,12 +100,12 @@
         "path": "models/model_6.glb",
         "full_path": "htmls/models/model_6.glb",
         "position": [
-          3.95,
-          -2.58,
-          -6.83
+          -1.71,
+          0.47,
+          -7.77
         ],
         "visible": true,
-        "priority": 1,
+        "priority": 3,
         "faces": 5000
       },
       {
@@ -113,12 +113,12 @@
         "path": "models/model_7.glb",
         "full_path": "htmls/models/model_7.glb",
         "position": [
-          2.58,
-          5.88,
-          2.24
+          2.0,
+          -6.46,
+          -4.06
         ],
         "visible": true,
-        "priority": 1,
+        "priority": 2,
         "faces": 5000
       },
       {
@@ -126,9 +126,9 @@
         "path": "models/model_8.glb",
         "full_path": "htmls/models/model_8.glb",
         "position": [
-          -2.03,
-          -5.83,
-          -0.17
+          -0.71,
+          -0.28,
+          4.09
         ],
         "visible": true,
         "priority": 1,
@@ -139,9 +139,9 @@
         "path": "models/model_9.glb",
         "full_path": "htmls/models/model_9.glb",
         "position": [
-          6.43,
-          -4.35,
-          -7.72
+          4.22,
+          5.4,
+          -3.49
         ],
         "visible": true,
         "priority": 1,
@@ -152,9 +152,9 @@
         "path": "models/model_10.glb",
         "full_path": "htmls/models/model_10.glb",
         "position": [
-          -7.79,
-          -4.46,
-          -2.2
+          -1.28,
+          4.35,
+          6.73
         ],
         "visible": true,
         "priority": 1,
@@ -165,9 +165,9 @@
         "path": "models/model_11.glb",
         "full_path": "htmls/models/model_11.glb",
         "position": [
-          -1.96,
-          -4.66,
-          -4.91
+          6.13,
+          5.68,
+          -4.05
         ],
         "visible": true,
         "priority": 1,
@@ -178,9 +178,9 @@
         "path": "models/model_12.glb",
         "full_path": "htmls/models/model_12.glb",
         "position": [
-          0.07,
-          -5.47,
-          7.1
+          -6.56,
+          -5.45,
+          4.37
         ],
         "visible": true,
         "priority": 1,
@@ -191,9 +191,9 @@
         "path": "models/model_13.glb",
         "full_path": "htmls/models/model_13.glb",
         "position": [
-          7.09,
-          4.95,
-          -0.89
+          6.58,
+          4.1,
+          6.63
         ],
         "visible": true,
         "priority": 1,
@@ -204,12 +204,12 @@
         "path": "models/model_14.glb",
         "full_path": "htmls/models/model_14.glb",
         "position": [
-          -6.25,
-          -1.2,
-          -7.91
+          -0.35,
+          3.64,
+          3.67
         ],
         "visible": true,
-        "priority": 3,
+        "priority": 1,
         "faces": 5000
       },
       {
@@ -217,12 +217,12 @@
         "path": "models/model_15.glb",
         "full_path": "htmls/models/model_15.glb",
         "position": [
-          -4.99,
-          5.96,
-          4.4
+          5.08,
+          0.18,
+          2.05
         ],
         "visible": true,
-        "priority": 2,
+        "priority": 1,
         "faces": 5000
       },
       {
@@ -230,18 +230,18 @@
         "path": "models/model_16.glb",
         "full_path": "htmls/models/model_16.glb",
         "position": [
-          7.6,
-          6.46,
-          3.57
+          2.36,
+          -5.95,
+          5.84
         ],
         "visible": true,
-        "priority": 2,
+        "priority": 1,
         "faces": 5000
       }
     ],
     "audio": {
       "path": "audios/audio_clip.wav",
-      "length": 3,
+      "length": 7,
       "autoplay": false,
       "priority": 3
     },
