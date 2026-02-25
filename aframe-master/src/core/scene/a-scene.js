@@ -722,24 +722,21 @@ export class AScene extends AEntity {
       this.emit('first-render', { time: firstRenderTime });
     }
 
-    // Performance monitoring code - commented out for performance testing
-    // if(!this.allAssetsLoaded || this.afterLoadedFrame < 30){
-    //   var currentTime = performance.now();
-    //   var monitorDelta = this.lastFrameTime ? currentTime - this.lastFrameTime : 0;
-    //   this.lastFrameTime = currentTime;
-    //   console.log('debug: scene frame time:', monitorDelta.toFixed(2) + 'ms, total time:', currentTime.toFixed(2));
-    //   // 跳过第一帧（monitorDelta为0）
-    //   if (monitorDelta > 0) {
-    //     this.remTimes.push({'delta': monitorDelta, 'status': this.allAssetsLoaded});
-    //   }
-    //
-    //   if(this.allAssetsLoaded){
-    //     this.afterLoadedFrame+=1;
-    //     if(this.afterLoadedFrame === 30 ){
-    //       this.saveTimes();
-    //     }
-    //   }
-    // }
+    // Runtime smoothness: record each frame time (after render started, i.e. post priority-1)
+    if (!this.allAssetsLoaded || this.afterLoadedFrame < 1) {
+      var currentTime = performance.now();
+      var monitorDelta = this.lastFrameTime ? currentTime - this.lastFrameTime : 0;
+      this.lastFrameTime = currentTime;
+      if (monitorDelta > 0) {
+        this.remTimes.push({ delta: monitorDelta, allAssetsLoaded: this.allAssetsLoaded });
+      }
+      if (this.allAssetsLoaded) {
+        this.afterLoadedFrame += 1;
+        if (this.afterLoadedFrame === 1) {
+          this.saveTimes();
+        }
+      }
+    }
     if (savedBackground) {
       this.object3D.background = savedBackground;
     }
