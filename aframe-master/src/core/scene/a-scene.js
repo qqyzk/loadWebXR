@@ -667,18 +667,7 @@ export class AScene extends AEntity {
 
   saveTimes () {
     const data = JSON.stringify(this.remTimes, null, 2);
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'performance_data.json';
-    a.style.display = 'none';
-
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    console.log('[A-Frame performance_data]', data);
   }
 
   /**

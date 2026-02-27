@@ -1,15 +1,16 @@
 /* global customElements */
 /**
  * a-assets-priority-only.js
- * Ablation variant: priority only, no greedy scheduling, no chunking.
- * Priority 1 loads fully → firstloaded → render starts; then priority 2 loads fully,
- * then priority 3 loads fully (no per-frame budget for 2 and 3).
+ * Ablation variant: priority only, no greedy, no chunking. Scene tasks run as soon as
+ * each asset's network completes (concurrent scene tasks via registered promises).
  *
- * To use: In src/index.js change:
- *   import './core/a-assets.js';
- * to:
- *   import './core/a-assets-priority-only.js';
- * Then run the build (e.g. npm run build).
+ * To use: In src/index.js:
+ *   1) Change: import './core/a-assets.js' → import './core/a-assets-priority-only.js'
+ *   2) After: import './components/index.js', add:
+ *      import './components/gltf-model-priority-only.js';
+ *      import './components/sound-priority-only.js';
+ *      (so they override the default gltf-model and sound)
+ *   Then run the build (e.g. npm run build).
  */
 import * as THREE from 'three';
 import { ANode } from './a-node.js';
@@ -28,6 +29,7 @@ class AAssets extends ANode {
     this.networkQueues = {1: [], 2: [], 3: []};
     this.sceneQueues = {1: [], 2: [], 3: []};
     this.sceneTaskCount = {1: 0, 2: 0, 3: 0};
+    this.scenePromises = {1: [], 2: [], 3: []};
     this.currentPriority = 1;
     this.allTasksDone = false;
     this.sceneTaskDone = 0;
@@ -78,8 +80,8 @@ class AAssets extends ANode {
   }
 
   /**
-   * Load one priority group fully: network transfer then all scene tasks.
-   * No per-frame budget; runs to completion.
+   * Load one priority group fully: network transfer then scene tasks run as soon as
+   * each asset's network completes (concurrent scene tasks via registered promises).
    */
   async loadPriorityGroupFully (priority) {
     const group = this.networkQueues[priority];
@@ -94,22 +96,17 @@ class AAssets extends ANode {
     });
 
     this.currentPriority = priority;
-    this.sceneTaskDone = 0;
 
-    // Yield until entities (gltf-model etc.) have connected and called addSceneTaskCount.
-    // Otherwise sceneTaskCount[priority] is 0 and we exit the loop below without ever awaiting.
+    // Yield until entities have connected and registered their scene promises.
     while (group.length > 0 && this.sceneTaskCount[priority] === 0) {
       await this.delay(2);
     }
-
-    while (this.sceneTaskDone < this.sceneTaskCount[priority]) {
-      if (this.sceneQueues[priority].length !== 0) {
-        await this.doSceneTask();
-        this.sceneTaskDone++;
-      } else {
-        await this.delay(2);
-      }
+    while (this.scenePromises[priority].length < this.sceneTaskCount[priority]) {
+      await this.delay(2);
     }
+
+    await Promise.all(this.scenePromises[priority]);
+    this.scenePromises[priority] = [];
   }
 
   delay (ms) {
@@ -145,6 +142,18 @@ class AAssets extends ANode {
 
   registerSceneTask (task) {
     this.sceneQueues[task.priority].push(task);
+  }
+
+  registerScenePromise (priority, promise) {
+    this.scenePromises[priority].push(promise);
+  }
+
+  runGLTFSceneTask (task) {
+    return this.doNormalGLTFTask(task);
+  }
+
+  runSoundSceneTask (task) {
+    return this.doSoundTask(task);
   }
 
   doGLTFTask (task) {
