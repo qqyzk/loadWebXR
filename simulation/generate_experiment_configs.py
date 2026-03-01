@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 生成实验配置脚本
-生成 4种优先级分布 × 5种资源总数 = 20种配置组合
+生成 4种优先级分布 × 6种资源总数 = 24种配置组合，可按面数输出到 experiment_configs/{faces}/
 
 优先级分布：
 1. (70%, 20%, 10%) - P1主导
@@ -9,8 +9,8 @@
 3. (20%, 30%, 50%) - 均衡偏P3
 4. (10%, 20%, 70%) - P3主导
 
-资源总数：
-16, 32, 64, 128, 256
+资源总数：8, 16, 32, 64, 128, 256
+面数：5000, 10000, 20000, 40000, 80000（输出到 experiment_configs/{faces}/，路径指向 htmls/{faces}/）
 """
 
 import os
@@ -28,101 +28,116 @@ PRIORITY_DISTRIBUTIONS = {
 
 MODEL_COUNTS = [8, 16, 32, 64, 128, 256]
 
+# 支持的面数（experiment_configs/{faces}/、htmls/{faces}/）
+DEFAULT_FACES_LIST = [10000, 20000, 40000, 80000]
 
-def generate_all_configs(output_dir="experiment_configs", use_baseline=False):
+
+def generate_all_configs_for_faces(output_base_dir="experiment_configs", faces_list=None, use_baseline=False):
     """
-    生成所有实验配置
+    为每种面数生成 24 个实验配置，写入 experiment_configs/{faces}/
     
     Args:
-        output_dir: 输出目录
-        use_baseline: 如果为True，在文件名中添加baseline标记
+        output_base_dir: 实验配置根目录（其下按面数分子目录）
+        faces_list: 面数列表，如 [10000, 20000, 40000, 80000]；None 时用 DEFAULT_FACES_LIST
+        use_baseline: 如果为 True，在文件名中添加 baseline 标记
     """
-    os.makedirs(output_dir, exist_ok=True)
+    if faces_list is None:
+        faces_list = DEFAULT_FACES_LIST
     
+    for faces in faces_list:
+        output_dir = os.path.join(output_base_dir, str(faces))
+        os.makedirs(output_dir, exist_ok=True)
+        print(f"\n--- faces = {faces} -> {output_dir}/ ---")
+        _generate_one_faces_set(output_dir, faces, use_baseline)
+
+
+def _generate_one_faces_set(output_dir, faces, use_baseline):
+    """为单一面数生成 24 个 config，写入 output_dir。"""
     config_id = 1
     all_configs = []
     
     for dist_name, dist_values in PRIORITY_DISTRIBUTIONS.items():
         for model_count in MODEL_COUNTS:
-            # 生成配置
             config = generate_config(
                 config_id=config_id,
                 model_count=model_count,
-                priority_distribution=dist_values
+                priority_distribution=dist_values,
+                faces=faces,
             )
             
-            # 修改输出路径
-            branch_suffix = "baseline" if use_baseline else "main"
             filename = f"config_{dist_name}_{model_count}.json"
             config_path = os.path.join(output_dir, filename)
             
-            # 同时也更新web_page中的output_path
             html_filename = f"index_{dist_name}_{model_count}.html"
-            config["web_page"]["output_path"] = f"htmls/{html_filename}"
+            config["web_page"]["output_path"] = f"htmls/{faces}/{html_filename}"
             config["web_page"]["title"] = f"Experiment {dist_name} N={model_count}"
             
-            # 保存配置
             with open(config_path, "w", encoding="utf-8") as f:
                 json.dump(config, f, indent=2, ensure_ascii=False)
             
-            # 统计信息
             exp_cfg = config["web_page"]["experiment_config"]
             p1_count = exp_cfg["priority_counts"]["P1"]
             p2_count = exp_cfg["priority_counts"]["P2"]
             p3_count = exp_cfg["priority_counts"]["P3"]
             
-            print(f"[{config_id:2d}/20] {filename}")
-            print(f"        Priority: P1={p1_count:3d}, P2={p2_count:3d}, P3={p3_count:3d}")
+            print(f"  [{config_id:2d}/24] {filename}  P1={p1_count}, P2={p2_count}, P3={p3_count}")
             
             all_configs.append({
                 "id": config_id,
                 "file": filename,
                 "distribution": dist_name,
                 "model_count": model_count,
-                "priority_counts": {
-                    "P1": p1_count,
-                    "P2": p2_count,
-                    "P3": p3_count
-                }
+                "faces": faces,
+                "priority_counts": {"P1": p1_count, "P2": p2_count, "P3": p3_count},
             })
-            
             config_id += 1
     
-    # 生成索引文件
     index_path = os.path.join(output_dir, "experiment_index.json")
     with open(index_path, "w", encoding="utf-8") as f:
         json.dump({
             "total_configs": len(all_configs),
+            "faces": faces,
             "priority_distributions": {
-                name: {"P1": vals[0], "P2": vals[1], "P3": vals[2]} 
+                name: {"P1": vals[0], "P2": vals[1], "P3": vals[2]}
                 for name, vals in PRIORITY_DISTRIBUTIONS.items()
             },
             "model_counts": MODEL_COUNTS,
-            "configs": all_configs
+            "configs": all_configs,
         }, f, indent=2, ensure_ascii=False)
     
-    print(f"\n✅ 已生成 {len(all_configs)} 个配置文件")
-    print(f"✅ 索引文件: {index_path}")
-    print(f"\n配置目录: {output_dir}/")
+    print(f"  -> 索引: {index_path}")
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="生成实验配置 (4种优先级分布 × 5种资源总数 = 20种配置)"
+        description="按面数生成实验配置到 experiment_configs/{faces}/ (4 分布 × 6 模型数 = 24 配置/面数)"
     )
     parser.add_argument(
-        "--output_dir", 
-        type=str, 
+        "--output_dir",
+        type=str,
         default="experiment_configs",
-        help="输出目录 (默认: experiment_configs)"
+        help="实验配置根目录，其下按面数分子目录 (默认: experiment_configs)",
+    )
+    parser.add_argument(
+        "--faces",
+        type=int,
+        nargs="+",
+        default=None,
+        metavar="N",
+        help="面数列表，如 --faces 5000 10000 20000 40000 80000；默认: 10000 20000 40000 80000",
     )
     args = parser.parse_args()
     
-    print(f"=" * 60)
-    print(f"生成实验配置")
-    print(f"=" * 60)
+    print("=" * 60)
+    print("生成实验配置 (experiment_configs/{faces}/)")
+    print("=" * 60)
     
-    generate_all_configs(output_dir=args.output_dir, use_baseline=False)
+    generate_all_configs_for_faces(
+        output_base_dir=args.output_dir,
+        faces_list=args.faces,
+        use_baseline=False,
+    )
+    print("\n完成。之后对每种面数运行: python main.py --configs_dir experiment_configs/<faces>")
 
 
 if __name__ == "__main__":

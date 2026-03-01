@@ -5,7 +5,7 @@ import random
 import math
 
 
-def generate_config(config_id: int, model_count=None, priority_distribution=None):
+def generate_config(config_id: int, model_count=None, priority_distribution=None, faces=None):
     """
     Generate configuration with support for priority distribution
     
@@ -13,6 +13,7 @@ def generate_config(config_id: int, model_count=None, priority_distribution=None
         config_id: Configuration ID
         model_count: Total number of models (16, 32, 64, 128, 256), if None will use random 4-8
         priority_distribution: Tuple of (P1%, P2%, P3%), e.g., (0.7, 0.2, 0.1) or None for random
+        faces: 每个模型的面数，用于 output_dir/html 路径；None 时用旧路径 htmls/models/
     """
     # Step 1: 确定模型数量
     if model_count is None:
@@ -30,23 +31,30 @@ def generate_config(config_id: int, model_count=None, priority_distribution=None
         if not math.isclose(total, 1.0, rel_tol=1e-5):
             raise ValueError(f"Priority distribution must sum to 1.0, got {total}")
     
-    # Step 3: 生成faces_list（固定5000 faces）
-    # 所有模型使用相同的复杂度，但通过编号区分
-    faces_list = [5000] * model_count
+    # Step 3: 生成 faces_list；faces 为 None 时沿用 5000（兼容旧 configs）
+    faces_per_model = faces if faces is not None else 5000
+    faces_list = [faces_per_model] * model_count
     
     clip_length = random.randint(1, 10)
 
-    # Step 4: 模型生成部分 (固定 output_dir)
+    # 路径前缀：按面数分目录时用 htmls/{faces}/，否则 htmls/
+    if faces is not None:
+        htmls_base = f"htmls/{faces}"
+    else:
+        htmls_base = "htmls"
+
+    # Step 4: 模型生成部分
     model_generation = {
-        "output_dir": "htmls/models/",
+        "output_dir": f"{htmls_base}/models/",
         "faces_list": faces_list
     }
 
-    # Step 5: 音频处理部分 (固定 input/output_audio)
+    # Step 5: 音频处理部分（输入统一用 5000 的 test.wav，输出按面数目录）
+    input_audio = "htmls/5000/audios/test.wav" if (faces is not None and faces != 5000) else f"{htmls_base}/audios/test.wav"
     audio_processing = {
-        "input_audio": "htmls/audios/test.wav",
+        "input_audio": input_audio,
         "clip_length": clip_length,
-        "output_audio": "htmls/audios/audio_clip.wav"
+        "output_audio": f"{htmls_base}/audios/audio_clip.wav"
     }
 
     # Step 6: 分配优先级
@@ -76,15 +84,16 @@ def generate_config(config_id: int, model_count=None, priority_distribution=None
         priorities = [1 if random.random() < 0.5 else 3 for _ in range(model_count)]
 
     # Step 7: 网页生成部分 (output_path/title 带 id)
-    webpage_output_dir = "htmls"
+    webpage_output_dir = htmls_base
     models = []
 
-    for idx, (faces, priority) in enumerate(zip(faces_list, priorities), start=1):
+    for idx, (face_count, priority) in enumerate(zip(faces_list, priorities), start=1):
         # 使用编号命名：model_1.glb, model_2.glb, ...
         model_filename = f"model_{idx}.glb"
-        model_full_path = os.path.join("htmls/models/", model_filename)
+        models_dir = f"{htmls_base}/models/"
+        model_full_path = os.path.join(models_dir, model_filename)
         model_relative_path = os.path.join(
-            os.path.relpath("htmls/models/", webpage_output_dir),
+            os.path.relpath(models_dir, webpage_output_dir),
             model_filename
         ).replace("\\", "/")
 
@@ -103,17 +112,17 @@ def generate_config(config_id: int, model_count=None, priority_distribution=None
             "position": [round(x, 2), round(y, 2), round(z, 2)],
             "visible": visible,
             "priority": priority,
-            "faces": faces  # 保留faces信息用于生成模型
+            "faces": face_count  # 保留 faces 信息用于生成模型
         })
 
-    audio_relative_path = os.path.relpath("htmls/audios/audio_clip.wav", webpage_output_dir).replace("\\", "/")
+    audio_relative_path = os.path.relpath(f"{htmls_base}/audios/audio_clip.wav", webpage_output_dir).replace("\\", "/")
     
     # 音频不自动播放
     audio_autoplay = False
 
     web_page = {
         "title": f"A-Frame Scene {config_id}",
-        "output_path": f"htmls/index_{config_id}.html",
+        "output_path": f"{htmls_base}/index_{config_id}.html",
         "model_count": model_count,
         "models": models,
         "audio": {

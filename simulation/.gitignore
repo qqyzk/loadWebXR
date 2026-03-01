@@ -11,14 +11,14 @@ env/
 ENV/
 .venv
 
-# Generated outputs
-htmls/models/*.glb
-htmls/audios/*.wav
-htmls/audios/*.mp3
-htmls/index_*.html
+# Generated outputs (per-face dirs: htmls/5000/, htmls/10000/, ...)
+htmls/*/
 
-# Keep example files
-!htmls/audios/test.wav
+# Generated experiment configs (per-face: experiment_configs/5000/, ...)
+experiment_configs/*/
+
+# Keep source audio for pipeline (optional)
+!htmls/5000/audios/test.wav
 
 # Generated A-Frame library
 lib/my-aframe.js
