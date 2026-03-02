@@ -60,8 +60,16 @@ def load_frames(filepath):
             "loading_end_index": loading_end,
         }
 
-    # profile
-    frame_times = [float(x["frameDurationMs"]) for x in data]
+    # profile: only priority 2 and 3 (drop priority 1); frame time = lastTrueRenderTimeMs
+    data = [x for x in data if x.get("priority") in (2, 3)]
+    if not data:
+        return {
+            "format": "profile",
+            "frame_times_ms": [],
+            "time_ms": [],
+            "loading_end_index": None,
+        }
+    frame_times = [float(x["lastTrueRenderTimeMs"]) for x in data]
     t0 = float(data[0]["frameStart"])
     time_ms = [float(x["frameStart"]) - t0 for x in data]
     return {
