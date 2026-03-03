@@ -2,7 +2,7 @@
 # Switch A-Frame ablation version: copy -prism / -no-chunk / -priority-only / -profile to unsuffixed names
 # so index.js and components/index.js (which import a-assets.js, gltf-model.js, sound.js) load the right variant.
 #
-# Usage: ./switch-version.sh <prism|no-chunk|priority-only|profile>
+# Usage: ./switch-version.sh <prism|no-chunk|priority-only|profile|previous|extreme>
 # Run from aframe-master. Then run npm run build (or your build command).
 
 set -e
@@ -35,8 +35,20 @@ case "$1" in
     cp "${COMP}/sound-prism.js" "${COMP}/sound.js"
     echo "Switched to profile (no-chunk + scene/network task timing JSON to console)."
     ;;
+  previous)
+    cp "${CORE}/a-assets-previous.js" "${CORE}/a-assets.js"
+    cp "${COMP}/gltf-model-prism.js" "${COMP}/gltf-model.js"
+    cp "${COMP}/sound-prism.js" "${COMP}/sound.js"
+    echo "Switched to previous (saved profile variant)."
+    ;;
+  extreme)
+    cp "${CORE}/a-assets-extreme.js" "${CORE}/a-assets.js"
+    cp "${COMP}/gltf-model-prism.js" "${COMP}/gltf-model.js"
+    cp "${COMP}/sound-prism.js" "${COMP}/sound.js"
+    echo "Switched to extreme (profile + at most 1 task every N frames, N=3)."
+    ;;
   *)
-    echo "Usage: $0 <prism|no-chunk|priority-only|profile>"
+    echo "Usage: $0 <prism|no-chunk|priority-only|profile|previous|extreme>"
     exit 1
     ;;
 esac

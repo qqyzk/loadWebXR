@@ -7760,14 +7760,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var three_addons_loaders_GLTFLoader_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three/addons/loaders/GLTFLoader.js */ "./node_modules/three/examples/jsm/loaders/GLTFLoader.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
+
+
+
 /**
- * gltf-model-priority-only.js
- * For use with a-assets-priority-only: registers a promise that runs the scene task
- * as soon as this asset's network load completes (concurrent scene tasks).
- * No chunking; same component name 'gltf-model' so load after components/index.js to override.
+ * glTF model loader.
  */
-
-
 var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerComponent)('gltf-model', {
   schema: {
     type: 'mymodel'
@@ -7807,24 +7805,77 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     if (assetEl.hasAttribute('priority')) {
       priority = parseInt(assetEl.getAttribute('priority'));
     }
-    assets.addSceneTaskCount({
-      priority: priority
-    });
-    var promise = assetEl.loaded().then(() => this.ready).then(() => assets.runGLTFSceneTask({
-      type: 'gltf-model',
-      src: src,
-      el: self.el,
-      loader: self.loader,
-      theself: self,
-      priority: priority
-    }));
-    assets.registerScenePromise(priority, promise);
+
+    // Check if this is a chunked model
+    if (assets.isChunkedModel && assets.isChunkedModel(assetEl)) {
+      // Handle chunked model - 新的分块处理逻辑
+      this.handleChunkedModel(assetEl, src, priority, assets);
+    } else {
+      // Handle non-chunked model (original logic)
+      assets.addSceneTaskCount({
+        priority: priority
+      });
+      assetEl.loaded().then(() => this.ready).then(() => {
+        assets.registerSceneTask({
+          type: 'gltf-model',
+          src: src,
+          el: self.el,
+          loader: self.loader,
+          theself: self,
+          priority: priority
+        });
+      });
+    }
   },
   remove: function () {
     if (!this.model) {
       return;
     }
     this.el.removeObject3D('mesh');
+  },
+  // 新增：处理分块模型
+  handleChunkedModel: function (assetEl, src, priority, assets) {
+    var self = this;
+    const chunkCount = assets.getChunkCount(assetEl);
+
+    // console.log('🔍 [GLTF-COMPONENT] Chunked model detected:', {
+    //   src: src,
+    //   chunkCount: chunkCount,
+    //   priority: priority
+    // });
+
+    // 为每个分块增加场景任务计数
+    for (let i = 1; i <= chunkCount; i++) {
+      assets.addSceneTaskCount({
+        priority: priority
+      });
+    }
+
+    // 等待每个分块的网络传输完成，然后注册GLTF加载任务
+    this.ready.then(() => {
+      for (let i = 1; i <= chunkCount; i++) {
+        const chunkPromise = assets.getChunkPromise(src, i);
+        if (chunkPromise) {
+          chunkPromise.then(() => {
+            // console.log('📦 [GLTF-COMPONENT] Chunk network complete, registering scene task:', i);
+
+            // 单个分块网络传输完成，注册GLTF加载任务
+            assets.registerSceneTask({
+              type: 'chunk-gltf',
+              baseSrc: src,
+              chunkIndex: i,
+              totalChunks: chunkCount,
+              el: self.el,
+              loader: self.loader,
+              theself: self,
+              priority: priority
+            });
+          });
+        } else {
+          console.error('❌ [GLTF-COMPONENT] No chunk promise found for:', src, 'chunk:', i);
+        }
+      }
+    });
   }
 });
 
@@ -16349,16 +16400,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 /* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
-/**
- * sound-priority-only.js
- * For use with a-assets-priority-only: registers a promise that runs the scene task
- * as soon as this asset's network load completes (concurrent scene tasks).
- * Same component name 'sound' so load after components/index.js to override.
- */
 
 
 
 var warn = (0,_utils_index_js__WEBPACK_IMPORTED_MODULE_1__.debug)('components:sound:warn');
+
+/**
+ * Sound component.
+ */
 var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerComponent)('sound', {
   schema: {
     autoplay: {
@@ -16410,6 +16459,8 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     this.pool = new three__WEBPACK_IMPORTED_MODULE_2__.Group();
     this.loaded = false;
     this.mustPlay = false;
+
+    // Don't pass evt because playSound takes a function as parameter.
     this.playSoundBound = function () {
       self.playSound();
     };
@@ -16419,6 +16470,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     var i;
     var sound;
     var srcChanged = data.src !== oldData.src;
+    // Create new sound if not yet created or changing `src`.
     if (srcChanged) {
       if (!data.src) {
         return;
@@ -16435,6 +16487,8 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
       }
       sound.setLoop(data.loop);
       sound.setLoopStart(data.loopStart);
+
+      // With a loop start specified without a specified loop end, the end of the loop should be the end of the file
       if (data.loopStart !== 0 && data.loopEnd === 0) {
         sound.setLoopEnd(sound.buffer.duration);
       } else {
@@ -16446,6 +16500,8 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     if (data.on !== oldData.on) {
       this.updateEventListener(oldData.on);
     }
+
+    // All sound values set. Load in `src`.
     if (srcChanged) {
       var self = this;
       this.loaded = false;
@@ -16459,15 +16515,29 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
       assets.addSceneTaskCount({
         priority: priority
       });
-      var promise = assetEl.loaded().then(() => assets.runSoundSceneTask({
-        type: 'sound',
-        src: src,
-        el: self.el,
-        loader: this.audioLoader,
-        theself: self,
-        priority: priority
-      }));
-      assets.registerScenePromise(priority, promise);
+      assetEl.loaded().then(() => {
+        assets.registerSceneTask({
+          type: 'sound',
+          src: src,
+          el: self.el,
+          loader: this.audioLoader,
+          theself: self,
+          sound: sound,
+          priority: priority
+        });
+        // this.audioLoader.load(src, function (buffer) {
+        //   for (i = 0; i < self.pool.children.length; i++) {
+        //     sound = self.pool.children[i];
+        //     sound.setBuffer(buffer);
+        //   }
+        //   self.loaded = true;
+
+        //   // Remove this key from cache, otherwise we can't play it again
+        //   THREE.Cache.remove(data.src);
+        //   if (self.data.autoplay || self.mustPlay) { self.playSound(self.processSound); }
+        //   self.el.emit('sound-loaded', self.evtDetail, false);
+        // });
+      });
     }
   },
   pause: function () {
@@ -16493,9 +16563,13 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
         sound.disconnect();
       }
     } catch (e) {
+      // disconnect() will throw if it was never connected initially.
       warn('Audio source not properly disconnected');
     }
   },
+  /**
+  *  Update listener attached to the user defined on event.
+  */
   updateEventListener: function (oldEvt) {
     var el = this.el;
     if (oldEvt) {
@@ -16506,6 +16580,9 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
   removeEventListener: function () {
     this.el.removeEventListener(this.data.on, this.playSoundBound);
   },
+  /**
+   * Removes current sound object, creates new sound object, adds to entity.
+   */
   setupSound: function () {
     var el = this.el;
     var i;
@@ -16516,14 +16593,20 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
       this.stopSound();
       el.removeObject3D('sound');
     }
+
+    // Only want one AudioListener. Cache it on the scene.
     var listener = this.listener = sceneEl.audioListener || new three__WEBPACK_IMPORTED_MODULE_2__.AudioListener();
     sceneEl.audioListener = listener;
     if (sceneEl.camera) {
       sceneEl.camera.add(listener);
     }
+
+    // Wait for camera if necessary.
     sceneEl.addEventListener('camera-set-active', function (evt) {
       evt.detail.cameraEl.getObject3D('camera').add(listener);
     });
+
+    // Create [poolSize] audio instances and attach them to pool
     this.pool = new three__WEBPACK_IMPORTED_MODULE_2__.Group();
     for (i = 0; i < this.data.poolSize; i++) {
       sound = this.data.positional ? new three__WEBPACK_IMPORTED_MODULE_2__.PositionalAudio(listener) : new three__WEBPACK_IMPORTED_MODULE_2__.Audio(listener);
@@ -16538,6 +16621,9 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
       };
     }
   },
+  /**
+   * Pause all the sounds in the pool.
+   */
   pauseSound: function () {
     var i;
     var sound;
@@ -16551,6 +16637,9 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
       sound.pause();
     }
   },
+  /**
+   * Look for an unused sound in the pool and play it if found.
+   */
   playSound: function (processSound) {
     var found;
     var i;
@@ -16582,6 +16671,9 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     this.mustPlay = false;
     this.processSound = undefined;
   },
+  /**
+   * Stop all the sounds in the pool.
+   */
   stopSound: function () {
     var i;
     var sound;
@@ -18942,17 +19034,44 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 /* global customElements */
 /**
- * a-assets-priority-only.js
- * Ablation variant: priority only, no greedy, no chunking. Scene tasks run as soon as
- * each asset's network completes (concurrent scene tasks via registered promises).
+ * a-assets-profile.js
  *
- * To use: In src/index.js:
- *   1) Change: import './core/a-assets.js' → import './core/a-assets-priority-only.js'
- *   2) After: import './components/index.js', add:
- *      import './components/gltf-model-priority-only.js';
- *      import './components/sound-priority-only.js';
- *      (so they override the default gltf-model and sound)
- *   Then run the build (e.g. npm run build).
+ * Same logic as a-assets-no-chunk.js, with one addition: in the doTasks loop (and the
+ * loadFirstPriority while-loop), we measure the time of each call and record task info
+ * (type, src, id) so we can output a per-frame profile. Timing is done only in the loop;
+ * doNetworkTask/doSceneTask are changed only to return task descriptors for logging.
+ *
+ * === Changes vs no-chunk (only these) ===
+ *
+ * 1. Constructor: add _profileFrameIndex, _profileFrameTasks, _profileFrames,
+ *    _profileFrameStart, _profileFramePriority, _profileFrameNetworkMs.
+ *
+ * 2. doTasks (render-loop):
+ *    - Start: set _profileFrameStart = startTime, _profileFrameTasks = [],
+ *      _profileFrameNetworkMs = 0, _profileFramePriority = this.currentPriority.
+ *    - Before doNetworkTask(): t0 = performance.now(); info = this.doNetworkTask();
+ *      if (info) push { ...info, durationMs: now()-t0 }, _profileFrameNetworkMs += duration.
+ *    - Before await doSceneTask(): t0 = performance.now(); info = await this.doSceneTask();
+ *      if (info) push { ...info, durationMs: now()-t0 }.
+ *    - When allTasksDone: setTimeout 0, console.log(JSON.stringify(_profileFrames, null, 2)).
+ *    - After while: if (_profileFrameTasks.length) push one frame object to _profileFrames,
+ *      then _profileFrameIndex++.
+ *
+ * 3. loadFirstPriority (its while-loop): same idea — before each await doSceneTask(),
+ *    t0 = now(), info = await doSceneTask(), if (info) push to _profileFrameTasks with
+ *    durationMs = now()-t0. We must init _profileFrame* at start of loadFirstPriority
+ *    and push a frame at end so priority-1 frames are included.
+ *
+ * 4. doNetworkTask: return task descriptor instead of task.load().
+ *    task = shift(); if (!task) return; get src, id, tag; task.load(); return { type:'network', subtype:tag, src, id }.
+ *
+ * 5. doSceneTask: after doing the work, return { type:'scene', subtype: task.type, src, id }
+ *    so the loop can log it (no timing inside doSceneTask).
+ *
+ * Output: one JSON array of frames. Each frame has frameIndex, priority, frameStart, frameEnd,
+ * frameDurationMs, taskDurationMs, networkTaskDurationMs, tasks: [].
+ * lastTrueRenderTimeMs (optional): user-perceived frame interval = this frameStart - previous render's
+ * frameStart; only present from the second render frame onward.
  */
 
 
@@ -18970,6 +19089,9 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
       2: [],
       3: []
     };
+    this.renderFirstFrame = true;
+    this.frameTimeBudget = 16.7;
+    this.safeMargin = this.frameTimeBudget * 0.3; // 30% of budget; effectiveBudget = frameTimeBudget - safeMargin
     this.networkQueues = {
       1: [],
       2: [],
@@ -18985,16 +19107,16 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
       2: 0,
       3: 0
     };
-    this.scenePromises = {
-      1: [],
-      2: [],
-      3: []
-    };
     this.currentPriority = 1;
+    this.currentStage = 0;
     this.allTasksDone = false;
     this.sceneTaskDone = 0;
+    this._profileFrameIndex = 0;
+    this._profileFrames = [];
+    this._profileLastRenderStartTime = null;
   }
   async doConnectedCallback() {
+    var self = this;
     super.doConnectedCallback();
     if (!this.parentNode.isScene) {
       throw new Error('<a-assets> must be a child of a <a-scene>.');
@@ -19003,12 +19125,14 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     await Promise.resolve();
     this.collectResources();
     this.load();
-    await this.loadPriorityGroupFully(1);
+    await this.loadFirstPriority();
     this.parentNode.emit('firstloaded');
-    await this.loadPriorityGroupFully(2);
-    await this.loadPriorityGroupFully(3);
-    this.allTasksDone = true;
-    this.parentNode.emit('all-assets-loaded');
+    this.parentNode.addEventListener('render', async function (event) {
+      const startTime = event.detail;
+      if (!self.allTasksDone) {
+        self.doTasks(startTime);
+      }
+    });
   }
   disconnectedCallback() {
     super.disconnectedCallback();
@@ -19033,35 +19157,91 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     if (el.hasAttribute('priority')) return parseInt(el.getAttribute('priority'));
     return 3;
   }
-
-  /**
-   * Load one priority group fully: network transfer then scene tasks run as soon as
-   * each asset's network completes (concurrent scene tasks via registered promises).
-   */
-  async loadPriorityGroupFully(priority) {
-    const group = this.networkQueues[priority];
+  async loadPriorityGroups(groups) {
+    for (let priority of groups) {
+      await this.loadGroup(priority);
+    }
+  }
+  async loadFirstPriority() {
+    const group = this.networkQueues[1];
     if (!group.length) return;
     group.map(item => {
       if (item.tagName === 'A-ASSET-ITEM') {
         this.loadAssetItem(item);
-      } else if (item.tagName === 'AUDIO') {
-        this.loadAudio(item);
       }
     });
-    this.currentPriority = priority;
-
-    // Yield until entities have connected and registered their scene promises.
-    while (group.length > 0 && this.sceneTaskCount[priority] === 0) {
-      await this.delay(2);
+    const frameStart = performance.now();
+    const frameTasks = [];
+    let frameNetworkMs = 0;
+    const framePriority = this.currentPriority;
+    while (true) {
+      if (this.sceneQueues[this.currentPriority].length !== 0) {
+        const lastUsedMs = performance.now() - frameStart;
+        const t0 = performance.now();
+        const info = await this.doSceneTask();
+        if (info) {
+          frameTasks.push({
+            ...info,
+            durationMs: performance.now() - t0,
+            lastUsedMs: lastUsedMs
+          });
+        }
+        this.sceneTaskDone++;
+      } else {
+        await this.delay(2);
+      }
+      if (this.sceneTaskDone === this.sceneTaskCount[this.currentPriority]) {
+        this.currentStage = 0;
+        this.sceneTaskDone = 0;
+        this.currentPriority++;
+        break;
+      }
     }
-    while (this.scenePromises[priority].length < this.sceneTaskCount[priority]) {
-      await this.delay(2);
+    if (frameTasks.length > 0) {
+      const frameEnd = performance.now();
+      const taskDurationMs = frameTasks.reduce(function (s, t) {
+        return s + (t.durationMs || 0);
+      }, 0);
+      const frameIndex = this._profileFrameIndex++;
+      this._profileFrames.push({
+        frameIndex: frameIndex,
+        priority: framePriority,
+        frameStart: frameStart,
+        frameEnd,
+        frameDurationMs: frameEnd - frameStart,
+        taskDurationMs: taskDurationMs,
+        networkTaskDurationMs: frameNetworkMs,
+        tasks: frameTasks
+      });
     }
-    await Promise.all(this.scenePromises[priority]);
-    this.scenePromises[priority] = [];
+  }
+  async loadGroup(priority) {
+    const group = this.networkQueues[priority];
+    if (!group.length) return;
+    await Promise.all(group.map(item => {
+      if (item.tagName === 'A-ASSET-ITEM') {
+        return this.loadAssetItem(item);
+      } else if (item.tagName === 'AUDIO') {
+        return this.loadAudio(item);
+      }
+    }));
   }
   delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  async doGroupSceneTask(priority) {
+    while (this.sceneQueues[this.currentPriority].length < this.priorityQueues[priority].length) {
+      await this.delay(2);
+    }
+    const group = this.sceneQueues[priority];
+    if (!group.length) return;
+    await Promise.all(group.map(item => {
+      if (item.type === 'gltf-model') {
+        return this.doGLTFTask(item);
+      } else if (item.type === 'sound') {
+        return this.doSoundTask(item);
+      }
+    }));
   }
   async loadAssetItem(item) {
     return item.load();
@@ -19090,14 +19270,100 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
   registerSceneTask(task) {
     this.sceneQueues[task.priority].push(task);
   }
-  registerScenePromise(priority, promise) {
-    this.scenePromises[priority].push(promise);
+  async doTasks(startTime) {
+    const frameStart = startTime;
+    const lastTrueRenderTimeMs = this._profileLastRenderStartTime != null ? frameStart - this._profileLastRenderStartTime : undefined;
+    this._profileLastRenderStartTime = frameStart;
+    const frameTasks = [];
+    let frameNetworkMs = 0;
+    const framePriority = this.currentPriority;
+    const effectiveBudget = this.frameTimeBudget - this.safeMargin;
+    while (performance.now() - startTime < effectiveBudget && !this.allTasksDone) {
+      if (this.currentStage === 0) {
+        if (this.networkQueues[this.currentPriority].length > 0) {
+          const lastUsedMs = performance.now() - startTime;
+          const t0 = performance.now();
+          const info = this.doNetworkTask();
+          if (info) {
+            const durationMs = performance.now() - t0;
+            frameTasks.push({
+              ...info,
+              durationMs: durationMs,
+              lastUsedMs: lastUsedMs,
+              curUsedMs: performance.now() - startTime
+            });
+            frameNetworkMs += durationMs;
+          }
+        } else {
+          this.currentStage = 1;
+        }
+      } else if (this.currentStage === 1) {
+        if (this.sceneQueues[this.currentPriority].length !== 0) {
+          const lastUsedMs = performance.now() - startTime;
+          const t0 = performance.now();
+          const info = await this.doSceneTask();
+          if (info) {
+            frameTasks.push({
+              ...info,
+              durationMs: performance.now() - t0,
+              lastUsedMs: lastUsedMs,
+              curUsedMs: performance.now() - startTime
+            });
+          }
+          this.sceneTaskDone++;
+        } else {
+          await this.delay(2);
+        }
+        if (this.sceneTaskDone === this.sceneTaskCount[this.currentPriority]) {
+          this.currentStage = 0;
+          this.sceneTaskDone = 0;
+          this.currentPriority++;
+          if (this.currentPriority > 3) {
+            this.allTasksDone = true;
+            const self = this;
+            setTimeout(function () {
+              console.log(JSON.stringify(self._profileFrames, null, 2));
+            }, 0);
+            this.parentNode.emit('all-assets-loaded');
+          }
+        }
+      }
+    }
+    if (frameTasks.length > 0) {
+      const frameEnd = performance.now();
+      const taskDurationMs = frameTasks.reduce(function (s, t) {
+        return s + (t.durationMs || 0);
+      }, 0);
+      const frameIndex = this._profileFrameIndex++;
+      const frameRecord = {
+        frameIndex: frameIndex,
+        priority: framePriority,
+        ...(lastTrueRenderTimeMs !== undefined && {
+          lastTrueRenderTimeMs: lastTrueRenderTimeMs
+        }),
+        frameStart: frameStart,
+        frameEnd,
+        frameDurationMs: frameEnd - frameStart,
+        taskDurationMs: taskDurationMs,
+        networkTaskDurationMs: frameNetworkMs,
+        tasks: frameTasks
+      };
+      this._profileFrames.push(frameRecord);
+    }
   }
-  runGLTFSceneTask(task) {
-    return this.doNormalGLTFTask(task);
-  }
-  runSoundSceneTask(task) {
-    return this.doSoundTask(task);
+  doNetworkTask() {
+    const task = this.networkQueues[this.currentPriority].shift();
+    if (!task) return undefined;
+    const src = task.getAttribute ? task.getAttribute('src') : null;
+    const id = task.getAttribute ? task.getAttribute('id') : null;
+    const tag = task.tagName ? task.tagName.toLowerCase() : 'unknown';
+    task.load();
+    return {
+      type: 'network',
+      subtype: tag,
+      src,
+      id
+    };
   }
   doGLTFTask(task) {
     return this.doNormalGLTFTask(task);
@@ -19145,11 +19411,20 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
   }
   async doSceneTask() {
     const task = this.sceneQueues[this.currentPriority].shift();
+    if (!task) return undefined;
     if (task.type === 'gltf-model') {
       await this.doGLTFTask(task);
     } else if (task.type === 'sound') {
       await this.doSoundTask(task);
     }
+    const src = task.src || task.el && task.el.getAttribute && task.el.getAttribute('src');
+    const id = task.el && task.el.getAttribute && task.el.getAttribute('id');
+    return {
+      type: 'scene',
+      subtype: task.type,
+      src,
+      id
+    };
   }
 }
 customElements.define('a-assets', AAssets);

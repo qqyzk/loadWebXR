@@ -1,16 +1,43 @@
 /* global customElements */
 /**
- * a-assets-priority-only.js
- * Ablation variant: priority only, no greedy, no chunking. Scene tasks run as soon as
- * each asset's network completes (concurrent scene tasks via registered promises).
+ * a-assets-profile.js
  *
- * To use: In src/index.js:
- *   1) Change: import './core/a-assets.js' → import './core/a-assets-priority-only.js'
- *   2) After: import './components/index.js', add:
- *      import './components/gltf-model-priority-only.js';
- *      import './components/sound-priority-only.js';
- *      (so they override the default gltf-model and sound)
- *   Then run the build (e.g. npm run build).
+ * Same logic as a-assets-no-chunk.js, with one addition: in the doTasks loop (and the
+ * loadFirstPriority while-loop), we measure the time of each call and record task info
+ * (type, src, id) so we can output a per-frame profile. Timing is done only in the loop;
+ * doNetworkTask/doSceneTask are changed only to return task descriptors for logging.
+ *
+ * === Changes vs no-chunk (only these) ===
+ *
+ * 1. Constructor: add _profileFrameIndex, _profileFrameTasks, _profileFrames,
+ *    _profileFrameStart, _profileFramePriority, _profileFrameNetworkMs.
+ *
+ * 2. doTasks (render-loop):
+ *    - Start: set _profileFrameStart = startTime, _profileFrameTasks = [],
+ *      _profileFrameNetworkMs = 0, _profileFramePriority = this.currentPriority.
+ *    - Before doNetworkTask(): t0 = performance.now(); info = this.doNetworkTask();
+ *      if (info) push { ...info, durationMs: now()-t0 }, _profileFrameNetworkMs += duration.
+ *    - Before await doSceneTask(): t0 = performance.now(); info = await this.doSceneTask();
+ *      if (info) push { ...info, durationMs: now()-t0 }.
+ *    - When allTasksDone: setTimeout 0, console.log(JSON.stringify(_profileFrames, null, 2)).
+ *    - After while: if (_profileFrameTasks.length) push one frame object to _profileFrames,
+ *      then _profileFrameIndex++.
+ *
+ * 3. loadFirstPriority (its while-loop): same idea — before each await doSceneTask(),
+ *    t0 = now(), info = await doSceneTask(), if (info) push to _profileFrameTasks with
+ *    durationMs = now()-t0. We must init _profileFrame* at start of loadFirstPriority
+ *    and push a frame at end so priority-1 frames are included.
+ *
+ * 4. doNetworkTask: return task descriptor instead of task.load().
+ *    task = shift(); if (!task) return; get src, id, tag; task.load(); return { type:'network', subtype:tag, src, id }.
+ *
+ * 5. doSceneTask: after doing the work, return { type:'scene', subtype: task.type, src, id }
+ *    so the loop can log it (no timing inside doSceneTask).
+ *
+ * Output: one JSON array of frames. Each frame has frameIndex, priority, frameStart, frameEnd,
+ * frameDurationMs, taskDurationMs, networkTaskDurationMs, tasks: [].
+ * lastTrueRenderTimeMs (optional): user-perceived frame interval = this frameStart - previous render's
+ * frameStart; only present from the second render frame onward.
  */
 import * as THREE from 'three';
 import { ANode } from './a-node.js';
@@ -26,16 +53,24 @@ class AAssets extends ANode {
     this.fileLoader = fileLoader;
     this.timeout = null;
     this.priorityQueues = {1: [], 2: [], 3: []};
+    this.renderFirstFrame = true;
+    this.frameTimeBudget = 16.7;
+    this.safeMargin = this.frameTimeBudget * 0.3; // 30% of budget; effectiveBudget = frameTimeBudget - safeMargin
     this.networkQueues = {1: [], 2: [], 3: []};
-    this.sceneQueues = {1: [], 2: [], 3: []};
-    this.sceneTaskCount = {1: 0, 2: 0, 3: 0};
-    this.scenePromises = {1: [], 2: [], 3: []};
+    this.sceneQueues = { 1: [],2: [], 3: []};
+    this.sceneTaskCount = { 1: 0, 2: 0, 3: 0};
     this.currentPriority = 1;
+    this.currentStage = 0;
     this.allTasksDone = false;
     this.sceneTaskDone = 0;
+    this._profileFrameIndex = 0;
+    this._profileFrames = [];
+    this._profileLastRenderStartTime = null;
   }
 
   async doConnectedCallback () {
+    var self = this;
+
     super.doConnectedCallback();
 
     if (!this.parentNode.isScene) {
@@ -45,15 +80,14 @@ class AAssets extends ANode {
     await Promise.resolve();
     this.collectResources();
     this.load();
-
-    await this.loadPriorityGroupFully(1);
+    await this.loadFirstPriority();
     this.parentNode.emit('firstloaded');
-
-    await this.loadPriorityGroupFully(2);
-    await this.loadPriorityGroupFully(3);
-
-    this.allTasksDone = true;
-    this.parentNode.emit('all-assets-loaded');
+    this.parentNode.addEventListener('render', async function (event) {
+      const startTime = event.detail;
+      if (!self.allTasksDone) {
+        self.doTasks(startTime);
+      }
+    });
   }
 
   disconnectedCallback () {
@@ -79,38 +113,97 @@ class AAssets extends ANode {
     return 3;
   }
 
-  /**
-   * Load one priority group fully: network transfer then scene tasks run as soon as
-   * each asset's network completes (concurrent scene tasks via registered promises).
-   */
-  async loadPriorityGroupFully (priority) {
-    const group = this.networkQueues[priority];
+  async loadPriorityGroups (groups) {
+    for (let priority of groups) {
+      await this.loadGroup(priority);
+    }
+  }
+
+  async loadFirstPriority () {
+    const group = this.networkQueues[1];
     if (!group.length) return;
 
     group.map(item => {
       if (item.tagName === 'A-ASSET-ITEM') {
         this.loadAssetItem(item);
-      } else if (item.tagName === 'AUDIO') {
-        this.loadAudio(item);
       }
     });
 
-    this.currentPriority = priority;
+    const frameStart = performance.now();
+    const frameTasks = [];
+    let frameNetworkMs = 0;
+    const framePriority = this.currentPriority;
 
-    // Yield until entities have connected and registered their scene promises.
-    while (group.length > 0 && this.sceneTaskCount[priority] === 0) {
-      await this.delay(2);
-    }
-    while (this.scenePromises[priority].length < this.sceneTaskCount[priority]) {
-      await this.delay(2);
+    while (true) {
+      if (this.sceneQueues[this.currentPriority].length !== 0) {
+        const lastUsedMs = performance.now() - frameStart;
+        const t0 = performance.now();
+        const info = await this.doSceneTask();
+        if (info) {
+          frameTasks.push({ ...info, durationMs: performance.now() - t0,  lastUsedMs: lastUsedMs });
+        }
+        this.sceneTaskDone++;
+      } else {
+        await this.delay(2);
+      }
+      if (this.sceneTaskDone === this.sceneTaskCount[this.currentPriority]) {
+        this.currentStage = 0;
+        this.sceneTaskDone = 0;
+        this.currentPriority++;
+        break;
+      }
     }
 
-    await Promise.all(this.scenePromises[priority]);
-    this.scenePromises[priority] = [];
+    if (frameTasks.length > 0) {
+      const frameEnd = performance.now();
+      const taskDurationMs = frameTasks.reduce(function (s, t) { return s + (t.durationMs || 0); }, 0);
+      const frameIndex = this._profileFrameIndex++;
+      this._profileFrames.push({
+        frameIndex: frameIndex,
+        priority: framePriority,
+        frameStart: frameStart,
+        frameEnd,
+        frameDurationMs: frameEnd - frameStart,
+        taskDurationMs: taskDurationMs,
+        networkTaskDurationMs: frameNetworkMs,
+        tasks: frameTasks
+      });
+    }
+  }
+
+  async loadGroup (priority) {
+    const group = this.networkQueues[priority];
+    if (!group.length) return;
+    await Promise.all(
+      group.map(item => {
+        if (item.tagName === 'A-ASSET-ITEM') {
+          return this.loadAssetItem(item);
+        } else if (item.tagName === 'AUDIO') {
+          return this.loadAudio(item);
+        }
+      })
+    );
   }
 
   delay (ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async doGroupSceneTask (priority) {
+    while (this.sceneQueues[this.currentPriority].length < this.priorityQueues[priority].length) {
+      await this.delay(2);
+    }
+    const group = this.sceneQueues[priority];
+    if (!group.length) return;
+    await Promise.all(
+      group.map(item => {
+        if (item.type === 'gltf-model') {
+          return this.doGLTFTask(item);
+        } else if (item.type === 'sound') {
+          return this.doSoundTask(item);
+        }
+      })
+    );
   }
 
   async loadAssetItem (item) {
@@ -144,16 +237,87 @@ class AAssets extends ANode {
     this.sceneQueues[task.priority].push(task);
   }
 
-  registerScenePromise (priority, promise) {
-    this.scenePromises[priority].push(promise);
+  async doTasks (startTime) {
+    const frameStart = startTime;
+    const lastTrueRenderTimeMs = this._profileLastRenderStartTime != null
+      ? frameStart - this._profileLastRenderStartTime
+      : undefined;
+    this._profileLastRenderStartTime = frameStart;
+
+    const frameTasks = [];
+    let frameNetworkMs = 0;
+    const framePriority = this.currentPriority;
+
+    const effectiveBudget = this.frameTimeBudget - this.safeMargin;
+    while (performance.now() - startTime < effectiveBudget && !this.allTasksDone) {
+      if (this.currentStage === 0) {
+        if (this.networkQueues[this.currentPriority].length > 0) {
+          const lastUsedMs = performance.now() - startTime;
+          const t0 = performance.now();
+          const info = this.doNetworkTask();
+          if (info) {
+            const durationMs = performance.now() - t0;
+            frameTasks.push({ ...info, durationMs: durationMs, lastUsedMs: lastUsedMs, curUsedMs: performance.now() - startTime  });
+            frameNetworkMs += durationMs;
+          }
+        } else {
+          this.currentStage = 1;
+        }
+      } else if (this.currentStage === 1) {
+        if (this.sceneQueues[this.currentPriority].length !== 0) {
+          const lastUsedMs = performance.now() - startTime;
+          const t0 = performance.now();
+          const info = await this.doSceneTask();
+          if (info) {
+            frameTasks.push({ ...info, durationMs: performance.now() - t0, lastUsedMs: lastUsedMs, curUsedMs: performance.now() - startTime });
+          }
+          this.sceneTaskDone++;
+        } else {
+          await this.delay(2);
+        }
+        if (this.sceneTaskDone === this.sceneTaskCount[this.currentPriority]) {
+          this.currentStage = 0;
+          this.sceneTaskDone = 0;
+          this.currentPriority++;
+          if (this.currentPriority > 3) {
+            this.allTasksDone = true;
+            const self = this;
+            setTimeout(function () {
+              console.log(JSON.stringify(self._profileFrames, null, 2));
+            }, 0);
+            this.parentNode.emit('all-assets-loaded');
+          }
+        }
+      }
+    }
+
+    if (frameTasks.length > 0) {
+      const frameEnd = performance.now();
+      const taskDurationMs = frameTasks.reduce(function (s, t) { return s + (t.durationMs || 0); }, 0);
+      const frameIndex = this._profileFrameIndex++;
+      const frameRecord = {
+        frameIndex: frameIndex,
+        priority: framePriority,
+        ...(lastTrueRenderTimeMs !== undefined && { lastTrueRenderTimeMs: lastTrueRenderTimeMs }),
+        frameStart: frameStart,
+        frameEnd,
+        frameDurationMs: frameEnd - frameStart,
+        taskDurationMs: taskDurationMs,
+        networkTaskDurationMs: frameNetworkMs,
+        tasks: frameTasks
+      };
+      this._profileFrames.push(frameRecord);
+    }
   }
 
-  runGLTFSceneTask (task) {
-    return this.doNormalGLTFTask(task);
-  }
-
-  runSoundSceneTask (task) {
-    return this.doSoundTask(task);
+  doNetworkTask () {
+    const task = this.networkQueues[this.currentPriority].shift();
+    if (!task) return undefined;
+    const src = task.getAttribute ? task.getAttribute('src') : null;
+    const id = task.getAttribute ? task.getAttribute('id') : null;
+    const tag = task.tagName ? task.tagName.toLowerCase() : 'unknown';
+    task.load();
+    return { type: 'network', subtype: tag, src, id };
   }
 
   doGLTFTask (task) {
@@ -199,11 +363,15 @@ class AAssets extends ANode {
 
   async doSceneTask () {
     const task = this.sceneQueues[this.currentPriority].shift();
+    if (!task) return undefined;
     if (task.type === 'gltf-model') {
       await this.doGLTFTask(task);
     } else if (task.type === 'sound') {
       await this.doSoundTask(task);
     }
+    const src = task.src || (task.el && task.el.getAttribute && task.el.getAttribute('src'));
+    const id = task.el && task.el.getAttribute && task.el.getAttribute('id');
+    return { type: 'scene', subtype: task.type, src, id };
   }
 }
 

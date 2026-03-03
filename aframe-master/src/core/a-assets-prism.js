@@ -17,6 +17,7 @@ class AAssets extends ANode {
     this.priorityQueues = {1: [], 2: [], 3: []};
     this.renderFirstFrame = true;
     this.frameTimeBudget = 16.7;
+    this.safeMargin = this.frameTimeBudget * 0.3; // 30% of budget; effectiveBudget = frameTimeBudget - safeMargin
     this.networkQueues = {1: [], 2: [], 3: []};
     this.sceneQueues = { 1: [],2: [], 3: []};
     this.sceneTaskCount = { 1: 0, 2: 0, 3: 0};
@@ -225,7 +226,8 @@ class AAssets extends ANode {
     this.sceneQueues[task.priority].push(task);
   }
   async doTasks (startTime) {
-    while ( performance.now()-startTime < this.frameTimeBudget && !this.allTasksDone) {
+    const effectiveBudget = this.frameTimeBudget - this.safeMargin;
+    while ( performance.now()-startTime < effectiveBudget && !this.allTasksDone) {
       if (this.currentStage === 0){
         if(this.networkQueues[this.currentPriority].length > 0){
           this.doNetworkTask();

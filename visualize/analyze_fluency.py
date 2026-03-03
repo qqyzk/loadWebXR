@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 # Metrics are computed over the loading phase: performance uses allAssetsLoaded==False; profile uses all frames.
 # First SKIP_FIRST_N_FRAMES are excluded from all metric calculations.
 FPS_REF_MS = 16.7  # 60 FPS reference line (ms)
-STUTTER_PERCENT_ABOVE_REF = 0.2  # Frame time above this fraction over FPS_REF_MS is counted as stutter (e.g. 0.2 = 20%)
+STUTTER_PERCENT_ABOVE_REF = 0.3  # Frame time above this fraction over FPS_REF_MS is counted as stutter (e.g. 0.3 = 30%)
 SKIP_FIRST_N_FRAMES = 3  # Exclude this many frames from the start when computing metrics
 IMAGES_DIR = os.path.join(os.path.dirname(__file__), "images")
 
@@ -60,8 +60,8 @@ def load_frames(filepath):
             "loading_end_index": loading_end,
         }
 
-    # profile: only priority 2 and 3 (drop priority 1); frame time = lastTrueRenderTimeMs
-    data = [x for x in data if x.get("priority") in (2, 3)]
+    # profile: only priority 2 and 3 (drop priority 1); only frames with lastTrueRenderTimeMs; frame time = lastTrueRenderTimeMs
+    data = [x for x in data if x.get("priority") in (2, 3) and "lastTrueRenderTimeMs" in x]
     if not data:
         return {
             "format": "profile",

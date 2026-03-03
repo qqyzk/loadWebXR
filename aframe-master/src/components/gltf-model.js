@@ -1,14 +1,11 @@
-/**
- * gltf-model-priority-only.js
- * For use with a-assets-priority-only: registers a promise that runs the scene task
- * as soon as this asset's network load completes (concurrent scene tasks).
- * No chunking; same component name 'gltf-model' so load after components/index.js to override.
- */
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { registerComponent } from '../core/component.js';
 
+/**
+ * glTF model loader.
+ */
 export var Component = registerComponent('gltf-model', {
-  schema: { type: 'mymodel' },
+  schema: {type: 'mymodel'},
 
   init: function () {
     var self = this;
@@ -45,24 +42,77 @@ export var Component = registerComponent('gltf-model', {
       priority = parseInt(assetEl.getAttribute('priority'));
     }
 
-    assets.addSceneTaskCount({ priority: priority });
-
-    var promise = assetEl.loaded()
-      .then(() => this.ready)
-      .then(() => assets.runGLTFSceneTask({
-        type: 'gltf-model',
-        src: src,
-        el: self.el,
-        loader: self.loader,
-        theself: self,
+    // Check if this is a chunked model
+    if (assets.isChunkedModel && assets.isChunkedModel(assetEl)) {
+      // Handle chunked model - 新的分块处理逻辑
+      this.handleChunkedModel(assetEl, src, priority, assets);
+    } else {
+      // Handle non-chunked model (original logic)
+      assets.addSceneTaskCount({
         priority: priority
-      }));
+      });
 
-    assets.registerScenePromise(priority, promise);
+      assetEl.loaded()
+        .then(() => this.ready)
+        .then(() => {
+          assets.registerSceneTask({
+            type: 'gltf-model',
+            src: src,
+            el: self.el,
+            loader: self.loader,
+            theself: self,
+            priority: priority
+          });
+        });
+    }
   },
 
   remove: function () {
     if (!this.model) { return; }
     this.el.removeObject3D('mesh');
+  },
+
+  // 新增：处理分块模型
+  handleChunkedModel: function (assetEl, src, priority, assets) {
+    var self = this;
+    const chunkCount = assets.getChunkCount(assetEl);
+
+    // console.log('🔍 [GLTF-COMPONENT] Chunked model detected:', {
+    //   src: src,
+    //   chunkCount: chunkCount,
+    //   priority: priority
+    // });
+
+    // 为每个分块增加场景任务计数
+    for (let i = 1; i <= chunkCount; i++) {
+      assets.addSceneTaskCount({ priority: priority });
+    }
+
+    // 等待每个分块的网络传输完成，然后注册GLTF加载任务
+    this.ready.then(() => {
+      for (let i = 1; i <= chunkCount; i++) {
+        const chunkPromise = assets.getChunkPromise(src, i);
+        if (chunkPromise) {
+          chunkPromise.then(() => {
+            // console.log('📦 [GLTF-COMPONENT] Chunk network complete, registering scene task:', i);
+
+            // 单个分块网络传输完成，注册GLTF加载任务
+            assets.registerSceneTask({
+              type: 'chunk-gltf',
+              baseSrc: src,
+              chunkIndex: i,
+              totalChunks: chunkCount,
+              el: self.el,
+              loader: self.loader,
+              theself: self,
+              priority: priority
+            });
+          });
+        } else {
+          console.error('❌ [GLTF-COMPONENT] No chunk promise found for:', src, 'chunk:', i);
+        }
+      }
+    });
   }
+
 });

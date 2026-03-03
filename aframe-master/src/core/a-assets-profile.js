@@ -55,6 +55,7 @@ class AAssets extends ANode {
     this.priorityQueues = {1: [], 2: [], 3: []};
     this.renderFirstFrame = true;
     this.frameTimeBudget = 16.7;
+    this.safeMargin = this.frameTimeBudget * 0.3; // 30% of budget; effectiveBudget = frameTimeBudget - safeMargin
     this.networkQueues = {1: [], 2: [], 3: []};
     this.sceneQueues = { 1: [],2: [], 3: []};
     this.sceneTaskCount = { 1: 0, 2: 0, 3: 0};
@@ -135,11 +136,11 @@ class AAssets extends ANode {
 
     while (true) {
       if (this.sceneQueues[this.currentPriority].length !== 0) {
-        const elapsedInFrameMs = performance.now() - frameStart;
+        const lastUsedMs = performance.now() - frameStart;
         const t0 = performance.now();
         const info = await this.doSceneTask();
         if (info) {
-          frameTasks.push({ ...info, durationMs: performance.now() - t0, elapsedInFrameMs: elapsedInFrameMs });
+          frameTasks.push({ ...info, durationMs: performance.now() - t0,  lastUsedMs: lastUsedMs });
         }
         this.sceneTaskDone++;
       } else {
@@ -247,15 +248,16 @@ class AAssets extends ANode {
     let frameNetworkMs = 0;
     const framePriority = this.currentPriority;
 
-    while (performance.now() - startTime < this.frameTimeBudget && !this.allTasksDone) {
+    const effectiveBudget = this.frameTimeBudget - this.safeMargin;
+    while (performance.now() - startTime < effectiveBudget && !this.allTasksDone) {
       if (this.currentStage === 0) {
         if (this.networkQueues[this.currentPriority].length > 0) {
-          const elapsedInFrameMs = performance.now() - startTime;
+          const lastUsedMs = performance.now() - startTime;
           const t0 = performance.now();
           const info = this.doNetworkTask();
           if (info) {
             const durationMs = performance.now() - t0;
-            frameTasks.push({ ...info, durationMs: durationMs, elapsedInFrameMs: elapsedInFrameMs });
+            frameTasks.push({ ...info, durationMs: durationMs, lastUsedMs: lastUsedMs, curUsedMs: performance.now() - startTime  });
             frameNetworkMs += durationMs;
           }
         } else {
@@ -263,11 +265,11 @@ class AAssets extends ANode {
         }
       } else if (this.currentStage === 1) {
         if (this.sceneQueues[this.currentPriority].length !== 0) {
-          const elapsedInFrameMs = performance.now() - startTime;
+          const lastUsedMs = performance.now() - startTime;
           const t0 = performance.now();
           const info = await this.doSceneTask();
           if (info) {
-            frameTasks.push({ ...info, durationMs: performance.now() - t0, elapsedInFrameMs: elapsedInFrameMs });
+            frameTasks.push({ ...info, durationMs: performance.now() - t0, lastUsedMs: lastUsedMs, curUsedMs: performance.now() - startTime });
           }
           this.sceneTaskDone++;
         } else {
