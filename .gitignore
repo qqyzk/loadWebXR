@@ -1,9 +1,5 @@
 try.html
 
-# Model-splitter output and deps (use model-splitter/.gitignore)
-# model-splitter/results/
-# model-splitter/node_modules/
-
 # Generated chunk reports (when written to app dir by mistake)
 realCase/*/chunk_report.json
 
