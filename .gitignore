@@ -1,5 +1,12 @@
 try.html
 
+# Model-splitter output and deps (use model-splitter/.gitignore)
+# model-splitter/results/
+# model-splitter/node_modules/
+
+# Generated chunk reports (when written to app dir by mistake)
+realCase/*/chunk_report.json
+
 # Generated A-Frame builds (created by aframe-master/update.sh)
 realCase/EllieTale-WebXR-main/lib/my-aframe.js
 realCase/hallovreen-master/mylib/my-aframe.js
