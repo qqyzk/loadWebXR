@@ -214,8 +214,9 @@ def copy_chunks_for_src(
     dry_run: bool = False,
 ) -> None:
     """
-    将 results_root 中的 {Base}_chunk_i.glb 拷贝到 app_root 中对应的
-    {src}_split_{actual}chunks/model_chunk_i.glb。
+    将 results_root 中的分块拷贝到 app_root 中对应的 {src}_split_{actual}chunks/。
+    若存在 .gltf + .bin（纹理去重输出），则拷贝 model_chunk_i.gltf、model_chunk_i.bin 及 base_stem_textures/；
+    否则拷贝 model_chunk_i.glb。
     """
     src_path = Path(src)
     src_dir_rel = src_path.parent              # e.g. 'item'
@@ -232,16 +233,42 @@ def copy_chunks_for_src(
     if not dry_run:
         target_dir.mkdir(parents=True, exist_ok=True)
 
-    for i in range(1, actual_chunks + 1):
-        src_chunk = source_dir / f"{base_stem}_chunk_{i}.glb"
-        dst_chunk = target_dir / f"model_chunk_{i}.glb"
-        if not src_chunk.is_file():
-            print(f"[warn] chunk file missing, skip copy: {src_chunk}")
-            continue
-        print(f"[info] copy chunk: {src_chunk} -> {dst_chunk}")
-        if dry_run:
-            continue
-        shutil.copy2(src_chunk, dst_chunk)
+    first_gltf = source_dir / f"{base_stem}_chunk_1.gltf"
+    use_gltf = first_gltf.is_file()
+
+    if use_gltf:
+        for i in range(1, actual_chunks + 1):
+            src_gltf = source_dir / f"{base_stem}_chunk_{i}.gltf"
+            src_bin = source_dir / f"{base_stem}_chunk_{i}.bin"
+            dst_gltf = target_dir / f"model_chunk_{i}.gltf"
+            dst_bin = target_dir / f"model_chunk_{i}.bin"
+            if not src_gltf.is_file():
+                print(f"[warn] chunk gltf missing, skip: {src_gltf}")
+                continue
+            print(f"[info] copy chunk: {src_gltf} -> {dst_gltf}")
+            if not dry_run:
+                shutil.copy2(src_gltf, dst_gltf)
+                if src_bin.is_file():
+                    shutil.copy2(src_bin, dst_bin)
+        textures_src = source_dir / f"{base_stem}_textures"
+        if textures_src.is_dir():
+            textures_dst = target_dir / f"{base_stem}_textures"
+            print(f"[info] copy textures: {textures_src} -> {textures_dst}")
+            if not dry_run:
+                if textures_dst.exists():
+                    shutil.rmtree(textures_dst)
+                shutil.copytree(textures_src, textures_dst)
+    else:
+        for i in range(1, actual_chunks + 1):
+            src_chunk = source_dir / f"{base_stem}_chunk_{i}.glb"
+            dst_chunk = target_dir / f"model_chunk_{i}.glb"
+            if not src_chunk.is_file():
+                print(f"[warn] chunk file missing, skip copy: {src_chunk}")
+                continue
+            print(f"[info] copy chunk: {src_chunk} -> {dst_chunk}")
+            if dry_run:
+                continue
+            shutil.copy2(src_chunk, dst_chunk)
 
 
 def update_html_for_chunks(
@@ -252,7 +279,7 @@ def update_html_for_chunks(
     """
     根据 src_to_actual 映射，更新 HTML 中 <a-asset-item> 的 chunked / chunk-count 属性。
 
-    - 若 actual>=2：添加/更新 chunked="true" chunk-count="N"。
+    - 若 actual>=2：添加/更新 chunked="true" chunk-count="N"（分块统一为 gltf + 共享纹理）。
     - 若 actual 为 None 或 <2 或不存在映射：移除 chunked / chunk-count。
     """
     if not html_path.is_file():
@@ -270,16 +297,17 @@ def update_html_for_chunks(
             return line
         src = m.group(1)
 
-        # 先移除已有的 chunk 属性
+        # 先移除已有的 chunk 相关属性（含历史遗留的 chunk-format）
         new_line = re.sub(r'\s+chunked="[^"]*"', "", line)
         new_line = re.sub(r'\s+chunk-count="[^"]*"', "", new_line)
+        new_line = re.sub(r'\s+chunk-format="[^"]*"', "", new_line)
 
         actual = src_to_actual.get(src)
         if actual is None or actual < 2:
             # 不分块：只保留清理后的行
             return new_line
 
-        # 需要分块：插入 chunked & chunk-count 到 opening tag 内（第一个 > 前）
+        # 需要分块：插入 chunked & chunk-count
         insertion = f' chunked="true" chunk-count="{actual}"'
         m_resp = re.search(r'\sresponse-type=', new_line)
         if m_resp:

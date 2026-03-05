@@ -43,19 +43,19 @@
     <template id="scene-template">
     <a-scene fog="type: linear; color: #597360; near: 2; far: 30;" background="color: #000" correct-gamma>
       <a-assets timeout="30000">
-        <a-asset-item id="skeleton" src="models/skeleton.gltf" priority="2"></a-asset-item>
+        <a-asset-item id="skeleton" src="models/skeleton.gltf" priority="2" chunked="true" chunk-count="51"></a-asset-item>
         <a-asset-item id="village" src="models/village.gltf" priority="1"></a-asset-item>
         <a-asset-item id="village_trees_outer" src="models/village_trees_outer.gltf" priority="1"></a-asset-item>
         <a-asset-item id="village_trees_middle" src="models/village_trees_middle.gltf" priority="1"></a-asset-item>
         <a-asset-item id="village_trees_inner" src="models/village_trees_inner.gltf" priority="1"></a-asset-item>
         <a-asset-item id="zombi" src="models/zombi.gltf" priority="1"></a-asset-item>
         <a-asset-item id="werewolf" src="models/werewolf.gltf" priority="1"></a-asset-item>
-        <a-asset-item id="witch" src="models/witch.gltf" priority="2"></a-asset-item>
-        <a-asset-item id="vampire" src="models/vampire.gltf" priority="2" chunked="true" chunk-count="2"></a-asset-item>
-        <a-asset-item id="pumpkin_happy" src="models/pumpkin_happy.gltf" priority="2"></a-asset-item>
-        <a-asset-item id="pumpkin_evil" src="models/pumpkin_evil.gltf" priority="2"></a-asset-item>
-        <a-asset-item id="hand" src="models/hand.gltf" priority="2" chunked="true" chunk-count="2"></a-asset-item>
-        <a-asset-item id="feet" src="models/feet.gltf" priority="2" chunked="true" chunk-count="3"></a-asset-item>
+        <a-asset-item id="witch" src="models/witch.gltf" priority="2" chunked="true" chunk-count="18"></a-asset-item>
+        <a-asset-item id="vampire" src="models/vampire.gltf" priority="2" chunked="true" chunk-count="23"></a-asset-item>
+        <a-asset-item id="pumpkin_happy" src="models/pumpkin_happy.gltf" priority="2" chunked="true" chunk-count="19"></a-asset-item>
+        <a-asset-item id="pumpkin_evil" src="models/pumpkin_evil.gltf" priority="2" chunked="true" chunk-count="20"></a-asset-item>
+        <a-asset-item id="hand" src="models/hand.gltf" priority="2" chunked="true" chunk-count="46"></a-asset-item>
+        <a-asset-item id="feet" src="models/feet.gltf" priority="2" chunked="true" chunk-count="36"></a-asset-item>
         <a-asset-item id="bat" src="models/bat.gltf" priority="1"></a-asset-item>
         
         <!-- Audio Assets -->

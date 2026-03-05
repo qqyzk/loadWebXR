@@ -403,7 +403,8 @@ class AAssets extends ANode {
         return;
       }
       
-      task.loader.parse(chunkData, '', (gltfModel) => {
+      const resourcePath = task.chunkBasePath || '';
+      task.loader.parse(chunkData, resourcePath, (gltfModel) => {
         // 存储加载的分块模型
         this.storeLoadedChunk(task.baseSrc, task.chunkIndex, gltfModel);
         
@@ -456,19 +457,15 @@ class AAssets extends ANode {
     const firstChunk = chunks[1];
     const combinedScene = firstChunk.scene || firstChunk.scenes[0];
     
-    // 将其他分块的内容添加到基础场景中
+    // 将其他分块的内容添加到基础场景中（移动节点而非 clone，以保留 SkinnedMesh 与骨骼的引用，避免 matrixWorld 未更新导致 applyBoneTransform 报错）
     for (let i = 2; i <= totalChunks; i++) {
       const chunk = chunks[i];
       const chunkScene = chunk.scene || chunk.scenes[0];
       
       if (chunkScene) {
-        // 将分块场景的所有子节点添加到组合场景中
-        // 使用 clone() 避免节点被多次添加的问题
-        chunkScene.children.forEach(child => {
-          combinedScene.add(child.clone());
-        });
-        
-        // console.log('debug: [CHUNK COMBINED]', i, 'children count:', chunkScene.children.length);
+        while (chunkScene.children.length > 0) {
+          combinedScene.add(chunkScene.children[0]);
+        }
       }
     }
     
@@ -536,7 +533,7 @@ class AAssets extends ANode {
   getChunkSrc (element, chunkIndex) {
     const basePath = element.getAttribute('src');
     const chunkCount = this.getChunkCount(element);
-    return `${basePath}_split_${chunkCount}chunks/model_chunk_${chunkIndex}.glb`;
+    return `${basePath}_split_${chunkCount}chunks/model_chunk_${chunkIndex}.gltf`;
   }
 
 

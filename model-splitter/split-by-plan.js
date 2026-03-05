@@ -9,11 +9,12 @@
  *      * Resolve the GLB/GLTF path: appRoot + src (relative).
  *      * Load the model with three.js GLTFLoader.
  *      * Analyze total vertices / triangles.
- *      * Compute per-chunk capacity:
- *            V_max = floor(V_total / k)
- *            F_max = floor(F_total / k)
- *      * Greedily pack meshes into chunks under V_max/F_max.
- *      * Export each chunk as a GLB file with a deterministic name.
+ *      * Compute per-chunk capacity: V_max = floor(V_total / k), F_max = floor(F_total / k).
+ *      * 统一逻辑（单/多 mesh）：凡超过 V_max 或 F_max 的 mesh 先按容量拆成若干 piece（splitMeshIntoK），
+ *        再在 V_max/F_max 下贪心将 pieces 装入各 chunk，保证每块都不超过 V_max/F_max，减少卡顿。
+ *      * 最终 chunk 数可能略偏离 k，无妨。纹理与 skeleton 正确，与 apply_chunks/combineChunks 兼容。
+ *      * 纹理去重：导出为 glTF + 外部纹理，同一纹理只写一份到 baseName_textures/，各 chunk 引用之，渲染效果不变。
+ *      * Export each chunk as .gltf + .bin + shared textures folder.
  *
  * 实现说明:
  *  - 本脚本作为 ES module 运行, 直接从
@@ -117,6 +118,7 @@ if (typeof globalThis.document === 'undefined' && typeof globalThis.OffscreenCan
 
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 import { pathToFileURL } from 'url';
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
@@ -393,6 +395,169 @@ function getSkeletonRoot (skeleton) {
   return b;
 }
 
+/**
+ * 将单个 BufferGeometry 按三角形数尽量均分拆成 k 份。
+ * 支持索引/非索引、以及 position/normal/uv/color/skinIndex/skinWeight 等常见 attribute。
+ * @param {THREE.BufferGeometry} geometry
+ * @param {number} k
+ * @returns {THREE.BufferGeometry[]}
+ */
+function splitBufferGeometryIntoK (geometry, k) {
+  if (!geometry.attributes?.position) return [];
+  const pos = geometry.attributes.position;
+  const vertexCount = pos.count;
+  const hasIndex = geometry.index !== null && geometry.index.count > 0;
+  const triCount = hasIndex
+    ? Math.floor(geometry.index.count / 3)
+    : Math.floor(vertexCount / 3);
+  if (triCount < k) {
+    // 三角形数不足 k：能分几块就几块
+    k = Math.max(1, triCount);
+  }
+  if (k <= 1) {
+    return [geometry];
+  }
+
+  const indexAttr = geometry.index;
+  const attrs = geometry.attributes;
+
+  // 为每个三角形分配到 chunk（贪心按三角形数均分）
+  const triToChunk = new Array(triCount);
+  const chunkTriCount = new Array(k).fill(0);
+  for (let t = 0; t < triCount; t++) {
+    let best = 0;
+    let bestCount = chunkTriCount[0];
+    for (let c = 1; c < k; c++) {
+      if (chunkTriCount[c] < bestCount) {
+        best = c;
+        bestCount = chunkTriCount[c];
+      }
+    }
+    triToChunk[t] = best;
+    chunkTriCount[best]++;
+  }
+
+  const result = [];
+  for (let c = 0; c < k; c++) {
+    const triIndices = [];
+    for (let t = 0; t < triCount; t++) {
+      if (triToChunk[t] === c) triIndices.push(t);
+    }
+    if (triIndices.length === 0) continue;
+
+    const oldToNewVertex = new Map();
+    const newVertices = [];
+
+    function addVertex (oldIdx) {
+      if (oldToNewVertex.has(oldIdx)) return oldToNewVertex.get(oldIdx);
+      const newIdx = newVertices.length;
+      newVertices.push(oldIdx);
+      oldToNewVertex.set(oldIdx, newIdx);
+      return newIdx;
+    }
+
+    const newIndexArray = [];
+    for (const t of triIndices) {
+      let i0, i1, i2;
+      if (hasIndex) {
+        i0 = indexAttr.getX(t * 3);
+        i1 = indexAttr.getX(t * 3 + 1);
+        i2 = indexAttr.getX(t * 3 + 2);
+      } else {
+        i0 = t * 3;
+        i1 = t * 3 + 1;
+        i2 = t * 3 + 2;
+      }
+      newIndexArray.push(addVertex(i0), addVertex(i1), addVertex(i2));
+    }
+
+    const newGeom = new THREE.BufferGeometry();
+    const n = newVertices.length;
+    for (const name of Object.keys(attrs)) {
+      const attr = attrs[name];
+      const itemSize = attr.itemSize;
+      const arr = new (attr.array.constructor)(n * itemSize);
+      for (let i = 0; i < n; i++) {
+        const oldIdx = newVertices[i];
+        for (let s = 0; s < itemSize; s++) {
+          arr[i * itemSize + s] = attr.getComponent(oldIdx, s);
+        }
+      }
+      const newAttr = new THREE.BufferAttribute(arr, itemSize);
+      if (attr.normalized) newAttr.normalized = true;
+      newGeom.setAttribute(name, newAttr);
+    }
+    newGeom.setIndex(newIndexArray);
+    if (geometry.groups?.length) {
+      newGeom.groups = [{ start: 0, count: newIndexArray.length, materialIndex: 0 }];
+    }
+    if (geometry.drawMode !== undefined) newGeom.drawMode = geometry.drawMode;
+    result.push(newGeom);
+  }
+  return result;
+}
+
+/**
+ * 将单个 Mesh（或 SkinnedMesh）按几何拆成 k 个子 mesh，保持 material 与 skeleton 正确。
+ * @param {THREE.Mesh|THREE.SkinnedMesh} mesh
+ * @param {number} k
+ * @returns {THREE.Mesh[]}
+ */
+function splitMeshIntoK (mesh, k) {
+  const geometry = mesh.geometry;
+  if (!geometry) return [];
+  const parts = splitBufferGeometryIntoK(geometry, k);
+  if (parts.length <= 1) return [mesh];
+
+  const isSkinned = mesh.isSkinnedMesh && mesh.skeleton;
+  const skRoot = isSkinned ? getSkeletonRoot(mesh.skeleton) : null;
+  const MeshClass = isSkinned ? THREE.SkinnedMesh : THREE.Mesh;
+  const out = [];
+
+  for (let i = 0; i < parts.length; i++) {
+    const subGeom = parts[i];
+    const subMesh = new MeshClass(subGeom, mesh.material);
+    subMesh.name = (mesh.name || 'mesh') + '_chunk' + (i + 1);
+    subMesh.matrix.copy(mesh.matrix);
+    subMesh.matrixWorld.copy(mesh.matrixWorld);
+    if (mesh.parent) subMesh.parent = mesh.parent;
+
+    if (isSkinned && skRoot) {
+      const skeletonClone = cloneWithSkeleton(skRoot);
+      const nameToBone = new Map();
+      const clonedBonesInOrder = [];
+      skeletonClone.traverse((node) => {
+        if (node.isBone) {
+          if (node.name) nameToBone.set(node.name, node);
+          clonedBonesInOrder.push(node);
+        }
+      });
+      // bones 与 boneInverses 必须与原始 skeleton 长度、顺序一致，否则 geometry 的 skinIndex 会访问到 undefined 导致 applyBoneTransform 报错
+      const bones = [];
+      const boneInverses = [];
+      for (let i = 0; i < mesh.skeleton.bones.length; i++) {
+        const b = mesh.skeleton.bones[i];
+        let cloned = b.name ? nameToBone.get(b.name) : null;
+        if (!cloned && clonedBonesInOrder.length === mesh.skeleton.bones.length) {
+          cloned = clonedBonesInOrder[i];
+        }
+        if (!cloned) {
+          cloned = b.clone();
+          skeletonClone.add(cloned);
+        }
+        bones.push(cloned);
+        boneInverses.push(mesh.skeleton.boneInverses[i].clone());
+      }
+      if (bones.length) {
+        subMesh.add(skeletonClone);
+        subMesh.bind(new THREE.Skeleton(bones, boneInverses), mesh.bindMatrix.clone());
+      }
+    }
+    out.push(subMesh);
+  }
+  return out;
+}
+
 function splitSceneByK (root, stats, k) {
   const Vmax = Math.floor(stats.totalVertices / k);
   const Fmax = Math.floor(stats.totalTriangles / k);
@@ -406,7 +571,23 @@ function splitSceneByK (root, stats, k) {
     }
   });
 
-  meshes.sort((a, b) => {
+  // 统一逻辑（单 mesh / 多 mesh）：凡超过 V_max 或 F_max 的 mesh 先按容量拆成若干 piece，再贪心打包
+  const pieces = [];
+  for (const mesh of meshes) {
+    const geom = mesh.geometry;
+    const meshTri = geom.index ? geom.index.count / 3 : geom.attributes.position.count / 3;
+    const meshVert = geom.attributes.position.count;
+
+    if (meshVert <= Vmax && meshTri <= Fmax) {
+      pieces.push(mesh);
+    } else {
+      const numPieces = Math.max(1, Math.ceil(meshTri / Fmax), Math.ceil(meshVert / Vmax));
+      const subMeshes = splitMeshIntoK(mesh, numPieces);
+      pieces.push(...subMeshes);
+    }
+  }
+
+  pieces.sort((a, b) => {
     const aTri = a.geometry.index ? a.geometry.index.count / 3 : a.geometry.attributes.position.count / 3;
     const bTri = b.geometry.index ? b.geometry.index.count / 3 : b.geometry.attributes.position.count / 3;
     return bTri - aTri;
@@ -419,7 +600,7 @@ function splitSceneByK (root, stats, k) {
   let curVert = 0;
   let addedSkeletonRoots = new Set();
 
-  for (const mesh of meshes) {
+  for (const mesh of pieces) {
     const geom = mesh.geometry;
     const meshTri = geom.index ? geom.index.count / 3 : geom.attributes.position.count / 3;
     const meshVert = geom.attributes.position.count;
@@ -440,7 +621,6 @@ function splitSceneByK (root, stats, k) {
       addedSkeletonRoots = new Set();
     }
 
-    // SkinnedMesh 需将骨骼根一并加入 chunk，否则导出后 skin.joints 引用缺失导致解析报错
     if (mesh.isSkinnedMesh && mesh.skeleton) {
       const skRoot = getSkeletonRoot(mesh.skeleton);
       if (skRoot && !addedSkeletonRoots.has(skRoot)) {
@@ -470,14 +650,63 @@ function splitSceneByK (root, stats, k) {
   } else {
     console.log('  ✅ 三角形完整性检查通过');
   }
-  if (sumVert !== stats.totalVertices) {
-    console.warn(`  ⚠️ 顶点数不匹配: 分配=${sumVert}, 原始=${stats.totalVertices}`);
-  } else {
+  // 分块后各 chunk 独立顶点缓冲、顶点不共享，总顶点数会 ≥ 原始，属正常；仅当少于原始时表示数据丢失
+  if (sumVert < stats.totalVertices) {
+    console.warn(`  ⚠️ 顶点数异常(数据丢失): 分配=${sumVert}, 原始=${stats.totalVertices}`);
+  } else if (sumVert === stats.totalVertices) {
     console.log('  ✅ 顶点数完整性检查通过');
+  } else {
+    console.log(`  ✅ 顶点数: 分配合计 ${sumVert}（分块后不共享顶点 ≥ 原始 ${stats.totalVertices}，正常）`);
   }
 
-  console.log(`  实际生成 ${chunks.length} 个 chunk (目标 k=${k})`);
+  console.log(`  实际生成 ${chunks.length} 个 chunk (目标约 k=${k}, 每块 ≤ V_max/F_max)`);
   return chunks;
+}
+
+/** 从 data URL 解码为 Buffer，返回 { buffer, ext }，ext 为 .png / .jpg */
+function decodeDataUrlImage (uri) {
+  if (typeof uri !== 'string' || !uri.startsWith('data:')) return null;
+  const m = /^data:([^;]+);base64,(.+)$/.exec(uri);
+  if (!m) return null;
+  const mime = m[1];
+  const ext = mime === 'image/jpeg' ? '.jpg' : '.png';
+  const buffer = Buffer.from(m[2], 'base64');
+  return { buffer, ext };
+}
+
+/** 按内容去重所有 chunk 的 images，写出共享纹理目录，并改写各 chunk JSON 的 image.uri */
+function dedupeAndWriteSharedTextures (chunkJsonList, baseName, outDir) {
+  const texturesDir = path.join(outDir, `${baseName}_textures`);
+  const hashToFile = new Map(); // hash -> { path, buffer, ext }
+  let textureIndex = 0;
+
+  for (const json of chunkJsonList) {
+    if (!json.images || !Array.isArray(json.images)) continue;
+    for (let i = 0; i < json.images.length; i++) {
+      const img = json.images[i];
+      const uri = img.uri;
+      const decoded = decodeDataUrlImage(uri);
+      if (!decoded) continue;
+      const hash = crypto.createHash('sha256').update(decoded.buffer).digest('hex').slice(0, 16);
+      let file = hashToFile.get(hash);
+      if (!file) {
+        const relPath = `${baseName}_textures/${textureIndex}${decoded.ext}`;
+        file = { relPath, buffer: decoded.buffer, ext: decoded.ext };
+        hashToFile.set(hash, file);
+        textureIndex++;
+      }
+      img.uri = file.relPath;
+    }
+  }
+
+  if (hashToFile.size === 0) return;
+  if (!fs.existsSync(texturesDir)) fs.mkdirSync(texturesDir, { recursive: true });
+  for (const file of hashToFile.values()) {
+    const full = path.join(outDir, file.relPath);
+    fs.writeFileSync(full, file.buffer);
+  }
+  const totalRefs = chunkJsonList.reduce((s, j) => s + (j.images?.length || 0), 0);
+  console.log(`    纹理去重: ${totalRefs} 处引用 -> ${hashToFile.size} 个唯一纹理 -> ${baseName}_textures/`);
 }
 
 async function exportChunks (chunks, baseName, outDir) {
@@ -486,28 +715,52 @@ async function exportChunks (chunks, baseName, outDir) {
   }
 
   const exporter = new GLTFExporter();
+  const chunkJsonList = [];
 
   for (const chunk of chunks) {
     const scene = new THREE.Scene();
     scene.add(chunk.group);
 
-    const arrayBuffer = await new Promise((resolve, reject) => {
+    const json = await new Promise((resolve, reject) => {
       exporter.parse(
         scene,
         (result) => resolve(result),
         (error) => reject(error),
-        { binary: true }
+        { binary: false }
       );
     });
 
-    const buffer = arrayBuffer instanceof ArrayBuffer
-      ? Buffer.from(arrayBuffer)
-      : Buffer.from(arrayBuffer.buffer || arrayBuffer);
+    if (!json || typeof json !== 'object') {
+      throw new Error(`Chunk ${chunk.index + 1} export returned invalid JSON`);
+    }
 
-    const filename = `${baseName}_chunk_${chunk.index + 1}.glb`;
-    const outPath = path.join(outDir, filename);
-    fs.writeFileSync(outPath, buffer);
-    console.log(`    写出 ${outPath} (${buffer.length} bytes, ${chunk.triangles} tri, ${chunk.vertices} vert)`);
+    chunkJsonList.push({ json, chunk });
+  }
+
+  dedupeAndWriteSharedTextures(
+    chunkJsonList.map((x) => x.json),
+    baseName,
+    outDir
+  );
+
+  for (const { json, chunk } of chunkJsonList) {
+    const i = chunk.index + 1;
+    const binUri = `model_chunk_${i}.bin`;
+    if (json.buffers && json.buffers[0]) {
+      const dataUri = json.buffers[0].uri;
+      if (typeof dataUri === 'string' && dataUri.startsWith('data:')) {
+        const m = /^data:[^;]+;base64,(.+)$/.exec(dataUri);
+        if (m) {
+          const binPath = path.join(outDir, `${baseName}_chunk_${i}.bin`);
+          fs.writeFileSync(binPath, Buffer.from(m[1], 'base64'));
+          json.buffers[0].uri = binUri;
+        }
+      }
+    }
+
+    const gltfPath = path.join(outDir, `${baseName}_chunk_${i}.gltf`);
+    fs.writeFileSync(gltfPath, JSON.stringify(json, null, 0), 'utf8');
+    console.log(`    写出 ${gltfPath} (${chunk.triangles} tri, ${chunk.vertices} vert)`);
   }
 }
 

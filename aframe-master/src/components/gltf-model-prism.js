@@ -97,11 +97,14 @@ export var Component = registerComponent('gltf-model', {
             // console.log('📦 [GLTF-COMPONENT] Chunk network complete, registering scene task:', i);
 
             // 单个分块网络传输完成，注册GLTF加载任务
+            // chunkBasePath：分块 glTF 所在目录，用于解析 .bin / 纹理等相对路径
+            const chunkBasePath = src + '_split_' + chunkCount + 'chunks/';
             assets.registerSceneTask({
               type: 'chunk-gltf',
               baseSrc: src,
               chunkIndex: i,
               totalChunks: chunkCount,
+              chunkBasePath: chunkBasePath,
               el: self.el,
               loader: self.loader,
               theself: self,

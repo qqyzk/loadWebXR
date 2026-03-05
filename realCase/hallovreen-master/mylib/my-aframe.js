@@ -7860,11 +7860,14 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
             // console.log('📦 [GLTF-COMPONENT] Chunk network complete, registering scene task:', i);
 
             // 单个分块网络传输完成，注册GLTF加载任务
+            // chunkBasePath：分块 glTF 所在目录，用于解析 .bin / 纹理等相对路径
+            const chunkBasePath = src + '_split_' + chunkCount + 'chunks/';
             assets.registerSceneTask({
               type: 'chunk-gltf',
               baseSrc: src,
               chunkIndex: i,
               totalChunks: chunkCount,
+              chunkBasePath: chunkBasePath,
               el: self.el,
               loader: self.loader,
               theself: self,
@@ -19376,12 +19379,8 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     return this.doNormalGLTFTask(task);
   }
   doNormalGLTFTask(task) {
-    const taskStartTime = performance.now();
-    // console.log('debug: [START] loading gltf model:', task.src, 'at:', taskStartTime.toFixed(2));
     return new Promise((resolve, reject) => {
       task.loader.load(task.src, function gltfLoaded(gltfModel) {
-        const taskEndTime = performance.now();
-        const taskDuration = taskEndTime - taskStartTime;
         task.theself.model = gltfModel.scene || gltfModel.scenes[0];
         task.theself.model.animations = gltfModel.animations;
         task.el.setObject3D('mesh', task.theself.model);
@@ -19389,24 +19388,19 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
           format: 'gltf',
           model: task.theself.model
         });
-        // console.log('debug: [END] loading gltf model:', task.src, 'duration:', taskDuration.toFixed(2) + 'ms');
         resolve();
       }, undefined /* onProgress */, function gltfFailed(error) {
-        const taskEndTime = performance.now();
-        const taskDuration = taskEndTime - taskStartTime;
         var message = error && error.message ? error.message : 'Failed to load glTF model';
         warn(message);
         task.el.emit('model-error', {
           format: 'gltf',
           src: task.src
         });
-        // console.log('debug: [ERROR] loading gltf model:', task.src, 'duration:', taskDuration.toFixed(2) + 'ms', error);
         reject(error);
       });
     });
   }
   doSoundTask(task) {
-    // console.log('debug: [START] loading sound:', task.src);
     return new Promise((resolve, reject) => {
       task.loader.load(task.src, function (buffer) {
         for (var i = 0; i < task.theself.pool.children.length; i++) {
@@ -19421,10 +19415,8 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
           task.theself.playSound(task.theself.processSound);
         }
         task.theself.el.emit('sound-loaded', task.theself.evtDetail, false);
-        // console.log('debug: [END] loading sound:', task.src);
         resolve();
       }, undefined /* onProgress */, function (error) {
-        // console.log('debug: [ERROR] loading sound:', task.src, error);
         reject(error);
       });
     });
@@ -19442,9 +19434,6 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
 
   // 新增：处理单个分块的GLTF加载
   doChunkGLTFTask(task) {
-    const taskStartTime = performance.now();
-    // console.log('debug: [START] loading chunk gltf:', task.baseSrc, 'chunk:', task.chunkIndex);
-
     return new Promise((resolve, reject) => {
       const chunkData = this.getChunkData(task.baseSrc, task.chunkIndex);
       if (!chunkData) {
@@ -19453,10 +19442,8 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
         reject(error);
         return;
       }
-      task.loader.parse(chunkData, '', gltfModel => {
-        const taskEndTime = performance.now();
-        const taskDuration = taskEndTime - taskStartTime;
-
+      const resourcePath = task.chunkBasePath || '';
+      task.loader.parse(chunkData, resourcePath, gltfModel => {
         // 存储加载的分块模型
         this.storeLoadedChunk(task.baseSrc, task.chunkIndex, gltfModel);
 
@@ -19473,16 +19460,9 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
             model: combinedModel,
             isChunked: true
           });
-
-          // console.log('debug: [COMBINED MODEL COMPLETE]', task.baseSrc);
         }
-
-        // console.log('debug: [END] loading chunk gltf:', task.baseSrc, 'chunk:', task.chunkIndex, 'duration:', taskDuration.toFixed(2) + 'ms');
         resolve();
       }, error => {
-        const taskEndTime = performance.now();
-        const taskDuration = taskEndTime - taskStartTime;
-        // console.log('debug: [ERROR] loading chunk gltf:', task.baseSrc, 'chunk:', task.chunkIndex, 'duration:', taskDuration.toFixed(2) + 'ms', error);
         reject(error);
       });
     });
@@ -19518,18 +19498,14 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     const firstChunk = chunks[1];
     const combinedScene = firstChunk.scene || firstChunk.scenes[0];
 
-    // 将其他分块的内容添加到基础场景中
+    // 将其他分块的内容添加到基础场景中（移动节点而非 clone，以保留 SkinnedMesh 与骨骼的引用，避免 matrixWorld 未更新导致 applyBoneTransform 报错）
     for (let i = 2; i <= totalChunks; i++) {
       const chunk = chunks[i];
       const chunkScene = chunk.scene || chunk.scenes[0];
       if (chunkScene) {
-        // 将分块场景的所有子节点添加到组合场景中
-        // 使用 clone() 避免节点被多次添加的问题
-        chunkScene.children.forEach(child => {
-          combinedScene.add(child.clone());
-        });
-
-        // console.log('debug: [CHUNK COMBINED]', i, 'children count:', chunkScene.children.length);
+        while (chunkScene.children.length > 0) {
+          combinedScene.add(chunkScene.children[0]);
+        }
       }
     }
 
@@ -19594,7 +19570,7 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
   getChunkSrc(element, chunkIndex) {
     const basePath = element.getAttribute('src');
     const chunkCount = this.getChunkCount(element);
-    return `${basePath}_split_${chunkCount}chunks/model_chunk_${chunkIndex}.glb`;
+    return `${basePath}_split_${chunkCount}chunks/model_chunk_${chunkIndex}.gltf`;
   }
 }
 customElements.define('a-assets', AAssets);
