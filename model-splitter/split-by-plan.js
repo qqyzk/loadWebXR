@@ -21,9 +21,19 @@
  *    导入 three 及其 JSM loader/exporter, 避免依赖顶层 node_modules。
  */
 
-// Node 下 three.js JSM 依赖的浏览器全局：self、FileReader（GLTFExporter 导出 binary 时用）
+// Node 下 three.js JSM 依赖的浏览器全局：self、FileReader、ProgressEvent
 if (typeof globalThis.self === 'undefined') {
   globalThis.self = globalThis;
+}
+if (typeof globalThis.ProgressEvent === 'undefined') {
+  globalThis.ProgressEvent = class ProgressEvent extends Event {
+    constructor (type, opts = {}) {
+      super(type);
+      this.lengthComputable = opts.lengthComputable ?? false;
+      this.loaded = opts.loaded ?? 0;
+      this.total = opts.total ?? 0;
+    }
+  };
 }
 if (typeof globalThis.FileReader === 'undefined') {
   globalThis.FileReader = class FileReader {
@@ -115,6 +125,7 @@ const threeModule = await import(pathToFileURL(path.join(threePath, 'build', 'th
 const THREE = threeModule.default && threeModule.default.Group ? threeModule.default : threeModule;
 const { GLTFLoader } = await import(pathToFileURL(path.join(threePath, 'examples', 'jsm', 'loaders', 'GLTFLoader.js')).href);
 const { GLTFExporter } = await import(pathToFileURL(path.join(threePath, 'examples', 'jsm', 'exporters', 'GLTFExporter.js')).href);
+const { clone: cloneWithSkeleton } = await import(pathToFileURL(path.join(threePath, 'examples', 'jsm', 'utils', 'SkeletonUtils.js')).href);
 
 function printUsageAndExit () {
   console.log(`用法:
@@ -254,21 +265,29 @@ async function createNodeTextureLoader (THREE) {
   return {
     load (url, onLoad, _onProgress, onError) {
       const u = typeof url === 'string' ? url : '';
-      if (!u.startsWith('blob:')) {
-        if (onError) onError(new Error('NodeTextureLoader only supports blob: URLs'));
+      const isBlob = u.startsWith('blob:');
+      const isDataUri = u.startsWith('data:');
+      if (!isBlob && !isDataUri) {
+        if (onError) onError(new Error('NodeTextureLoader only supports blob: or data: URLs'));
         return;
       }
       (async () => {
         try {
           let buf;
-          const resolved = resolveObjectURL ? resolveObjectURL(u) : null;
-          if (resolved) {
-            const ab = resolved.arrayBuffer ? await resolved.arrayBuffer() : resolved;
-            buf = Buffer.from(ab);
+          if (isDataUri) {
+            const m = /^data:[^;]+;base64,(.+)$/.exec(u);
+            if (!m) throw new Error('Invalid data URI');
+            buf = Buffer.from(m[1], 'base64');
           } else {
-            const res = await fetch(u);
-            if (!res.ok) throw new Error(`fetch ${u}: ${res.status}`);
-            buf = Buffer.from(await res.arrayBuffer());
+            const resolved = resolveObjectURL ? resolveObjectURL(u) : null;
+            if (resolved) {
+              const ab = resolved.arrayBuffer ? await resolved.arrayBuffer() : resolved;
+              buf = Buffer.from(ab);
+            } else {
+              const res = await fetch(u);
+              if (!res.ok) throw new Error(`fetch ${u}: ${res.status}`);
+              buf = Buffer.from(await res.arrayBuffer());
+            }
           }
           const { data, info } = await sharp(buf)
             .ensureAlpha()
@@ -288,23 +307,90 @@ async function createNodeTextureLoader (THREE) {
   };
 }
 
+/** 根据扩展名返回 MIME 类型 */
+function mimeFromExt (uri) {
+  const e = path.extname(uri).toLowerCase();
+  if (e === '.png') return 'image/png';
+  if (e === '.jpg' || e === '.jpeg') return 'image/jpeg';
+  if (e === '.webp') return 'image/webp';
+  if (e === '.gif') return 'image/gif';
+  return 'image/png';
+}
+
+/**
+ * 对 .gltf 文件预处理：将外部 .bin 和纹理引用内联为 base64 data URI，
+ * 解决 Node 下 FileLoader 无法 fetch file:// 的问题。
+ */
+function inlineGLTFBuffers (filePath) {
+  const ext = path.extname(filePath).toLowerCase();
+  if (ext !== '.gltf') return fs.readFileSync(filePath);
+
+  const dir = path.dirname(filePath);
+  const json = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  let modified = false;
+
+  if (json.buffers && Array.isArray(json.buffers)) {
+    for (const buf of json.buffers) {
+      const uri = buf.uri;
+      if (!uri || typeof uri !== 'string' || uri.startsWith('data:')) continue;
+
+      const binPath = path.resolve(dir, uri);
+      if (!fs.existsSync(binPath)) continue;
+
+      const binData = fs.readFileSync(binPath);
+      buf.uri = 'data:application/octet-stream;base64,' + binData.toString('base64');
+      modified = true;
+    }
+  }
+
+  if (json.images && Array.isArray(json.images)) {
+    for (const img of json.images) {
+      const uri = img.uri;
+      if (!uri || typeof uri !== 'string' || uri.startsWith('data:')) continue;
+
+      const imgPath = path.resolve(dir, uri);
+      if (!fs.existsSync(imgPath)) continue;
+
+      const imgData = fs.readFileSync(imgPath);
+      const mime = mimeFromExt(uri);
+      img.uri = 'data:' + mime + ';base64,' + imgData.toString('base64');
+      modified = true;
+    }
+  }
+
+  if (!modified) return fs.readFileSync(filePath);
+  const str = JSON.stringify(json);
+  return Buffer.from(str, 'utf8');
+}
+
 async function loadGLTFAsScene (filePath) {
   const loader = new GLTFLoader();
   if (nodeTextureDecoder) {
     const nodeLoader = await createNodeTextureLoader(THREE);
     if (nodeLoader) loader.textureLoader = nodeLoader;
   }
-  const buffer = fs.readFileSync(filePath);
+
+  const buffer = inlineGLTFBuffers(filePath);
   const arrayBuffer = buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength);
+
+  const resourcePath = pathToFileURL(path.resolve(path.dirname(filePath)) + path.sep).href;
 
   return new Promise((resolve, reject) => {
     loader.parse(
       arrayBuffer,
-      path.dirname(filePath) + '/',
+      resourcePath,
       (gltf) => resolve(gltf.scene || gltf.scenes[0]),
       (error) => reject(error)
     );
   });
+}
+
+/** SkinnedMesh 的骨骼根节点，用于导出时保留 skin 引用 */
+function getSkeletonRoot (skeleton) {
+  if (!skeleton?.bones?.length) return null;
+  let b = skeleton.bones[0];
+  while (b.parent && b.parent.isBone) b = b.parent;
+  return b;
 }
 
 function splitSceneByK (root, stats, k) {
@@ -331,6 +417,7 @@ function splitSceneByK (root, stats, k) {
   let currentGroup = new THREE.Group();
   let curTri = 0;
   let curVert = 0;
+  let addedSkeletonRoots = new Set();
 
   for (const mesh of meshes) {
     const geom = mesh.geometry;
@@ -350,10 +437,19 @@ function splitSceneByK (root, stats, k) {
       currentGroup = new THREE.Group();
       curTri = 0;
       curVert = 0;
+      addedSkeletonRoots = new Set();
     }
 
-    const clonedMesh = mesh.clone();
-    currentGroup.add(clonedMesh);
+    // SkinnedMesh 需将骨骼根一并加入 chunk，否则导出后 skin.joints 引用缺失导致解析报错
+    if (mesh.isSkinnedMesh && mesh.skeleton) {
+      const skRoot = getSkeletonRoot(mesh.skeleton);
+      if (skRoot && !addedSkeletonRoots.has(skRoot)) {
+        currentGroup.add(skRoot);
+        addedSkeletonRoots.add(skRoot);
+      }
+    }
+
+    currentGroup.add(mesh);
     curTri += meshTri;
     curVert += meshVert;
   }
@@ -424,7 +520,8 @@ async function processOneModel (src, record, args) {
   console.log(`\n处理模型: ${src}`);
   console.log(`  k=${record.k}, maxProcessTimeMs=${record.maxProcessTimeMs.toFixed(2)}`);
 
-  const scene = await loadGLTFAsScene(inputPath);
+  let scene = await loadGLTFAsScene(inputPath);
+  scene = cloneWithSkeleton(scene);
   const stats = analyzeModel(scene);
   console.log(`  模型信息: meshes=${stats.meshes}, triangles=${stats.totalTriangles}, vertices=${stats.totalVertices}`);
 

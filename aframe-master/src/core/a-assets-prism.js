@@ -344,25 +344,17 @@ class AAssets extends ANode {
   }
 
   doNormalGLTFTask (task) {
-    const taskStartTime = performance.now();
-    // console.log('debug: [START] loading gltf model:', task.src, 'at:', taskStartTime.toFixed(2));
     return new Promise((resolve, reject) => {
       task.loader.load(task.src, function gltfLoaded (gltfModel) {
-        const taskEndTime = performance.now();
-        const taskDuration = taskEndTime - taskStartTime;
         task.theself.model = gltfModel.scene || gltfModel.scenes[0];
         task.theself.model.animations = gltfModel.animations;
         task.el.setObject3D('mesh', task.theself.model);
         task.el.emit('model-loaded', {format: 'gltf', model: task.theself.model});
-        // console.log('debug: [END] loading gltf model:', task.src, 'duration:', taskDuration.toFixed(2) + 'ms');
         resolve();
       }, undefined /* onProgress */, function gltfFailed (error) {
-        const taskEndTime = performance.now();
-        const taskDuration = taskEndTime - taskStartTime;
         var message = (error && error.message) ? error.message : 'Failed to load glTF model';
         warn(message);
         task.el.emit('model-error', {format: 'gltf', src: task.src});
-        // console.log('debug: [ERROR] loading gltf model:', task.src, 'duration:', taskDuration.toFixed(2) + 'ms', error);
         reject(error);
       });
     });
@@ -370,7 +362,6 @@ class AAssets extends ANode {
 
   
   doSoundTask (task) {
-    // console.log('debug: [START] loading sound:', task.src);
     return new Promise((resolve, reject) => {
       task.loader.load(task.src, function (buffer) {
         for (var i = 0; i < task.theself.pool.children.length; i++) {
@@ -383,10 +374,8 @@ class AAssets extends ANode {
         THREE.Cache.remove(task.src);
         if (task.theself.data.autoplay || task.theself.mustPlay) { task.theself.playSound(task.theself.processSound); }
         task.theself.el.emit('sound-loaded', task.theself.evtDetail, false);
-        // console.log('debug: [END] loading sound:', task.src);
         resolve();
       }, undefined /* onProgress */, function (error) {
-        // console.log('debug: [ERROR] loading sound:', task.src, error);
         reject(error);
       });
     });
@@ -404,9 +393,6 @@ class AAssets extends ANode {
 
   // 新增：处理单个分块的GLTF加载
   doChunkGLTFTask (task) {
-    const taskStartTime = performance.now();
-    // console.log('debug: [START] loading chunk gltf:', task.baseSrc, 'chunk:', task.chunkIndex);
-    
     return new Promise((resolve, reject) => {
       const chunkData = this.getChunkData(task.baseSrc, task.chunkIndex);
       
@@ -418,9 +404,6 @@ class AAssets extends ANode {
       }
       
       task.loader.parse(chunkData, '', (gltfModel) => {
-        const taskEndTime = performance.now();
-        const taskDuration = taskEndTime - taskStartTime;
-        
         // 存储加载的分块模型
         this.storeLoadedChunk(task.baseSrc, task.chunkIndex, gltfModel);
         
@@ -433,16 +416,10 @@ class AAssets extends ANode {
           task.theself.model = combinedModel;
           task.el.setObject3D('mesh', combinedModel);
           task.el.emit('model-loaded', {format: 'gltf', model: combinedModel, isChunked: true});
-          
-          // console.log('debug: [COMBINED MODEL COMPLETE]', task.baseSrc);
         }
         
-        // console.log('debug: [END] loading chunk gltf:', task.baseSrc, 'chunk:', task.chunkIndex, 'duration:', taskDuration.toFixed(2) + 'ms');
         resolve();
       }, (error) => {
-        const taskEndTime = performance.now();
-        const taskDuration = taskEndTime - taskStartTime;
-        // console.log('debug: [ERROR] loading chunk gltf:', task.baseSrc, 'chunk:', task.chunkIndex, 'duration:', taskDuration.toFixed(2) + 'ms', error);
         reject(error);
       });
     });
