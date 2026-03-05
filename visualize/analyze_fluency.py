@@ -11,9 +11,11 @@ import matplotlib.pyplot as plt
 # Metrics are computed over the loading phase: performance uses allAssetsLoaded==False; profile uses all frames.
 # First SKIP_FIRST_N_FRAMES are excluded from all metric calculations.
 FPS_REF_MS = 16.7  # 60 FPS reference line (ms)
-STUTTER_PERCENT_ABOVE_REF = 0.3  # Frame time above this fraction over FPS_REF_MS is counted as stutter (e.g. 0.3 = 30%)
+STUTTER_REFS = (0.2, 0.3)  # Frame time above this fraction over FPS_REF_MS is counted as stutter; we report both.
 SKIP_FIRST_N_FRAMES = 3  # Exclude this many frames from the start when computing metrics
-IMAGES_DIR = os.path.join(os.path.dirname(__file__), "images")
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+IMAGES_DIR = os.path.join(_SCRIPT_DIR, "images")
+DATA_DIR = os.path.join(_SCRIPT_DIR, "data")
 
 
 def _detect_format(data):
@@ -100,30 +102,42 @@ def get_loading_phase_frame_times(parsed):
 
 def compute_metrics(parsed):
     """
-    Compute Average FPS, FTSD, MaxFT, stutter count, stutter_pct (over loading phase, first SKIP_FIRST_N_FRAMES excluded).
-    FTSD has the same unit as frame time (ms). Stutter: frame time > FPS_REF_MS * (1 + STUTTER_PERCENT_ABOVE_REF).
-    Returns: dict with keys avg_fps, ftsd_ms, max_ft_ms, n_frames, stutter_count, stutter_pct
+    Compute Average FPS, FTSD, MaxFT, top3_avg_ft_ms, stutter counts/pcts for STUTTER_REFS (over loading phase).
+    FTSD has the same unit as frame time (ms). Stutter: frame time > FPS_REF_MS * (1 + ref).
+    top3_avg_ft_ms = average of the 3 largest (worst) frame times.
+    Returns: dict with avg_fps, ftsd_ms, max_ft_ms, top3_avg_ft_ms, n_frames, and per-ref stutter_*.
     """
     ft = get_loading_phase_frame_times(parsed)
     if not ft:
-        return {"avg_fps": 0.0, "ftsd_ms": 0.0, "max_ft_ms": 0.0, "n_frames": 0, "stutter_count": 0, "stutter_pct": 0.0}
+        out = {"avg_fps": 0.0, "ftsd_ms": 0.0, "max_ft_ms": 0.0, "top3_avg_ft_ms": 0.0, "n_frames": 0}
+        for ref in STUTTER_REFS:
+            out[f"stutter_count_{ref}"] = 0
+            out[f"stutter_pct_{ref}"] = 0.0
+        return out
     arr = np.array(ft, dtype=float)
     n_frames = len(ft)
     mean_ms = float(np.mean(arr))
     avg_fps = 1000.0 / mean_ms if mean_ms > 0 else 0.0
-    ftsd_ms = float(np.std(arr))  # same unit as frame time (ms)
+    ftsd_ms = float(np.std(arr))
     max_ft_ms = float(np.max(arr))
-    stutter_threshold_ms = FPS_REF_MS * (1.0 + STUTTER_PERCENT_ABOVE_REF)
-    stutter_count = int(np.sum(arr > stutter_threshold_ms))
-    stutter_pct = round(100.0 * stutter_count / n_frames, 2) if n_frames else 0.0
-    return {
+    sorted_ft = np.sort(arr)
+    top3_ft = sorted_ft[-min(3, len(sorted_ft)):]  # 3 largest (worst) frame times
+    top3_avg_ft_ms = round(float(np.mean(top3_ft)), 2) if len(top3_ft) > 0 else 0.0
+
+    out = {
         "avg_fps": round(avg_fps, 2),
         "ftsd_ms": round(ftsd_ms, 2),
         "max_ft_ms": round(max_ft_ms, 2),
+        "top3_avg_ft_ms": top3_avg_ft_ms,
         "n_frames": n_frames,
-        "stutter_count": stutter_count,
-        "stutter_pct": stutter_pct,
     }
+    for ref in STUTTER_REFS:
+        thresh_ms = FPS_REF_MS * (1.0 + ref)
+        count = int(np.sum(arr > thresh_ms))
+        pct = round(100.0 * count / n_frames, 2) if n_frames else 0.0
+        out[f"stutter_count_{ref}"] = count
+        out[f"stutter_pct_{ref}"] = pct
+    return out
 
 
 def plot_frame_times(parsed, title=None, show_loading_end=True, ax=None):
@@ -168,6 +182,22 @@ def plot_frame_times(parsed, title=None, show_loading_end=True, ax=None):
     return fig
 
 
+def _plot_output_path(filepath, images_dir=IMAGES_DIR, data_dir=DATA_DIR):
+    """
+    Path for saving the plot: preserve directory structure under data/ so that
+    e.g. data/hallo/prism_4g_0 -> images/hallo/prism_4g_0.png (no overwrite across subdirs).
+    """
+    filepath = os.path.realpath(os.path.abspath(filepath))
+    data_dir = os.path.realpath(data_dir)
+    if filepath.startswith(data_dir):
+        rel = os.path.relpath(filepath, data_dir)
+    else:
+        rel = os.path.basename(filepath)
+    rel_no_ext = os.path.splitext(rel)[0]
+    out_path = os.path.join(images_dir, rel_no_ext + ".png")
+    return out_path
+
+
 def analyze_file(
     filepath,
     save_plot=True,
@@ -177,10 +207,10 @@ def analyze_file(
     """
     Load one JSON file, compute metrics, optionally save/show plot.
     filepath: path to JSON file
-    save_plot: whether to save figure to images_dir
+    save_plot: whether to save figure to images_dir (subdirs under data/ preserved)
     images_dir: directory for saved images (default visualize/images)
     show_plot: whether to show plot window
-    Returns: (parsed, metrics)
+    Returns: (parsed, metrics, plot_path_or_none)
     """
     parsed = load_frames(filepath)
     metrics = compute_metrics(parsed)
@@ -188,18 +218,20 @@ def analyze_file(
     basename = os.path.splitext(os.path.basename(filepath))[0]
     title = f"Frame time — {basename}"
 
+    plot_path = None
     if save_plot:
-        os.makedirs(images_dir, exist_ok=True)
-        out_path = os.path.join(images_dir, f"{basename}.png")
+        out_path = _plot_output_path(filepath, images_dir=images_dir)
+        os.makedirs(os.path.dirname(out_path), exist_ok=True)
         fig = plot_frame_times(parsed, title=title)
         fig.savefig(out_path, dpi=150, bbox_inches="tight")
         plt.close(fig)
+        plot_path = out_path
 
     if show_plot:
         plot_frame_times(parsed, title=title)
         plt.show()
 
-    return parsed, metrics
+    return parsed, metrics, plot_path
 
 
 def main():
@@ -212,16 +244,18 @@ def main():
     if not os.path.isfile(filepath):
         print(f"File not found: {filepath}")
         sys.exit(2)
-    parsed, metrics = analyze_file(filepath, save_plot=True, show_plot=show)
+    parsed, metrics, plot_path = analyze_file(filepath, save_plot=True, show_plot=show)
     print(f"Format: {parsed['format']}")
-    print(f"Average FPS: {metrics['avg_fps']}")
-    print(f"FTSD (ms):   {metrics['ftsd_ms']}")
-    print(f"MaxFT (ms):  {metrics['max_ft_ms']}")
-    print(f"Stutter count (>{FPS_REF_MS * (1 + STUTTER_PERCENT_ABOVE_REF):.1f} ms): {metrics['stutter_count']}")
-    print(f"Stutter pct: {metrics['stutter_pct']}%")
+    print(f"Average FPS:      {metrics['avg_fps']}")
+    print(f"FTSD (ms):        {metrics['ftsd_ms']}")
+    print(f"MaxFT (ms):       {metrics['max_ft_ms']}")
+    print(f"Top-3 avg FT (ms): {metrics['top3_avg_ft_ms']}")
+    for ref in STUTTER_REFS:
+        thresh_ms = FPS_REF_MS * (1.0 + ref)
+        print(f"Stutter pct (>{thresh_ms:.1f} ms, ref={ref}): {metrics[f'stutter_pct_{ref}']}%  (count: {metrics[f'stutter_count_{ref}']})")
     print(f"Frames (loading phase): {metrics['n_frames']}")
-    basename = os.path.splitext(os.path.basename(filepath))[0]
-    print(f"Plot saved: {os.path.join(IMAGES_DIR, basename + '.png')}")
+    if plot_path:
+        print(f"Plot saved: {plot_path}")
 
 
 if __name__ == "__main__":

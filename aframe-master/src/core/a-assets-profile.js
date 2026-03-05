@@ -153,22 +153,7 @@ class AAssets extends ANode {
         break;
       }
     }
-
-    if (frameTasks.length > 0) {
-      const frameEnd = performance.now();
-      const taskDurationMs = frameTasks.reduce(function (s, t) { return s + (t.durationMs || 0); }, 0);
-      const frameIndex = this._profileFrameIndex++;
-      this._profileFrames.push({
-        frameIndex: frameIndex,
-        priority: framePriority,
-        frameStart: frameStart,
-        frameEnd,
-        frameDurationMs: frameEnd - frameStart,
-        taskDurationMs: taskDurationMs,
-        networkTaskDurationMs: frameNetworkMs,
-        tasks: frameTasks
-      });
-    }
+    // Do not record priority 1; only priority 2+ are recorded in doTasks (every render frame).
   }
 
   async loadGroup (priority) {
@@ -291,23 +276,24 @@ class AAssets extends ANode {
       }
     }
 
-    if (frameTasks.length > 0) {
-      const frameEnd = performance.now();
-      const taskDurationMs = frameTasks.reduce(function (s, t) { return s + (t.durationMs || 0); }, 0);
-      const frameIndex = this._profileFrameIndex++;
-      const frameRecord = {
-        frameIndex: frameIndex,
-        priority: framePriority,
-        ...(lastTrueRenderTimeMs !== undefined && { lastTrueRenderTimeMs: lastTrueRenderTimeMs }),
-        frameStart: frameStart,
-        frameEnd,
-        frameDurationMs: frameEnd - frameStart,
-        taskDurationMs: taskDurationMs,
-        networkTaskDurationMs: frameNetworkMs,
-        tasks: frameTasks
-      };
-      this._profileFrames.push(frameRecord);
-    }
+    // doTasks runs only in render loop (priority 2 or 3); record every frame. First frame may lack lastTrueRenderTimeMs.
+    const frameEnd = performance.now();
+    const taskDurationMs = frameTasks.length > 0
+      ? frameTasks.reduce(function (s, t) { return s + (t.durationMs || 0); }, 0)
+      : 0;
+    const frameIndex = this._profileFrameIndex++;
+    const frameRecord = {
+      frameIndex: frameIndex,
+      priority: framePriority,
+      ...(lastTrueRenderTimeMs !== undefined && { lastTrueRenderTimeMs: lastTrueRenderTimeMs }),
+      frameStart: frameStart,
+      frameEnd,
+      frameDurationMs: frameEnd - frameStart,
+      taskDurationMs: taskDurationMs,
+      networkTaskDurationMs: frameNetworkMs,
+      tasks: frameTasks
+    };
+    this._profileFrames.push(frameRecord);
   }
 
   doNetworkTask () {

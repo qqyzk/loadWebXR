@@ -129,22 +129,7 @@ class AAssets extends ANode {
         break;
       }
     }
-
-    if (frameTasks.length > 0) {
-      const frameEnd = performance.now();
-      const taskDurationMs = frameTasks.reduce(function (s, t) { return s + (t.durationMs || 0); }, 0);
-      const frameIndex = this._profileFrameIndex++;
-      this._profileFrames.push({
-        frameIndex: frameIndex,
-        priority: framePriority,
-        frameStart: frameStart,
-        frameEnd,
-        frameDurationMs: frameEnd - frameStart,
-        taskDurationMs: taskDurationMs,
-        networkTaskDurationMs: frameNetworkMs,
-        tasks: frameTasks
-      });
-    }
+    // Do not record priority 1; only priority 2+ are recorded in doTasks (every render frame).
   }
 
   async loadGroup (priority) {
@@ -223,19 +208,8 @@ class AAssets extends ANode {
 
     // One record per render frame; frameIndex = render frame index (0, 1, 2, ...)
     const currentFrameIndex = this._profileFrameIndex++;
-    // After first render, wait M frames before starting priority 2/3; record these as priority 1
+    // After first render, wait M frames before starting priority 2/3; do not record (no priority 1).
     if (this._extremeWaitFramesRemaining > 0) {
-      this._profileFrames.push({
-        frameIndex: currentFrameIndex,
-        priority: 1,
-        ...(lastTrueRenderTimeMs !== undefined && { lastTrueRenderTimeMs: lastTrueRenderTimeMs }),
-        frameStart: frameStart,
-        frameEnd: frameStart,
-        frameDurationMs: 0,
-        taskDurationMs: 0,
-        networkTaskDurationMs: 0,
-        tasks: []
-      });
       this._extremeWaitFramesRemaining--;
       return;
     }
