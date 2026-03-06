@@ -420,6 +420,25 @@ function splitBufferGeometryIntoK (geometry, k) {
 
   const indexAttr = geometry.index;
   const attrs = geometry.attributes;
+  const groups = Array.isArray(geometry.groups) ? geometry.groups : [];
+
+  // 为每个三角形标注其 materialIndex（用于 multi-material mesh 导出一致）
+  const triMaterialIndex = new Array(triCount).fill(0);
+  if (groups.length) {
+    for (const g of groups) {
+      if (!g || typeof g.start !== 'number' || typeof g.count !== 'number') continue;
+      const start = Math.max(0, g.start | 0);
+      const end = Math.max(start, (g.start + g.count) | 0);
+      const matIndex = (g.materialIndex ?? 0) | 0;
+      // glTF/three 的 group 通常以 index(或 vertex) 为单位且按三角形边界切分（count 为 3 的倍数）。
+      const triStart = Math.floor(start / 3);
+      const triEnd = Math.min(triCount, Math.ceil(end / 3));
+      for (let t = triStart; t < triEnd; t++) {
+        const idxStart = t * 3;
+        if (idxStart >= start && idxStart + 3 <= end) triMaterialIndex[t] = matIndex;
+      }
+    }
+  }
 
   // 为每个三角形分配到 chunk（贪心按三角形数均分）
   const triToChunk = new Array(triCount);
@@ -457,6 +476,7 @@ function splitBufferGeometryIntoK (geometry, k) {
     }
 
     const newIndexArray = [];
+    const newTriMats = [];
     for (const t of triIndices) {
       let i0, i1, i2;
       if (hasIndex) {
@@ -468,6 +488,7 @@ function splitBufferGeometryIntoK (geometry, k) {
         i1 = t * 3 + 1;
         i2 = t * 3 + 2;
       }
+      newTriMats.push(triMaterialIndex[t] | 0);
       newIndexArray.push(addVertex(i0), addVertex(i1), addVertex(i2));
     }
 
@@ -488,8 +509,20 @@ function splitBufferGeometryIntoK (geometry, k) {
       newGeom.setAttribute(name, newAttr);
     }
     newGeom.setIndex(newIndexArray);
-    if (geometry.groups?.length) {
-      newGeom.groups = [{ start: 0, count: newIndexArray.length, materialIndex: 0 }];
+    if (newTriMats.length && groups.length) {
+      // 按新索引顺序生成 groups：每个 group 对应一段连续 indices 且 materialIndex 不变
+      newGeom.clearGroups();
+      let currentMat = newTriMats[0];
+      let groupStart = 0;
+      for (let ti = 0; ti < newTriMats.length; ti++) {
+        const mat = newTriMats[ti];
+        if (mat !== currentMat) {
+          newGeom.addGroup(groupStart, ti * 3 - groupStart, currentMat);
+          groupStart = ti * 3;
+          currentMat = mat;
+        }
+      }
+      newGeom.addGroup(groupStart, newTriMats.length * 3 - groupStart, currentMat);
     }
     if (geometry.drawMode !== undefined) newGeom.drawMode = geometry.drawMode;
     result.push(newGeom);
@@ -509,6 +542,13 @@ function splitMeshIntoK (mesh, k) {
   const parts = splitBufferGeometryIntoK(geometry, k);
   if (parts.length <= 1) return [mesh];
 
+  // 让拆分后的 subMesh 在 world 空间与原 mesh 完全一致（后续 re-parent 也不会“站立变躺着”）
+  const worldMatrix = mesh.matrixWorld ? mesh.matrixWorld.clone() : null;
+  const wp = new THREE.Vector3();
+  const wq = new THREE.Quaternion();
+  const ws = new THREE.Vector3();
+  if (worldMatrix) worldMatrix.decompose(wp, wq, ws);
+
   const isSkinned = mesh.isSkinnedMesh && mesh.skeleton;
   const skRoot = isSkinned ? getSkeletonRoot(mesh.skeleton) : null;
   const MeshClass = isSkinned ? THREE.SkinnedMesh : THREE.Mesh;
@@ -518,9 +558,13 @@ function splitMeshIntoK (mesh, k) {
     const subGeom = parts[i];
     const subMesh = new MeshClass(subGeom, mesh.material);
     subMesh.name = (mesh.name || 'mesh') + '_chunk' + (i + 1);
-    subMesh.matrix.copy(mesh.matrix);
-    subMesh.matrixWorld.copy(mesh.matrixWorld);
-    if (mesh.parent) subMesh.parent = mesh.parent;
+    if (worldMatrix) {
+      subMesh.position.copy(wp);
+      subMesh.quaternion.copy(wq);
+      subMesh.scale.copy(ws);
+      subMesh.updateMatrix();
+      subMesh.updateMatrixWorld(true);
+    }
 
     if (isSkinned && skRoot) {
       const skeletonClone = cloneWithSkeleton(skRoot);
@@ -559,6 +603,9 @@ function splitMeshIntoK (mesh, k) {
 }
 
 function splitSceneByK (root, stats, k) {
+  // 必须先更新 matrixWorld，否则后续 re-parent/导出会发生坐标漂移（典型症状：站立变躺着/位置错乱）
+  root.updateMatrixWorld(true);
+
   const Vmax = Math.floor(stats.totalVertices / k);
   const Fmax = Math.floor(stats.totalTriangles / k);
 
@@ -600,6 +647,15 @@ function splitSceneByK (root, stats, k) {
   let curVert = 0;
   let addedSkeletonRoots = new Set();
 
+  function isAncestor (ancestor, obj) {
+    let n = obj;
+    while (n) {
+      if (n === ancestor) return true;
+      n = n.parent;
+    }
+    return false;
+  }
+
   for (const mesh of pieces) {
     const geom = mesh.geometry;
     const meshTri = geom.index ? geom.index.count / 3 : geom.attributes.position.count / 3;
@@ -623,13 +679,15 @@ function splitSceneByK (root, stats, k) {
 
     if (mesh.isSkinnedMesh && mesh.skeleton) {
       const skRoot = getSkeletonRoot(mesh.skeleton);
-      if (skRoot && !addedSkeletonRoots.has(skRoot)) {
-        currentGroup.add(skRoot);
+      // 只有当 bone root 不在 mesh 自身层级内时，才需要单独加入（GLTFLoader 常见结构：bones 在 scene 图里，不是 mesh 的 child）
+      if (skRoot && !isAncestor(mesh, skRoot) && !addedSkeletonRoots.has(skRoot)) {
+        currentGroup.attach(skRoot); // 保留 world transform
         addedSkeletonRoots.add(skRoot);
       }
     }
 
-    currentGroup.add(mesh);
+    // 用 attach 保留 mesh 的 world transform（否则会丢失中间节点 transform 导致姿态/位置错误）
+    currentGroup.attach(mesh);
     curTri += meshTri;
     curVert += meshVert;
   }

@@ -1,0 +1,28 @@
+[
+  {
+    "src": "item/Noah_hunter_v1.01.glb",
+    "type": "scene",
+    "subtype": "model",
+    "is3DModel": true,
+    "needChunk": true,
+    "k": 14,
+    "maxProcessTimeMs": 50.0,
+    "targetFrameTimeMs": 16.7,
+    "safeMarginMs": 5.01,
+    "budgetMs": 11.69,
+    "exceedsBudget": true
+  },
+  {
+    "src": "item/Elly_2k_03.glb",
+    "type": "scene",
+    "subtype": "model",
+    "is3DModel": true,
+    "needChunk": true,
+    "k": 11,
+    "maxProcessTimeMs": 50.0,
+    "targetFrameTimeMs": 16.7,
+    "safeMarginMs": 5.01,
+    "budgetMs": 11.69,
+    "exceedsBudget": true
+  }
+]
