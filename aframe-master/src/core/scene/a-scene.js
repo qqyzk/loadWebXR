@@ -85,7 +85,7 @@ export class AScene extends AEntity {
     this.setAttribute('keyboard-shortcuts', '');
     this.setAttribute('screenshot', '');
     this.setAttribute('xr-mode-ui', '');
-    this.setAttribute('device-orientation-permission-ui', '');
+    this.setAttribute('device-orientation-permission-ui', 'enabled: false');
     super.doConnectedCallback();
 
     // Renderer initialization

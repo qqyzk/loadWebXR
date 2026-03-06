@@ -8,3 +8,12 @@ realCase/EllieTale-WebXR-main/lib/my-aframe.js
 realCase/hallovreen-master/mylib/my-aframe.js
 realCase/Virtual-Reality-Museum-master/mylib/my-aframe.js
 simulation/lib/my-aframe.js
+
+# Generated chunk outputs / backups
+**/_chunk_backups/
+**/*_split_*chunks/
+model-splitter-pre/
+
+# Local experiment / scratch variants
+aframe-master/src/core/a-assets-previousjs
+aframe-master/src/core/a-assets-profile-with-chunk.js

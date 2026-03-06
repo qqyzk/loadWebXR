@@ -34,7 +34,10 @@ export var Component = registerComponent('device-orientation-permission-ui', {
   init: function () {
     var self = this;
 
-    if (!this.data.enabled) { return; }
+    if (!this.data.enabled) {
+      this.permissionGranted = true;
+      return;
+    }
 
     if (!window.isSecureContext) {
       this.showHTTPAlert();

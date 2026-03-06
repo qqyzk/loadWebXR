@@ -1,41 +1,41 @@
+/**
+ * sound-priority-only.js
+ * For use with a-assets-priority-only: registers a promise that runs the scene task
+ * as soon as this asset's network load completes (concurrent scene tasks).
+ * Same component name 'sound' so load after components/index.js to override.
+ */
 import { registerComponent } from '../core/component.js';
 import { debug } from '../utils/index.js';
 import * as THREE from 'three';
 
 var warn = debug('components:sound:warn');
 
-/**
- * Sound component.
- */
 export var Component = registerComponent('sound', {
   schema: {
-    autoplay: {default: false},
-    distanceModel: {default: 'inverse', oneOf: ['linear', 'inverse', 'exponential']},
-    loop: {default: false},
-    loopStart: {default: 0},
-    loopEnd: {default: 0},
-    maxDistance: {default: 10000},
-    on: {default: ''},
-    poolSize: {default: 1},
-    positional: {default: true},
-    refDistance: {default: 1},
-    rolloffFactor: {default: 1},
-    src: {type: 'myaudio'},
-    volume: {default: 1}
+    autoplay: { default: false },
+    distanceModel: { default: 'inverse', oneOf: ['linear', 'inverse', 'exponential'] },
+    loop: { default: false },
+    loopStart: { default: 0 },
+    loopEnd: { default: 0 },
+    maxDistance: { default: 10000 },
+    on: { default: '' },
+    poolSize: { default: 1 },
+    positional: { default: true },
+    refDistance: { default: 1 },
+    rolloffFactor: { default: 1 },
+    src: { type: 'myaudio' },
+    volume: { default: 1 }
   },
 
   multiple: true,
 
   init: function () {
     var self = this;
-
     this.listener = null;
     this.audioLoader = new THREE.AudioLoader();
     this.pool = new THREE.Group();
     this.loaded = false;
     this.mustPlay = false;
-
-    // Don't pass evt because playSound takes a function as parameter.
     this.playSoundBound = function () { self.playSound(); };
   },
 
@@ -44,7 +44,6 @@ export var Component = registerComponent('sound', {
     var i;
     var sound;
     var srcChanged = data.src !== oldData.src;
-    // Create new sound if not yet created or changing `src`.
     if (srcChanged) {
       if (!data.src) { return; }
       this.setupSound();
@@ -60,14 +59,11 @@ export var Component = registerComponent('sound', {
       }
       sound.setLoop(data.loop);
       sound.setLoopStart(data.loopStart);
-
-      // With a loop start specified without a specified loop end, the end of the loop should be the end of the file
       if (data.loopStart !== 0 && data.loopEnd === 0) {
         sound.setLoopEnd(sound.buffer.duration);
       } else {
         sound.setLoopEnd(data.loopEnd);
       }
-
       sound.setVolume(data.volume);
       sound.isPaused = false;
     }
@@ -76,10 +72,8 @@ export var Component = registerComponent('sound', {
       this.updateEventListener(oldData.on);
     }
 
-    // All sound values set. Load in `src`.
     if (srcChanged) {
       var self = this;
-
       this.loaded = false;
       var assetEl = document.getElementById(data.src.substring(1));
       var src = assetEl.getAttribute('src');
@@ -88,33 +82,18 @@ export var Component = registerComponent('sound', {
       if (assetEl.hasAttribute('priority')) {
         priority = parseInt(assetEl.getAttribute('priority'));
       }
-      assets.addSceneTaskCount({
-        priority: priority
-      });
-      assetEl.loaded()
-        .then(() => {
-          assets.registerSceneTask({
-            type: 'sound',
-            src: src,
-            el: self.el,
-            loader: this.audioLoader,
-            theself: self,
-            sound: sound,
-            priority: priority
-          });
-          // this.audioLoader.load(src, function (buffer) {
-          //   for (i = 0; i < self.pool.children.length; i++) {
-          //     sound = self.pool.children[i];
-          //     sound.setBuffer(buffer);
-          //   }
-          //   self.loaded = true;
+      assets.addSceneTaskCount({ priority: priority });
 
-          //   // Remove this key from cache, otherwise we can't play it again
-          //   THREE.Cache.remove(data.src);
-          //   if (self.data.autoplay || self.mustPlay) { self.playSound(self.processSound); }
-          //   self.el.emit('sound-loaded', self.evtDetail, false);
-          // });
-        });
+      var promise = assetEl.loaded().then(() => assets.runSoundSceneTask({
+        type: 'sound',
+        src: src,
+        el: self.el,
+        loader: this.audioLoader,
+        theself: self,
+        priority: priority
+      }));
+
+      assets.registerScenePromise(priority, promise);
     }
   },
 
@@ -131,27 +110,20 @@ export var Component = registerComponent('sound', {
   remove: function () {
     var i;
     var sound;
-
     this.removeEventListener();
-
     if (this.el.getObject3D(this.attrName)) {
       this.el.removeObject3D(this.attrName);
     }
-
     try {
       for (i = 0; i < this.pool.children.length; i++) {
         sound = this.pool.children[i];
         sound.disconnect();
       }
     } catch (e) {
-      // disconnect() will throw if it was never connected initially.
       warn('Audio source not properly disconnected');
     }
   },
 
-  /**
-  *  Update listener attached to the user defined on event.
-  */
   updateEventListener: function (oldEvt) {
     var el = this.el;
     if (oldEvt) { el.removeEventListener(oldEvt, this.playSoundBound); }
@@ -162,9 +134,6 @@ export var Component = registerComponent('sound', {
     this.el.removeEventListener(this.data.on, this.playSoundBound);
   },
 
-  /**
-   * Removes current sound object, creates new sound object, adds to entity.
-   */
   setupSound: function () {
     var el = this.el;
     var i;
@@ -177,7 +146,6 @@ export var Component = registerComponent('sound', {
       el.removeObject3D('sound');
     }
 
-    // Only want one AudioListener. Cache it on the scene.
     var listener = this.listener = sceneEl.audioListener || new THREE.AudioListener();
     sceneEl.audioListener = listener;
 
@@ -185,12 +153,10 @@ export var Component = registerComponent('sound', {
       sceneEl.camera.add(listener);
     }
 
-    // Wait for camera if necessary.
     sceneEl.addEventListener('camera-set-active', function (evt) {
       evt.detail.cameraEl.getObject3D('camera').add(listener);
     });
 
-    // Create [poolSize] audio instances and attach them to pool
     this.pool = new THREE.Group();
     for (i = 0; i < this.data.poolSize; i++) {
       sound = this.data.positional
@@ -209,13 +175,9 @@ export var Component = registerComponent('sound', {
     }
   },
 
-  /**
-   * Pause all the sounds in the pool.
-   */
   pauseSound: function () {
     var i;
     var sound;
-
     this.isPlaying = false;
     for (i = 0; i < this.pool.children.length; i++) {
       sound = this.pool.children[i];
@@ -227,9 +189,6 @@ export var Component = registerComponent('sound', {
     }
   },
 
-  /**
-   * Look for an unused sound in the pool and play it if found.
-   */
   playSound: function (processSound) {
     var found;
     var i;
@@ -265,9 +224,6 @@ export var Component = registerComponent('sound', {
     this.processSound = undefined;
   },
 
-  /**
-   * Stop all the sounds in the pool.
-   */
   stopSound: function () {
     var i;
     var sound;

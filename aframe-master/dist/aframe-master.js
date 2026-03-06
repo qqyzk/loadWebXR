@@ -7760,12 +7760,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var three_addons_loaders_GLTFLoader_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three/addons/loaders/GLTFLoader.js */ "./node_modules/three/examples/jsm/loaders/GLTFLoader.js");
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
-
-
-
 /**
- * glTF model loader.
+ * gltf-model-priority-only.js
+ * For use with a-assets-priority-only: registers a promise that runs the scene task
+ * as soon as this asset's network load completes (concurrent scene tasks).
+ * No chunking; same component name 'gltf-model' so load after components/index.js to override.
  */
+
+
 var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerComponent)('gltf-model', {
   schema: {
     type: 'mymodel'
@@ -7805,80 +7807,24 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     if (assetEl.hasAttribute('priority')) {
       priority = parseInt(assetEl.getAttribute('priority'));
     }
-
-    // Check if this is a chunked model
-    if (assets.isChunkedModel && assets.isChunkedModel(assetEl)) {
-      // Handle chunked model - 新的分块处理逻辑
-      this.handleChunkedModel(assetEl, src, priority, assets);
-    } else {
-      // Handle non-chunked model (original logic)
-      assets.addSceneTaskCount({
-        priority: priority
-      });
-      assetEl.loaded().then(() => this.ready).then(() => {
-        assets.registerSceneTask({
-          type: 'gltf-model',
-          src: src,
-          el: self.el,
-          loader: self.loader,
-          theself: self,
-          priority: priority
-        });
-      });
-    }
+    assets.addSceneTaskCount({
+      priority: priority
+    });
+    var promise = assetEl.loaded().then(() => this.ready).then(() => assets.runGLTFSceneTask({
+      type: 'gltf-model',
+      src: src,
+      el: self.el,
+      loader: self.loader,
+      theself: self,
+      priority: priority
+    }));
+    assets.registerScenePromise(priority, promise);
   },
   remove: function () {
     if (!this.model) {
       return;
     }
     this.el.removeObject3D('mesh');
-  },
-  // 新增：处理分块模型
-  handleChunkedModel: function (assetEl, src, priority, assets) {
-    var self = this;
-    const chunkCount = assets.getChunkCount(assetEl);
-
-    // console.log('🔍 [GLTF-COMPONENT] Chunked model detected:', {
-    //   src: src,
-    //   chunkCount: chunkCount,
-    //   priority: priority
-    // });
-
-    // 为每个分块增加场景任务计数
-    for (let i = 1; i <= chunkCount; i++) {
-      assets.addSceneTaskCount({
-        priority: priority
-      });
-    }
-
-    // 等待每个分块的网络传输完成，然后注册GLTF加载任务
-    this.ready.then(() => {
-      for (let i = 1; i <= chunkCount; i++) {
-        const chunkPromise = assets.getChunkPromise(src, i);
-        if (chunkPromise) {
-          chunkPromise.then(() => {
-            // console.log('📦 [GLTF-COMPONENT] Chunk network complete, registering scene task:', i);
-
-            // 单个分块网络传输完成，注册GLTF加载任务
-            // chunkBasePath：分块 glTF 所在目录，用于解析 .bin / 纹理等相对路径
-            const chunkBasePath = src + '_split_' + chunkCount + 'chunks/';
-            assets.registerSceneTask({
-              type: 'chunk-gltf',
-              baseSrc: src,
-              chunkIndex: i,
-              totalChunks: chunkCount,
-              chunkBasePath: chunkBasePath,
-              el: self.el,
-              loader: self.loader,
-              theself: self,
-              priority: priority
-            });
-          });
-        } else {
-          console.error('❌ [GLTF-COMPONENT] No chunk promise found for:', src, 'chunk:', i);
-        }
-      }
-    });
   }
 });
 
@@ -14655,6 +14601,7 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
   init: function () {
     var self = this;
     if (!this.data.enabled) {
+      this.permissionGranted = true;
       return;
     }
     if (!window.isSecureContext) {
@@ -16403,14 +16350,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core_component_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/component.js */ "./src/core/component.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 /* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.core.js");
+/**
+ * sound-priority-only.js
+ * For use with a-assets-priority-only: registers a promise that runs the scene task
+ * as soon as this asset's network load completes (concurrent scene tasks).
+ * Same component name 'sound' so load after components/index.js to override.
+ */
 
 
 
 var warn = (0,_utils_index_js__WEBPACK_IMPORTED_MODULE_1__.debug)('components:sound:warn');
-
-/**
- * Sound component.
- */
 var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerComponent)('sound', {
   schema: {
     autoplay: {
@@ -16462,8 +16411,6 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     this.pool = new three__WEBPACK_IMPORTED_MODULE_2__.Group();
     this.loaded = false;
     this.mustPlay = false;
-
-    // Don't pass evt because playSound takes a function as parameter.
     this.playSoundBound = function () {
       self.playSound();
     };
@@ -16473,7 +16420,6 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     var i;
     var sound;
     var srcChanged = data.src !== oldData.src;
-    // Create new sound if not yet created or changing `src`.
     if (srcChanged) {
       if (!data.src) {
         return;
@@ -16490,8 +16436,6 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
       }
       sound.setLoop(data.loop);
       sound.setLoopStart(data.loopStart);
-
-      // With a loop start specified without a specified loop end, the end of the loop should be the end of the file
       if (data.loopStart !== 0 && data.loopEnd === 0) {
         sound.setLoopEnd(sound.buffer.duration);
       } else {
@@ -16503,8 +16447,6 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     if (data.on !== oldData.on) {
       this.updateEventListener(oldData.on);
     }
-
-    // All sound values set. Load in `src`.
     if (srcChanged) {
       var self = this;
       this.loaded = false;
@@ -16518,29 +16460,15 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
       assets.addSceneTaskCount({
         priority: priority
       });
-      assetEl.loaded().then(() => {
-        assets.registerSceneTask({
-          type: 'sound',
-          src: src,
-          el: self.el,
-          loader: this.audioLoader,
-          theself: self,
-          sound: sound,
-          priority: priority
-        });
-        // this.audioLoader.load(src, function (buffer) {
-        //   for (i = 0; i < self.pool.children.length; i++) {
-        //     sound = self.pool.children[i];
-        //     sound.setBuffer(buffer);
-        //   }
-        //   self.loaded = true;
-
-        //   // Remove this key from cache, otherwise we can't play it again
-        //   THREE.Cache.remove(data.src);
-        //   if (self.data.autoplay || self.mustPlay) { self.playSound(self.processSound); }
-        //   self.el.emit('sound-loaded', self.evtDetail, false);
-        // });
-      });
+      var promise = assetEl.loaded().then(() => assets.runSoundSceneTask({
+        type: 'sound',
+        src: src,
+        el: self.el,
+        loader: this.audioLoader,
+        theself: self,
+        priority: priority
+      }));
+      assets.registerScenePromise(priority, promise);
     }
   },
   pause: function () {
@@ -16566,13 +16494,9 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
         sound.disconnect();
       }
     } catch (e) {
-      // disconnect() will throw if it was never connected initially.
       warn('Audio source not properly disconnected');
     }
   },
-  /**
-  *  Update listener attached to the user defined on event.
-  */
   updateEventListener: function (oldEvt) {
     var el = this.el;
     if (oldEvt) {
@@ -16583,9 +16507,6 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
   removeEventListener: function () {
     this.el.removeEventListener(this.data.on, this.playSoundBound);
   },
-  /**
-   * Removes current sound object, creates new sound object, adds to entity.
-   */
   setupSound: function () {
     var el = this.el;
     var i;
@@ -16596,20 +16517,14 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
       this.stopSound();
       el.removeObject3D('sound');
     }
-
-    // Only want one AudioListener. Cache it on the scene.
     var listener = this.listener = sceneEl.audioListener || new three__WEBPACK_IMPORTED_MODULE_2__.AudioListener();
     sceneEl.audioListener = listener;
     if (sceneEl.camera) {
       sceneEl.camera.add(listener);
     }
-
-    // Wait for camera if necessary.
     sceneEl.addEventListener('camera-set-active', function (evt) {
       evt.detail.cameraEl.getObject3D('camera').add(listener);
     });
-
-    // Create [poolSize] audio instances and attach them to pool
     this.pool = new three__WEBPACK_IMPORTED_MODULE_2__.Group();
     for (i = 0; i < this.data.poolSize; i++) {
       sound = this.data.positional ? new three__WEBPACK_IMPORTED_MODULE_2__.PositionalAudio(listener) : new three__WEBPACK_IMPORTED_MODULE_2__.Audio(listener);
@@ -16624,9 +16539,6 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
       };
     }
   },
-  /**
-   * Pause all the sounds in the pool.
-   */
   pauseSound: function () {
     var i;
     var sound;
@@ -16640,9 +16552,6 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
       sound.pause();
     }
   },
-  /**
-   * Look for an unused sound in the pool and play it if found.
-   */
   playSound: function (processSound) {
     var found;
     var i;
@@ -16674,9 +16583,6 @@ var Component = (0,_core_component_js__WEBPACK_IMPORTED_MODULE_0__.registerCompo
     this.mustPlay = false;
     this.processSound = undefined;
   },
-  /**
-   * Stop all the sounds in the pool.
-   */
   stopSound: function () {
     var i;
     var sound;
@@ -19036,14 +18942,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _a_node_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./a-node.js */ "./src/core/a-node.js");
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/index.js */ "./src/utils/index.js");
 /* global customElements */
+/**
+ * a-assets-priority-only.js
+ * Ablation variant: priority only, no greedy, no chunking. Scene tasks run as soon as
+ * each asset's network completes (concurrent scene tasks via registered promises).
+ *
+ * To use: In src/index.js:
+ *   1) Change: import './core/a-assets.js' → import './core/a-assets-priority-only.js'
+ *   2) After: import './components/index.js', add:
+ *      import './components/gltf-model-priority-only.js';
+ *      import './components/sound-priority-only.js';
+ *      (so they override the default gltf-model and sound)
+ *   Then run the build (e.g. npm run build).
+ */
 
 
 
 var fileLoader = new three__WEBPACK_IMPORTED_MODULE_2__.FileLoader();
 var warn = (0,_utils_index_js__WEBPACK_IMPORTED_MODULE_1__.debug)('core:a-assets:warn');
-/**
- * Asset management system. Handles blocking on asset loading.
- */
 class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
   constructor() {
     super();
@@ -19055,9 +18971,6 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
       2: [],
       3: []
     };
-    this.renderFirstFrame = true;
-    this.frameTimeBudget = 16.7;
-    this.safeMargin = this.frameTimeBudget * 0.3; // 30% of budget; effectiveBudget = frameTimeBudget - safeMargin
     this.networkQueues = {
       1: [],
       2: [],
@@ -19073,26 +18986,16 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
       2: 0,
       3: 0
     };
+    this.scenePromises = {
+      1: [],
+      2: [],
+      3: []
+    };
     this.currentPriority = 1;
-    this.currentStage = 0;
     this.allTasksDone = false;
     this.sceneTaskDone = 0;
-    // 新增：分块相关状态管理
-    this.chunkData = {}; // 存储下载的分块数据
-    this.loadedChunks = {}; // 存储已加载的分块模型
-    this.chunkPromises = {}; // 存储每个分块的Promise
-    this.chunkResolvers = {}; // 存储Promise的resolve函数
   }
   async doConnectedCallback() {
-    var self = this;
-    var i;
-    var loaded = [];
-    var mediaEl;
-    var mediaEls;
-    var imgEl;
-    var imgEls;
-    var timeout;
-    var children;
     super.doConnectedCallback();
     if (!this.parentNode.isScene) {
       throw new Error('<a-assets> must be a child of a <a-scene>.');
@@ -19100,18 +19003,13 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     await customElements.whenDefined('a-asset-item');
     await Promise.resolve();
     this.collectResources();
-    // console.log('debug:queue', this.priorityQueues);
     this.load();
-    // await this.loadGroup(1);//network trasfer
-    // await this.doGroupSceneTask(1);//scene
-    await this.loadFirstPriority();
+    await this.loadPriorityGroupFully(1);
     this.parentNode.emit('firstloaded');
-    this.parentNode.addEventListener('render', async function (event) {
-      const startTime = event.detail;
-      if (!self.allTasksDone) {
-        self.doTasks(startTime);
-      }
-    });
+    await this.loadPriorityGroupFully(2);
+    await this.loadPriorityGroupFully(3);
+    this.allTasksDone = true;
+    this.parentNode.emit('all-assets-loaded');
   }
   disconnectedCallback() {
     super.disconnectedCallback();
@@ -19120,7 +19018,6 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     }
   }
   load() {
-    // Filter out all children, as waiting already took place in doConnectedCallback.
     super.load.call(this, null, function () {
       return false;
     });
@@ -19130,116 +19027,42 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
     elements.forEach(el => {
       const priority = this.getPriority(el);
       this.priorityQueues[priority].push(el);
-
-      // Check if this is a chunked model
-      if (this.isChunkedModel(el)) {
-        const src = el.getAttribute('src');
-        // console.log('🔍 [ASSETS] Chunked model detected, creating chunk tasks:', src);
-
-        // 为每个分块创建网络任务
-        const chunkCount = this.getChunkCount(el);
-        for (let i = 1; i <= chunkCount; i++) {
-          const chunkTask = {
-            type: 'chunk',
-            originalAssetEl: el,
-            chunkIndex: i,
-            chunkSrc: this.getChunkSrc(el, i),
-            baseSrc: src,
-            modelId: el.getAttribute('id'),
-            priority: priority
-          };
-          this.networkQueues[priority].push(chunkTask);
-
-          // 为每个分块创建Promise
-          this.createChunkPromise(src, i);
-
-          // console.log('🔍 [ASSETS] Created chunk task:', chunkTask.chunkSrc);
-        }
-      } else {
-        // Non-chunked model, add to networkQueues as usual
-        this.networkQueues[priority].push(el);
-      }
+      this.networkQueues[priority].push(el);
     });
   }
   getPriority(el) {
     if (el.hasAttribute('priority')) return parseInt(el.getAttribute('priority'));
     return 3;
   }
-  async loadPriorityGroups(groups) {
-    for (let priority of groups) {
-      // console.log('debug: loading group', priority);
-      await this.loadGroup(priority);
-    }
-  }
-  async loadFirstPriority() {
-    // console.log('debug: loading first priority group', this.currentPriority);
-    const group = this.networkQueues[1];
-    // console.log('debug: network transfering group',1, group);
-    if (!group.length) return;
 
-    // 处理网络传输任务（支持分块任务）
+  /**
+   * Load one priority group fully: network transfer then scene tasks run as soon as
+   * each asset's network completes (concurrent scene tasks via registered promises).
+   */
+  async loadPriorityGroupFully(priority) {
+    const group = this.networkQueues[priority];
+    if (!group.length) return;
     group.map(item => {
-      if (item.type === 'chunk') {
-        // 分块任务：使用已实现的 loadChunk 方法
-        this.loadChunk(item);
-      } else if (item.tagName === 'A-ASSET-ITEM') {
-        // 普通资源任务
-        // console.log('debug: loading asset item', item);
+      if (item.tagName === 'A-ASSET-ITEM') {
         this.loadAssetItem(item);
+      } else if (item.tagName === 'AUDIO') {
+        this.loadAudio(item);
       }
     });
-    // console.log('debug: scene queues', this.sceneQueues);
-    // 等待场景任务完成
-    while (true) {
-      // console.log('debug: scene queues', this.sceneQueues,this.sceneQueues[this.currentPriority].length);
-      if (this.sceneQueues[this.currentPriority].length !== 0) {
-        await this.doSceneTask();
-        this.sceneTaskDone++;
-      } else {
-        await this.delay(2);
-      }
-      if (this.sceneTaskDone === this.sceneTaskCount[this.currentPriority]) {
-        this.currentStage = 0;
-        this.sceneTaskDone = 0;
-        this.currentPriority++;
-        break;
-      }
+    this.currentPriority = priority;
+
+    // Yield until entities have connected and registered their scene promises.
+    while (group.length > 0 && this.sceneTaskCount[priority] === 0) {
+      await this.delay(2);
     }
-  }
-  async loadGroup(priority) {
-    const group = this.networkQueues[priority];
-    // console.log('debug: network transfering group', priority, group);
-    if (!group.length) return;
-    await Promise.all(group.map(item => {
-      if (item.type === 'chunk') {
-        // 分块任务：使用已实现的 loadChunk 方法
-        return this.loadChunk(item);
-      } else if (item.tagName === 'A-ASSET-ITEM') {
-        return this.loadAssetItem(item);
-      } else if (item.tagName === 'AUDIO') {
-        return this.loadAudio(item);
-      }
-    }));
-    // console.log('debug: netword transfered group', priority,this.sceneQueues);
+    while (this.scenePromises[priority].length < this.sceneTaskCount[priority]) {
+      await this.delay(2);
+    }
+    await Promise.all(this.scenePromises[priority]);
+    this.scenePromises[priority] = [];
   }
   delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
-  }
-  async doGroupSceneTask(priority) {
-    while (this.sceneQueues[this.currentPriority].length < this.priorityQueues[priority].length) {
-      await this.delay(2);
-      // console.log('debug: waiting for scene task', this.sceneQueues[this.currentPriority].length, this.priorityQueues[priority].length);
-    }
-    const group = this.sceneQueues[priority];
-    // console.log('debug: loading group', priority, group);
-    if (!group.length) return;
-    await Promise.all(group.map(item => {
-      if (item.type === 'gltf-model') {
-        return this.doGLTFTask(item);
-      } else if (item.type === 'sound') {
-        return this.doSoundTask(item);
-      }
-    }));
   }
   async loadAssetItem(item) {
     return item.load();
@@ -19268,112 +19091,14 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
   registerSceneTask(task) {
     this.sceneQueues[task.priority].push(task);
   }
-  async doTasks(startTime) {
-    const effectiveBudget = this.frameTimeBudget - this.safeMargin;
-    while (performance.now() - startTime < effectiveBudget && !this.allTasksDone) {
-      if (this.currentStage === 0) {
-        if (this.networkQueues[this.currentPriority].length > 0) {
-          this.doNetworkTask();
-        } else {
-          this.currentStage = 1;
-          // console.log('debug: network queue empty, switch to scene task', this.currentPriority);
-        }
-      } else if (this.currentStage === 1) {
-        if (this.sceneQueues[this.currentPriority].length !== 0) {
-          await this.doSceneTask();
-          this.sceneTaskDone++;
-        } else {
-          await this.delay(2);
-        }
-        if (this.sceneTaskDone === this.sceneTaskCount[this.currentPriority]) {
-          this.currentStage = 0;
-          this.sceneTaskDone = 0;
-          this.currentPriority++;
-          // console.log('debug: scene task done, switch to next priority', this.currentPriority);
-          if (this.currentPriority > 3) {
-            this.allTasksDone = true;
-            this.parentNode.emit('all-assets-loaded');
-          }
-        }
-      }
-    }
+  registerScenePromise(priority, promise) {
+    this.scenePromises[priority].push(promise);
   }
-  doNetworkTask() {
-    const task = this.networkQueues[this.currentPriority].shift();
-    if (task.type === 'chunk') {
-      return this.loadChunk(task);
-    } else {
-      return task.load();
-    }
+  runGLTFSceneTask(task) {
+    return this.doNormalGLTFTask(task);
   }
-
-  // 新增：加载单个分块
-  loadChunk(chunkTask) {
-    // console.log('debug: [START] chunk network transfer:', chunkTask.chunkSrc);
-
-    return new Promise((resolve, reject) => {
-      fileLoader.setResponseType('arraybuffer');
-      fileLoader.load(chunkTask.chunkSrc, response => {
-        // 存储分块数据
-        this.storeChunkData(chunkTask.baseSrc, chunkTask.chunkIndex, response);
-
-        // 解决对应的Promise
-        this.resolveChunkPromise(chunkTask.baseSrc, chunkTask.chunkIndex);
-
-        // console.log('debug: [END] chunk network transfer:', chunkTask.chunkSrc);
-        resolve();
-      }, undefined, error => {
-        // console.log('debug: [ERROR] chunk network transfer:', chunkTask.chunkSrc, error);
-        reject(error);
-      });
-    });
-  }
-
-  // 新增：存储分块数据
-  storeChunkData(baseSrc, chunkIndex, data) {
-    if (!this.chunkData[baseSrc]) {
-      this.chunkData[baseSrc] = {};
-    }
-    this.chunkData[baseSrc][chunkIndex] = data;
-    // console.log('debug: [CHUNK DATA STORED]', baseSrc, 'chunk:', chunkIndex);
-  }
-
-  // 新增：检查分块数据是否准备好
-  isChunkDataReady(baseSrc, chunkIndex) {
-    return this.chunkData[baseSrc] && this.chunkData[baseSrc][chunkIndex];
-  }
-
-  // 新增：获取分块数据
-  getChunkData(baseSrc, chunkIndex) {
-    return this.chunkData[baseSrc] && this.chunkData[baseSrc][chunkIndex];
-  }
-
-  // 新增：创建分块Promise
-  createChunkPromise(baseSrc, chunkIndex) {
-    if (!this.chunkPromises[baseSrc]) {
-      this.chunkPromises[baseSrc] = {};
-    }
-    if (!this.chunkResolvers[baseSrc]) {
-      this.chunkResolvers[baseSrc] = {};
-    }
-    this.chunkPromises[baseSrc][chunkIndex] = new Promise(resolve => {
-      this.chunkResolvers[baseSrc][chunkIndex] = resolve;
-    });
-
-    // console.log('debug: [CHUNK PROMISE CREATED]', baseSrc, 'chunk:', chunkIndex);
-  }
-
-  // 新增：获取分块Promise
-  getChunkPromise(baseSrc, chunkIndex) {
-    return this.chunkPromises[baseSrc] && this.chunkPromises[baseSrc][chunkIndex];
-  }
-
-  // 新增：解决分块Promise
-  resolveChunkPromise(baseSrc, chunkIndex) {
-    if (this.chunkResolvers[baseSrc] && this.chunkResolvers[baseSrc][chunkIndex]) {
-      this.chunkResolvers[baseSrc][chunkIndex]();
-      // console.log('debug: [CHUNK PROMISE RESOLVED]', baseSrc, 'chunk:', chunkIndex);
-    }
+  runSoundSceneTask(task) {
+    return this.doSoundTask(task);
   }
   doGLTFTask(task) {
     return this.doNormalGLTFTask(task);
@@ -19389,7 +19114,7 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
           model: task.theself.model
         });
         resolve();
-      }, undefined /* onProgress */, function gltfFailed(error) {
+      }, undefined, function gltfFailed(error) {
         var message = error && error.message ? error.message : 'Failed to load glTF model';
         warn(message);
         task.el.emit('model-error', {
@@ -19408,169 +19133,24 @@ class AAssets extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
           task.sound.setBuffer(buffer);
         }
         task.theself.loaded = true;
-
-        // Remove this key from cache, otherwise we can't play it again
         three__WEBPACK_IMPORTED_MODULE_2__.Cache.remove(task.src);
         if (task.theself.data.autoplay || task.theself.mustPlay) {
           task.theself.playSound(task.theself.processSound);
         }
         task.theself.el.emit('sound-loaded', task.theself.evtDetail, false);
         resolve();
-      }, undefined /* onProgress */, function (error) {
+      }, undefined, function (error) {
         reject(error);
       });
     });
   }
   async doSceneTask() {
     const task = this.sceneQueues[this.currentPriority].shift();
-    if (task.type === 'chunk-gltf') {
-      await this.doChunkGLTFTask(task);
-    } else if (task.type === 'gltf-model') {
+    if (task.type === 'gltf-model') {
       await this.doGLTFTask(task);
     } else if (task.type === 'sound') {
       await this.doSoundTask(task);
     }
-  }
-
-  // 新增：处理单个分块的GLTF加载
-  doChunkGLTFTask(task) {
-    return new Promise((resolve, reject) => {
-      const chunkData = this.getChunkData(task.baseSrc, task.chunkIndex);
-      if (!chunkData) {
-        const error = new Error('Chunk data not available for ' + task.baseSrc + ' chunk ' + task.chunkIndex);
-        console.error('debug: [ERROR] chunk data missing:', task.baseSrc, task.chunkIndex);
-        reject(error);
-        return;
-      }
-      const resourcePath = task.chunkBasePath || '';
-      task.loader.parse(chunkData, resourcePath, gltfModel => {
-        // 存储加载的分块模型
-        this.storeLoadedChunk(task.baseSrc, task.chunkIndex, gltfModel);
-
-        // 检查是否所有分块都加载完成
-        if (this.areAllChunksLoaded(task.baseSrc, task.totalChunks)) {
-          // 组装完整模型
-          const combinedModel = this.combineChunks(task.baseSrc, task.totalChunks);
-
-          // 设置到元素上（只在最后一个分块完成时）
-          task.theself.model = combinedModel;
-          task.el.setObject3D('mesh', combinedModel);
-          task.el.emit('model-loaded', {
-            format: 'gltf',
-            model: combinedModel,
-            isChunked: true
-          });
-        }
-        resolve();
-      }, error => {
-        reject(error);
-      });
-    });
-  }
-
-  // 新增：存储已加载的分块模型
-  storeLoadedChunk(baseSrc, chunkIndex, gltfModel) {
-    if (!this.loadedChunks[baseSrc]) {
-      this.loadedChunks[baseSrc] = {};
-    }
-    this.loadedChunks[baseSrc][chunkIndex] = gltfModel;
-    // console.log('debug: [CHUNK MODEL STORED]', baseSrc, 'chunk:', chunkIndex);
-  }
-
-  // 新增：检查所有分块是否都加载完成
-  areAllChunksLoaded(baseSrc, totalChunks) {
-    if (!this.loadedChunks[baseSrc]) return false;
-    for (let i = 1; i <= totalChunks; i++) {
-      if (!this.loadedChunks[baseSrc][i]) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  // 新增：组合所有分块
-  combineChunks(baseSrc, totalChunks) {
-    // console.log('debug: [COMBINING CHUNKS]', baseSrc, totalChunks, 'chunks');
-
-    const chunks = this.loadedChunks[baseSrc];
-
-    // 使用第一个分块作为基础场景
-    const firstChunk = chunks[1];
-    const combinedScene = firstChunk.scene || firstChunk.scenes[0];
-
-    // 将其他分块的内容添加到基础场景中（移动节点而非 clone，以保留 SkinnedMesh 与骨骼的引用，避免 matrixWorld 未更新导致 applyBoneTransform 报错）
-    for (let i = 2; i <= totalChunks; i++) {
-      const chunk = chunks[i];
-      const chunkScene = chunk.scene || chunk.scenes[0];
-      if (chunkScene) {
-        while (chunkScene.children.length > 0) {
-          combinedScene.add(chunkScene.children[0]);
-        }
-      }
-    }
-
-    // 保留第一个分块的动画（如果有的话）
-    combinedScene.animations = firstChunk.animations || [];
-
-    // console.log('debug: [COMBINE COMPLETE]', baseSrc, 'total children:', combinedScene.children.length);
-
-    return combinedScene;
-  }
-
-  /**
-   * Check if a model is chunked based on HTML attributes
-   * @param {Element} element - The a-asset-item element
-   * @returns {boolean} - True if the model is chunked
-   */
-  isChunkedModel(element) {
-    if (!element || !element.getAttribute) return false;
-    const chunked = element.getAttribute('chunked');
-    const isChunked = chunked === 'true';
-
-    // Debug logging
-    // console.log('🔍 [CHUNK DETECTION]', {
-    //   id: element.getAttribute('id'),
-    //   src: element.getAttribute('src'),
-    //   chunked: chunked,
-    //   isChunked: isChunked
-    // });
-
-    return isChunked;
-  }
-
-  /**
-   * Get the number of chunks for a chunked model from HTML attributes
-   * @param {Element} element - The a-asset-item element
-   * @returns {number} - The number of chunks, or 0 if not chunked
-   */
-  getChunkCount(element) {
-    if (!this.isChunkedModel(element)) return 0;
-    const chunkCountAttr = element.getAttribute('chunk-count');
-    const chunkCount = parseInt(chunkCountAttr, 10);
-    if (isNaN(chunkCount) || chunkCount <= 0) {
-      // console.warn('⚠️ [CHUNK COUNT] Invalid chunk-count attribute:', chunkCountAttr, 'for element:', element.getAttribute('id'));
-      return 0;
-    }
-
-    // console.log('✅ [CHUNK COUNT]', {
-    //   id: element.getAttribute('id'),
-    //   src: element.getAttribute('src'),
-    //   chunkCount: chunkCount
-    // });
-
-    return chunkCount;
-  }
-
-  /**
-   * Get the source path for a specific chunk
-   * @param {Element} element - The a-asset-item element
-   * @param {number} chunkIndex - The chunk index (1-based)
-   * @returns {string} - The chunk source path
-   */
-  getChunkSrc(element, chunkIndex) {
-    const basePath = element.getAttribute('src');
-    const chunkCount = this.getChunkCount(element);
-    return `${basePath}_split_${chunkCount}chunks/model_chunk_${chunkIndex}.gltf`;
   }
 }
 customElements.define('a-assets', AAssets);
@@ -19594,9 +19174,6 @@ class AAssetItem extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
   load() {
     if (this._loadingPromise) return this._loadingPromise;
     const src = this.getAttribute('src');
-    // console.log('debug: [START] network transfer:', src);
-
-    // Check if this is an image file
     if (this.isImageFile(src)) {
       this._loadingPromise = this.loadImage(src);
     } else {
@@ -19607,21 +19184,16 @@ class AAssetItem extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
   isImageFile(src) {
     const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.svg'];
     const fileName = src.toLowerCase();
-    const isImage = imageExtensions.some(ext => fileName.endsWith(ext));
-    // console.log('debug: [IMAGE CHECK]', src, 'isImage:', isImage);
-    return isImage;
+    return imageExtensions.some(ext => fileName.endsWith(ext));
   }
   loadImage(src) {
     return new Promise((resolve, reject) => {
-      // Use blob response type for images
       fileLoader.setResponseType('blob');
       fileLoader.load(src, response => {
-        // Create img element from blob
         const img = new Image();
         img.onload = () => {
-          this.data = img; // Store img element instead of blob
+          this.data = img;
           _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode.prototype.load.call(this);
-          // console.log('debug: [END] network transfer (image):', src);
           resolve();
           this._resolveLoaded();
         };
@@ -19629,10 +19201,8 @@ class AAssetItem extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
           this.emit('error', {
             error
           }, false);
-          // console.log('debug: [ERROR] network transfer (image):', src, error);
           reject(error);
         };
-        // Create object URL from blob and set as img src
         img.src = URL.createObjectURL(response);
       }, xhr => {
         this.emit('progress', {
@@ -19644,20 +19214,17 @@ class AAssetItem extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
         this.emit('error', {
           error
         }, false);
-        // console.log('debug: [ERROR] network transfer (image):', src, error);
         reject(error);
       });
     });
   }
   loadOtherFile(src) {
     const responseType = this.getAttribute('response-type') || inferResponseType(src);
-    const id = this.getAttribute('id');
     return new Promise((resolve, reject) => {
       fileLoader.setResponseType(responseType);
       fileLoader.load(src, response => {
         this.data = response;
         _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode.prototype.load.call(this);
-        // console.log('debug: [END] network transfer:', src);
         resolve();
         this._resolveLoaded();
       }, xhr => {
@@ -19670,50 +19237,32 @@ class AAssetItem extends _a_node_js__WEBPACK_IMPORTED_MODULE_0__.ANode {
         this.emit('error', {
           error
         }, false);
-        // console.log('debug: [ERROR] network transfer:', src, error);
         reject(error);
       });
     });
   }
 }
 customElements.define('a-asset-item', AAssetItem);
-
-/**
- * Create a Promise that resolves once the media element has finished buffering.
- *
- * @param {Element} el - HTMLMediaElement.
- * @returns {Promise}
- */
 function mediaElementLoaded(el) {
   if (!el.hasAttribute('autoplay') && el.getAttribute('preload') !== 'auto') {
     return;
   }
-
-  // If media specifies autoplay or preload, wait until media is completely buffered.
   return new Promise(function (resolve, reject) {
     if (el.readyState === 4) {
       return resolve();
-    } // Already loaded.
+    }
     if (el.error) {
       return reject();
-    } // Error.
-
+    }
     el.addEventListener('loadeddata', checkProgress, false);
     el.addEventListener('progress', checkProgress, false);
     el.addEventListener('error', reject, false);
     function checkProgress() {
-      // Add up the seconds buffered.
       var secondsBuffered = 0;
       for (var i = 0; i < el.buffered.length; i++) {
         secondsBuffered += el.buffered.end(i) - el.buffered.start(i);
       }
-
-      // Compare seconds buffered to media duration.
       if (secondsBuffered >= el.duration) {
-        // Set in cache because we won't be needing to call three.js loader if we have.
-        // a loaded media element.
-        // Store video elements only. three.js loader is used for audio elements.
-        // See assetParse too.
         if (el.tagName === 'VIDEO') {
           three__WEBPACK_IMPORTED_MODULE_2__.Cache.add(el.getAttribute('src'), el);
         }
@@ -19722,16 +19271,8 @@ function mediaElementLoaded(el) {
     }
   });
 }
-
-/**
- * Automatically add attributes to media elements where convenient.
- * crossorigin, playsinline.
- */
 function fixUpMediaElement(mediaEl) {
-  // Cross-origin.
   var newMediaEl = setCrossOrigin(mediaEl);
-
-  // Plays inline for mobile.
   if (newMediaEl.tagName && newMediaEl.tagName.toLowerCase() === 'video') {
     newMediaEl.setAttribute('playsinline', '');
     newMediaEl.setAttribute('webkit-playsinline', '');
@@ -19742,31 +19283,17 @@ function fixUpMediaElement(mediaEl) {
   }
   return newMediaEl;
 }
-
-/**
- * Automatically set `crossorigin` if not defined on the media element.
- * If it is not defined, we must create and re-append a new media element <img> and
- * have the browser re-request it with `crossorigin` set.
- *
- * @param {Element} mediaEl - Media element (e.g., <img>, <audio>, <video>).
- * @returns {Element} Media element to be used to listen to for loaded events.
- */
 function setCrossOrigin(mediaEl) {
   var newMediaEl;
   var src;
-
-  // Already has crossorigin set.
   if (mediaEl.hasAttribute('crossorigin')) {
     return mediaEl;
   }
   src = mediaEl.getAttribute('src');
   if (src !== null) {
-    // Does not have protocol.
     if (src.indexOf('://') === -1) {
       return mediaEl;
     }
-
-    // Determine if cross origin is actually needed.
     if (extractDomain(src) === window.location.host) {
       return mediaEl;
     }
@@ -19776,29 +19303,10 @@ function setCrossOrigin(mediaEl) {
   newMediaEl = mediaEl.cloneNode(true);
   return newMediaEl;
 }
-
-/**
- * Extract domain out of URL.
- *
- * @param {string} url
- * @returns {string}
- */
 function extractDomain(url) {
-  // Find and remove protocol (e.g., http, ftp, etc.) to get domain.
   var domain = url.indexOf('://') > -1 ? url.split('/')[2] : url.split('/')[0];
-
-  // Find and remove port number.
   return domain.substring(0, domain.indexOf(':'));
 }
-
-/**
- * Infer response-type attribute from src.
- * Default is text (default XMLHttpRequest.responseType)
- * and arraybuffer for .glb files.
- *
- * @param {string} src
- * @returns {string}
- */
 function inferResponseType(src) {
   var fileName = getFileNameFromURL(src);
   var dotLastIndex = fileName.lastIndexOf('.');
@@ -19810,13 +19318,6 @@ function inferResponseType(src) {
   }
   return 'text';
 }
-
-/**
- * Extract filename from URL
- *
- * @param {string} url
- * @returns {string}
- */
 function getFileNameFromURL(url) {
   var parser = document.createElement('a');
   parser.href = url;
@@ -22656,7 +22157,7 @@ class AScene extends _a_entity_js__WEBPACK_IMPORTED_MODULE_7__.AEntity {
     this.setAttribute('keyboard-shortcuts', '');
     this.setAttribute('screenshot', '');
     this.setAttribute('xr-mode-ui', '');
-    this.setAttribute('device-orientation-permission-ui', '');
+    this.setAttribute('device-orientation-permission-ui', 'enabled: false');
     super.doConnectedCallback();
 
     // Renderer initialization
