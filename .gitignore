@@ -3,21 +3,11 @@ try.html
 # Generated chunk reports (when written to app dir by mistake)
 realCase/*/chunk_report.json
 
-# Generated realCase entry HTML (code-generated, avoid blocking branch switch)
-realCase/EllieTale-WebXR-main/html/Beach.html
-realCase/Virtual-Reality-Museum-master/index.html
-realCase/hallovreen-master/index.html
-
 # Generated A-Frame builds (created by aframe-master/update.sh)
 realCase/EllieTale-WebXR-main/lib/my-aframe.js
 realCase/hallovreen-master/mylib/my-aframe.js
 realCase/Virtual-Reality-Museum-master/mylib/my-aframe.js
 simulation/lib/my-aframe.js
-
-# Generated realCase entry HTML (script-generated, differs by branch)
-realCase/EllieTale-WebXR-main/html/Beach.html
-realCase/Virtual-Reality-Museum-master/index.html
-realCase/hallovreen-master/index.html
 
 # aframe-master build output and overwritten core (auto-generated)
 aframe-master/dist/

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!-- Meta -->
+    <meta charset="utf-8">
+    <title>Virtual Reality Museum in A-Frame</title>
+
+    <meta property="og:title" content="Virtual Reality Museum in A-Frame" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="./" />
+    <meta property="og:description" content="WebVR demo that displays art " />
+	<meta property="article:tag" content="WebVR" />
+	<meta property="article:tag" content="A-Frame" />
+	<meta property="article:section" content="Virtual Reality" />
+
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta name="twitter:title" content="Virtual Reality Museum in A-Frame">
+    <meta name="twitter:description" content="WebVR demo that displays art ">
+
+    <meta name="description" content="Virtual-Reality-Museum - WebVR demo that displays art using A-Frame">
+	<meta name="author" content="">
+		
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+
+    <script src="mylib/my-aframe.js"></script>
+
+    <script src="js/lzma.js"></script>
+    <script src="js/ctm.js"></script>
+    <script src="js/CTMLoader.js?v=3"></script>
+
+    <script src="js/spheres_anim.js?v=2"></script>
+    <script src="js/anim_1.js?v=2"></script>
+    <script src="js/anim_2.js?v=2"></script>
+    <script src="js/envMapMaterial.js"></script>
+    <script src="js/ctm_component.js?v=2"></script>
+    <script src="js/mobile_component.js"></script>
+
+  </head>
+
+  <body>
+
+
+    <div id="container" class="container">
+      <div class="info">
+        <div class="company"><a href="http://www.cecropiasolutions.com" target="_blank">cecropiasolutions.com</a></div>
+        <div class="title">The Hall</div>
+        <a class="button" id="ttff-start-button" href="#">start experience</a>
+        <div class="instructions">
+          <div><strong>VR</strong>: Hand controllers and teleport with trigger.</div>
+          <div><strong>Desktop</strong>: Keyboard (WASD/arrows) and mouse.</div>
+          <div><strong>Mobile</strong>: Gaze cursor and teleportation.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scene template - will be injected after Start button click -->
+    <template id="scene-template">
+    <a-scene>
+
+      <a-entity mobile></a-entity>
+
+      <a-entity light="type: directional; color: #FFF; intensity: 0.5" position="2 20 0"></a-entity>
+      <a-entity light="type: ambient; color: #FFF"></a-entity>
+
+      <!-- Custom components with animations -->
+      <a-entity anim_1></a-entity>
+      <a-entity anim_2></a-entity>
+
+      <a-assets chunk-profile="192_30">
+        <!-- 音频资源 -->
+        <!-- <a-asset-item id="museum-audio-1" src="audio/84529__cmusounddesign__02-museum.ogg" response-type="arraybuffer" priority="2"></a-asset-item> -->
+        <!-- <a-asset-item id="museum-audio-2" src="audio/219462__cediez__musee-victoria-londres-grand-escalier.ogg" response-type="arraybuffer" priority="2"></a-asset-item> -->
+
+        <!-- 3D模型资源 -->
+        <a-asset-item id="floor-glb" src="models/floor.glb" priority="1"></a-asset-item>
+
+        <a-asset-item id="hall-glb" src="models/hall.glb" priority="1"></a-asset-item>
+
+        <a-asset-item id="hall_low_floor-glb" src="models/hall_low_floor.glb" priority="1"></a-asset-item>
+
+        <a-asset-item id="acropolis-glb" src="models/acropolis.glb" priority="2"></a-asset-item>
+
+        <!-- <a-asset-item id="castle_lake-glb" src="models/castle_lake.glb" priority="2"></a-asset-item> -->
+
+        <a-asset-item id="good_samaritan-glb" src="models/good_samaritan.glb" priority="2" chunked="true" chunk-count="2"></a-asset-item>
+
+        <a-asset-item id="moonlight-glb" src="models/moonlight.glb" priority="2"></a-asset-item>
+
+        <a-asset-item id="podiums-glb" src="models/podiums.glb" priority="1"></a-asset-item>
+
+        <a-asset-item id="lamps-glb" src="models/lamps.glb" priority="1"></a-asset-item>
+
+        <a-asset-item id="david-glb" src="models/david.glb" priority="2"></a-asset-item>
+        <!-- <a-asset-item id="female_head-glb" src="models/female_head.glb" priority="2"></a-asset-item> -->
+        <a-asset-item id="lion-glb" src="models/lion.glb" priority="2"></a-asset-item>
+        <a-asset-item id="greek_bust-glb" src="models/greek_bust.glb" priority="2"></a-asset-item>
+        <a-asset-item id="old_man-glb" src="models/old_man.glb" priority="2" chunked="true" chunk-count="2"></a-asset-item>
+        <a-asset-item id="nefertiti-glb" src="models/nefertiti.glb" priority="2" chunked="true" chunk-count="2"></a-asset-item>
+      
+        <a-asset-item id="fractal_1-glb" src="models/fractal_1.glb" priority="1"></a-asset-item>
+        <a-asset-item id="fractal_2-glb" src="models/fractal_2.glb" priority="1"></a-asset-item>
+        <a-asset-item id="fractal_3-glb" src="models/fractal_3.glb" priority="1"></a-asset-item>
+        <!-- <a-asset-item id="female_helmet-glb" src="models/female_helmet.glb" priority="1"></a-asset-item> -->
+        <!-- <a-asset-item id="monk_uv-glb" src="models/monk_uv.glb" priority="1"></a-asset-item> -->
+        <a-asset-item id="david_bike_hall_3-glb" src="models/david_bike_hall_3.glb" priority="2"></a-asset-item>
+
+      </a-assets>
+
+      <a-sky color="#EEEEFF"></a-sky>
+
+      <a-gltf-model src="#floor-glb" id="floor"></a-gltf-model>
+      <a-gltf-model src="#hall-glb" id="hall"></a-gltf-model>
+      <a-gltf-model src="#hall_low_floor-glb" id="hall_low_floor"></a-gltf-model>
+      <a-gltf-model src="#acropolis-glb"></a-gltf-model>
+      <a-gltf-model src="#castle_lake-glb"></a-gltf-model>
+      <a-gltf-model src="#good_samaritan-glb"></a-gltf-model>
+      <a-gltf-model src="#moonlight-glb"></a-gltf-model>
+      <a-gltf-model src="#podiums-glb"></a-gltf-model>
+      <a-gltf-model src="#lamps-glb"></a-gltf-model>
+      <a-gltf-model src="#david-glb"></a-gltf-model>
+      <a-gltf-model src="#female_head-glb"></a-gltf-model>
+      <a-gltf-model src="#lion-glb"></a-gltf-model>
+      <a-gltf-model src="#greek_bust-glb"></a-gltf-model>
+      <a-gltf-model src="#old_man-glb"></a-gltf-model>
+      <a-gltf-model src="#nefertiti-glb"></a-gltf-model>
+      <!-- <a-gltf-model src="#fractal_1-glb"></a-gltf-model> -->
+      <!-- <a-gltf-model src="#fractal_2-glb"></a-gltf-model> -->
+      <!-- <a-gltf-model src="#fractal_3-glb"></a-gltf-model> -->
+      <!-- <a-gltf-model src="#female_helmet-glb"></a-gltf-model> -->
+      <!-- <a-gltf-model src="#monk_uv-glb"></a-gltf-model> -->
+      <a-gltf-model src="#david_bike_hall_3-glb"></a-gltf-model>
+
+      <!-- 音频实体 - 按照EllieTale模式 -->
+      <a-sound src="#museum-audio-1" autoplay="true" loop="true" position="1 1 0"></a-sound>
+      <a-sound src="#museum-audio-2" autoplay="true" loop="true" position="1 1 10"></a-sound>
+
+    </a-scene>
+    </template>
+
+    <!-- Scene will be injected here -->
+    <div id="scene-container"></div>
+
+    <script src="main.js"></script>
+    <!-- TTFF Measurement Script -->
+    <script src="ttff-measurement-main.js"></script>
+
+</body>
+</html>
