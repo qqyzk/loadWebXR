@@ -76,17 +76,17 @@ export var Component = registerComponent('gltf-model', {
   handleChunkedModel: function (assetEl, src, priority, assets) {
     var self = this;
     const chunkCount = assets.getChunkCount(assetEl);
-
-    // console.log('🔍 [GLTF-COMPONENT] Chunked model detected:', {
-    //   src: src,
-    //   chunkCount: chunkCount,
-    //   priority: priority
-    // });
+    const profile = assets.getAttribute && assets.getAttribute('chunk-profile');
 
     // 为每个分块增加场景任务计数
     for (let i = 1; i <= chunkCount; i++) {
       assets.addSceneTaskCount({ priority: priority });
     }
+
+    // chunkBasePath：分块 glTF 所在目录，用于解析 .bin / 纹理等相对路径；与 getChunkSrc 约定一致（方案 A 带 profile）
+    const chunkBasePath = profile
+      ? src + '_split_' + profile + '_' + chunkCount + 'chunks/'
+      : src + '_split_' + chunkCount + 'chunks/';
 
     // 等待每个分块的网络传输完成，然后注册GLTF加载任务
     this.ready.then(() => {
@@ -94,11 +94,7 @@ export var Component = registerComponent('gltf-model', {
         const chunkPromise = assets.getChunkPromise(src, i);
         if (chunkPromise) {
           chunkPromise.then(() => {
-            // console.log('📦 [GLTF-COMPONENT] Chunk network complete, registering scene task:', i);
-
             // 单个分块网络传输完成，注册GLTF加载任务
-            // chunkBasePath：分块 glTF 所在目录，用于解析 .bin / 纹理等相对路径
-            const chunkBasePath = src + '_split_' + chunkCount + 'chunks/';
             assets.registerSceneTask({
               type: 'chunk-gltf',
               baseSrc: src,

@@ -4,19 +4,15 @@ Apply model-splitter chunk results into real applications.
 
 功能概述
 --------
-- 读取 model-splitter 生成的 chunk_report.json。
-- 根据实际分块数量，把 GLB 分块文件拷贝到对应 Web3D 应用目录中，
-  路径命名遵循 a-assets-prism.js 的约定：
+- 读取 model-splitter 生成的 chunk_report_<profile>.json（每个 profile 独立一份，互不影响）。
+- 根据实际分块数量，把分块文件拷贝到应用目录，路径命名遵循方案 A（带 profile）：
+    src="item/Foo.glb", profile=4g, 实际 N 块
+      -> item/Foo.glb_split_4g_Nchunks/model_chunk_1.gltf ...
 
-    src="item/Foo.glb", 实际 N 块
-      -> item/Foo.glb_split_Nchunks/model_chunk_1.glb
-         ...
-         item/Foo.glb_split_Nchunks/model_chunk_N.glb
-
-- 自动修改应用的 HTML 资源声明：
-  - 对「实际>=2」的模型：添加 / 更新 chunked="true"、chunk-count="N"。
+- 自动修改应用的 HTML：
+  - 在 <a-assets> 上设置 chunk-profile="<profile>"，用于运行时选择分块版本。
+  - 对「实际>=2」的模型：添加/更新 chunked="true"、chunk-count="N"。
   - 对「无法分割」或实际<2 的模型：移除 chunked / chunk-count。
-  - 支持多次运行，属性会被纠正到与最新 chunk_report 一致。
 
 - 在首次对某个 HTML 做修改之前，会创建一个 *-no-chunk.html 备份。
 
@@ -29,10 +25,13 @@ Apply model-splitter chunk results into real applications.
 用法示例
 --------
 python model-splitter/apply_chunks.py \\
-  --chunk-report model-splitter/results/tale/chunk_report.json
+  --chunk-report model-splitter/results/tale/chunk_report_4g.json
+
+profile 从 chunk-report 文件名推断（chunk_report_4g.json -> 4g）。可选 --profile 覆盖。
 
 可选参数：
   --scenario tale|hallo|mus   # 若无法从路径推断，可手动指定
+  --profile 4g                # 覆盖从文件名推断的 profile
   --dry-run                   # 仅打印操作，不真正修改文件
 """
 
@@ -96,12 +95,16 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
     parser.add_argument(
         "--chunk-report",
         required=True,
-        help="Path to chunk_report.json (e.g. model-splitter/results/tale/chunk_report.json).",
+        help="Path to chunk_report_<profile>.json (e.g. model-splitter/results/tale/chunk_report_4g.json).",
     )
     parser.add_argument(
         "--scenario",
         choices=SCENARIO_NAMES,
         help="Scenario name (tale|hallo|mus). If omitted, inferred from chunk-report path.",
+    )
+    parser.add_argument(
+        "--profile",
+        help="Profile name (e.g. 4g, 3g). If omitted, inferred from chunk-report filename (chunk_report_4g.json -> 4g).",
     )
     parser.add_argument(
         "--dry-run",
@@ -117,6 +120,14 @@ def infer_scenario_from_path(path: Path) -> Optional[str]:
     for name in SCENARIO_NAMES:
         if name in parts:
             return name
+    return None
+
+
+def infer_profile_from_report_path(report_path: Path) -> Optional[str]:
+    """从 chunk_report 文件名推断 profile：chunk_report_4g.json -> 4g。"""
+    stem = report_path.stem  # chunk_report_4g
+    if stem.startswith("chunk_report_"):
+        return stem[len("chunk_report_"):] or None
     return None
 
 
@@ -175,14 +186,13 @@ def ensure_no_chunk_backup(html_path: Path, dry_run: bool = False) -> None:
 def move_existing_split_dirs_for_src(
     scenario: ScenarioConfig,
     src: str,
+    profile: str,
     backup_root: Path,
     dry_run: bool = False,
 ) -> None:
     """
-    把 app_root 中与指定 src 对应的旧分块目录移动到 backup_root 下面。
-
-    例如：
-      app_root / item / Foo.glb_split_4chunks  ->  backup_root / item / Foo.glb_split_4chunks
+    把 app_root 中与指定 src 且当前 profile 对应的旧分块目录移动到 backup_root。
+    仅移动 *_split_<profile>_* 的目录，不影响其他 profile 的目录。
     """
     src_path = Path(src)
     parent_rel = src_path.parent  # e.g. 'item'
@@ -192,11 +202,11 @@ def move_existing_split_dirs_for_src(
     if not parent_abs.is_dir():
         return
 
+    prefix = base_name + "_split_" + profile + "_"
     for entry in parent_abs.iterdir():
         if not entry.is_dir():
             continue
-        # 目录名形如 'Foo.glb_split_4chunks'
-        if entry.name.startswith(base_name + "_split_"):
+        if entry.name.startswith(prefix):
             rel_from_app = entry.relative_to(scenario.app_root)
             dest = backup_root / rel_from_app
             print(f"[info] move old split dir: {entry} -> {dest}")
@@ -209,12 +219,13 @@ def move_existing_split_dirs_for_src(
 def copy_chunks_for_src(
     scenario: ScenarioConfig,
     results_root: Path,
+    profile: str,
     src: str,
     actual_chunks: int,
     dry_run: bool = False,
 ) -> None:
     """
-    将 results_root 中的分块拷贝到 app_root 中对应的 {src}_split_{actual}chunks/。
+    将 results_root/<profile>/ 中的分块拷贝到 app_root 中 {src}_split_{profile}_{N}chunks/。
     若存在 .gltf + .bin（纹理去重输出），则拷贝 model_chunk_i.gltf、model_chunk_i.bin 及 base_stem_textures/；
     否则拷贝 model_chunk_i.glb。
     """
@@ -223,12 +234,12 @@ def copy_chunks_for_src(
     base_name = src_path.name                  # e.g. 'Foo.glb'
     base_stem = src_path.stem                  # e.g. 'Foo'
 
-    source_dir = results_root / src_dir_rel
+    source_dir = results_root / profile / src_dir_rel
     if not source_dir.is_dir():
         print(f"[warn] source dir for chunks not found, skip: {source_dir}")
         return
 
-    target_dir = scenario.app_root / f"{src}_split_{actual_chunks}chunks"
+    target_dir = scenario.app_root / f"{src}_split_{profile}_{actual_chunks}chunks"
     print(f"[info] ensure target dir exists: {target_dir}")
     if not dry_run:
         target_dir.mkdir(parents=True, exist_ok=True)
@@ -273,14 +284,14 @@ def copy_chunks_for_src(
 
 def update_html_for_chunks(
     html_path: Path,
+    profile: str,
     src_to_actual: Dict[str, Optional[int]],
     dry_run: bool = False,
 ) -> None:
     """
-    根据 src_to_actual 映射，更新 HTML 中 <a-asset-item> 的 chunked / chunk-count 属性。
-
-    - 若 actual>=2：添加/更新 chunked="true" chunk-count="N"（分块统一为 gltf + 共享纹理）。
-    - 若 actual 为 None 或 <2 或不存在映射：移除 chunked / chunk-count。
+    根据 profile 与 src_to_actual 映射，更新 HTML：
+    - 在 <a-assets> 上设置 chunk-profile="<profile>"。
+    - 对 <a-asset-item>：若 actual>=2 添加/更新 chunked、chunk-count；否则移除。
     """
     if not html_path.is_file():
         raise FileNotFoundError(f"Scene HTML not found: {html_path}")
@@ -322,6 +333,20 @@ def update_html_for_chunks(
 
     new_lines = [process_line(ln) for ln in lines]
 
+    # 在 <a-assets> 上设置或更新 chunk-profile
+    def set_a_assets_profile(line: str) -> str:
+        if "<a-assets" not in line or line.strip().startswith("<!--"):
+            return line
+        new_line = re.sub(r'\s+chunk-profile="[^"]*"', "", line)
+        # 在 > 前插入 chunk-profile
+        pos = new_line.find(">")
+        if pos == -1:
+            pos = len(new_line)
+        insertion = f' chunk-profile="{profile}"'
+        return new_line[:pos] + insertion + new_line[pos:]
+
+    new_lines = [set_a_assets_profile(ln) for ln in new_lines]
+
     if new_lines == lines:
         print(f"[info] HTML unchanged: {html_path}")
         return
@@ -355,48 +380,59 @@ def main(argv: List[str]) -> int:
         return 1
 
     scenario = configs[scenario_name]
+    profile = args.profile or infer_profile_from_report_path(chunk_report_path)
+    if not profile:
+        print(
+            "[error] could not infer profile from chunk-report filename (e.g. chunk_report_4g.json). Use --profile 4g",
+            file=sys.stderr,
+        )
+        return 1
+
     print(f"[info] scenario: {scenario.name}")
+    print(f"[info] profile: {profile}")
     print(f"[info] app_root: {scenario.app_root}")
     print(f"[info] scene_html: {scenario.scene_html}")
-    print(f"[info] default results_root: {scenario.results_root}")
+    print(f"[info] results_root: {scenario.results_root}")
 
-    # 目前我们假定 chunk_report 就是来自 scenario.results_root，对路径不再强校验。
     records = load_chunk_report(chunk_report_path)
     src_to_actual = build_src_to_actual_map(records)
 
     # 先备份 HTML（如无备份）
     ensure_no_chunk_backup(scenario.scene_html, dry_run=args.dry_run)
 
-    # 为本次运行创建一个备份根目录，用于移动旧的 split 目录
+    # 为本次运行创建一个备份根目录，用于移动当前 profile 的旧 split 目录
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     backup_root = scenario.app_root / "_chunk_backups" / timestamp
 
-    # 预扫描：对报告中的每个 src，移动现有的 split 目录
+    # 预扫描：对报告中的每个 src，仅移动当前 profile 的 split 目录
     for src in sorted({row.get("模型") for row in records if isinstance(row.get("模型"), str)}):
         if src is None:
             continue
         move_existing_split_dirs_for_src(
             scenario=scenario,
             src=src,
+            profile=profile,
             backup_root=backup_root,
             dry_run=args.dry_run,
         )
 
-    # 拷贝新的分块文件
+    # 拷贝新的分块文件（从 results_root/<profile>/ 到 app 的 _split_<profile>_Nchunks）
     for src, actual in src_to_actual.items():
         if actual is None or actual < 2:
             continue
         copy_chunks_for_src(
             scenario=scenario,
             results_root=scenario.results_root,
+            profile=profile,
             src=src,
             actual_chunks=actual,
             dry_run=args.dry_run,
         )
 
-    # 更新 HTML 中的 chunked / chunk-count 属性
+    # 更新 HTML：chunk-profile 与各 a-asset-item 的 chunked / chunk-count
     update_html_for_chunks(
         html_path=scenario.scene_html,
+        profile=profile,
         src_to_actual=src_to_actual,
         dry_run=args.dry_run,
     )

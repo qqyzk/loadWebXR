@@ -134,14 +134,23 @@ function printUsageAndExit () {
   node model-splitter/split-by-plan.js \\
     --chunk-plan path/to/chunk_plan_profile_4g.json \\
     --app-root /abs/path/to/app/root \\
+    [--profile 4g] \\
     [--output-root /abs/path/for/output]
 
 参数说明:
   --chunk-plan   来自 analyze_profile_for_chunking.py 的 JSON 输出
   --app-root     应用根目录, chunk_plan 中的 src 会被视为相对该目录的路径 (可省略, 对 tale/hallo/mus 使用内置默认值)
+  --profile      分块方案名(如 4g/3g/slow), 用于输出子目录与 chunk_report_<profile>.json；不传则从 chunk-plan 文件名推断(如 chunk_plan_profile_4g.json→4g)
   --output-root  可选, 分块后的模型输出根目录(默认: model-splitter/results/<tale|hallo|mus>)
 `);
   process.exit(1);
+}
+
+function inferProfileFromChunkPlanPath (chunkPlanPath) {
+  const base = path.basename(chunkPlanPath, path.extname(chunkPlanPath));
+  // chunk_plan_profile_4g -> 4g, chunk_plan_4g -> 4g
+  const m = base.match(/^chunk_plan_(?:profile_)?(.+)$/);
+  return m ? m[1] : null;
 }
 
 function inferDefaults (args) {
@@ -152,6 +161,11 @@ function inferDefaults (args) {
   if (norm.includes('tale')) scenario = 'tale';
   else if (norm.includes('hallo')) scenario = 'hallo';
   else if (norm.includes('mus')) scenario = 'mus';
+
+  // 默认 profile：未传 --profile 时从 chunk-plan 文件名推断
+  if (!args.profile) {
+    args.profile = inferProfileFromChunkPlanPath(args.chunkPlan) || 'default';
+  }
 
   // 默认 appRoot（与 HTML 中 src="item/..." 等相对路径一致）
   if (!args.appRoot && scenario) {
@@ -180,6 +194,8 @@ function parseArgs (argv) {
       args.chunkPlan = argv[++i];
     } else if (a === '--app-root') {
       args.appRoot = argv[++i];
+    } else if (a === '--profile') {
+      args.profile = argv[++i];
     } else if (a === '--output-root') {
       args.outputRoot = argv[++i];
     } else if (a === '--help' || a === '-h') {
@@ -840,8 +856,8 @@ async function processOneModel (src, record, args) {
 
   const baseName = path.basename(src).replace(/\.gl[bt]f?$/i, '');
   const outDir = args.outputRoot
-    ? path.join(args.outputRoot, path.dirname(src))
-    : path.dirname(inputPath);
+    ? path.join(args.outputRoot, args.profile, path.dirname(src))
+    : path.join(path.dirname(inputPath), args.profile);
 
   if (chunks.length <= 1) {
     console.log('  实际无法分割（单 mesh 或无法再分），不输出 chunk 文件');
@@ -892,7 +908,7 @@ async function main () {
     实际: r.actualChunks
   }));
 
-  const reportPath = path.join(args.outputRoot, 'chunk_report.json');
+  const reportPath = path.join(args.outputRoot, `chunk_report_${args.profile}.json`);
   fs.writeFileSync(reportPath, JSON.stringify(reportRows, null, 2), 'utf8');
   console.log('\n报告已写入: ' + reportPath);
 

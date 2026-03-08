@@ -49,6 +49,33 @@ def parse_args() -> argparse.Namespace:
         default=10,
         help="How many slowest 3D models to show in the summary.",
     )
+    parser.add_argument(
+        "--max-k",
+        type=int,
+        default=16,
+        help="Maximum chunk count k per model; values above this are clipped (default:16).",
+    )
+    parser.add_argument(
+        "--expansion",
+        type=int,
+        default=None,
+        metavar="PCT",
+        help=(
+            "Single expansion percent (e.g. 30). Target total chunks = N*(1+PCT/100). "
+            "Uses greedy split: repeatedly split the slowest model until target reached."
+        ),
+    )
+    parser.add_argument(
+        "--expansions",
+        nargs="*",
+        type=int,
+        default=None,
+        metavar="PCT",
+        help=(
+            "Multiple expansion percents to generate multiple plans (e.g. 30 50 100 200). "
+            "Writes chunk_plan_<base>_<pct>.json for each. Overrides --expansion."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -112,6 +139,7 @@ def build_records(
     aggregated: Dict[Tuple[str, str, str], float],
     target_frame_ms: float,
     safe_margin_ms: float,
+    max_k: int = 16,
 ) -> List[Dict[str, Any]]:
     budget_ms = target_frame_ms - safe_margin_ms
     if budget_ms <= 0:
@@ -131,8 +159,183 @@ def build_records(
 
         if need_chunk:
             k = int(math.ceil(max_process / budget_ms))
+            k = min(k, max_k)
         else:
             k = 1
+
+        record = {
+            "src": src,
+            "type": task_type,
+            "subtype": subtype,
+            "is3DModel": model_flag,
+            "maxProcessTimeMs": max_process,
+            "targetFrameTimeMs": target_frame_ms,
+            "safeMarginMs": safe_margin_ms,
+            "budgetMs": budget_ms,
+            "exceedsBudget": exceeds_budget,
+            "needChunk": need_chunk,
+            "k": k,
+        }
+        records.append(record)
+
+    return records
+
+
+def build_records_expansion(
+    aggregated: Dict[Tuple[str, str, str], float],
+    target_frame_ms: float,
+    safe_margin_ms: float,
+    expansion_pct: int,
+    max_k: int = 16,
+) -> List[Dict[str, Any]]:
+    """
+    Build chunk plan by expansion percent: target total chunks = N * (1 + expansion_pct/100).
+    Greedy: repeatedly split the model with largest (time_i / k_i) until target chunk count reached.
+    """
+    budget_ms = target_frame_ms - safe_margin_ms
+    if budget_ms <= 0:
+        raise ValueError(
+            f"Non-positive budget: target_frame_ms={target_frame_ms}, "
+            f"safe_margin_ms={safe_margin_ms}"
+        )
+
+    # Separate 3D models (by maxProcessTimeMs desc) and non-models
+    model_keys: List[Tuple[Tuple[str, str, str], float]] = []
+    non_model_items: List[Tuple[Tuple[str, str, str], float]] = []
+    for key, max_process in aggregated.items():
+        (src, task_type, subtype) = key
+        if is_3d_model(subtype, src):
+            model_keys.append((key, max_process))
+        else:
+            non_model_items.append((key, max_process))
+
+    model_keys.sort(key=lambda x: x[1], reverse=True)
+    N = len(model_keys)
+    if N == 0:
+        target_total = 0
+    else:
+        target_total = max(N, round(N * (1 + expansion_pct / 100.0)))
+    target_total = min(target_total, N * max_k)
+
+    # Greedy: k[i] for each model, start all at 1, add splits until sum(k) == target_total
+    k_list = [1] * N
+    current_total = N
+    while current_total < target_total:
+        best_i = -1
+        best_val = -1.0
+        for i in range(N):
+            if k_list[i] >= max_k:
+                continue
+            val = model_keys[i][1] / k_list[i]
+            if val > best_val:
+                best_val = val
+                best_i = i
+        if best_i < 0:
+            break
+        k_list[best_i] += 1
+        current_total += 1
+
+    key_to_k: Dict[Tuple[str, str, str], int] = {
+        model_keys[i][0]: k_list[i] for i in range(N)
+    }
+
+    records: List[Dict[str, Any]] = []
+    for (src, task_type, subtype), max_process in sorted(
+        aggregated.items(), key=lambda kv: kv[0][0]
+    ):
+        key = (src, task_type, subtype)
+        model_flag = is_3d_model(subtype, src)
+        k = key_to_k.get(key, 1) if model_flag else 1
+        need_chunk = bool(model_flag and k > 1)
+        exceeds_budget = max_process > budget_ms
+
+        record = {
+            "src": src,
+            "type": task_type,
+            "subtype": subtype,
+            "is3DModel": model_flag,
+            "maxProcessTimeMs": max_process,
+            "targetFrameTimeMs": target_frame_ms,
+            "safeMarginMs": safe_margin_ms,
+            "budgetMs": budget_ms,
+            "exceedsBudget": exceeds_budget,
+            "needChunk": need_chunk,
+            "k": k,
+        }
+        records.append(record)
+
+    return records
+
+
+def build_records_expansion(
+    aggregated: Dict[Tuple[str, str, str], float],
+    target_frame_ms: float,
+    safe_margin_ms: float,
+    expansion_pct: int,
+    max_k: int = 16,
+) -> List[Dict[str, Any]]:
+    """
+    Build chunk plan by expansion: target total chunks = N * (1 + expansion_pct/100).
+    Greedy: repeatedly pick the model with largest (time_i / k_i), increment k_i until
+    total chunks reached. Non-3D resources get k=1.
+    """
+    budget_ms = target_frame_ms - safe_margin_ms
+    if budget_ms <= 0:
+        raise ValueError(
+            f"Non-positive budget: target_frame_ms={target_frame_ms}, "
+            f"safe_margin_ms={safe_margin_ms}"
+        )
+
+    # Separate 3D models (by profile time desc) and non-models
+    model_keys_times: List[Tuple[Tuple[str, str, str], float]] = []
+    non_model_items: List[Tuple[Tuple[str, str, str], float]] = []
+
+    for key, max_process in aggregated.items():
+        (src, task_type, subtype) = key
+        if is_3d_model(subtype, src):
+            model_keys_times.append((key, max_process))
+        else:
+            non_model_items.append((key, max_process))
+
+    # Sort models by maxProcessTimeMs descending (slowest first)
+    model_keys_times.sort(key=lambda x: x[1], reverse=True)
+    N = len(model_keys_times)
+    if N == 0:
+        target_total = 0
+    else:
+        target_total = max(N, round(N * (1 + expansion_pct / 100.0)))
+
+    # Greedy: k_i = 1 initially; add splits until sum(k_i) == target_total
+    # Each step: pick i with max time_i / k_i, then k_i += 1 (cap at max_k)
+    k_list = [1] * N
+    current_total = N
+    while current_total < target_total:
+        best_i = -1
+        best_val = -1.0
+        for i in range(N):
+            if k_list[i] >= max_k:
+                continue
+            val = model_keys_times[i][1] / k_list[i]
+            if val > best_val:
+                best_val = val
+                best_i = i
+        if best_i < 0:
+            break
+        k_list[best_i] += 1
+        current_total += 1
+
+    key_to_k: Dict[Tuple[str, str, str], int] = {}
+    for idx, (key, _) in enumerate(model_keys_times):
+        key_to_k[key] = k_list[idx]
+
+    # Build full records (models + non-models), sorted by src for stability
+    records: List[Dict[str, Any]] = []
+    for key, max_process in sorted(aggregated.items(), key=lambda kv: kv[0][0]):
+        (src, task_type, subtype) = key
+        model_flag = is_3d_model(subtype, src)
+        k = key_to_k.get(key, 1)
+        need_chunk = bool(model_flag and k > 1)
+        exceeds_budget = max_process > budget_ms
 
         record = {
             "src": src,
@@ -218,6 +421,14 @@ def print_summary(records: List[Dict[str, Any]], top_k: int) -> None:
         print()
 
 
+def _profile_base_name(profile_path: str) -> str:
+    """e.g. profile_4g or profile_4g.json -> profile_4g"""
+    base = os.path.basename(profile_path)
+    if base.endswith(".json"):
+        base = base[:-5]
+    return base
+
+
 def main() -> None:
     args = parse_args()
 
@@ -226,23 +437,59 @@ def main() -> None:
     safe_margin_ms = args.safe_margin_ms
 
     if safe_margin_ms is None:
-        # Keep default consistent with a-assets-profile.js:
-        # this.frameTimeBudget = 16.7;
-        # this.safeMargin = this.frameTimeBudget * 0.3;
         safe_margin_ms = target_frame_ms * 0.3
 
     frames = load_profile(profile_path)
     aggregated = aggregate_max_process_times(frames)
-    records = build_records(aggregated, target_frame_ms, safe_margin_ms)
+    dir_name = os.path.dirname(profile_path)
+    base_name = _profile_base_name(profile_path)
 
+    # Multiple expansion percents (e.g. 30 50 100 200)
+    if args.expansions is not None:
+        for pct in args.expansions:
+            records = build_records_expansion(
+                aggregated,
+                target_frame_ms,
+                safe_margin_ms,
+                expansion_pct=pct,
+                max_k=args.max_k,
+            )
+            output_name = f"chunk_plan_{base_name}_{pct}.json"
+            output_path = os.path.join(dir_name, output_name)
+            write_output(records, output_path)
+            print(f"Wrote chunking plan (expansion={pct}%): {output_path}")
+        if args.expansions:
+            print_summary(records, args.top_k)
+        return
+
+    # Single expansion percent
+    if args.expansion is not None:
+        records = build_records_expansion(
+            aggregated,
+            target_frame_ms,
+            safe_margin_ms,
+            expansion_pct=args.expansion,
+            max_k=args.max_k,
+        )
+        if args.output:
+            output_path = args.output
+        else:
+            output_name = f"chunk_plan_{base_name}_{args.expansion}.json"
+            output_path = os.path.join(dir_name, output_name)
+        write_output(records, output_path)
+        print(f"Wrote chunking plan (expansion={args.expansion}%): {output_path}")
+        print_summary(records, args.top_k)
+        return
+
+    # Legacy: single plan by budget
+    records = build_records(
+        aggregated, target_frame_ms, safe_margin_ms, max_k=args.max_k
+    )
     if args.output:
         output_path = args.output
     else:
-        base = os.path.basename(profile_path)
-        dir_name = os.path.dirname(profile_path)
-        output_name = f"chunk_plan_{base}.json"
+        output_name = f"chunk_plan_{base_name}.json"
         output_path = os.path.join(dir_name, output_name)
-
     write_output(records, output_path)
     print(f"Wrote chunking plan to: {output_path}")
     print_summary(records, args.top_k)

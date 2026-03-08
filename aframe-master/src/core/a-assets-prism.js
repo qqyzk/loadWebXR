@@ -525,7 +525,9 @@ class AAssets extends ANode {
   }
 
   /**
-   * Get the source path for a specific chunk
+   * Get the source path for a specific chunk.
+   * If <a-assets> has chunk-profile, use scheme A: basePath_split_<profile>_<N>chunks/model_chunk_<i>.gltf
+   * Otherwise legacy: basePath_split_<N>chunks/model_chunk_<i>.gltf
    * @param {Element} element - The a-asset-item element
    * @param {number} chunkIndex - The chunk index (1-based)
    * @returns {string} - The chunk source path
@@ -533,6 +535,13 @@ class AAssets extends ANode {
   getChunkSrc (element, chunkIndex) {
     const basePath = element.getAttribute('src');
     const chunkCount = this.getChunkCount(element);
+    const assetsEl = element.parentNode && element.parentNode.tagName && element.parentNode.tagName.toLowerCase() === 'a-assets'
+      ? element.parentNode
+      : (element.closest && element.closest('a-assets'));
+    const profile = assetsEl && assetsEl.getAttribute && assetsEl.getAttribute('chunk-profile');
+    if (profile) {
+      return `${basePath}_split_${profile}_${chunkCount}chunks/model_chunk_${chunkIndex}.gltf`;
+    }
     return `${basePath}_split_${chunkCount}chunks/model_chunk_${chunkIndex}.gltf`;
   }
 
