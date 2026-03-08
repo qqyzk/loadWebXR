@@ -9,6 +9,12 @@ realCase/hallovreen-master/mylib/my-aframe.js
 realCase/Virtual-Reality-Museum-master/mylib/my-aframe.js
 simulation/lib/my-aframe.js
 
+# aframe-master build output and overwritten core (auto-generated)
+aframe-master/dist/
+aframe-master/src/components/gltf-model.js
+aframe-master/src/components/sound.js
+aframe-master/src/core/a-assets.js
+
 # Generated chunk outputs / backups
 **/_chunk_backups/
 **/*_split_*chunks/
