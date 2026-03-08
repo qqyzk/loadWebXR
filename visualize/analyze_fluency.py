@@ -31,6 +31,18 @@ def _detect_format(data):
     raise ValueError("Unrecognized JSON format; expected performance (no-chunk) or profile (ellie-profile) structure")
 
 
+def _load_json_maybe_escaped(filepath):
+    """Load JSON; if standard parse fails, try fixing escaped quotes (e.g. \\\" -> \")."""
+    with open(filepath, "r", encoding="utf-8") as f:
+        raw = f.read()
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        # Some copies paste with escaped quotes (\" instead of "); fix and retry
+        fixed = raw.replace('\\"', '"')
+        return json.loads(fixed)
+
+
 def load_frames(filepath):
     """
     Load JSON, auto-detect format, return unified structure for metrics and plotting.
@@ -42,8 +54,7 @@ def load_frames(filepath):
             "loading_end_index": int | None  # only for performance: frame index where loading completes (for vertical line)
         }
     """
-    with open(filepath, "r", encoding="utf-8") as f:
-        data = json.load(f)
+    data = _load_json_maybe_escaped(filepath)
     fmt = _detect_format(data)
 
     if fmt == "performance":
