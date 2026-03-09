@@ -23,3 +23,16 @@ model-splitter-pre/
 # Local experiment / scratch variants
 aframe-master/src/core/a-assets-previousjs
 aframe-master/src/core/a-assets-profile-with-chunk.js
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.egg-info/
+.eggs/
+
+# Visualize / model-splitter outputs (optional: remove if you want to track)
+visualize/results/
+model-splitter/results_verify/
+model-splitter/results_verify_tale/
