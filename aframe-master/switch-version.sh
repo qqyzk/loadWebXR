@@ -2,7 +2,7 @@
 # Switch A-Frame ablation version: copy -prism / -no-chunk / -priority-only / -profile to unsuffixed names
 # so index.js and components/index.js (which import a-assets.js, gltf-model.js, sound.js) load the right variant.
 #
-# Usage: ./switch-version.sh <prism|no-chunk|priority-only|profile|profile-with-chunk|previous|extreme>
+# Usage: ./switch-version.sh <prism|no-chunk|priority-only|progressive|profile|profile-with-chunk|previous|extreme>
 # Run from aframe-master. Then run npm run build (or your build command).
 
 set -e
@@ -16,6 +16,12 @@ case "$1" in
     cp "${COMP}/gltf-model-prism.js" "${COMP}/gltf-model.js"
     cp "${COMP}/sound-prism.js" "${COMP}/sound.js"
     echo "Switched to prism (priority + greedy + chunking)."
+    ;;
+  progressive)
+    cp "${CORE}/a-assets-progressive.js" "${CORE}/a-assets.js"
+    cp "${COMP}/gltf-model-priority-only.js" "${COMP}/gltf-model.js"
+    cp "${COMP}/sound-priority-only.js" "${COMP}/sound.js"
+    echo "Switched to progressive (conventional progressive loading; VIA order with load-order=via)."
     ;;
   no-chunk)
     cp "${CORE}/a-assets-no-chunk.js" "${CORE}/a-assets.js"
@@ -54,7 +60,7 @@ case "$1" in
     echo "Switched to extreme (profile + at most 1 task every N frames, N=3)."
     ;;
   *)
-    echo "Usage: $0 <prism|no-chunk|priority-only|profile|profile-with-chunk|previous|extreme>"
+    echo "Usage: $0 <prism|no-chunk|priority-only|progressive|profile|profile-with-chunk|previous|extreme>"
     exit 1
     ;;
 esac

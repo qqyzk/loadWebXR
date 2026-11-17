@@ -1,0 +1,749 @@
+{
+  "app": "tale",
+  "probedAt": "2026-11-16T17:15:59.934Z",
+  "emulatedViewport": {
+    "width": 915,
+    "height": 412,
+    "deviceScaleFactor": 2.625,
+    "isMobile": true,
+    "hasTouch": true
+  },
+  "camera": {
+    "position": [
+      0,
+      1,
+      -5
+    ],
+    "direction": [
+      0,
+      0,
+      -1
+    ],
+    "fov": 80,
+    "aspect": 2.221884498480243,
+    "near": 0.005,
+    "far": 10000
+  },
+  "viewport": [
+    915,
+    412
+  ],
+  "assets": [
+    {
+      "id": "target",
+      "src": "item/Beach_Seashell_lit_v1.02.glb",
+      "priority": 1,
+      "entities": 4,
+      "viaScore": 0.13256945695639416,
+      "angle": 0.13256945695639416,
+      "inFrustum": true,
+      "viaRank": 1
+    },
+    {
+      "id": "Environment",
+      "src": "item/Beach_Environment_v1.02.glb",
+      "priority": 1,
+      "entities": 1,
+      "viaScore": 1.47531233485601,
+      "angle": 1.47531233485601,
+      "inFrustum": true,
+      "viaRank": 3
+    },
+    {
+      "id": "distractorModel",
+      "src": "item/Noah_hunter_v1.01.glb",
+      "priority": 3,
+      "entities": 2,
+      "viaScore": 0.6668720368486608,
+      "angle": 0.6668720368486608,
+      "inFrustum": true,
+      "viaRank": 2
+    },
+    {
+      "id": "fairymodel",
+      "src": "item/Elly_2k_03.glb",
+      "priority": 2,
+      "entities": 1,
+      "viaScore": 4.5735630911490635,
+      "angle": 2.5735630911490635,
+      "inFrustum": false,
+      "viaRank": 4
+    },
+    {
+      "id": "helloSound",
+      "src": "assets/illy_the_fairy/1_Hello_there.wav",
+      "priority": 2,
+      "entities": 0,
+      "viaScore": null,
+      "angle": null,
+      "inFrustum": null
+    },
+    {
+      "id": "enviroSound",
+      "src": "assets/illy_the_fairy/3_fishing_beach.wav",
+      "priority": 3,
+      "entities": 0,
+      "viaScore": null,
+      "angle": null,
+      "inFrustum": null
+    },
+    {
+      "id": "half",
+      "src": "item/Beach_Seashell_particles_half_v1.01.glb",
+      "priority": 3,
+      "entities": 1,
+      "viaScore": 4.985267678412723,
+      "angle": 2.985267678412723,
+      "inFrustum": false,
+      "viaRank": 12
+    },
+    {
+      "id": "targetSound",
+      "src": "assets/illy_the_fairy/15_seashell.wav",
+      "priority": 3,
+      "entities": 0,
+      "viaScore": null,
+      "angle": null,
+      "inFrustum": null
+    },
+    {
+      "id": "infoSound",
+      "src": "assets/illy_the_fairy/10_point_at.wav",
+      "priority": 3,
+      "entities": 0,
+      "viaScore": null,
+      "angle": null,
+      "inFrustum": null
+    },
+    {
+      "id": "infoSound2",
+      "src": "assets/illy_the_fairy/11_click_on.wav",
+      "priority": 3,
+      "entities": 0,
+      "viaScore": null,
+      "angle": null,
+      "inFrustum": null
+    },
+    {
+      "id": "infoSounditem",
+      "src": "assets/illy_the_fairy/7_Yay_This.wav",
+      "priority": 3,
+      "entities": 0,
+      "viaScore": null,
+      "angle": null,
+      "inFrustum": null
+    },
+    {
+      "id": "infoSounditemone",
+      "src": "assets/illy_the_fairy/8_Awesome_That.wav",
+      "priority": 3,
+      "entities": 0,
+      "viaScore": null,
+      "angle": null,
+      "inFrustum": null
+    },
+    {
+      "id": "infoSounditemtwo",
+      "src": "assets/illy_the_fairy/9_Woho_This.wav",
+      "priority": 3,
+      "entities": 0,
+      "viaScore": null,
+      "angle": null,
+      "inFrustum": null
+    },
+    {
+      "id": "slowSound",
+      "src": "assets/illy_the_fairy/11_too_slow.wav",
+      "priority": 3,
+      "entities": 0,
+      "viaScore": null,
+      "angle": null,
+      "inFrustum": null
+    },
+    {
+      "id": "endSound",
+      "src": "assets/illy_the_fairy/21_have_helped.wav",
+      "priority": 3,
+      "entities": 0,
+      "viaScore": null,
+      "angle": null,
+      "inFrustum": null
+    },
+    {
+      "id": "boxSound",
+      "src": "assets/illy_the_fairy/13_Uncle_needs.wav",
+      "priority": 3,
+      "entities": 0,
+      "viaScore": null,
+      "angle": null,
+      "inFrustum": null
+    },
+    {
+      "id": "boxSound2",
+      "src": "assets/illy_the_fairy/20_object.wav",
+      "priority": 3,
+      "entities": 0,
+      "viaScore": null,
+      "angle": null,
+      "inFrustum": null
+    },
+    {
+      "id": "boxSound3",
+      "src": "assets/illy_the_fairy/14_pick_up.wav",
+      "priority": 3,
+      "entities": 0,
+      "viaScore": null,
+      "angle": null,
+      "inFrustum": null
+    },
+    {
+      "id": "shrimp",
+      "src": "assets/illy_the_fairy/18_Shrimp.wav",
+      "priority": 3,
+      "entities": 0,
+      "viaScore": null,
+      "angle": null,
+      "inFrustum": null
+    },
+    {
+      "id": "shark",
+      "src": "assets/illy_the_fairy/19_shark.wav",
+      "priority": 3,
+      "entities": 0,
+      "viaScore": null,
+      "angle": null,
+      "inFrustum": null
+    },
+    {
+      "id": "ship",
+      "src": "assets/illy_the_fairy/21_ship.wav",
+      "priority": 3,
+      "entities": 0,
+      "viaScore": null,
+      "angle": null,
+      "inFrustum": null
+    },
+    {
+      "id": "fishing",
+      "src": "assets/illy_the_fairy/23_fishing_rod.wav",
+      "priority": 3,
+      "entities": 0,
+      "viaScore": null,
+      "angle": null,
+      "inFrustum": null
+    },
+    {
+      "id": "whale",
+      "src": "assets/illy_the_fairy/22_whale.wav",
+      "priority": 3,
+      "entities": 0,
+      "viaScore": null,
+      "angle": null,
+      "inFrustum": null
+    },
+    {
+      "id": "octopus",
+      "src": "assets/illy_the_fairy/20_octopus.wav",
+      "priority": 3,
+      "entities": 0,
+      "viaScore": null,
+      "angle": null,
+      "inFrustum": null
+    },
+    {
+      "id": "ball",
+      "src": "assets/illy_the_fairy/14_boxs.wav",
+      "priority": 3,
+      "entities": 0,
+      "viaScore": null,
+      "angle": null,
+      "inFrustum": null
+    },
+    {
+      "id": "fishingRod",
+      "src": "item/Beach_prop_fishingRod_01.glb",
+      "priority": 2,
+      "entities": 1,
+      "viaScore": 4.944197093739913,
+      "angle": 2.9441970937399127,
+      "inFrustum": false,
+      "viaRank": 5
+    },
+    {
+      "id": "sharkModel",
+      "src": "item/Beach_prop_sharky_01.glb",
+      "priority": 2,
+      "entities": 1,
+      "viaScore": 4.944197093739913,
+      "angle": 2.9441970937399127,
+      "inFrustum": false,
+      "viaRank": 6
+    },
+    {
+      "id": "octopusModel",
+      "src": "item/Beach_prop_octopus_01.glb",
+      "priority": 2,
+      "entities": 1,
+      "viaScore": 4.944197093739913,
+      "angle": 2.9441970937399127,
+      "inFrustum": false,
+      "viaRank": 7
+    },
+    {
+      "id": "shrimpModel",
+      "src": "item/Beach_prop_shrimp_01.glb",
+      "priority": 2,
+      "entities": 1,
+      "viaScore": 4.944197093739913,
+      "angle": 2.9441970937399127,
+      "inFrustum": false,
+      "viaRank": 8
+    },
+    {
+      "id": "whaleModel",
+      "src": "item/Beach_prop_whale_01.glb",
+      "priority": 2,
+      "entities": 1,
+      "viaScore": 4.944197093739913,
+      "angle": 2.9441970937399127,
+      "inFrustum": false,
+      "viaRank": 9
+    },
+    {
+      "id": "shipModel",
+      "src": "item/Beach_prop_ship_01.glb",
+      "priority": 2,
+      "entities": 1,
+      "viaScore": 4.944197093739913,
+      "angle": 2.9441970937399127,
+      "inFrustum": false,
+      "viaRank": 10
+    },
+    {
+      "id": "ballModel",
+      "src": "item/Beach_prop_ball_01.glb",
+      "priority": 2,
+      "entities": 1,
+      "viaScore": 4.944197093739913,
+      "angle": 2.9441970937399127,
+      "inFrustum": false,
+      "viaRank": 11
+    }
+  ],
+  "entities": [
+    {
+      "key": "Environment#1",
+      "asset": "Environment",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        -32.394180561983376,
+        -6.005980287420839,
+        -51.525355007186334
+      ],
+      "max": [
+        58.015878677368164,
+        44.39418500718634,
+        37.26300957986997
+      ],
+      "center": [
+        12.810849057692394,
+        19.19410235988275,
+        -7.131172713658181
+      ],
+      "distance": 22.353637542832047,
+      "angle": 1.47531233485601,
+      "inFrustum": true,
+      "viaScore": 1.47531233485601
+    },
+    {
+      "key": "target#1",
+      "asset": "target",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        -2.796672860892106,
+        -0.10044062686243943,
+        2.6041671997573346
+      ],
+      "max": [
+        -0.740854655298409,
+        0.45716542088014633,
+        4.652693714401187
+      ],
+      "center": [
+        -1.7687637580952575,
+        0.17836239700885345,
+        3.628430457079261
+      ],
+      "distance": 8.846096638362782,
+      "angle": 2.9192979071138514,
+      "inFrustum": false,
+      "viaScore": 4.919297907113851
+    },
+    {
+      "key": "target#2",
+      "asset": "target",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        -5.574057056054255,
+        0.12165937313756056,
+        -3.3630130358040065
+      ],
+      "max": [
+        -4.084789831677635,
+        0.6792654208801463,
+        -1.9320305559605804
+      ],
+      "center": [
+        -4.829423443865945,
+        0.40046239700885344,
+        -2.6475217958822936
+      ],
+      "distance": 5.405268711027348,
+      "angle": 2.0210783611118335,
+      "inFrustum": false,
+      "viaScore": 4.021078361111833
+    },
+    {
+      "key": "target#3",
+      "asset": "target",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        2.189072943945744,
+        -0.029590626862439438,
+        -5.464753035804006
+      ],
+      "max": [
+        3.678340168322365,
+        0.5280154208801464,
+        -4.033770555960579
+      ],
+      "center": [
+        2.9337065561340543,
+        0.24921239700885348,
+        -4.749261795882292
+      ],
+      "distance": 3.0386157752031266,
+      "angle": 1.6534075051085566,
+      "inFrustum": false,
+      "viaScore": 3.6534075051085564
+    },
+    {
+      "key": "target#4",
+      "asset": "target",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        -1.8815970560542559,
+        0.11663937313756056,
+        -15.371933035804005
+      ],
+      "max": [
+        -0.39232983167763524,
+        0.6742454208801464,
+        -13.94095055596058
+      ],
+      "center": [
+        -1.1369634438659455,
+        0.3954423970088535,
+        -14.656441795882293
+      ],
+      "distance": 9.741921983124497,
+      "angle": 0.13256945695639416,
+      "inFrustum": true,
+      "viaScore": 0.13256945695639416
+    },
+    {
+      "key": "fishingRod#1",
+      "asset": "fishingRod",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        0,
+        0,
+        0
+      ],
+      "max": [
+        0,
+        0,
+        0
+      ],
+      "center": [
+        0,
+        0,
+        0
+      ],
+      "distance": 5.0990195135927845,
+      "angle": 2.9441970937399127,
+      "inFrustum": false,
+      "viaScore": 4.944197093739913
+    },
+    {
+      "key": "sharkModel#1",
+      "asset": "sharkModel",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        0,
+        0,
+        0
+      ],
+      "max": [
+        0,
+        0,
+        0
+      ],
+      "center": [
+        0,
+        0,
+        0
+      ],
+      "distance": 5.0990195135927845,
+      "angle": 2.9441970937399127,
+      "inFrustum": false,
+      "viaScore": 4.944197093739913
+    },
+    {
+      "key": "octopusModel#1",
+      "asset": "octopusModel",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        0,
+        0,
+        0
+      ],
+      "max": [
+        0,
+        0,
+        0
+      ],
+      "center": [
+        0,
+        0,
+        0
+      ],
+      "distance": 5.0990195135927845,
+      "angle": 2.9441970937399127,
+      "inFrustum": false,
+      "viaScore": 4.944197093739913
+    },
+    {
+      "key": "shrimpModel#1",
+      "asset": "shrimpModel",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        0,
+        0,
+        0
+      ],
+      "max": [
+        0,
+        0,
+        0
+      ],
+      "center": [
+        0,
+        0,
+        0
+      ],
+      "distance": 5.0990195135927845,
+      "angle": 2.9441970937399127,
+      "inFrustum": false,
+      "viaScore": 4.944197093739913
+    },
+    {
+      "key": "whaleModel#1",
+      "asset": "whaleModel",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        0,
+        0,
+        0
+      ],
+      "max": [
+        0,
+        0,
+        0
+      ],
+      "center": [
+        0,
+        0,
+        0
+      ],
+      "distance": 5.0990195135927845,
+      "angle": 2.9441970937399127,
+      "inFrustum": false,
+      "viaScore": 4.944197093739913
+    },
+    {
+      "key": "shipModel#1",
+      "asset": "shipModel",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        0,
+        0,
+        0
+      ],
+      "max": [
+        0,
+        0,
+        0
+      ],
+      "center": [
+        0,
+        0,
+        0
+      ],
+      "distance": 5.0990195135927845,
+      "angle": 2.9441970937399127,
+      "inFrustum": false,
+      "viaScore": 4.944197093739913
+    },
+    {
+      "key": "ballModel#1",
+      "asset": "ballModel",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        0,
+        0,
+        0
+      ],
+      "max": [
+        0,
+        0,
+        0
+      ],
+      "center": [
+        0,
+        0,
+        0
+      ],
+      "distance": 5.0990195135927845,
+      "angle": 2.9441970937399127,
+      "inFrustum": false,
+      "viaScore": 4.944197093739913
+    },
+    {
+      "key": "fairymodel#1",
+      "asset": "fairymodel",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        -0.5821019923686981,
+        1.62321,
+        -3.1798749015591663
+      ],
+      "max": [
+        0.3832858884334564,
+        2.902679947261825,
+        -2.8499999940395355
+      ],
+      "center": [
+        -0.09940805196762084,
+        2.2629449736309124,
+        -3.014937447799351
+      ],
+      "distance": 2.3548641793880463,
+      "angle": 2.5735630911490635,
+      "inFrustum": false,
+      "viaScore": 4.5735630911490635
+    },
+    {
+      "key": "distractorModel#1",
+      "asset": "distractorModel",
+      "visibleAttr": "false",
+      "hasMesh": true,
+      "min": [
+        0.9977461695671082,
+        0.0996551050298541,
+        -7.823999964237213
+      ],
+      "max": [
+        2.502253830432892,
+        1.9977976617821784,
+        -6.624000035762787
+      ],
+      "center": [
+        1.75,
+        1.0487263834060163,
+        -7.224
+      ],
+      "distance": 2.8303798791752017,
+      "angle": 0.6668720368486608,
+      "inFrustum": true,
+      "viaScore": 0.6668720368486608
+    },
+    {
+      "key": "distractorModel#2",
+      "asset": "distractorModel",
+      "visibleAttr": "false",
+      "hasMesh": true,
+      "min": [
+        10.028230193289192,
+        0.2996551050298541,
+        -1.6226922125958032
+      ],
+      "max": [
+        11.324369806710807,
+        2.1977976617821784,
+        -0.07491927260058373
+      ],
+      "center": [
+        10.6763,
+        1.2487263834060163,
+        -0.8488057425981934
+      ],
+      "distance": 11.457646366793135,
+      "angle": 1.9415390205654115,
+      "inFrustum": false,
+      "viaScore": 3.9415390205654113
+    },
+    {
+      "key": "half#1",
+      "asset": "half",
+      "visibleAttr": "false",
+      "hasMesh": true,
+      "min": [
+        -0.9335221230046201,
+        -0.0008841703502791237,
+        -0.957342035271408
+      ],
+      "max": [
+        0.9384351378352584,
+        0.42597219082971716,
+        0.9497930798587769
+      ],
+      "center": [
+        0.0024565074153191646,
+        0.21254401023971903,
+        -0.00377447770631556
+      ],
+      "distance": 5.057900991503969,
+      "angle": 2.985267678412723,
+      "inFrustum": false,
+      "viaScore": 4.985267678412723
+    }
+  ],
+  "viaOrder": [
+    "target",
+    "distractorModel",
+    "Environment",
+    "fairymodel",
+    "fishingRod",
+    "sharkModel",
+    "octopusModel",
+    "shrimpModel",
+    "whaleModel",
+    "shipModel",
+    "ballModel",
+    "half"
+  ]
+}

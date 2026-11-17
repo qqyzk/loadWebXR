@@ -14,13 +14,16 @@ class AAssets extends ANode {
     this.isAssets = true;
     this.fileLoader = fileLoader;
     this.timeout = null;
-    this.priorityQueues = {1: [], 2: [], 3: []};
+    this.priorityQueues = {1: [], 2: [], 3: [], 4: []};
     this.renderFirstFrame = true;
     this.frameTimeBudget = 16.7;
     this.safeMargin = this.frameTimeBudget * 0.3; // 30% of budget; effectiveBudget = frameTimeBudget - safeMargin
-    this.networkQueues = {1: [], 2: [], 3: []};
-    this.sceneQueues = { 1: [],2: [], 3: []};
-    this.sceneTaskCount = { 1: 0, 2: 0, 3: 0};
+    this.networkQueues = {1: [], 2: [], 3: [], 4: []};
+    this.sceneQueues = { 1: [],2: [], 3: [], 4: []};
+    this.sceneTaskCount = { 1: 0, 2: 0, 3: 0, 4: 0};
+    // Highest priority level in use (at least 3); level 4 is only used by the
+    // priority-granularity experiment, so 3-level pages behave exactly as before.
+    this.maxPriority = 3;
     this.currentPriority = 1;
     this.currentStage = 0;
     this.allTasksDone = false;
@@ -57,10 +60,20 @@ class AAssets extends ANode {
     // await this.doGroupSceneTask(1);//scene
     await this.loadFirstPriority();
     this.parentNode.emit('firstloaded');
+    // frame-budget="off" (ablation): a single loop that processes every task as
+    // soon as it is ready, without the per-frame time budget.
+    const budgetOff = this.getAttribute('frame-budget') === 'off';
     this.parentNode.addEventListener('render', async function (event) {
       const startTime = event.detail;
       if(!self.allTasksDone){
-        self.doTasks(startTime);
+        if (budgetOff) {
+          if (!self.unbudgetedLoopStarted) {
+            self.unbudgetedLoopStarted = true;
+            self.doTasks(startTime, Infinity);
+          }
+        } else {
+          self.doTasks(startTime);
+        }
       }
     });
   }
@@ -80,6 +93,7 @@ class AAssets extends ANode {
     const elements = this.getChildren();
     elements.forEach(el => {
       const priority = this.getPriority(el);
+      this.maxPriority = Math.max(this.maxPriority, priority);
       this.priorityQueues[priority].push(el);
       
       // Check if this is a chunked model
@@ -225,8 +239,8 @@ class AAssets extends ANode {
   registerSceneTask (task) {
     this.sceneQueues[task.priority].push(task);
   }
-  async doTasks (startTime) {
-    const effectiveBudget = this.frameTimeBudget - this.safeMargin;
+  async doTasks (startTime, budgetOverride) {
+    const effectiveBudget = budgetOverride !== undefined ? budgetOverride : this.frameTimeBudget - this.safeMargin;
     while ( performance.now()-startTime < effectiveBudget && !this.allTasksDone) {
       if (this.currentStage === 0){
         if(this.networkQueues[this.currentPriority].length > 0){
@@ -248,7 +262,7 @@ class AAssets extends ANode {
           this.sceneTaskDone = 0;
           this.currentPriority++;
           // console.log('debug: scene task done, switch to next priority', this.currentPriority);
-          if(this.currentPriority > 3){
+          if(this.currentPriority > this.maxPriority){
             this.allTasksDone = true;
             this.parentNode.emit('all-assets-loaded');
           }

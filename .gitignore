@@ -36,3 +36,13 @@ __pycache__/
 visualize/results/
 model-splitter/results_verify/
 model-splitter/results_verify_tale/
+# Experiment harness (experiment/): generated pages, copied bundles, runner deps
+realCase/**/*.exp-*.html
+realCase/*/lib/my-aframe-*.js
+realCase/*/mylib/my-aframe-*.js
+realCase/*/exp-measure.js
+experiment/bundles/
+experiment/pages.json
+experiment/runner/node_modules/
+experiment/results/smoke-*/
+realCase/*/exp-stages.js

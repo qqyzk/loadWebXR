@@ -1,0 +1,12 @@
+{
+  "name": "prism-experiment-runner",
+  "private": true,
+  "type": "module",
+  "description": "Automated TTFF / frame-time runs for the generated experiment pages",
+  "scripts": {
+    "run": "node run.mjs"
+  },
+  "dependencies": {
+    "puppeteer-core": "^23.11.1"
+  }
+}

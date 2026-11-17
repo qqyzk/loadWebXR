@@ -1,0 +1,568 @@
+{
+  "app": "mus",
+  "probedAt": "2026-11-16T17:16:03.342Z",
+  "emulatedViewport": {
+    "width": 915,
+    "height": 412,
+    "deviceScaleFactor": 2.625,
+    "isMobile": true,
+    "hasTouch": true
+  },
+  "camera": {
+    "position": [
+      0,
+      1.764,
+      0
+    ],
+    "direction": [
+      0,
+      0,
+      -1
+    ],
+    "fov": 80,
+    "aspect": 2.220873786407767,
+    "near": 0.005,
+    "far": 10000
+  },
+  "viewport": [
+    915,
+    412
+  ],
+  "assets": [
+    {
+      "id": "floor-glb",
+      "src": "models/floor.glb",
+      "priority": 1,
+      "entities": 1,
+      "viaScore": 3.5707960564790473,
+      "angle": 1.5707960564790473,
+      "inFrustum": false,
+      "viaRank": 9
+    },
+    {
+      "id": "hall-glb",
+      "src": "models/hall.glb",
+      "priority": 1,
+      "entities": 1,
+      "viaScore": 1.5707963267948966,
+      "angle": 1.5707963267948966,
+      "inFrustum": true,
+      "viaRank": 5
+    },
+    {
+      "id": "hall_low_floor-glb",
+      "src": "models/hall_low_floor.glb",
+      "priority": 1,
+      "entities": 1,
+      "viaScore": 1.5707960564839878,
+      "angle": 1.5707960564839878,
+      "inFrustum": true,
+      "viaRank": 4
+    },
+    {
+      "id": "acropolis-glb",
+      "src": "models/acropolis.glb",
+      "priority": 2,
+      "entities": 1,
+      "viaScore": 3.9298618046760208,
+      "angle": 1.9298618046760208,
+      "inFrustum": false,
+      "viaRank": 11
+    },
+    {
+      "id": "good_samaritan-glb",
+      "src": "models/good_samaritan.glb",
+      "priority": 2,
+      "entities": 1,
+      "viaScore": 4.157293883560898,
+      "angle": 2.157293883560898,
+      "inFrustum": false,
+      "viaRank": 12
+    },
+    {
+      "id": "moonlight-glb",
+      "src": "models/moonlight.glb",
+      "priority": 2,
+      "entities": 1,
+      "viaScore": 3.90148004638929,
+      "angle": 1.90148004638929,
+      "inFrustum": false,
+      "viaRank": 10
+    },
+    {
+      "id": "podiums-glb",
+      "src": "models/podiums.glb",
+      "priority": 1,
+      "entities": 1,
+      "viaScore": 0.13711183743458194,
+      "angle": 0.13711183743458194,
+      "inFrustum": true,
+      "viaRank": 1
+    },
+    {
+      "id": "lamps-glb",
+      "src": "models/lamps.glb",
+      "priority": 1,
+      "entities": 1,
+      "viaScore": 4.964657223208336,
+      "angle": 2.9646572232083366,
+      "inFrustum": false,
+      "viaRank": 14
+    },
+    {
+      "id": "david-glb",
+      "src": "models/david.glb",
+      "priority": 2,
+      "entities": 1,
+      "viaScore": 3.5614798886063133,
+      "angle": 1.561479888606313,
+      "inFrustum": false,
+      "viaRank": 7
+    },
+    {
+      "id": "lion-glb",
+      "src": "models/lion.glb",
+      "priority": 2,
+      "entities": 1,
+      "viaScore": 1.0685402821661527,
+      "angle": 1.0685402821661527,
+      "inFrustum": true,
+      "viaRank": 3
+    },
+    {
+      "id": "greek_bust-glb",
+      "src": "models/greek_bust.glb",
+      "priority": 2,
+      "entities": 1,
+      "viaScore": 1.0586531022210244,
+      "angle": 1.0586531022210244,
+      "inFrustum": true,
+      "viaRank": 2
+    },
+    {
+      "id": "old_man-glb",
+      "src": "models/old_man.glb",
+      "priority": 2,
+      "entities": 1,
+      "viaScore": 3.5679272936437503,
+      "angle": 1.5679272936437505,
+      "inFrustum": false,
+      "viaRank": 8
+    },
+    {
+      "id": "nefertiti-glb",
+      "src": "models/nefertiti.glb",
+      "priority": 2,
+      "entities": 1,
+      "viaScore": 3.3049516991694152,
+      "angle": 1.3049516991694152,
+      "inFrustum": false,
+      "viaRank": 6
+    },
+    {
+      "id": "fractal_1-glb",
+      "src": "models/fractal_1.glb",
+      "priority": 1,
+      "entities": 0,
+      "viaScore": null,
+      "angle": null,
+      "inFrustum": null
+    },
+    {
+      "id": "fractal_2-glb",
+      "src": "models/fractal_2.glb",
+      "priority": 1,
+      "entities": 0,
+      "viaScore": null,
+      "angle": null,
+      "inFrustum": null
+    },
+    {
+      "id": "fractal_3-glb",
+      "src": "models/fractal_3.glb",
+      "priority": 1,
+      "entities": 0,
+      "viaScore": null,
+      "angle": null,
+      "inFrustum": null
+    },
+    {
+      "id": "david_bike_hall_3-glb",
+      "src": "models/david_bike_hall_3.glb",
+      "priority": 2,
+      "entities": 1,
+      "viaScore": 4.745471797788738,
+      "angle": 2.7454717977887384,
+      "inFrustum": false,
+      "viaRank": 13
+    }
+  ],
+  "entities": [
+    {
+      "key": "floor-glb#1",
+      "asset": "floor-glb",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        -7.499998092651367,
+        0,
+        -2
+      ],
+      "max": [
+        7.499997138977051,
+        0,
+        1.9999990463256836
+      ],
+      "center": [
+        -4.76837158203125e-7,
+        0,
+        -4.76837158203125e-7
+      ],
+      "distance": 1.764000000000129,
+      "angle": 1.5707960564790473,
+      "inFrustum": false,
+      "viaScore": 3.5707960564790473
+    },
+    {
+      "key": "hall-glb#1",
+      "asset": "hall-glb",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        -9.498786926269531,
+        0,
+        -14
+      ],
+      "max": [
+        9.498786926269531,
+        5,
+        14
+      ],
+      "center": [
+        0,
+        2.5,
+        0
+      ],
+      "distance": 0.736,
+      "angle": 1.5707963267948966,
+      "inFrustum": true,
+      "viaScore": 1.5707963267948966
+    },
+    {
+      "key": "hall_low_floor-glb#1",
+      "asset": "hall_low_floor-glb",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        -1.9917800426483154,
+        0,
+        -14
+      ],
+      "max": [
+        1.9702850580215454,
+        9.999999974752427e-7,
+        13.999999046325684
+      ],
+      "center": [
+        -0.01074749231338501,
+        4.999999987376214e-7,
+        -4.76837158203125e-7
+      ],
+      "distance": 1.764032240235849,
+      "angle": 1.5707960564839878,
+      "inFrustum": true,
+      "viaScore": 1.5707960564839878
+    },
+    {
+      "key": "acropolis-glb#1",
+      "asset": "acropolis-glb",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        3.7103259563446045,
+        0.9744179844856262,
+        1.9571579694747925
+      ],
+      "max": [
+        6.710328102111816,
+        2.9664199352264404,
+        1.9571599960327148
+      ],
+      "center": [
+        5.2103270292282104,
+        1.9704189598560333,
+        1.9571589827537537
+      ],
+      "distance": 5.5696128969855545,
+      "angle": 1.9298618046760208,
+      "inFrustum": false,
+      "viaScore": 3.9298618046760208
+    },
+    {
+      "key": "good_samaritan-glb#1",
+      "asset": "good_samaritan-glb",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        -3.6860930919647217,
+        1.0104190111160278,
+        1.9571590423583984
+      ],
+      "max": [
+        -2.1900908946990967,
+        2.930419921875,
+        1.9571599960327148
+      ],
+      "center": [
+        -2.938091993331909,
+        1.970419466495514,
+        1.9571595191955566
+      ],
+      "distance": 3.536306963628461,
+      "angle": 2.157293883560898,
+      "inFrustum": false,
+      "viaScore": 4.157293883560898
+    },
+    {
+      "key": "moonlight-glb#1",
+      "asset": "moonlight-glb",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        -6.849463939666748,
+        1.1184179782867432,
+        1.9571590423583984
+      ],
+      "max": [
+        -4.545462131500244,
+        2.8224198818206787,
+        1.9571599960327148
+      ],
+      "center": [
+        -5.697463035583496,
+        1.970418930053711,
+        1.9571595191955566
+      ],
+      "distance": 6.027782942351409,
+      "angle": 1.90148004638929,
+      "inFrustum": false,
+      "viaScore": 3.90148004638929
+    },
+    {
+      "key": "podiums-glb#1",
+      "asset": "podiums-glb",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        -6.25,
+        0,
+        -13.922740936279297
+      ],
+      "max": [
+        6.249999046325684,
+        1.4106680154800415,
+        -1.422739028930664
+      ],
+      "center": [
+        -4.76837158203125e-7,
+        0.7053340077400208,
+        -7.6727399826049805
+      ],
+      "distance": 7.745431719654697,
+      "angle": 0.13711183743458194,
+      "inFrustum": true,
+      "viaScore": 0.13711183743458194
+    },
+    {
+      "key": "lamps-glb#1",
+      "asset": "lamps-glb",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        -6.189678192138672,
+        2.943037986755371,
+        1.7033100128173828
+      ],
+      "max": [
+        5.699073791503906,
+        3.389794111251831,
+        14.221366882324219
+      ],
+      "center": [
+        -0.2453022003173828,
+        3.166416049003601,
+        7.962338447570801
+      ],
+      "distance": 8.088620246843563,
+      "angle": 2.9646572232083366,
+      "inFrustum": false,
+      "viaScore": 4.964657223208336
+    },
+    {
+      "key": "david-glb#1",
+      "asset": "david-glb",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        -9.266490936279297,
+        0.6712899804115295,
+        -0.8122720122337341
+      ],
+      "max": [
+        -7.651247024536133,
+        2.6126575469970703,
+        0.6546379923820496
+      ],
+      "center": [
+        -8.458868980407715,
+        1.6419737637043,
+        -0.07881700992584229
+      ],
+      "distance": 8.460116249266436,
+      "angle": 1.561479888606313,
+      "inFrustum": false,
+      "viaScore": 3.5614798886063133
+    },
+    {
+      "key": "lion-glb#1",
+      "asset": "lion-glb",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        -3.2715260982513428,
+        1.417356014251709,
+        -1.9792660474777222
+      ],
+      "max": [
+        -2.7229340076446533,
+        2.088996171951294,
+        -1.313125491142273
+      ],
+      "center": [
+        -2.997230052947998,
+        1.7531760931015015,
+        -1.6461957693099976
+      ],
+      "distance": 3.419570975743791,
+      "angle": 1.0685402821661527,
+      "inFrustum": true,
+      "viaScore": 1.0685402821661527
+    },
+    {
+      "key": "greek_bust-glb#1",
+      "asset": "greek_bust-glb",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        2.80527400970459,
+        1.4111080169677734,
+        -1.9255419969558716
+      ],
+      "max": [
+        3.18390154838562,
+        2.1653707027435303,
+        -1.4415384531021118
+      ],
+      "center": [
+        2.994587779045105,
+        1.7882393598556519,
+        -1.6835402250289917
+      ],
+      "distance": 3.435469575220129,
+      "angle": 1.0586531022210244,
+      "inFrustum": true,
+      "viaScore": 1.0586531022210244
+    },
+    {
+      "key": "old_man-glb#1",
+      "asset": "old_man-glb",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        8.102193832397461,
+        0.5980209708213806,
+        -0.5005930066108704
+      ],
+      "max": [
+        8.82278823852539,
+        3.2597179412841797,
+        0.45202532410621643
+      ],
+      "center": [
+        8.462491035461426,
+        1.9288694560527802,
+        -0.024283841252326965
+      ],
+      "distance": 8.46413174328886,
+      "angle": 1.5679272936437505,
+      "inFrustum": false,
+      "viaScore": 3.5679272936437503
+    },
+    {
+      "key": "nefertiti-glb#1",
+      "asset": "nefertiti-glb",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        5.7974138259887695,
+        1.4125679731369019,
+        -1.9441590309143066
+      ],
+      "max": [
+        6.205445289611816,
+        2.2580490112304688,
+        -1.3243253231048584
+      ],
+      "center": [
+        6.001429557800293,
+        1.8353084921836853,
+        -1.6342421770095825
+      ],
+      "distance": 6.22036889030012,
+      "angle": 1.3049516991694152,
+      "inFrustum": false,
+      "viaScore": 3.3049516991694152
+    },
+    {
+      "key": "david_bike_hall_3-glb#1",
+      "asset": "david_bike_hall_3-glb",
+      "visibleAttr": null,
+      "hasMesh": true,
+      "min": [
+        2.2540900707244873,
+        0.5546550154685974,
+        5.757050037384033
+      ],
+      "max": [
+        3.1797542572021484,
+        1.7717769145965576,
+        7.549344062805176
+      ],
+      "center": [
+        2.716922163963318,
+        1.1632159650325775,
+        6.6531970500946045
+      ],
+      "distance": 7.2116321654043345,
+      "angle": 2.7454717977887384,
+      "inFrustum": false,
+      "viaScore": 4.745471797788738
+    }
+  ],
+  "viaOrder": [
+    "podiums-glb",
+    "greek_bust-glb",
+    "lion-glb",
+    "hall_low_floor-glb",
+    "hall-glb",
+    "nefertiti-glb",
+    "david-glb",
+    "old_man-glb",
+    "floor-glb",
+    "moonlight-glb",
+    "acropolis-glb",
+    "good_samaritan-glb",
+    "david_bike_hall_3-glb",
+    "lamps-glb"
+  ]
+}
