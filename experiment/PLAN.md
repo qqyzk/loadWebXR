@@ -2,6 +2,8 @@
 
 TMC 大修（M6–M9）所需实验的代码、流程和进度。审稿意见与整体计划见 `revision1/审稿意见与修改计划.md`，这里只记录实验怎么做。
 
+分批顺序、每批的预期结果和检查点见 `revision1/实验/实验规划.md`（论文只需要 Fast 4G 和不限速两种条件，不测 Local Wifi）；下面“真机运行步骤”只是命令示例。
+
 ## 思路
 
 每个实验配置对应一个固定网址，不再切分支、不再手动改 HTML 或重新构建：
@@ -29,8 +31,6 @@ python3 ../analyze.py pixel6-trial
 # 3. 正式：主实验（11 个配置 × 3 个应用 × 10 轮，约 5–6 小时）
 node run.mjs --session pixel6-main-fast4g --set main --network fast4g --runs 10
 python3 ../analyze.py pixel6-main-fast4g
-# （可选）Local Wifi：手机和 Mac 在同一局域网，页面走 Wi-Fi，USB 只用来控制 Chrome
-node run.mjs --session pixel6-main-wifi --set main --network none --host <Mac 的局域网 IP> --runs 10
 # 4. 主实验选出每个应用最好的分块配置后，更新 gen_pages.py 的 BEST_PROFILE，重新生成，再跑：
 node run.mjs --session pixel6-levels-fast4g --set levels --network fast4g --runs 10
 node run.mjs --session pixel6-stress-fast4g --set stress --network fast4g --runs 10
