@@ -10,7 +10,9 @@ Per run:
                  phase after the first complete frame: frames rendered after TTFF
                  and flagged allAssetsLoaded == false (the loading-phase rule of
                  visualize/analyze_fluency.py), skipping the first SKIP_FRAMES
-                 frames as the original analysis did.
+                 frames as the original analysis did. Loaders that render from
+                 the start (bundle "progressive": progressive, via) are measured
+                 from the first frame instead of from TTFF.
                  ftsd, max_ft, top3_ft (mean of the 3 longest frames), p99_ft,
                  low1_fps (1% low: FPS over the slowest 1% of frames),
                  missed_ratio (frames missed at the display period; the period is
@@ -68,9 +70,9 @@ def frame_series(exp: dict) -> list[tuple[float, float, bool]]:
     return out
 
 
-def smoothness(exp: dict, skip: int, period: float | None) -> dict:
+def smoothness(exp: dict, skip: int, period: float | None, from_first_frame: bool = False) -> dict:
     series = frame_series(exp)
-    start = exp.get("ttffEndTime")
+    start = None if from_first_frame else exp.get("ttffEndTime")
     ft = [d for (t, d, loaded) in series if not loaded and (start is None or t > start)]
     ft = ft[skip:]
     if not ft:
@@ -126,7 +128,7 @@ def run_metrics(path: Path, skip: int, period: float | None) -> tuple[dict, list
         "battery_temp": meta.get("batteryTemp"),
         "viewport": "x".join(str(v) for v in exp.get("viewport") or []),
     }
-    row.update(smoothness(exp, skip, period))
+    row.update(smoothness(exp, skip, period, from_first_frame=meta.get("bundle") == "progressive"))
     vis_rows = []
     vis = exp.get("visibility")
     if vis:
