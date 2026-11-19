@@ -108,7 +108,8 @@ async function main () {
   console.log('[page]', { viewport: report.viewport, dpr: report.devicePixelRatio, rafFps: report.rafFps.toFixed(1) });
   console.log('[network]', `bundle fetch: ${report.fetchUnthrottledMs.toFixed(0)} ms unthrottled, ${report.fetchFast4gMs.toFixed(0)} ms Fast 4G`);
   const [w, h] = report.viewport;
-  if (w < h) { console.log('[warn] the phone is in portrait; the probe and VIA order will use portrait. Rotate to landscape and rerun preflight if the runs should be landscape.'); }
+  if (w > h) { console.log('[warn] the phone is in landscape; the experiments use portrait. Rotate it and rerun preflight.'); }
+  if (report.rafFps > 65) { console.log(`[warn] Chrome renders at ${report.rafFps.toFixed(0)} fps; set the display to 60 Hz (Settings > Display > Smooth Display off).`); }
   if (!opts.noReprobe) {
     console.log(`[probe] re-probing with the phone viewport ${w}x${h} and regenerating pages`);
     execFileSync('node', [path.join(EXP_DIR, 'runner', 'probe.mjs'), '--viewport', `${w}x${h}`], { stdio: 'inherit' });

@@ -21,7 +21,7 @@ TMC 大修（M6–M9）所需实验的代码、流程和进度。审稿意见与
 
 ```bash
 # 0. 一次性准备（已完成）：brew install --cask android-platform-tools；cd experiment/runner && npm install
-# 1. 手机：开发者选项里打开 USB 调试，连上 Mac 并授权；打开 Chrome；横屏固定在支架上；关掉省电模式和自动亮度
+# 1. 手机：开发者选项里打开 USB 调试，连上 Mac 并授权；打开 Chrome；竖屏固定在支架上；屏幕刷新率设为 60 Hz（关闭“流畅显示”）；关掉省电模式和自动亮度
 cd experiment/runner
 node preflight.mjs                      # 检查设备、Chrome 版本、视口、帧率、端口转发和限速，
                                         # 并按手机实际视口自动重跑探针、重新生成页面（整个 session 保持同一方向）
@@ -37,7 +37,7 @@ node run.mjs --session pixel6-stress-fast4g --set stress --network fast4g --runs
 node run.mjs --session pixel6-stages --set stages --network none --runs 5
 ```
 
-常用选项：`--apps tale,hallo,mus`、`--configs a,b`、`--cooldown 20`（秒）、`--max-temp 38`（电池温度 °C，超过就等待）、`--dry-run`（只打印运行顺序）、`--target desktop`（桌面 Chrome 冒烟测试）。中断后用同一命令重跑即可续跑，已有结果文件会跳过；失败记录在 `failures.jsonl`（含失败时页面已测到的数据和报错）。
+常用选项：`--apps tale,hallo,mus`、`--configs a,b`、`--cooldown 30`（每次运行后最少等待秒数）、`--temp-margin 1`（等电池温度回到本批开始时 +1 °C 以内）、`--max-wait 600`、`--max-temp 38`、`--dry-run`（只打印运行顺序）、`--target desktop`（桌面 Chrome 冒烟测试）。每次运行后关掉实验页面、切回空白页（Chrome 不退出），再按上述规则冷却；每次记录起始电池温度、各传感器温度和冷却时长。中断后用同一命令重跑即可续跑，已有结果文件会跳过；失败记录在 `failures.jsonl`（含失败时页面已测到的数据和报错）。
 
 ## 配置
 
@@ -93,7 +93,7 @@ prism / nobudget / unthrottled × 每帧人为渲染负载 const10（10 ms）、
 
 ## 发现与待确认
 
-- **原 P1 无法完全复现**：`classify/*-priority.json` 的生成代码不在仓库里。用探针在竖屏 412×915、横屏 915×412、桌面 1280×720 三种视口下检查初始视锥：tale 完全一致；hallo 竖屏缺 zombi/werewolf/bat，横屏多出 skeleton/pumpkin_happy（P2）；mus 的 floor、lamps 在任何视口下都不在初始视锥内（lamps 位于相机正后方），fractal 系列实体已被注释。主实验的 TTFF 只依赖 `priority` 属性，不受影响；VIA 顺序和 R1-1 的可见性统计用探针结果，视口需与真机一致（默认横屏，真机 preflight 后按实际视口重跑探针）。
+- **原 P1 无法完全复现**：`classify/*-priority.json` 的生成代码不在仓库里。用探针在竖屏 412×915、横屏 915×412、桌面 1280×720 三种视口下检查初始视锥：tale 完全一致；hallo 竖屏缺 zombi/werewolf/bat，横屏多出 skeleton/pumpkin_happy（P2）；mus 的 floor、lamps 在任何视口下都不在初始视锥内（lamps 位于相机正后方），fractal 系列实体已被注释。主实验的 TTFF 只依赖 `priority` 属性，不受影响；VIA 顺序和 R1-1 的可见性统计用探针结果，视口需与真机一致（实验用竖屏，探针默认 412×915，真机 preflight 后按实际视口重跑）。
 - **渲染持续超预算时 PrismLoader 会饿死**：桌面冒烟测试中 prism-const20 三个应用都在 120 s 内没加载完，tale 的 prism-const10 也超时；nobudget 和 unthrottled 都能加载完。原因是剩余预算一直为负时 `doTasks` 一个任务也不执行。R2-2 的回复需要处理这一点（例如每帧至少执行一个任务），改不改由论文方案决定。
 - **常规渐进加载 / VIA 的 TTFF 接近 Baseline**（桌面 Fast 4G 单次）：所有请求同时发出、共享带宽，P1 要和其他资源一起下完；VIA 的顺序只影响超出 6 个并发连接后的排队。mus 在这两种配置下 P1 最后才完成，TTFF 之后没有加载阶段，平滑度为空。
 - **帧预算写死为 16.7 ms**：Pixel 6 屏幕是 90 Hz，preflight 会测出浏览器实际 rAF 帧率。

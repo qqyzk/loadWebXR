@@ -1,9 +1,9 @@
 {
   "app": "mus",
-  "probedAt": "2026-11-16T17:16:03.342Z",
+  "probedAt": "2026-11-19T20:20:56.691Z",
   "emulatedViewport": {
-    "width": 915,
-    "height": 412,
+    "width": 412,
+    "height": 915,
     "deviceScaleFactor": 2.625,
     "isMobile": true,
     "hasTouch": true
@@ -20,13 +20,13 @@
       -1
     ],
     "fov": 80,
-    "aspect": 2.220873786407767,
+    "aspect": 0.45027322404371584,
     "near": 0.005,
     "far": 10000
   },
   "viewport": [
-    915,
-    412
+    412,
+    915
   ],
   "assets": [
     {
@@ -47,7 +47,7 @@
       "viaScore": 1.5707963267948966,
       "angle": 1.5707963267948966,
       "inFrustum": true,
-      "viaRank": 5
+      "viaRank": 3
     },
     {
       "id": "hall_low_floor-glb",
@@ -57,7 +57,7 @@
       "viaScore": 1.5707960564839878,
       "angle": 1.5707960564839878,
       "inFrustum": true,
-      "viaRank": 4
+      "viaRank": 2
     },
     {
       "id": "acropolis-glb",
@@ -124,20 +124,20 @@
       "src": "models/lion.glb",
       "priority": 2,
       "entities": 1,
-      "viaScore": 1.0685402821661527,
+      "viaScore": 3.0685402821661527,
       "angle": 1.0685402821661527,
-      "inFrustum": true,
-      "viaRank": 3
+      "inFrustum": false,
+      "viaRank": 5
     },
     {
       "id": "greek_bust-glb",
       "src": "models/greek_bust.glb",
       "priority": 2,
       "entities": 1,
-      "viaScore": 1.0586531022210244,
+      "viaScore": 3.058653102221024,
       "angle": 1.0586531022210244,
-      "inFrustum": true,
-      "viaRank": 2
+      "inFrustum": false,
+      "viaRank": 4
     },
     {
       "id": "old_man-glb",
@@ -445,8 +445,8 @@
       ],
       "distance": 3.419570975743791,
       "angle": 1.0685402821661527,
-      "inFrustum": true,
-      "viaScore": 1.0685402821661527
+      "inFrustum": false,
+      "viaScore": 3.0685402821661527
     },
     {
       "key": "greek_bust-glb#1",
@@ -470,8 +470,8 @@
       ],
       "distance": 3.435469575220129,
       "angle": 1.0586531022210244,
-      "inFrustum": true,
-      "viaScore": 1.0586531022210244
+      "inFrustum": false,
+      "viaScore": 3.058653102221024
     },
     {
       "key": "old_man-glb#1",
@@ -551,10 +551,10 @@
   ],
   "viaOrder": [
     "podiums-glb",
-    "greek_bust-glb",
-    "lion-glb",
     "hall_low_floor-glb",
     "hall-glb",
+    "greek_bust-glb",
+    "lion-glb",
     "nefertiti-glb",
     "david-glb",
     "old_man-glb",

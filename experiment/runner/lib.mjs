@@ -79,9 +79,10 @@ export function startServer (port) {
 
 // ------------------------------------------------------------------ browser
 
-// Desktop runs emulate a Pixel 6 held in landscape (CSS 915x412, DPR 2.625).
-// Re-probe with the viewport the phone actually reports (exp.viewport in any run).
-export const MOBILE_VIEWPORT = { width: 915, height: 412, deviceScaleFactor: 2.625, isMobile: true, hasTouch: true };
+// Desktop runs emulate a Pixel 6 held in portrait (CSS 412x915, DPR 2.625), the
+// orientation of the experiments. preflight re-probes with the exact viewport the
+// phone reports.
+export const MOBILE_VIEWPORT = { width: 412, height: 915, deviceScaleFactor: 2.625, isMobile: true, hasTouch: true };
 
 // viewport: 'WxH' (CSS pixels; mobile emulation is kept), default MOBILE_VIEWPORT.
 export function viewportFromString (text) {

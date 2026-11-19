@@ -8,6 +8,12 @@
  * window.__exp.done and save window.__exp to
  *   experiment/results/<session>/<app>/<config>/run_<NN>.json
  *
+ * Between runs the phone cools down: the experiment tab is closed and an idle
+ * about:blank tab is brought to the front (Chrome itself stays open), then the
+ * runner waits at least --cooldown seconds and, on Android, until the battery
+ * temperature is back to within --temp-margin degrees of its value at the start
+ * of the session (at most --max-wait seconds; never above --max-temp).
+ *
  * Runs are scheduled in rounds: every round runs each selected page once, in a
  * shuffled order (seeded by the session name), so device drift is spread evenly
  * over all configurations. Existing result files are skipped, so an interrupted
@@ -53,7 +59,9 @@ const DEFAULTS = {
   configs: null,
   port: 8080,
   host: 'localhost',
-  cooldown: 20,
+  cooldown: 30,
+  tempMargin: 1,
+  maxWait: 600,
   settle: 2,
   timeout: 300,
   maxTemp: 38,
@@ -88,6 +96,35 @@ function shuffle (items, rand) {
 function batteryTemp () {
   const m = adb('shell dumpsys battery').match(/temperature:\s*(\d+)/);
   return m ? Number(m[1]) / 10 : null;
+}
+
+// Current temperatures reported by the thermal HAL (CPU, GPU, skin, ...), if available.
+function thermalTemps () {
+  try {
+    const out = adb('shell dumpsys thermalservice');
+    const section = out.split('Current temperatures from HAL:')[1] || '';
+    const temps = {};
+    for (const m of section.split('\n\n')[0].matchAll(/mValue=([\d.]+), mType=\d+, mName=([^,]+)/g)) {
+      temps[m[2]] = Number(m[1]);
+    }
+    return temps;
+  } catch { return null; }
+}
+
+// Cool down between runs: fixed minimum wait, then (Android) wait until the
+// battery temperature is back near its value at the start of the session.
+async function coolDown (opts, baseTemp) {
+  const t0 = Date.now();
+  await sleep(opts.cooldown * 1000);
+  if (opts.target !== 'android' || baseTemp === null) { return (Date.now() - t0) / 1000; }
+  const limit = Math.min(opts.maxTemp, baseTemp + opts.tempMargin);
+  let temp = batteryTemp();
+  while (temp !== null && temp > limit && (Date.now() - t0) / 1000 < opts.maxWait) {
+    console.log(`[cooldown] battery ${temp} C > ${limit.toFixed(1)} C, waiting`);
+    await sleep(15000);
+    temp = batteryTemp();
+  }
+  return (Date.now() - t0) / 1000;
 }
 
 // ------------------------------------------------------------------- one run
@@ -166,6 +203,12 @@ async function main () {
   const server = await startServer(opts.port);
   const browser = await openBrowser(opts);
   const browserVersion = await browser.version();
+  // Idle tab shown between runs, so nothing is rendered while the phone cools down.
+  const idleTab = await browser.newPage();
+  await idleTab.goto('about:blank');
+  const baseTemp = opts.target === 'android' ? batteryTemp() : null;
+  if (baseTemp !== null) { console.log(`[runner] battery ${baseTemp} C at session start; runs start below ${Math.min(opts.maxTemp, baseTemp + opts.tempMargin).toFixed(1)} C`); }
+  let waitedSec = null;
   fs.mkdirSync(outRoot, { recursive: true });
   const failLog = path.join(outRoot, 'failures.jsonl');
   const t0 = Date.now();
@@ -173,20 +216,15 @@ async function main () {
   try {
     for (let i = 0; i < todo.length; i++) {
       const { round, page, file } = todo[i];
-      if (opts.target === 'android') {
-        let temp = batteryTemp();
-        while (temp !== null && temp > opts.maxTemp) {
-          console.log(`[runner] battery ${temp} C > ${opts.maxTemp} C, waiting`);
-          await sleep(15000);
-          temp = batteryTemp();
-        }
-      }
       const url = `http://${opts.host}:${opts.port}${page.url}`;
       const meta = {
         session: opts.session, set: opts.set, round, app: page.app, config: page.config, bundle: page.bundle,
         chunkProfile: page.chunkProfile, network: opts.network, throttling: NETWORKS[opts.network], host: opts.host,
         target: opts.target, browserVersion, url, startedAt: new Date().toISOString(),
-        batteryTemp: opts.target === 'android' ? batteryTemp() : null
+        batteryTemp: opts.target === 'android' ? batteryTemp() : null,
+        sessionStartBatteryTemp: baseTemp,
+        thermal: opts.target === 'android' ? thermalTemps() : null,
+        cooldownBeforeSec: waitedSec
       };
       const label = `[${i + 1}/${todo.length}] round ${round} ${page.app}/${page.config}`;
       try {
@@ -202,7 +240,10 @@ async function main () {
           ...meta, error: err.message, consoleErrors: err.consoleErrors || [], partial: err.partial || null
         }) + '\n');
       }
-      if (i < todo.length - 1) { await sleep(opts.cooldown * 1000); }
+      if (i < todo.length - 1) {
+        await idleTab.bringToFront().catch(() => {});
+        waitedSec = await coolDown(opts, baseTemp);
+      }
     }
   } finally {
     await closeBrowser(browser, opts.target);

@@ -1,9 +1,9 @@
 {
   "app": "hallo",
-  "probedAt": "2026-11-16T17:16:01.478Z",
+  "probedAt": "2026-11-19T20:20:54.994Z",
   "emulatedViewport": {
-    "width": 915,
-    "height": 412,
+    "width": 412,
+    "height": 915,
     "deviceScaleFactor": 2.625,
     "isMobile": true,
     "hasTouch": true
@@ -20,13 +20,13 @@
       -1
     ],
     "fov": 80,
-    "aspect": 2.220873786407767,
+    "aspect": 0.45027322404371584,
     "near": 0.005,
     "far": 10000
   },
   "viewport": [
-    915,
-    412
+    412,
+    915
   ],
   "assets": [
     {
@@ -34,10 +34,10 @@
       "src": "models/skeleton.gltf",
       "priority": 2,
       "entities": 1,
-      "viaScore": 0.9788093548123975,
-      "angle": 0.9788093548123975,
-      "inFrustum": true,
-      "viaRank": 4
+      "viaScore": 2.9777037220166997,
+      "angle": 0.9777037220166997,
+      "inFrustum": false,
+      "viaRank": 8
     },
     {
       "id": "village",
@@ -47,7 +47,7 @@
       "viaScore": 1.5635080169615774,
       "angle": 1.5635080169615774,
       "inFrustum": true,
-      "viaRank": 8
+      "viaRank": 4
     },
     {
       "id": "village_trees_outer",
@@ -57,7 +57,7 @@
       "viaScore": 1.245712533491598,
       "angle": 1.245712533491598,
       "inFrustum": true,
-      "viaRank": 7
+      "viaRank": 3
     },
     {
       "id": "village_trees_middle",
@@ -67,7 +67,7 @@
       "viaScore": 1.1085930044663574,
       "angle": 1.1085930044663574,
       "inFrustum": true,
-      "viaRank": 5
+      "viaRank": 1
     },
     {
       "id": "village_trees_inner",
@@ -77,35 +77,35 @@
       "viaScore": 1.213760026648915,
       "angle": 1.213760026648915,
       "inFrustum": true,
-      "viaRank": 6
+      "viaRank": 2
     },
     {
       "id": "zombi",
       "src": "models/zombi.gltf",
       "priority": 1,
       "entities": 1,
-      "viaScore": 0.6002303100492403,
-      "angle": 0.6002303100492403,
-      "inFrustum": true,
-      "viaRank": 1
+      "viaScore": 2.599805327722288,
+      "angle": 0.5998053277222878,
+      "inFrustum": false,
+      "viaRank": 5
     },
     {
       "id": "werewolf",
       "src": "models/werewolf.gltf",
       "priority": 1,
       "entities": 1,
-      "viaScore": 0.9638301478810612,
+      "viaScore": 2.9638301478810614,
       "angle": 0.9638301478810612,
-      "inFrustum": true,
-      "viaRank": 3
+      "inFrustum": false,
+      "viaRank": 7
     },
     {
       "id": "witch",
       "src": "models/witch.gltf",
       "priority": 2,
       "entities": 1,
-      "viaScore": 3.92484918328158,
-      "angle": 1.9248491832815804,
+      "viaScore": 3.92395907521559,
+      "angle": 1.9239590752155904,
       "inFrustum": false,
       "viaRank": 12
     },
@@ -124,10 +124,10 @@
       "src": "models/pumpkin_happy.gltf",
       "priority": 2,
       "entities": 1,
-      "viaScore": 0.9496623986946284,
-      "angle": 0.9496623986946284,
-      "inFrustum": true,
-      "viaRank": 2
+      "viaScore": 2.9502906619746345,
+      "angle": 0.9502906619746346,
+      "inFrustum": false,
+      "viaRank": 6
     },
     {
       "id": "pumpkin_evil",
@@ -137,7 +137,7 @@
       "viaScore": 3.2343672015237184,
       "angle": 1.2343672015237184,
       "inFrustum": false,
-      "viaRank": 10
+      "viaRank": 9
     },
     {
       "id": "hand",
@@ -157,17 +157,17 @@
       "viaScore": 3.3512590301649237,
       "angle": 1.3512590301649239,
       "inFrustum": false,
-      "viaRank": 11
+      "viaRank": 10
     },
     {
       "id": "bat",
       "src": "models/bat.gltf",
       "priority": 1,
       "entities": 1,
-      "viaScore": 1.6745475842008704,
+      "viaScore": 3.6745475842008704,
       "angle": 1.6745475842008704,
-      "inFrustum": true,
-      "viaRank": 9
+      "inFrustum": false,
+      "viaRank": 11
     },
     {
       "id": "bgsound",
@@ -367,24 +367,24 @@
       "visibleAttr": null,
       "hasMesh": true,
       "min": [
-        5.717710756064957,
-        0.7748082859766392,
-        -4.719514650976086
+        5.7372458602573655,
+        0.7733537643503644,
+        -4.722460435430668
       ],
       "max": [
-        6.804351143705193,
-        3.0163075224532645,
-        -3.7101625771743163
+        6.793704696590181,
+        3.00244709069288,
+        -3.7328637520476535
       ],
       "center": [
-        6.261030949885075,
-        1.895557904214952,
-        -4.214838614075201
+        6.265475278423773,
+        1.8879004275216222,
+        -4.227662093739161
       ],
-      "distance": 7.553325596905121,
-      "angle": 0.9788093548123975,
-      "inFrustum": true,
-      "viaScore": 0.9788093548123975
+      "distance": 7.5638742651861675,
+      "angle": 0.9777037220166997,
+      "inFrustum": false,
+      "viaScore": 2.9777037220166997
     },
     {
       "key": "zombi#1",
@@ -392,24 +392,24 @@
       "visibleAttr": null,
       "hasMesh": true,
       "min": [
-        -6.272231038567017,
-        0.6458888736517625,
-        -8.58176266613199
+        -6.285244118290865,
+        0.6462894602427813,
+        -8.591422967365364
       ],
       "max": [
-        -4.513555891100671,
-        2.871333982571399,
-        -7.182803456976047
+        -4.52247618583668,
+        2.874083169641106,
+        -7.2197211575212
       ],
       "center": [
-        -5.392893464833843,
-        1.7586114281115806,
-        -7.882283061554018
+        -5.403860152063773,
+        1.7601863149419437,
+        -7.905572062443282
       ],
-      "distance": 9.551902625688589,
-      "angle": 0.6002303100492403,
-      "inFrustum": true,
-      "viaScore": 0.6002303100492403
+      "distance": 9.577339601008262,
+      "angle": 0.5998053277222878,
+      "inFrustum": false,
+      "viaScore": 2.599805327722288
     },
     {
       "key": "pumpkin_happy#1",
@@ -417,24 +417,24 @@
       "visibleAttr": "true",
       "hasMesh": true,
       "min": [
-        -7.045101631332997,
-        -0.014799512184125393,
-        -5.397205854465956
+        -7.047514071820706,
+        -0.0218389669026908,
+        -5.393772078078351
       ],
       "max": [
-        -4.981080643421608,
-        1.1259551748817036,
-        -3.3378520931109437
+        -4.983484999737075,
+        1.1222241426023367,
+        -3.3344067712940397
       ],
       "center": [
-        -6.013091137377303,
-        0.5555778313487891,
-        -4.36752897378845
+        -6.015499535778891,
+        0.550192587849823,
+        -4.364089424686195
       ],
-      "distance": 7.50489120705005,
-      "angle": 0.9496623986946284,
-      "inFrustum": true,
-      "viaScore": 0.9496623986946284
+      "distance": 7.505571715347165,
+      "angle": 0.9502906619746346,
+      "inFrustum": false,
+      "viaScore": 2.9502906619746345
     },
     {
       "key": "pumpkin_evil#1",
@@ -558,8 +558,8 @@
       ],
       "distance": 16.62072267324658,
       "angle": 0.9638301478810612,
-      "inFrustum": true,
-      "viaScore": 0.9638301478810612
+      "inFrustum": false,
+      "viaScore": 2.9638301478810614
     },
     {
       "key": "witch#1",
@@ -567,24 +567,24 @@
       "visibleAttr": null,
       "hasMesh": true,
       "min": [
-        -16.693652740179317,
-        10.860042289549158,
-        4.926562888697526
+        -16.68915806556862,
+        10.89699809492964,
+        4.91404941964636
       ],
       "max": [
-        -14.052061451933607,
-        13.866648339404428,
-        8.946551112404471
+        -14.047566777322913,
+        13.903604144784909,
+        8.934037643353305
       ],
       "center": [
-        -15.372857096056462,
-        12.363345314476792,
-        6.936557000550998
+        -15.368362421445767,
+        12.400301119857275,
+        6.924043531499832
       ],
-      "distance": 20.007252701866292,
-      "angle": 1.9248491832815804,
+      "distance": 20.019376779075852,
+      "angle": 1.9239590752155904,
       "inFrustum": false,
-      "viaScore": 3.92484918328158
+      "viaScore": 3.92395907521559
     },
     {
       "key": "bat#1",
@@ -608,22 +608,22 @@
       ],
       "distance": 5.277023788518411,
       "angle": 1.6745475842008704,
-      "inFrustum": true,
-      "viaScore": 1.6745475842008704
+      "inFrustum": false,
+      "viaScore": 3.6745475842008704
     }
   ],
   "viaOrder": [
-    "zombi",
-    "pumpkin_happy",
-    "werewolf",
-    "skeleton",
     "village_trees_middle",
     "village_trees_inner",
     "village_trees_outer",
     "village",
-    "bat",
+    "zombi",
+    "pumpkin_happy",
+    "werewolf",
+    "skeleton",
     "pumpkin_evil",
     "feet",
+    "bat",
     "witch",
     "vampire",
     "hand"
