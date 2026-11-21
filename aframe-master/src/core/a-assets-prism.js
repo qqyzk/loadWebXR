@@ -27,6 +27,13 @@ class AAssets extends ANode {
     this.currentPriority = 1;
     this.currentStage = 0;
     this.allTasksDone = false;
+    // gpu-prepare="on": after a model is added to the scene, upload its textures and
+    // compile its shaders as budgeted tasks, instead of during the first frame in
+    // which the model becomes visible (three.js does this lazily at first draw).
+    this.gpuPrepare = false;
+    this.gpuQueue = [];
+    this.firstPriorityDone = false;
+    this.allLoadedEmitted = false;
     this.sceneTaskDone=0;
     // 新增：分块相关状态管理
     this.chunkData = {}; // 存储下载的分块数据
@@ -58,14 +65,17 @@ class AAssets extends ANode {
     this.load();
     // await this.loadGroup(1);//network trasfer
     // await this.doGroupSceneTask(1);//scene
+    this.gpuPrepare = this.getAttribute('gpu-prepare') === 'on';
     await this.loadFirstPriority();
+    // P1 models are prepared by the first frame itself.
+    this.firstPriorityDone = true;
     this.parentNode.emit('firstloaded');
     // frame-budget="off" (ablation): a single loop that processes every task as
     // soon as it is ready, without the per-frame time budget.
     const budgetOff = this.getAttribute('frame-budget') === 'off';
     this.parentNode.addEventListener('render', async function (event) {
       const startTime = event.detail;
-      if(!self.allTasksDone){
+      if(!self.allTasksDone || self.gpuQueue.length){
         if (budgetOff) {
           if (!self.unbudgetedLoopStarted) {
             self.unbudgetedLoopStarted = true;
@@ -241,7 +251,12 @@ class AAssets extends ANode {
   }
   async doTasks (startTime, budgetOverride) {
     const effectiveBudget = budgetOverride !== undefined ? budgetOverride : this.frameTimeBudget - this.safeMargin;
-    while ( performance.now()-startTime < effectiveBudget && !this.allTasksDone) {
+    while ( performance.now()-startTime < effectiveBudget && (!this.allTasksDone || this.gpuQueue.length)) {
+      if (this.gpuQueue.length) {
+        this.doGpuTask();
+        continue;
+      }
+      if (this.allTasksDone) { break; }
       if (this.currentStage === 0){
         if(this.networkQueues[this.currentPriority].length > 0){
           this.doNetworkTask();
@@ -264,7 +279,7 @@ class AAssets extends ANode {
           // console.log('debug: scene task done, switch to next priority', this.currentPriority);
           if(this.currentPriority > this.maxPriority){
             this.allTasksDone = true;
-            this.parentNode.emit('all-assets-loaded');
+            this.emitAllLoadedIfReady();
           }
         }
       }
@@ -358,11 +373,13 @@ class AAssets extends ANode {
   }
 
   doNormalGLTFTask (task) {
+    const self = this;
     return new Promise((resolve, reject) => {
       task.loader.load(task.src, function gltfLoaded (gltfModel) {
         task.theself.model = gltfModel.scene || gltfModel.scenes[0];
         task.theself.model.animations = gltfModel.animations;
         task.el.setObject3D('mesh', task.theself.model);
+        self.queueGpuPrepare(task.theself.model);
         task.el.emit('model-loaded', {format: 'gltf', model: task.theself.model});
         resolve();
       }, undefined /* onProgress */, function gltfFailed (error) {
@@ -430,6 +447,7 @@ class AAssets extends ANode {
           // 设置到元素上（只在最后一个分块完成时）
           task.theself.model = combinedModel;
           task.el.setObject3D('mesh', combinedModel);
+          this.queueGpuPrepare(combinedModel);
           task.el.emit('model-loaded', {format: 'gltf', model: combinedModel, isChunked: true});
         }
         
@@ -485,10 +503,96 @@ class AAssets extends ANode {
     
     // 保留第一个分块的动画（如果有的话）
     combinedScene.animations = firstChunk.animations || [];
+
+    // Chunks of one model reference the same image files; each chunk is parsed
+    // separately and gets its own THREE.Texture, so without this the same image
+    // would be uploaded to the GPU once per chunk when the model is first drawn.
+    this.shareChunkTextures(chunks, totalChunks, combinedScene);
     
     // console.log('debug: [COMBINE COMPLETE]', baseSrc, 'total children:', combinedScene.children.length);
     
     return combinedScene;
+  }
+
+  emitAllLoadedIfReady () {
+    if (this.allTasksDone && !this.gpuQueue.length && !this.allLoadedEmitted) {
+      this.allLoadedEmitted = true;
+      this.parentNode.emit('all-assets-loaded');
+    }
+  }
+
+  // One task per texture (GPU upload) and one per model (shader compilation).
+  queueGpuPrepare (model) {
+    if (!this.gpuPrepare || !this.firstPriorityDone || !model) { return; }
+    const textures = new Set();
+    model.traverse((node) => {
+      if (!node.material) { return; }
+      (Array.isArray(node.material) ? node.material : [node.material]).forEach((material) => {
+        Object.keys(material).forEach((prop) => {
+          if (material[prop] && material[prop].isTexture) { textures.add(material[prop]); }
+        });
+      });
+    });
+    textures.forEach((texture) => this.gpuQueue.push({ type: 'texture', texture }));
+    this.gpuQueue.push({ type: 'compile', model });
+  }
+
+  doGpuTask () {
+    const task = this.gpuQueue.shift();
+    const scene = this.parentNode;
+    try {
+      if (task.type === 'texture') {
+        scene.renderer.initTexture(task.texture);
+      } else if (scene.camera) {
+        scene.renderer.compile(task.model, scene.camera, scene.object3D);
+      }
+    } catch (error) {
+      warn('gpu prepare failed: ' + (error && error.message));
+    }
+    this.emitAllLoadedIfReady();
+  }
+
+  // Replace textures that come from the same image (and have the same sampling
+  // settings) by a single THREE.Texture shared by all chunks, so that the merged
+  // model uploads each image once, like the original unchunked model.
+  shareChunkTextures (chunks, totalChunks, combinedScene) {
+    const textureKey = new Map();
+    for (let i = 1; i <= totalChunks; i++) {
+      const parser = chunks[i] && chunks[i].parser;
+      if (!parser || !parser.json) { continue; }
+      parser.associations.forEach((ref, obj) => {
+        if (!obj || !obj.isTexture || !ref || ref.textures === undefined) { return; }
+        const texDef = parser.json.textures && parser.json.textures[ref.textures];
+        const imgDef = texDef && parser.json.images && parser.json.images[texDef.source];
+        if (!imgDef || !imgDef.uri) { return; }
+        textureKey.set(obj, [imgDef.uri, obj.wrapS, obj.wrapT, obj.magFilter, obj.minFilter,
+          obj.flipY, obj.colorSpace, obj.channel].join('|'));
+      });
+    }
+    const canonical = new Map();
+    const replaced = new Set();
+    combinedScene.traverse((node) => {
+      if (!node.material) { return; }
+      const materials = Array.isArray(node.material) ? node.material : [node.material];
+      materials.forEach((material) => {
+        Object.keys(material).forEach((prop) => {
+          const tex = material[prop];
+          if (!tex || !tex.isTexture || !textureKey.has(tex)) { return; }
+          const key = textureKey.get(tex);
+          const shared = canonical.get(key);
+          if (!shared) { canonical.set(key, tex); return; }
+          if (shared !== tex) {
+            material[prop] = shared;
+            material.needsUpdate = true;
+            replaced.add(tex);
+          }
+        });
+      });
+    });
+    replaced.forEach((tex) => {
+      if (tex.source && tex.source.data && typeof tex.source.data.close === 'function') { tex.source.data.close(); }
+      tex.dispose();
+    });
   }
 
   /**

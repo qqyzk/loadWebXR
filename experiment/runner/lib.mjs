@@ -100,10 +100,35 @@ export async function openBrowser ({ target, port, chrome, headful, viewport }) 
       args: ['--use-angle=metal', '--enable-unsafe-swiftshader', '--autoplay-policy=no-user-gesture-required']
     });
   }
+  bringChromeToFront();
   adb('forward tcp:9222 localabstract:chrome_devtools_remote');
   adb(`reverse tcp:${port} tcp:${port}`);
   try { adb('shell svc power stayon usb'); } catch { /* optional */ }
-  return puppeteer.connect({ browserURL: 'http://127.0.0.1:9222', defaultViewport: null });
+  for (let attempt = 1; ; attempt++) {
+    try {
+      const browser = await withTimeout(
+        puppeteer.connect({ browserURL: 'http://127.0.0.1:9222', defaultViewport: null }), 60000, 'connecting to Chrome');
+      console.log(`[browser] connected to ${await browser.version()} on the phone`);
+      return browser;
+    } catch (err) {
+      if (attempt >= 3) { throw err; }
+      console.log(`[browser] ${err.message}; retrying`);
+      bringChromeToFront();
+    }
+  }
+}
+
+// Android suspends Chrome in the background (CDP calls then hang), so make sure
+// it is the foreground app; starting the main activity only brings the existing
+// task to the front.
+export function bringChromeToFront () {
+  adb('shell am start -n com.android.chrome/com.google.android.apps.chrome.Main -a android.intent.action.MAIN -c android.intent.category.LAUNCHER >/dev/null 2>&1');
+}
+
+export async function withTimeout (promise, ms, what) {
+  let timer;
+  const timeout = new Promise((_, reject) => { timer = setTimeout(() => reject(new Error(`${what} timed out after ${ms / 1000} s`)), ms); });
+  try { return await Promise.race([promise, timeout]); } finally { clearTimeout(timer); }
 }
 
 export async function closeBrowser (browser, target) {

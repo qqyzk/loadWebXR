@@ -16,6 +16,8 @@ opening a different URL; the runner selects pages by experiment set.
 
 Sets:
     main     M6/M7: baselines, ablation and chunk configurations (Fast 4G)
+    look     the main configurations with the camera turning at 30 deg/s from TTFF
+             on, so that models loaded during the run come into view
     levels   R1-1/R1-2: 2/3/4 priority levels x static / turn-away / look-around view
     stress   R2-2: artificial render load (constant / varying) for the schedulers
     stages   R2-1: per-model processing-stage benchmark (index.exp-stages.html,
@@ -83,7 +85,7 @@ def build_configs() -> list[dict]:
 
     def add(name, set_, bundle, **kw):
         c.append({"name": name, "set": set_, "bundle": bundle, "chunk": None, "budget": True,
-                  "via": False, "levels": 3, "exp": {}, **kw})
+                  "via": False, "gpu": False, "levels": 3, "exp": {}, **kw})
 
     # main (M6/M7)
     add("baseline", "main", "baseline")
@@ -95,6 +97,14 @@ def build_configs() -> list[dict]:
         add(f"prism-{p}", "main", "prism", chunk=p)
     for p in PROFILES:
         add(f"nobudget-{p}", "main", "prism", chunk=p, budget=False)
+    # PrismLoader that also schedules GPU preparation (texture upload, shader compile)
+    for p in PROFILES:
+        add(f"prismgpu-{p}", "main", "prism", chunk=p, gpu=True)
+
+    # look: the same configurations under head motion
+    for cfg in [dict(x) for x in c if x["set"] == "main"]:
+        cfg.update(name=f"{cfg['name']}-look", set="look", exp={"motion": {"type": "spin", "degPerSec": 30}})
+        c.append(cfg)
 
     # levels (R1-1/R1-2): PrismLoader with the best chunk profile
     for levels in (2, 3, 4):
@@ -197,7 +207,7 @@ def patch_scene(html: str, cfg: dict, counts: dict, priorities: dict | None, via
     for line in html.splitlines(keepends=True):
         commented = line.strip().startswith("<!--")
         if "<a-assets" in line and not commented:
-            line = re.sub(r'\s+(chunk-profile|frame-budget|load-order)="[^"]*"', "", line)
+            line = re.sub(r'\s+(chunk-profile|frame-budget|load-order|gpu-prepare)="[^"]*"', "", line)
             extra = ""
             if profile:
                 extra += f' chunk-profile="{profile}"'
@@ -205,6 +215,8 @@ def patch_scene(html: str, cfg: dict, counts: dict, priorities: dict | None, via
                 extra += ' frame-budget="off"'
             if cfg["via"]:
                 extra += ' load-order="via"'
+            if cfg["gpu"]:
+                extra += ' gpu-prepare="on"'
             pos = line.find(">")
             line = line[:pos] + extra + line[pos:]
         if "<a-asset-item" in line:
@@ -314,7 +326,7 @@ def generate() -> None:
             entry = scene if not separate_scene else entry_src
 
             page_cfg = {"app": app, "config": name, "set": cfg["set"], "bundle": cfg["bundle"],
-                        "chunkProfile": cfg["chunk"], "frameBudget": cfg["budget"], "via": cfg["via"],
+                        "chunkProfile": cfg["chunk"], "frameBudget": cfg["budget"], "via": cfg["via"], "gpuPrepare": cfg["gpu"],
                         "levels": cfg["levels"]}
             for key, value in cfg["exp"].items():
                 if key == "visibility":

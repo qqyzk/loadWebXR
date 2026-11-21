@@ -19,6 +19,9 @@
  *               control, so every run starts from the application's initial view.
  *   motion      {type: 'turn-away'|'look-around', degrees, durationMs}: rotate the
  *               camera yaw linearly from the first rendered frame on (R1-1/R1-2).
+ *               {type: 'spin', degPerSec}: rotate the yaw at a constant speed from
+ *               the first complete frame (TTFF) until the run ends, so that models
+ *               loaded meanwhile come into view (smoothness under head motion).
  *   visibility  [{key, asset, min, max}]: world-space boxes of the model entities
  *               (from experiment/runner/probe.mjs); every frame records which
  *               entities are inside the view frustum and whether they are loaded.
@@ -119,9 +122,15 @@
     var camEl = sceneEl.camera.el;
     var lc = camEl.components && camEl.components['look-controls'];
     var target = lc && lc.yawObject ? lc.yawObject : camEl.object3D;
+    var spin = CONFIG.motion.type === 'spin';
+    if (spin && exp.ttffEndTime === null) { return; }
     if (!motionState) {
       motionState = { start: t, baseYaw: target.rotation.y };
-      exp.motion = { type: CONFIG.motion.type, startTime: t, endTime: t + CONFIG.motion.durationMs };
+      exp.motion = { type: CONFIG.motion.type, startTime: t, endTime: spin ? null : t + CONFIG.motion.durationMs };
+    }
+    if (spin) {
+      target.rotation.y = motionState.baseYaw + (t - motionState.start) / 1000 * CONFIG.motion.degPerSec * Math.PI / 180;
+      return;
     }
     var progress = Math.min(1, (t - motionState.start) / CONFIG.motion.durationMs);
     target.rotation.y = motionState.baseYaw + progress * CONFIG.motion.degrees * Math.PI / 180;
@@ -249,6 +258,13 @@
       if (exp.done || exp.renderTimes.length >= MAX_RENDER_SAMPLES) { return; }
       var t = now();
       exp.renderTimes.push(t);
+      if (exp.renderTimes.length === 1) {
+        var cam = scene.camera;
+        var canvas = scene.canvas;
+        exp.viewportAtFirstFrame = [window.innerWidth, window.innerHeight];
+        exp.cameraAspect = cam ? cam.aspect : null;
+        exp.canvasSize = canvas ? [canvas.width, canvas.height] : null;
+      }
       if (exp.p1LoadedTime !== null && exp.ttffEndTime === null) {
         exp.ttffEndTime = t;
         exp.ttff = t - exp.startTime;
@@ -302,7 +318,7 @@
   function waitForCompletion (scene) {
     var hasTrace = Array.isArray(scene.remTimes);
     var traceDone = !hasTrace || (scene.allAssetsLoaded && scene.afterLoadedFrame >= 1);
-    var motionDone = !CONFIG.motion || (exp.motion && now() >= exp.motion.endTime);
+    var motionDone = !CONFIG.motion || CONFIG.motion.type === 'spin' || (exp.motion && now() >= exp.motion.endTime);
     if (CONFIG.maxDurationMs && now() - exp.startTime > CONFIG.maxDurationMs &&
         !(exp.ttff !== null && traceDone && motionDone)) {
       exp.timedOut = true;

@@ -1,0 +1,35 @@
+{
+  "checkedAt": "2026-11-21T14:32:18.558Z",
+  "device": {
+    "serial": "1B131FDF6002UK",
+    "model": "Pixel 6",
+    "android": "16",
+    "chrome": "147.0.7727.101",
+    "batteryLevel": 100,
+    "batteryTemp": 27.8,
+    "refreshRatesSeen": [
+      60,
+      90
+    ],
+    "surfaceOrientation": 0
+  },
+  "browserVersion": "Chrome/147.0.7727.101",
+  "fetchUnthrottledMs": 100.69999999995343,
+  "fetchFast4gMs": 2962.8000000000466,
+  "viewport": [
+    980,
+    1871
+  ],
+  "devicePixelRatio": 2.625,
+  "rafMedianMs": 16.699999999999818,
+  "rafFps": 59.88023952095874,
+  "renderViewport": [
+    411,
+    809
+  ],
+  "cameraAspect": 0.5074074074074074,
+  "canvasSize": [
+    1078,
+    2126
+  ]
+}

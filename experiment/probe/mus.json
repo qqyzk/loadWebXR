@@ -1,9 +1,9 @@
 {
   "app": "mus",
-  "probedAt": "2026-11-19T20:20:56.691Z",
+  "probedAt": "2026-11-21T14:32:33.612Z",
   "emulatedViewport": {
-    "width": 412,
-    "height": 915,
+    "width": 411,
+    "height": 809,
     "deviceScaleFactor": 2.625,
     "isMobile": true,
     "hasTouch": true
@@ -20,13 +20,13 @@
       -1
     ],
     "fov": 80,
-    "aspect": 0.45027322404371584,
+    "aspect": 0.5080346106304079,
     "near": 0.005,
     "far": 10000
   },
   "viewport": [
-    412,
-    915
+    411,
+    809
   ],
   "assets": [
     {

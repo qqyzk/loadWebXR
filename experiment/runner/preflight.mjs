@@ -37,7 +37,7 @@ function deviceInfo () {
   const battery = adb('shell dumpsys battery');
   const display = adb('shell dumpsys display');
   const refresh = [...display.matchAll(/(?:refreshRate|renderFrameRate|fps)[=:\s]+([\d.]+)/g)].map((m) => Number(m[1]));
-  const orientation = adb('shell dumpsys input').match(/SurfaceOrientation:\s*(\d)/);
+  const orientation = adb('shell dumpsys window displays').match(/mRotation=(\d)/);
   return {
     serial: devices[0].split('\t')[0],
     model: prop('ro.product.model'),
@@ -96,6 +96,17 @@ async function main () {
       }
       requestAnimationFrame(step);
     })));
+    // The rendering viewport: A-Frame injects a viewport meta tag when the scene is
+    // created, so read it at the first rendered frame of an experiment page.
+    const expTab = await browser.newPage();
+    await expTab.goto(`http://localhost:${opts.port}/hallovreen-master/index.exp-prism-4g_30.html`, { waitUntil: 'load' });
+    await expTab.waitForFunction(() => window.__exp && window.__exp.ready, { timeout: 60000 });
+    await expTab.click('#ttff-start-button');
+    await expTab.waitForFunction(() => window.__exp.viewportAtFirstFrame, { timeout: 120000 });
+    Object.assign(report, await expTab.evaluate(() => ({
+      renderViewport: window.__exp.viewportAtFirstFrame, cameraAspect: window.__exp.cameraAspect, canvasSize: window.__exp.canvasSize
+    })));
+    await expTab.close();
     await tab.close();
   } finally {
     await closeBrowser(browser, 'android');
@@ -105,9 +116,9 @@ async function main () {
   const out = path.join(EXP_DIR, 'results', `preflight-${report.checkedAt.replace(/[:.]/g, '-')}.json`);
   fs.mkdirSync(path.dirname(out), { recursive: true });
   fs.writeFileSync(out, JSON.stringify(report, null, 2) + '\n');
-  console.log('[page]', { viewport: report.viewport, dpr: report.devicePixelRatio, rafFps: report.rafFps.toFixed(1) });
+  console.log('[page]', { renderViewport: report.renderViewport, cameraAspect: report.cameraAspect, dpr: report.devicePixelRatio, rafFps: report.rafFps.toFixed(1) });
   console.log('[network]', `bundle fetch: ${report.fetchUnthrottledMs.toFixed(0)} ms unthrottled, ${report.fetchFast4gMs.toFixed(0)} ms Fast 4G`);
-  const [w, h] = report.viewport;
+  const [w, h] = report.renderViewport;
   if (w > h) { console.log('[warn] the phone is in landscape; the experiments use portrait. Rotate it and rerun preflight.'); }
   if (report.rafFps > 65) { console.log(`[warn] Chrome renders at ${report.rafFps.toFixed(0)} fps; set the display to 60 Hz (Settings > Display > Smooth Display off).`); }
   if (!opts.noReprobe) {

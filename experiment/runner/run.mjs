@@ -8,11 +8,11 @@
  * window.__exp.done and save window.__exp to
  *   experiment/results/<session>/<app>/<config>/run_<NN>.json
  *
- * Between runs the phone cools down: the experiment tab is closed and an idle
- * about:blank tab is brought to the front (Chrome itself stays open), then the
- * runner waits at least --cooldown seconds and, on Android, until the battery
- * temperature is back to within --temp-margin degrees of its value at the start
- * of the session (at most --max-wait seconds; never above --max-temp).
+ * All runs use one tab. Between runs the phone cools down: the tab leaves the
+ * experiment page for about:blank (Chrome itself stays open), then the
+ * runner waits --cooldown seconds; on Android it waits longer only while the
+ * battery is more than --temp-margin degrees above its temperature at the start
+ * of the session and still cooling (see coolDown).
  *
  * Runs are scheduled in rounds: every round runs each selected page once, in a
  * shuffled order (seeded by the session name), so device drift is spread evenly
@@ -36,7 +36,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {
-  EXP_DIR, DEFAULT_CHROME, adb, closeBrowser, loadPages, openBrowser, parseArgs, sleep, startServer
+  EXP_DIR, DEFAULT_CHROME, adb, closeBrowser, loadPages, openBrowser, parseArgs, sleep, startServer, withTimeout
 } from './lib.mjs';
 
 // Chrome DevTools presets (devtools-frontend front_end/core/sdk/NetworkManager.ts).
@@ -59,9 +59,10 @@ const DEFAULTS = {
   configs: null,
   port: 8080,
   host: 'localhost',
-  cooldown: 30,
-  tempMargin: 1,
-  maxWait: 600,
+  cooldown: 10,
+  tempMargin: 2,
+  plateau: 45,
+  maxWait: 180,
   settle: 2,
   timeout: 300,
   maxTemp: 38,
@@ -102,45 +103,55 @@ function batteryTemp () {
 function thermalTemps () {
   try {
     const out = adb('shell dumpsys thermalservice');
-    const section = out.split('Current temperatures from HAL:')[1] || '';
+    const section = (out.split('Current temperatures from HAL:')[1] || '').split(/Current cooling devices|Temperature static thresholds/)[0];
     const temps = {};
-    for (const m of section.split('\n\n')[0].matchAll(/mValue=([\d.]+), mType=\d+, mName=([^,]+)/g)) {
+    for (const m of section.matchAll(/Temperature\{mValue=([-\d.]+), mType=\d+, mName=([^,}]+)/g)) {
       temps[m[2]] = Number(m[1]);
     }
     return temps;
   } catch { return null; }
 }
 
-// Cool down between runs: fixed minimum wait, then (Android) wait until the
-// battery temperature is back near its value at the start of the session.
+// Cool down between runs: fixed minimum wait; then (Android) only if the battery
+// is more than --temp-margin above its temperature at the start of the session,
+// keep waiting while it is still falling (stop after --plateau seconds without a
+// drop) for at most --max-wait seconds. Above --max-temp, wait until it is below.
 async function coolDown (opts, baseTemp) {
   const t0 = Date.now();
   await sleep(opts.cooldown * 1000);
   if (opts.target !== 'android' || baseTemp === null) { return (Date.now() - t0) / 1000; }
   const limit = Math.min(opts.maxTemp, baseTemp + opts.tempMargin);
   let temp = batteryTemp();
-  while (temp !== null && temp > limit && (Date.now() - t0) / 1000 < opts.maxWait) {
+  let best = temp;
+  let bestAt = Date.now();
+  while (temp !== null && temp > limit) {
+    const waited = (Date.now() - t0) / 1000 - opts.cooldown;
+    const plateaued = (Date.now() - bestAt) / 1000 >= opts.plateau;
+    if (temp <= opts.maxTemp && (plateaued || waited >= opts.maxWait)) { break; }
     console.log(`[cooldown] battery ${temp} C > ${limit.toFixed(1)} C, waiting`);
     await sleep(15000);
     temp = batteryTemp();
+    if (temp !== null && temp < best - 0.05) { best = temp; bestAt = Date.now(); }
   }
   return (Date.now() - t0) / 1000;
 }
 
 // ------------------------------------------------------------------- one run
 
-async function runOnce (browser, page, opts, url) {
-  const tab = await browser.newPage();
+// All runs of a session use one tab (no tab switching on the phone): each run
+// navigates it to the experiment page and, afterwards, back to about:blank.
+async function runOnce (tab, cdp, page, opts, url) {
   const consoleErrors = [];
-  tab.on('pageerror', (err) => consoleErrors.push(`pageerror: ${err.message}`));
-  tab.on('console', (msg) => { if (msg.type() === 'error') { consoleErrors.push(msg.text()); } });
+  const onPageError = (err) => consoleErrors.push(`pageerror: ${err.message}`);
+  const onConsole = (msg) => { if (msg.type() === 'error') { consoleErrors.push(msg.text()); } };
+  tab.on('pageerror', onPageError);
+  tab.on('console', onConsole);
   try {
-    const cdp = await tab.createCDPSession();
-    await cdp.send('Network.enable');
     await cdp.send('Network.clearBrowserCache');
-    await cdp.send('Network.setCacheDisabled', { cacheDisabled: true });
     const net = NETWORKS[opts.network];
-    if (net) { await cdp.send('Network.emulateNetworkConditions', { offline: false, ...net }); }
+    await cdp.send('Network.emulateNetworkConditions', net
+      ? { offline: false, ...net }
+      : { offline: false, latency: 0, downloadThroughput: -1, uploadThroughput: -1 });
 
     const timeout = opts.timeout * 1000;
     await tab.goto(url, { waitUntil: 'load', timeout });
@@ -171,7 +182,10 @@ async function runOnce (browser, page, opts, url) {
     err.consoleErrors = consoleErrors;
     throw err;
   } finally {
-    await tab.close().catch(() => {});
+    tab.off('pageerror', onPageError);
+    tab.off('console', onConsole);
+    // Leave the experiment page so nothing is rendered during the cooldown.
+    await tab.goto('about:blank', { timeout: 30000 }).catch(() => {});
   }
 }
 
@@ -203,9 +217,12 @@ async function main () {
   const server = await startServer(opts.port);
   const browser = await openBrowser(opts);
   const browserVersion = await browser.version();
-  // Idle tab shown between runs, so nothing is rendered while the phone cools down.
-  const idleTab = await browser.newPage();
-  await idleTab.goto('about:blank');
+  // One tab for the whole session; cache disabled for every request.
+  const tab = await withTimeout(browser.newPage(), 30000, 'opening the experiment tab');
+  await tab.goto('about:blank');
+  const cdp = await tab.createCDPSession();
+  await cdp.send('Network.enable');
+  await cdp.send('Network.setCacheDisabled', { cacheDisabled: true });
   const baseTemp = opts.target === 'android' ? batteryTemp() : null;
   if (baseTemp !== null) { console.log(`[runner] battery ${baseTemp} C at session start; runs start below ${Math.min(opts.maxTemp, baseTemp + opts.tempMargin).toFixed(1)} C`); }
   let waitedSec = null;
@@ -228,7 +245,7 @@ async function main () {
       };
       const label = `[${i + 1}/${todo.length}] round ${round} ${page.app}/${page.config}`;
       try {
-        const { exp, consoleErrors } = await runOnce(browser, page, opts, url);
+        const { exp, consoleErrors } = await runOnce(tab, cdp, page, opts, url);
         fs.mkdirSync(path.dirname(file), { recursive: true });
         fs.writeFileSync(file, JSON.stringify({ meta, consoleErrors, exp }) + '\n');
         const eta = ((Date.now() - t0) / (i + 1)) * (todo.length - i - 1) / 60000;
@@ -240,12 +257,10 @@ async function main () {
           ...meta, error: err.message, consoleErrors: err.consoleErrors || [], partial: err.partial || null
         }) + '\n');
       }
-      if (i < todo.length - 1) {
-        await idleTab.bringToFront().catch(() => {});
-        waitedSec = await coolDown(opts, baseTemp);
-      }
+      if (i < todo.length - 1) { waitedSec = await coolDown(opts, baseTemp); }
     }
   } finally {
+    await tab.close().catch(() => {});
     await closeBrowser(browser, opts.target);
     server.close();
   }
