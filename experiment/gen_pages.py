@@ -85,7 +85,7 @@ def build_configs() -> list[dict]:
 
     def add(name, set_, bundle, **kw):
         c.append({"name": name, "set": set_, "bundle": bundle, "chunk": None, "budget": True,
-                  "via": False, "gpu": False, "levels": 3, "exp": {}, **kw})
+                  "via": False, "gpu": False, "prefetch": False, "levels": 3, "exp": {}, **kw})
 
     # main (M6/M7)
     add("baseline", "main", "baseline")
@@ -100,6 +100,15 @@ def build_configs() -> list[dict]:
     # PrismLoader that also schedules GPU preparation (texture upload, shader compile)
     for p in PROFILES:
         add(f"prismgpu-{p}", "main", "prism", chunk=p, gpu=True)
+    # Revised PrismLoader (prefetch of .gltf dependencies in the network stage +
+    # GPU preparation) and its ablations, all with the same prism code base:
+    # pl-<p> full, pl-nochunk, pl-nobudget-<p>, pl-none (neither chunking nor budget)
+    for p in PROFILES:
+        add(f"pl-{p}", "main", "prism", chunk=p, gpu=True, prefetch=True)
+    add("pl-nochunk", "main", "prism", gpu=True, prefetch=True)
+    for p in PROFILES:
+        add(f"pl-nobudget-{p}", "main", "prism", chunk=p, budget=False, gpu=True, prefetch=True)
+    add("pl-none", "main", "prism", budget=False, gpu=True, prefetch=True)
 
     # look: the same configurations under head motion
     for cfg in [dict(x) for x in c if x["set"] == "main"]:
@@ -207,7 +216,7 @@ def patch_scene(html: str, cfg: dict, counts: dict, priorities: dict | None, via
     for line in html.splitlines(keepends=True):
         commented = line.strip().startswith("<!--")
         if "<a-assets" in line and not commented:
-            line = re.sub(r'\s+(chunk-profile|frame-budget|load-order|gpu-prepare|task-log)="[^"]*"', "", line)
+            line = re.sub(r'\s+(chunk-profile|frame-budget|load-order|gpu-prepare|task-log|prefetch)="[^"]*"', "", line)
             extra = ""
             if profile:
                 extra += f' chunk-profile="{profile}"'
@@ -217,6 +226,8 @@ def patch_scene(html: str, cfg: dict, counts: dict, priorities: dict | None, via
                 extra += ' load-order="via"'
             if cfg["gpu"]:
                 extra += ' gpu-prepare="on"'
+            if cfg["prefetch"]:
+                extra += ' prefetch="on"'
             if cfg["bundle"] == "prism":
                 extra += ' task-log="on"'
             pos = line.find(">")
@@ -328,7 +339,7 @@ def generate() -> None:
             entry = scene if not separate_scene else entry_src
 
             page_cfg = {"app": app, "config": name, "set": cfg["set"], "bundle": cfg["bundle"],
-                        "chunkProfile": cfg["chunk"], "frameBudget": cfg["budget"], "via": cfg["via"], "gpuPrepare": cfg["gpu"],
+                        "chunkProfile": cfg["chunk"], "frameBudget": cfg["budget"], "via": cfg["via"], "gpuPrepare": cfg["gpu"], "prefetch": cfg["prefetch"],
                         "levels": cfg["levels"]}
             for key, value in cfg["exp"].items():
                 if key == "visibility":

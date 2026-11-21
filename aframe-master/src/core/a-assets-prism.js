@@ -5,6 +5,44 @@ import { debug } from '../utils/index.js';
 
 var fileLoader = new THREE.FileLoader();
 var warn = debug('core:a-assets:warn');
+
+// prefetch="on": a .gltf file references separate .bin and image files that
+// GLTFLoader would only fetch while parsing, i.e. during the processing stage.
+// Fetch them in the network stage instead, into THREE.Cache (images decoded off
+// the main thread with createImageBitmap, as GLTFLoader does), under the same
+// keys GLTFLoader uses, so that parsing finds them in memory.
+var prefetchBufferLoader = new THREE.FileLoader().setResponseType('arraybuffer');
+var prefetchImageLoader = typeof createImageBitmap !== 'undefined' ? new THREE.ImageBitmapLoader() : null;
+
+function prefetchIntoCache (url, loader) {
+  const cached = THREE.Cache.get(url);
+  if (cached !== undefined) {
+    return cached && cached.then ? cached.then(() => {}, () => {}) : Promise.resolve();
+  }
+  if (!loader) { return Promise.resolve(); }
+  return new Promise((resolve) => { loader.load(url, () => resolve(), undefined, () => resolve()); });
+}
+
+function prefetchGltfDependencies (data, basePath) {
+  let json;
+  try {
+    json = JSON.parse(typeof data === 'string' ? data : new TextDecoder().decode(data));
+  } catch (e) {
+    return Promise.resolve();
+  }
+  const jobs = [];
+  (json.buffers || []).forEach((b) => {
+    if (b.uri && b.uri.indexOf('data:') !== 0) {
+      jobs.push(prefetchIntoCache(THREE.LoaderUtils.resolveURL(b.uri, basePath), prefetchBufferLoader));
+    }
+  });
+  (json.images || []).forEach((img) => {
+    if (img.uri && img.uri.indexOf('data:') !== 0) {
+      jobs.push(prefetchIntoCache(THREE.LoaderUtils.resolveURL(img.uri, basePath), prefetchImageLoader));
+    }
+  });
+  return Promise.all(jobs);
+}
 /**
  * Asset management system. Handles blocking on asset loading.
  */
@@ -341,14 +379,19 @@ class AAssets extends ANode {
       fileLoader.setResponseType('arraybuffer');
       fileLoader.load(chunkTask.chunkSrc,
         response => {
-          // 存储分块数据
-          this.storeChunkData(chunkTask.baseSrc, chunkTask.chunkIndex, response);
-          
-          // 解决对应的Promise
-          this.resolveChunkPromise(chunkTask.baseSrc, chunkTask.chunkIndex);
-          
-          // console.log('debug: [END] chunk network transfer:', chunkTask.chunkSrc);
-          resolve();
+          const done = () => {
+            // 存储分块数据
+            this.storeChunkData(chunkTask.baseSrc, chunkTask.chunkIndex, response);
+            // 解决对应的Promise
+            this.resolveChunkPromise(chunkTask.baseSrc, chunkTask.chunkIndex);
+            resolve();
+          };
+          if (this.getAttribute('prefetch') === 'on' && /\.gltf$/i.test(chunkTask.chunkSrc)) {
+            const base = chunkTask.chunkSrc.substring(0, chunkTask.chunkSrc.lastIndexOf('/') + 1);
+            prefetchGltfDependencies(response, base).then(done);
+          } else {
+            done();
+          }
         },
         undefined,
         error => {
@@ -645,10 +688,8 @@ class AAssets extends ANode {
         });
       });
     });
-    replaced.forEach((tex) => {
-      if (tex.source && tex.source.data && typeof tex.source.data.close === 'function') { tex.source.data.close(); }
-      tex.dispose();
-    });
+    // The image data may be shared (THREE.Cache), so only the texture objects are disposed.
+    replaced.forEach((tex) => tex.dispose());
   }
 
   /**
@@ -811,11 +852,18 @@ class AAssetItem extends ANode {
       fileLoader.setResponseType(responseType);
       fileLoader.load(src, 
         response => {
-          this.data = response;
-          ANode.prototype.load.call(this);
-          // console.log('debug: [END] network transfer:', src);
-          resolve();
-          this._resolveLoaded();
+          const done = () => {
+            this.data = response;
+            ANode.prototype.load.call(this);
+            resolve();
+            this._resolveLoaded();
+          };
+          const assetsEl = this.parentNode;
+          if (assetsEl && assetsEl.getAttribute && assetsEl.getAttribute('prefetch') === 'on' && /\.gltf$/i.test(src)) {
+            prefetchGltfDependencies(response, THREE.LoaderUtils.extractUrlBase(src)).then(done);
+          } else {
+            done();
+          }
         },
         xhr => {
           this.emit('progress', {
