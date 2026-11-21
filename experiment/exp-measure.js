@@ -339,6 +339,8 @@
       exp.firstRenderTime = window.aframeMetrics.firstRenderTime;
     }
     if (tracker) { exp.visibility = tracker.result(); }
+    // Scheduler task log of the prism loader (task-log="on").
+    exp.taskLog = window.__prismTaskLog ? window.__prismTaskLog.slice() : null;
     exp.resources = performance.getEntriesByType('resource')
       .filter(function (e) { return e.startTime >= exp.startTime; })
       .map(function (e) {

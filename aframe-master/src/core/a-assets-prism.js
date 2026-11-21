@@ -32,8 +32,12 @@ class AAssets extends ANode {
     // which the model becomes visible (three.js does this lazily at first draw).
     this.gpuPrepare = false;
     this.gpuQueue = [];
+    this.p1Models = [];
     this.firstPriorityDone = false;
     this.allLoadedEmitted = false;
+    // task-log="on" (experiments): record every scheduler task in window.__prismTaskLog
+    this.taskLog = null;
+    this.activeLoops = 0;
     this.sceneTaskDone=0;
     // 新增：分块相关状态管理
     this.chunkData = {}; // 存储下载的分块数据
@@ -66,8 +70,14 @@ class AAssets extends ANode {
     // await this.loadGroup(1);//network trasfer
     // await this.doGroupSceneTask(1);//scene
     this.gpuPrepare = this.getAttribute('gpu-prepare') === 'on';
+    if (this.getAttribute('task-log') === 'on') { this.taskLog = window.__prismTaskLog = []; }
     await this.loadFirstPriority();
-    // P1 models are prepared by the first frame itself.
+    // Some P1 models are not drawn in the first frame (outside the initial view
+    // or hidden at start), so their GPU work would hit a later frame; prepare all
+    // P1 models before the first frame, while the loading screen is still shown.
+    if (this.gpuPrepare) {
+      this.p1Models.forEach((model) => this.prepareNow(model));
+    }
     this.firstPriorityDone = true;
     this.parentNode.emit('firstloaded');
     // frame-budget="off" (ablation): a single loop that processes every task as
@@ -249,24 +259,52 @@ class AAssets extends ANode {
   registerSceneTask (task) {
     this.sceneQueues[task.priority].push(task);
   }
+  logTask (frame, kind, id, t0, tSync, t1) {
+    if (this.taskLog) {
+      this.taskLog.push({ frame: frame, kind: kind, id: id, t0: t0, sync: tSync - t0, wall: t1 - t0, loops: this.activeLoops });
+    }
+  }
+
   async doTasks (startTime, budgetOverride) {
+    this.activeLoops++;
+    try {
+      await this.runTaskLoop(startTime, budgetOverride);
+    } finally {
+      this.activeLoops--;
+    }
+  }
+
+  async runTaskLoop (startTime, budgetOverride) {
     const effectiveBudget = budgetOverride !== undefined ? budgetOverride : this.frameTimeBudget - this.safeMargin;
     while ( performance.now()-startTime < effectiveBudget && (!this.allTasksDone || this.gpuQueue.length)) {
       if (this.gpuQueue.length) {
+        const g = this.gpuQueue[0];
+        const t0 = performance.now();
         this.doGpuTask();
+        const t1 = performance.now();
+        this.logTask(startTime, 'gpu-' + g.type, g.type === 'texture' ? (g.texture.name || g.texture.uuid.slice(0, 8)) : (g.model.name || ''), t0, t1, t1);
         continue;
       }
       if (this.allTasksDone) { break; }
       if (this.currentStage === 0){
         if(this.networkQueues[this.currentPriority].length > 0){
+          const n = this.networkQueues[this.currentPriority][0];
+          const t0 = performance.now();
           this.doNetworkTask();
+          const t1 = performance.now();
+          this.logTask(startTime, 'request', n.chunkSrc || (n.getAttribute && n.getAttribute('src')) || '', t0, t1, t1);
         } else {
           this.currentStage = 1;
           // console.log('debug: network queue empty, switch to scene task', this.currentPriority);
         }
       }else if (this.currentStage === 1){
         if(this.sceneQueues[this.currentPriority].length !== 0){
-          await this.doSceneTask();
+          const sTask = this.sceneQueues[this.currentPriority][0];
+          const t0 = performance.now();
+          const pending = this.doSceneTask();
+          const tSync = performance.now();
+          await pending;
+          this.logTask(startTime, sTask.type, (sTask.baseSrc || sTask.src || '') + (sTask.chunkIndex ? '#' + sTask.chunkIndex : ''), t0, tSync, performance.now());
           this.sceneTaskDone++;
         
         }else{
@@ -523,7 +561,26 @@ class AAssets extends ANode {
 
   // One task per texture (GPU upload) and one per model (shader compilation).
   queueGpuPrepare (model) {
-    if (!this.gpuPrepare || !this.firstPriorityDone || !model) { return; }
+    if (!this.gpuPrepare || !model) { return; }
+    if (!this.firstPriorityDone) { this.p1Models.push(model); return; }
+    this.modelTextures(model).forEach((texture) => this.gpuQueue.push({ type: 'texture', texture }));
+    this.gpuQueue.push({ type: 'compile', model });
+  }
+
+  prepareNow (model) {
+    const scene = this.parentNode;
+    const t0 = performance.now();
+    try {
+      this.modelTextures(model).forEach((texture) => scene.renderer.initTexture(texture));
+      if (scene.camera) { scene.renderer.compile(model, scene.camera, scene.object3D); }
+    } catch (error) {
+      warn('gpu prepare failed: ' + (error && error.message));
+    }
+    const t1 = performance.now();
+    this.logTask(-1, 'gpu-p1', model.name || '', t0, t1, t1);
+  }
+
+  modelTextures (model) {
     const textures = new Set();
     model.traverse((node) => {
       if (!node.material) { return; }
@@ -533,8 +590,7 @@ class AAssets extends ANode {
         });
       });
     });
-    textures.forEach((texture) => this.gpuQueue.push({ type: 'texture', texture }));
-    this.gpuQueue.push({ type: 'compile', model });
+    return textures;
   }
 
   doGpuTask () {

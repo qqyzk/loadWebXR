@@ -207,7 +207,7 @@ def patch_scene(html: str, cfg: dict, counts: dict, priorities: dict | None, via
     for line in html.splitlines(keepends=True):
         commented = line.strip().startswith("<!--")
         if "<a-assets" in line and not commented:
-            line = re.sub(r'\s+(chunk-profile|frame-budget|load-order|gpu-prepare)="[^"]*"', "", line)
+            line = re.sub(r'\s+(chunk-profile|frame-budget|load-order|gpu-prepare|task-log)="[^"]*"', "", line)
             extra = ""
             if profile:
                 extra += f' chunk-profile="{profile}"'
@@ -217,6 +217,8 @@ def patch_scene(html: str, cfg: dict, counts: dict, priorities: dict | None, via
                 extra += ' load-order="via"'
             if cfg["gpu"]:
                 extra += ' gpu-prepare="on"'
+            if cfg["bundle"] == "prism":
+                extra += ' task-log="on"'
             pos = line.find(">")
             line = line[:pos] + extra + line[pos:]
         if "<a-asset-item" in line:
